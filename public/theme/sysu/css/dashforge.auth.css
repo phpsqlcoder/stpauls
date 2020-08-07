@@ -1,0 +1,102 @@
+/*
+ * Dashforge Auth Pages (Signin, Signup, etc.)
+ *
+ * This style is use in auth pages.
+ *
+ */
+.content-auth {
+  min-height: calc(100vh - 106px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.content-auth>.container {
+  padding: 0;
+}
+
+@media (max-width: 1139px) {
+  .content-auth>.container {
+    max-width: none;
+    padding: 0 20px;
+  }
+}
+
+.content-auth>.container:first-child {
+  flex: 1;
+}
+
+.content-auth-alt {
+  min-height: calc(100vh - 106px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.content-auth-alt .container {
+  padding: 0;
+}
+
+@media (max-width: 1139px) {
+  .content-auth-alt .container {
+    max-width: none;
+  }
+}
+
+.sign-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 340px;
+}
+
+@media (min-width: 1200px) {
+  .sign-wrapper {
+    width: 340px;
+  }
+}
+
+.sign-wrapper .form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.signin-caption {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  height: 100vh;
+  padding: 0 30px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  color: white;
+}
+
+.signin-caption h2 {
+  color: white;
+  font-size: 60px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 30px black;
+}
+
+.signin-caption p {
+  font-size: 18px;
+  text-shadow: 1px 1px 20px black;
+}
+
+.signin-caption a {
+  font-weight: 700;
+  color: white;
+}
+
+@media (min-width: 1200px) {
+  .sign-wrapper {
+    width: 340px;
+  }
+}
