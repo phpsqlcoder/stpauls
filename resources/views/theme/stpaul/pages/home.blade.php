@@ -72,17 +72,17 @@
                     <div class="tab-pane fade" id="pills-bible" role="tabpanel" aria-labelledby="pills-bible-tab">
                         <div id="owl-product-2" class="owl-carousel owl-theme">
                             @php
-                                $books = \App\EcommerceModel\Product::where('category_id',2)->where('status', 'PUBLISHED')->where('is_featured',1)->orderBy('name','asc')->get(); 
+                                $bibles = \App\EcommerceModel\Product::where('category_id',2)->where('status', 'PUBLISHED')->where('is_featured',1)->orderBy('name','asc')->get(); 
                             @endphp
 
-                            @foreach($books as $book)
+                            @foreach($bibles as $bible)
                             <div class="product-link">
                                 <div class="product-card">
-                                    <a href="product-profile.htm">
-                                        <img src="{{ asset('storage/products/'.$book->photoPrimary) }}" alt="" />
-                                        <h3 class="product-price">Php {{ $book->getPriceWithCurrencyAttribute() }}</h3>
+                                    <a href="p{{ route('product.front.show',$bible->slug)}}">
+                                        <img src="{{ asset('storage/products/'.$bible->photoPrimary) }}" alt="" />
+                                        <h3 class="product-price">Php {{ $bible->getPriceWithCurrencyAttribute() }}</h3>
                                     </a>
-                                    <p class="product-title">{{ $book->name }}</p>
+                                    <p class="product-title">{{ $bible->name }}</p>
                                     <form>
                                         <button type="button" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
                                             <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
@@ -99,17 +99,17 @@
                     <div class="tab-pane fade" id="pills-devotional" role="tabpanel" aria-labelledby="pills-devotional-tab">
                         <div id="owl-product-3" class="owl-carousel owl-theme">
                             @php
-                                $books = \App\EcommerceModel\Product::where('category_id',4)->where('status', 'PUBLISHED')->where('is_featured',1)->orderBy('name','asc')->get(); 
+                                $devotionals = \App\EcommerceModel\Product::where('category_id',4)->where('status', 'PUBLISHED')->where('is_featured',1)->orderBy('name','asc')->get(); 
                             @endphp
 
-                            @foreach($books as $book)
+                            @foreach($devotionals as $devo)
                             <div class="product-link">
                                 <div class="product-card">
-                                    <a href="product-profile.htm">
-                                        <img src="{{ asset('storage/products/'.$book->photoPrimary) }}" alt="" />
-                                        <h3 class="product-price">Php {{ $book->getPriceWithCurrencyAttribute() }}</h3>
+                                    <a href="{{ route('product.front.show',$devo->slug)}}">
+                                        <img src="{{ asset('storage/products/'.$devo->photoPrimary) }}" alt="" />
+                                        <h3 class="product-price">Php {{ $devo->getPriceWithCurrencyAttribute() }}</h3>
                                     </a>
-                                    <p class="product-title">{{ $book->name }}</p>
+                                    <p class="product-title">{{ $devo->name }}</p>
                                     <form>
                                         <button type="button" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
                                             <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
@@ -160,7 +160,7 @@
                         <div class="product-link">
                             @foreach($title as $b)
                                 <div class="product-card">
-                                    <a href="">
+                                    <a href="{{ route('product.front.show',$b['slug'])}}">
                                         <img src="{{ asset('storage/products/'.$b->photoPrimary) }}" alt="" />
                                         <h3 class="product-price">Php {{ number_format($b['price'],2) }}</h3>
                                     </a>
@@ -200,7 +200,7 @@
                     @foreach($on_sale_items as $item)
                         <div class="product-link">
                             <div class="product-card">
-                                <a href="product-profile.htm">
+                                <a href="{{ route('product.front.show',$b['slug'])}}">
                                     <img src="{{ asset('storage/products/'.$item->photoPrimary) }}" alt="" />
                                     <h3 class="product-price">Php {{ $item->getPriceWithCurrencyAttribute() }}</h3>
                                 </a>
