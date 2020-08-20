@@ -3,14 +3,14 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Deactivate User</h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Deactivate Customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <form action="{{route('customer.deactivate')}}" method="post">
                     @csrf
-                    <input type="hidden" id="deactivate_user_id" name="user_id">
+                    <input type="hidden" id="deactivate_user_id" name="customer_id">
                     <div class="modal-body">
                         <p>You're about to deactivate this customer. Do you want to continue?</p>
                     </div>
@@ -27,14 +27,14 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Activate User</h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Activate Customer</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <form action="{{route('customer.activate')}}" method="post">
                     @csrf
-                    <input type="hidden" id="activate_user_id" name="user_id">
+                    <input type="hidden" id="activate_user_id" name="customer_id">
                     <div class="modal-body">
                         <p>You're about to activate this customer. Do you want to continue?</p>
                     </div>

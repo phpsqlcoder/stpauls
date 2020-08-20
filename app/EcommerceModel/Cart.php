@@ -26,6 +26,16 @@ class Cart extends Model
         return ($this->product->price * $this->qty);
     }
 
+    public function getPriceWithCurrencyAttribute()
+    {
+        return " ".number_format($this->price,2);
+    }
+
+    public function getTotalWeightAttribute()
+    {
+        return ($this->product->weight * $this->qty);
+    }
+
     public static function total_cart()
     {
         if (\Auth::check()) {

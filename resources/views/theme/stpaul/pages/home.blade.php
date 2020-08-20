@@ -3,6 +3,8 @@
 @section('pagecss')
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/owl.carousel/owl.theme.default.min.css') }}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 @endsection
 
 @section('content')
@@ -45,7 +47,7 @@
                     <div class="tab-pane fade show active" id="pills-book" role="tabpanel" aria-labelledby="pills-book-tab">
                         <div id="owl-product-1" class="owl-carousel owl-theme">
                             @php
-                                $books = \App\EcommerceModel\Product::where('category_id',1)->where('status', 'PUBLISHED')->where('is_featured',1)->orderBy('name','asc')->get(); 
+                                $books = \App\EcommerceModel\Product::where('category_id',1)->where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
                             @endphp
 
                             @foreach($books as $book)
@@ -55,12 +57,14 @@
                                         <img src="{{ asset('storage/products/'.$book->photoPrimary) }}" alt="" />
                                         <h3 class="product-price">Php {{ $book->getPriceWithCurrencyAttribute() }}</h3>
                                     </a>
-                                    <p class="product-title">{{ $book->name }}</p>
-                                    <form>
-                                        <button type="button" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
-                                            <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
-                                        </button>
-                                    </form>
+                                    <p class="product-title">{{ $book->name }}</p> 
+                                    @if($book->inventory > 0)
+                                    <button type="button" onclick="add_to_cart('{{$book->id}}');" id="btn{{$book->id}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                        <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
+                                    </button>
+                                    @else
+                                        <span>Out of Stock</span>
+                                    @endif
                                 </div>
                             </div>
                             @endforeach
@@ -72,7 +76,7 @@
                     <div class="tab-pane fade" id="pills-bible" role="tabpanel" aria-labelledby="pills-bible-tab">
                         <div id="owl-product-2" class="owl-carousel owl-theme">
                             @php
-                                $bibles = \App\EcommerceModel\Product::where('category_id',2)->where('status', 'PUBLISHED')->where('is_featured',1)->orderBy('name','asc')->get(); 
+                                $bibles = \App\EcommerceModel\Product::where('category_id',2)->where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
                             @endphp
 
                             @foreach($bibles as $bible)
@@ -83,11 +87,13 @@
                                         <h3 class="product-price">Php {{ $bible->getPriceWithCurrencyAttribute() }}</h3>
                                     </a>
                                     <p class="product-title">{{ $bible->name }}</p>
-                                    <form>
-                                        <button type="button" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
-                                            <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
-                                        </button>
-                                    </form>
+                                    @if($bible->inventory > 0)
+                                    <button type="button" onclick="add_to_cart('{{$bible->id}}');" id="btn{{$bible->id}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                        <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
+                                    </button>
+                                    @else
+                                        <span>Out of stock</span>
+                                    @endif
                                 </div>
                             </div>
                             @endforeach
@@ -99,7 +105,7 @@
                     <div class="tab-pane fade" id="pills-devotional" role="tabpanel" aria-labelledby="pills-devotional-tab">
                         <div id="owl-product-3" class="owl-carousel owl-theme">
                             @php
-                                $devotionals = \App\EcommerceModel\Product::where('category_id',4)->where('status', 'PUBLISHED')->where('is_featured',1)->orderBy('name','asc')->get(); 
+                                $devotionals = \App\EcommerceModel\Product::where('category_id',4)->where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
                             @endphp
 
                             @foreach($devotionals as $devo)
@@ -111,9 +117,13 @@
                                     </a>
                                     <p class="product-title">{{ $devo->name }}</p>
                                     <form>
-                                        <button type="button" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                        @if($devo->inventory > 0)
+                                        <button type="button" onclick="add_to_cart('{{$devo->id}}');" id="btn{{$devo->id}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
                                             <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                         </button>
+                                        @else
+                                            <span>Out of stock</span>
+                                        @endif
                                     </form>
                                 </div>
                             </div>
@@ -165,10 +175,14 @@
                                         <h3 class="product-price">Php {{ number_format($b['price'],2) }}</h3>
                                     </a>
                                     <p class="product-title">{{ $b['name'] }}</p>
-                                    <form id="addToCart16" data-source="">
-                                        <button type="button" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                    <form id="addToCart{{$b['id']}}" data-source="">
+                                        @if($b['inventory'] > 0)
+                                        <button type="button" onclick="add_to_cart({{$b['id']}});" id="btn{{$b['id']}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
                                             <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                         </button>
+                                        @else
+                                         <span>Out of Stock</span>
+                                        @endif
                                     </form>
                                 </div>
                             @endforeach
@@ -194,7 +208,7 @@
                 <!-- Item on Sale Content -->
                 <div id="owl-product-5" class="owl-carousel owl-theme">
                     @php
-                        $on_sale_items = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->where('is_featured',1)->orderBy('name','asc')->get(); 
+                        $on_sale_items = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
                     @endphp
 
                     @foreach($on_sale_items as $item)
@@ -206,9 +220,15 @@
                                 </a>
                                 <p class="product-title">{{ $item->name }}</p>
                                 <form>
-                                    <button type="button" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                    @if($item->inventory > 0)
+                                    <button type="button" onclick="add_to_cart('{{$item->id}}');" id="btn{{$item->id}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
                                         <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                     </button>
+                                    @else
+                                        <button type="button" class="btn add-cart-btn addToCartButton">
+                                            Out Of Stock
+                                        </button>
+                                    @endif
                                 </form>
                             </div>
                         </div>
@@ -234,4 +254,78 @@
 @section('pagejs')
     <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.extension.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+@endsection
+
+@section('customjs')
+    <script>
+        function add_to_cart(productID) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                data: {
+                    "product_id": productID,
+                    "_token": "{{ csrf_token() }}",
+                },
+                type: "post",
+                url: "{{route('cart.add')}}",
+                // beforeSend: function(){
+                //     $("#loading-overlay").show();
+                // },
+                success: function(returnData) {
+                    //$("#loading-overlay").hide();
+                    if (returnData['success']) {
+                        $('.cart-counter').html(returnData['totalItems']);
+                        
+                        swal({
+                            toast: true,
+                            position: 'center',
+                            title: "Product Added to your cart!",
+                            type: "success",
+                            showCancelButton: true,
+                            timerProgressBar: true,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "View Cart",
+                            cancelButtonText: "Continue Shopping",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                            
+                        },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = "{{route('cart.front.show')}}";
+                            } 
+                            else {
+                                // $('#btn'+product).html('<i class="fa fa-cart-plus bg-warning text-light p-1 rounded" title="Already added on cart"></i>');
+                                swal.close();
+                               
+                            }
+                        });
+                        
+                    }
+                    else{
+                        swal({
+                            toast: true,
+                            position: 'center',
+                            title: "Warning!",
+                            text: "We have insufficient inventory for this item.",
+                            type: "warning",
+                            showCancelButton: true,
+                            timerProgressBar: true, 
+                            closeOnCancel: false
+                            
+                        });
+                    }
+                },
+                failed: function() {
+                    $("#loading-overlay").hide(); 
+                }
+            });
+        }
+    </script>
 @endsection

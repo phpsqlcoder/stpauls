@@ -27,8 +27,8 @@ class CartController extends Controller
     public function store(Request $request)
     {       
         $product = Product::whereId($request->product_id)->first();
-        // logger($request);
-        // return;
+        $qty = isset($request->qty) ? $request->qty : 1;
+        
         if (auth()->check()) {
             
             $cart = Cart::where('product_id', $request->product_id)
@@ -36,7 +36,8 @@ class CartController extends Controller
                 ->first();
 
             if (!empty($cart)) {
-                $newQty = $cart->qty + $request->qty;
+
+                $newQty = $cart->qty + $qty;
                 $save = $cart->update([
                     'qty' => $newQty,
                     'price' => $product->price
@@ -45,7 +46,7 @@ class CartController extends Controller
                 $save = Cart::create([
                     'product_id' => $request->product_id,
                     'user_id' => Auth::id(),
-                    'qty' => $request->qty,
+                    'qty' => $qty,
                     'price' => $product->price
                 ]);
             }
@@ -58,7 +59,7 @@ class CartController extends Controller
 
             foreach ($cart as $key => $order) {
                 if ($order->product_id == $request->product_id) {
-                    $cart[$key]->qty = $request->qty;
+                    $cart[$key]->qty = $qty;
                     $cart[$key]->price = $product->price;
                     $not_exist = false;
                     break;
@@ -68,7 +69,7 @@ class CartController extends Controller
             if ($not_exist) {
                 $order = new Cart();
                 $order->product_id = $request->product_id;
-                $order->qty = $request->qty;
+                $order->qty = $qty;
                 $order->price = $product->price;
 
                 array_push($cart, $order);
@@ -108,17 +109,16 @@ class CartController extends Controller
         $page = new Page();
         $page->name = 'Cart';
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.cart', compact('cart', 'totalProducts','page'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.index', compact('cart', 'totalProducts','page'));
     }
 
     public function remove_product(Request $request)
     {
-
         if (auth()->check()) {
-            $delete = Cart::whereId($request->product_remove_id)->delete();
+            Cart::whereId($request->order_id)->delete();
         } else {
             $cart = session('cart', []);
-            $index = (int) $request->product_remove_id;
+            $index = (int) $request->order_id;
             if (isset($cart[$index])) {
                 unset($cart[$index]);
             }
@@ -130,35 +130,69 @@ class CartController extends Controller
 
     public function batch_update(Request $request)
     {
+        if($request->btnUpdateCart == 1){
 
-        if (auth()->check()) {            
-            if (Cart::where('user_id', auth()->id())->count() == 0) {
-                return redirect()->route('product.front.list');
-            }
+            $data   = $request->all();
+            $cartId = $data['cart_id'];
+            $qty    = $data['qty'];
 
-            for ($x = 1; $x <= $request->total_products; $x++) {
-                $upd = Cart::whereId($request->record_id[$x])->where('user_id', auth()->id())->update([
-                    'qty' => $request->quantity[$x]
-                ]);
-              
+            if (auth()->check()) {        
+
+                if (Cart::where('user_id', auth()->id())->count() == 0) {
+                    return redirect()->route('product.front.list');
+                }
+
+                foreach($cartId as $key => $cart){
+                    Cart::whereId($cart)->update([
+                        'qty' => $qty[$key]
+                    ]);
+                }
+
+                // for ($x = 1; $x <= $request->total_products; $x++) {
+                //     $upd = Cart::whereId($request->record_id[$x])->where('user_id', auth()->id())->update([
+                //         'qty' => $request->quantity[$x]
+                //     ]);
+                  
+                // }
+               
+                return back()->with('success', 'Cart has beed updated successfully.');
+            } else {
+                // $cart = session('cart', []);
+
+                // for ($x = 1; $x <= $request->total_products; $x++) {
+                //     foreach ($cart as $key => $order) {
+                //         if ($order->product_id == $request->record_id[$x]) {
+                //             $cart[$key]->qty = $request->quantity[$x];
+                //             break;
+                //         }
+                //     }
+                // }
+
+                // session(['cart' => $cart]);
+
+                // return redirect()->route('customer-front.login');
             }
-           
-            return redirect()->route('cart.front.checkout');
         } else {
-            $cart = session('cart', []);
+            if (auth()->check()) {
 
-            for ($x = 1; $x <= $request->total_products; $x++) {
-                foreach ($cart as $key => $order) {
-                    if ($order->product_id == $request->record_id[$x]) {
-                        $cart[$key]->qty = $request->quantity[$x];
-                        break;
+                return redirect()->route('cart.front.checkout');
+
+            } else {
+                $cart = session('cart', []);
+
+                for ($x = 1; $x <= $request->total_products; $x++) {
+                    foreach ($cart as $key => $order) {
+                        if ($order->product_id == $request->record_id[$x]) {
+                            $cart[$key]->qty = $request->quantity[$x];
+                            break;
+                        }
                     }
                 }
+
+                session(['cart' => $cart]);
+
+                return redirect()->route('customer-front.login');
             }
-
-            session(['cart' => $cart]);
-
-            return redirect()->route('customer-front.login');
         }
     }
 

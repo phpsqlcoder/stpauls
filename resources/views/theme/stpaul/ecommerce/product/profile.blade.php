@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/example.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/pygments.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/easyzoom.css') }}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 @endsection
 
 @section('content')
@@ -131,11 +133,15 @@
                             <div class="col-lg-7">
                                 <form id="addToCart" data-source="addToCart">
                                     <div class="product-detail">
-
                                         <div class="product-description">
                                             <ol class="breadcrumb">
-                                                <li class="breadcrumb-item active" aria-current="page">Books</li>
-                                                <li class="breadcrumb-item active" aria-current="page">General References</li>
+                                                @php 
+                                                    $arr = \App\EcommerceModel\ProductCategory::product_category($product->category_id);
+                                                @endphp
+
+                                                @foreach($arr as $key => $a)
+                                                    <li class="breadcrumb-item active" aria-current="page">{{ $a->name }}</li>
+                                                @endforeach
                                             </ol>
                                             <h2>{{ $product->name }}</h2>
                                             <hr>
@@ -147,52 +153,62 @@
                                                 <span class="fa fa-star checked"></span>
                                                 <span class="rating-count">(23) Customer ratings</span>
                                             </div>
-                                            <p>Patrick James | Product Name: Clemson Men's Lifestyle Shoes<br> This is really worth it.</p>
-                                            <div class="product-price">
-                                                <span class="price-after">₱ 160.00</span>
-                                                <span class="price-before">
-                      <div class="price-less">70% Off</div>
-                      <div class="price-original">₱ 160.00</div>
-                    </span>
-                                            </div>
+                                            <p>{{ $product->additional_info->authors }} | Product Name: {{ $product->name }}</p>
+                                            @if(\App\EcommerceModel\Product::onsale_checker($product->id) > 0)
+                                                <div class="product-price">
+                                                    <span class="price-after">₱ {{ $product->DiscountedPrice }} </span>
+                                                    <span class="price-before">
+                                                      <div class="price-less">{{ $product->on_sale->promo_details->discount }}% Off</div>
+                                                      <div class="price-original">₱ {{ $product->price }}</div>
+                                                    </span>
+                                                </div>
+                                            @else
+                                                <div class="product-price">
+                                                    <span class="price-after">₱ {{ $product->PriceWithCurrency }} </span>
+                                                </div>
+                                            @endif
                                         </div>
 
                                         <div class="product-info">
                                             <p>Quantity</p>
                                             <div class="quantity">
-                                                <input type="number" name="quantity" min="1" max="25" step="1" value="1" data-inc="1">
+                                                <input type="number" name="quantity" id="qty" min="1" max="{{ $product->inventory }}" step="1" value="1" data-inc="1">
+                                                <div class="quantity-nav">
+                                                    <div class="quantity-button quantity-up">+</div>
+                                                    <div class="quantity-button quantity-down">-</div>
+                                                </div>
                                                 <span class="product-pcs">pcs</span>
                                             </div>
                                             <div class="product-sku">
-                                                <i class="fa fa-check high-stock"></i> 25 available stock
+                                                <i class="fa fa-check high-stock"></i> {{ $product->inventory }} available stock
                                             </div>
                                         </div>
 
                                         <div class="product-btn">
-                                            <button type="button" class="btn btn-lg add-cart-alt2-btn addToCartButton" data-loading-text="processing...">
-                      <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/cart.png" alt=""> Add to cart
-                    </button>
-                                            <form id="buyNow" data-source="buyNow">
-                                                <button type="button" class="btn btn-lg buy-now-btn buyNowButton" data-loading-text="processing...">
-                      <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/blitz.png" alt=""> Buy Now
-                    </button>
+                                            @if($product->inventory > 0)
+                                            <button type="button" onclick="add_to_cart('{{$product->id}}');" class="btn btn-lg add-cart-alt2-btn addToCartButton" data-loading-text="processing...">
+                                                <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/cart.png" alt=""> Add to cart
+                                            </button>
+                            
+                                            <button type="button" class="btn btn-lg buy-now-btn buyNowButton" data-loading-text="processing...">
+                                                <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/blitz.png" alt=""> Buy Now
+                                            </button>
+                                            @endif  
 
-                                                <div class="product-wishlist">
-                                                    <input name="wishlist" id="wishlist" data-product-id="333" type="checkbox" />
-                                                    <label for="wishlist">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255.7 225.13">
-                        <path style="color:#000000;enable-background:accumulate;"
-                          d="M128,69.9s-17-48.25-63-48.25S7.71,75.32,7.71,75.32s-11.36,39.74,39.74,89.29L128,233.77l80.55-69.16c51.09-49.55,39.74-89.29,39.74-89.29S236.9,21.65,191,21.65,128,69.9,128,69.9Z"
-                          transform="translate(-0.13 -15.15)" fill="transparent" id="heart-path" stroke="#F8332A" stroke-width="15" marker="none" visibility="visible"
-                            display="inline" overflow="visible" />
-                      </svg>
-                    </label>
-                                                </div>
+                                            <div class="product-wishlist">
+                                                <input name="wishlist" id="wishlist" data-product-id="333" type="checkbox" />
+                                                <label for="wishlist">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255.7 225.13">
+                                                        <path style="color:#000000;enable-background:accumulate;"
+                                                      d="M128,69.9s-17-48.25-63-48.25S7.71,75.32,7.71,75.32s-11.36,39.74,39.74,89.29L128,233.77l80.55-69.16c51.09-49.55,39.74-89.29,39.74-89.29S236.9,21.65,191,21.65,128,69.9,128,69.9Z"
+                                                      transform="translate(-0.13 -15.15)" fill="transparent" id="heart-path" stroke="#F8332A" stroke-width="15" marker="none" visibility="visible"
+                                                        display="inline" overflow="visible" />
+                                                    </svg>
+                                                </label>
+                                            </div>
                                         </div>
-
                                     </div>
-                                    </form>
-
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -247,10 +263,11 @@
                             <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
                                 <div class="empty-review-wrap">
                                     <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/comment.png" />
-                                    <p>There are no reviews yet.<br />Be the first to review “The Friend of the Bridegroom”</p>
+                                    <p>There are no reviews yet.<br />Be the first to review “{{ $product->name }}”</p>
                                 </div>
                                 <div class="gap-40"></div>
-                                <form id='leave-review'>
+                                <form method="post" action="{{ route('product.review.store') }}">
+                                    @csrf
                                     <div class="form-style-alt fs-sm">
                                         <h2>We want to know your opinion!</h2>
                                         <label for="rating-count"><b>Your Rating</b></label>
@@ -264,7 +281,8 @@
                                         </div>
                                         <div class="gap-20"></div>
                                         <div class="form-wrap">
-                                            <textarea id="message" class="form-control form-input" name="message"></textarea>
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <textarea id="message" class="form-control form-input" name="review"></textarea>
                                             <label class="form-label textarea" for="message">Tell us what you thought about it</label>
                                         </div>
                                     </div>
@@ -347,6 +365,8 @@
     <script src="{{ asset('theme/stpaul/js/better-rating.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/easyzoom/src/easyzoom.js') }}"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
     <script>
         // Instantiate EasyZoom instances
         var $easyzoom = $('.easyzoom').easyZoom();
@@ -363,5 +383,126 @@
             api1.swap($this.data('standard'), $this.attr('href'));
         });
         
+        $(document).ready(function(){
+            /** Custom Input number increment js **/
+            jQuery(".quantity").each(function() {
+                var spinner = jQuery(this),
+                    input = spinner.find('input[type="number"]'),
+                    btnUp = spinner.find(".quantity-up"),
+                    btnDown = spinner.find(".quantity-down"),
+                    min = input.attr("min"),
+                    max = input.attr("max"),
+                    valOfAmout = input.val(),
+                    newVal = 0;
+
+                btnUp.on("click", function() {
+                    var varholder = input.val();
+                    var oldValue = parseFloat(input.val());
+
+                    if (varholder === "") {
+                        var newVal = 1;
+                    } else {
+                        if (oldValue >= max) {
+                            var newVal = oldValue;
+                        } else {
+                            var newVal = oldValue + 1;
+                        }
+                    }
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+
+                btnDown.on("click", function() {
+                    var varholder = input.val();
+                    var oldValue = parseFloat(input.val());
+
+                    if (varholder === "") {
+                        var newVal = 1;
+                    } else {
+                        if (oldValue <= min) {
+                            var newVal = oldValue;
+                        } else {
+                            var newVal = oldValue - 1;
+                        }
+                    }
+                    spinner.find("input").val(newVal);
+                    spinner.find("input").trigger("change");
+                });
+            });
+        });
+    </script>
+@endsection
+
+
+@section('customjs')
+    <script>
+        function add_to_cart(productID) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                data: {
+                    "product_id": productID,
+                    "qty": $('#qty').val(),
+                    "_token": "{{ csrf_token() }}",
+                },
+                type: "post",
+                url: "{{route('cart.add')}}",
+                // beforeSend: function(){
+                //     $("#loading-overlay").show();
+                // },
+                success: function(returnData) {
+                    //$("#loading-overlay").hide();
+                    if (returnData['success']) {
+                        $('.cart-counter').html(returnData['totalItems']);
+                        
+                        swal({
+                            toast: true,
+                            position: 'center',
+                            title: "Product Added to your cart!",
+                            type: "success",
+                            showCancelButton: true,
+                            timerProgressBar: true,
+                            confirmButtonClass: "btn-danger",
+                            confirmButtonText: "View Cart",
+                            cancelButtonText: "Continue Shopping",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                            
+                        },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = "{{route('cart.front.show')}}";
+                            } 
+                            else {
+                                // $('#btn'+product).html('<i class="fa fa-cart-plus bg-warning text-light p-1 rounded" title="Already added on cart"></i>');
+                                swal.close();
+                               
+                            }
+                        });
+                        
+                    }
+                    else{
+                        swal({
+                            toast: true,
+                            position: 'center',
+                            title: "Warning!",
+                            text: "We have insufficient inventory for this item.",
+                            type: "warning",
+                            showCancelButton: true,
+                            timerProgressBar: true, 
+                            closeOnCancel: false
+                            
+                        });
+                    }
+                },
+                failed: function() {
+                    $("#loading-overlay").hide(); 
+                }
+            });
+        }
     </script>
 @endsection

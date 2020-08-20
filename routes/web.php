@@ -1,9 +1,23 @@
 <?php
 
+
+
+Route::get('facebook', function () {
+    return view('facebook');
+})->name('fb');
+
+Route::get('auth/facebook', 'Auth\FacebookController@redirectToFacebook')->name('fb_signup');
+Route::get('auth/facebook/callback', 'Auth\FacebookController@handleFacebookCallback');
+
+Route::get('/home', 'HomeController@index')->name('fhome');
+
+
+
+
+
+
 // Home
 Route::get('/', 'FrontController@home')->name('home');
-
-// Route::view('/home','theme.stpaul.pages.home');
 
 Route::get('/products/{slug}', 'Product\Front\ProductFrontController@show')->name('product.front.show');
 Route::view('/product-listing','theme.stpaul.pages.product-listing');
@@ -11,17 +25,66 @@ Route::view('/product-listing','theme.stpaul.pages.product-listing');
 
 
 ########## ECOMMERCE ROUTES #############
+    // Customer Sign Up
+        Route::get('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@sign_up')->name('customer-front.sign-up');
+        Route::post('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@customer_sign_up')->name('customer-front.customer-sign-up');
 
-    // Product
-    
+        Route::get('myform/ajax/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
+    //
+
+    // Customer Login
+        Route::get('/login', 'EcommerceControllers\CustomerFrontController@login')->name('customer-front.login');
+        Route::post('/login', 'EcommerceControllers\CustomerFrontController@customer_login')->name('customer-front.customer_login');
+        Route::get('/customer-logout', 'EcommerceControllers\CustomerFrontController@logout')->name('customer.logout');
+
+    //
+
+    // Cart
+        Route::post('cart/add-product','EcommerceControllers\CartController@store')->name('cart.add');
+        Route::get('/cart/view', 'EcommerceControllers\CartController@view')->name('cart.front.show');
+
+
+        Route::post('cart/batch_update','EcommerceControllers\CartController@batch_update')->name('cart.front.batch_update');
+        Route::post('cart/remove-product','EcommerceControllers\CartController@remove_product')->name('cart.remove_product');
+    //
+
+    Route::group(['middleware' => ['authenticated']], function () {
+        Route::get('/checkout', 'EcommerceControllers\CheckoutController@checkout')->name('cart.front.checkout');
+
+        Route::post('product/review/store', 'EcommerceControllers\ProductReviewController@store')->name('product.review.store');
+
+        
+        
+        Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
+        Route::get('/account/sales', 'EcommerceControllers\SalesFrontController@sales_list')->name('profile.sales');
+        Route::post('/account/cancel/order', 'EcommerceControllers\SalesFrontController@cancel_order')->name('my-account.cancel-order');
+        Route::get('/account/manage', 'EcommerceControllers\MyAccountController@manage_account')->name('my-account.manage-account');
+        Route::post('/account/manage', 'EcommerceControllers\MyAccountController@update_personal_info')->name('my-account.update-personal-info');
+        Route::post('/account/manage/update-contact', 'EcommerceControllers\MyAccountController@update_contact_info')->name('my-account.update-contact-info');
+        Route::post('/account/manage/update-address', 'EcommerceControllers\MyAccountController@update_address_info')->name('my-account.update-address-info');
+
+        Route::get('/account/change-password', 'EcommerceControllers\MyAccountController@change_password')->name('my-account.change-password');
+
+        Route::post('/account/change-password', 'EcommerceControllers\MyAccountController@update_password')->name('my-account.update-password');
+
+        Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
+
+        // Paynamics Notification
+    });
 
 ########## ECOMMERCE ROUTES #############  
 
-Route::get('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@sign_up')->name('customer-front.sign-up');
-Route::post('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@customer_sign_up')->name('customer-front.customer-sign-up');
-Route::get('/account-logout', 'Auth\LoginController@logout')->name('account.logout');
-Route::get('/login', 'EcommerceControllers\CustomerFrontController@login')->name('customer-front.login');
-Route::post('/login', 'EcommerceControllers\CustomerFrontController@customer_login')->name('customer-front.customer_login');
+
+
+
+
+
+
+
+
+
+
+
 
 
 Route::get('/', 'FrontController@home')->name('home');
@@ -48,10 +111,8 @@ Route::any('/shop', 'Product\Front\ProductFrontController@list')->name('product.
 Route::get('/products/{slug}', 'Product\Front\ProductFrontController@show')->name('product.front.show');
 
 //Cart
-Route::post('cart/add-product','EcommerceControllers\CartController@store')->name('cart.add');
-Route::post('cart/batch_update','EcommerceControllers\CartController@batch_update')->name('cart.front.batch_update');
-Route::post('cart/remove-product','EcommerceControllers\CartController@remove_product')->name('cart.remove_product');
-Route::get('/cart/view', 'EcommerceControllers\CartController@view')->name('cart.front.show');
+
+
 Route::post('/payment-notification', 'EcommerceControllers\CartController@receive_data_from_payment_gateway')->name('cart.payment-notification');
 
 Route::get('/forgot-password', 'EcommerceControllers\EcommerceFrontController@forgot_password')->name('ecommerce.forgot_password');
@@ -62,29 +123,6 @@ Route::post('/reset-password', 'EcommerceControllers\EcommerceFrontController@re
 
 
 
-
-############# Customer ####################
-Route::group(['middleware' => ['authenticated']], function () {
-    Route::post('product/review/store', 'EcommerceControllers\ProductReviewController@store')->name('product.review.store');
-    Route::get('/checkout', 'EcommerceControllers\CheckoutController@checkout')->name('cart.front.checkout');
-    Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
-    Route::get('/account/sales', 'EcommerceControllers\SalesFrontController@sales_list')->name('profile.sales');
-    Route::post('/account/cancel/order', 'EcommerceControllers\SalesFrontController@cancel_order')->name('my-account.cancel-order');
-    Route::get('/account/manage', 'EcommerceControllers\MyAccountController@manage_account')->name('my-account.manage-account');
-    Route::post('/account/manage', 'EcommerceControllers\MyAccountController@update_personal_info')->name('my-account.update-personal-info');
-    Route::post('/account/manage/update-contact', 'EcommerceControllers\MyAccountController@update_contact_info')->name('my-account.update-contact-info');
-    Route::post('/account/manage/update-address', 'EcommerceControllers\MyAccountController@update_address_info')->name('my-account.update-address-info');
-
-    Route::get('/account/change-password', 'EcommerceControllers\MyAccountController@change_password')->name('my-account.change-password');
-
-    Route::post('/account/change-password', 'EcommerceControllers\MyAccountController@update_password')->name('my-account.update-password');
-
-    Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
-
-    // Paynamics Notification
-});
-
-
 ##############################################################
 Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
 
@@ -93,6 +131,39 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
     Auth::routes(['verify' => true]);
 
     Route::group(['middleware' => 'admin'], function () {
+
+        // Customers
+            Route::resource('/admin/customers', 'Settings\CustomerController');
+            Route::post('/customer/deactivate', 'Settings\CustomerController@deactivate')->name('customer.deactivate');
+            Route::post('/customer/activate', 'Settings\CustomerController@activate')->name('customer.activate');
+            // Route::get('/admin/customer-search/', 'Settings\CustomerController@search')->name(
+            //     'customer.search');
+            //Route::get('/admin/customer-profile-log-search/', 'Settings\CustomerController@filter')->name('customer.activity.search');
+        //
+
+        // Promos
+            Route::resource('/admin/promos', 'Promo\PromoController');
+            Route::get('/admin/promo/{id}/{status}', 'Promo\PromoController@update_status')->name('promo.change-status');
+            Route::post('/admin/promo-single-delete', 'Promo\PromoController@single_delete')->name('promo.single.delete');
+            Route::post('/admin/promo-multiple-change-status','Promo\PromoController@multiple_change_status')->name('promo.multiple.change.status');
+            Route::post('/admin/promo-multiple-delete','Promo\PromoController@multiple_delete')->name('promo.multiple.delete');
+            Route::get('/admin/promo-restore/{id}', 'Promo\PromoController@restore')->name('promo.restore');
+        //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             Route::resource('/admin/sales-transaction', 'EcommerceControllers\SalesController');
             Route::post('/admin/sales-transaction/change-status', 'EcommerceControllers\SalesController@change_status')->name('sales-transaction.change.status');
@@ -118,20 +189,14 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
             Route::get('/display-added-payments', 'EcommerceControllers\SalesController@display_payments')->name('display.added-payments');
             Route::get('/display-delivery-history', 'EcommerceControllers\SalesController@display_delivery')->name('display.delivery-history');
 
-             Route::get('/sales/update-payment/{id}','EcommerceControllers\JoborderController@staff_edit_payment')->name('staff-edit-payment');
+            Route::get('/sales/update-payment/{id}','EcommerceControllers\JoborderController@staff_edit_payment')->name('staff-edit-payment');
             Route::post('/sales/update-payment','EcommerceControllers\JoborderController@staff_update_payment')->name('staff-update-payment');
 
-             Route::resource('/admin/customers', 'Settings\CustomerController');
-            Route::post('/customer/deactivate', 'Settings\CustomerController@deactivate')->name('customer.deactivate');
-            Route::post('/customer/activate', 'Settings\CustomerController@activate')->name('customer.activate');
-            Route::get('/admin/customer-search/', 'Settings\CustomerController@search')->name(
-                'customer.search');
-            Route::get('/admin/customer-profile-log-search/', 'Settings\CustomerController@filter')->name('customer.activity.search');
 
         Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
 
-        Route::resource('/admin/customers', 'Settings\CustomerController');
+       
         Route::resource('/admin/sales-transaction', 'EcommerceControllers\SalesController');
         Route::resource('/admin/deliveryrate', 'EcommerceControllers\DeliveryRateController');
 

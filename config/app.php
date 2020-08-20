@@ -182,6 +182,8 @@ return [
         UniSharp\LaravelFilemanager\LaravelFilemanagerServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
 
+        Laravel\Socialite\SocialiteServiceProvider::class,
+
 
     ],
 
@@ -239,6 +241,8 @@ return [
 
         //Laravel File-manager
         'Image' => Intervention\Image\Facades\Image::class,
+
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];

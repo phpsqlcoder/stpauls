@@ -4,7 +4,7 @@ namespace App\Http\Controllers\EcommerceControllers;
 
 use App\EcommerceModel\Cart;
 use App\EcommerceModel\Member;
-use App\User;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -16,56 +16,79 @@ use Session;
 use App\Page;
 use App\EcommerceModel\Product;
 
+
+use App\User;
+
+use App\EcommerceModel\Customer;
+
+use App\Provinces;
+use App\Cities;
+
 class CustomerFrontController extends Controller
 {
+
     public function sign_up(Request $request) {
 
         $page = new Page();
         $page->name = 'Sign Up';
+        
+        $fbdata = $request;
 
-        return view('theme.sysu.ecommerce.customer.sign-up',compact('page'));
+        $provinces = Provinces::orderBy('province','asc')->get();
+
+        return view('theme.stpaul.ecommerce.customer.sign-up',compact('page','fbdata','provinces'));
 
     }
+
+    public function ajax_cities($id)
+    {
+
+        $data = Cities::where('province',$id)->get();
+
+        return response($data);
+    }
+
 
     public function customer_sign_up(Request $request) {
 
         Validator::make($request->all(), [
-            'email' => 'required|email|max:191|unique:users',
-            'lname' => 'required',
             'fname' => 'required',
-            'address_street' => 'required',
-            'address_municipality' => 'required',
-            'address_city' => 'required',
-            'address_zip' => 'required',
-            'contact_tel' => '',
-            'contact_mobile' => 'required',
+            'lname' => 'required',
+            'email' => 'required|email|max:191|unique:users',
             'password' => 'min:8|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:8'
+            'password_confirmation' => 'min:8',
+            'address' => 'required',
+            'brgy' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'mobileno' => 'required',
+            'zipcode' => 'required',
         ])->validate();
 
        
-        $user = User::create([
-            'name' => $request->fname.' '.$request->lname,
+        $customer = Customer::create([
+            'email' => $request->email,
             'password' => \Hash::make($request->password),
             'firstname' => $request->fname,
             'lastname' => $request->lname,
-            'email' => $request->email,
-            'address_street' => $request->address_street,
-            'address_municipality' => $request->address_municipality,
-            'address_city' => $request->address_city,
-            'address_zip' => $request->address_zip,            
-            'phone' => $request->contact_tel,
-            'mobile' => $request->contact_mobile,
-            'remember_token' => str_random(10),
-            'email_verified_at' => date('Y-m-d H:i:s'),
+            'telno' => $request->telno,
+            'mobile' => $request->mobileno,
+            'address' => $request->address,
+            'barangay' => $request->brgy,
+            'city' => $request->city,
+            'province' => $request->province,
+            'zipcode' => $request->zipcode,
             'is_active' => 1,
-            'role_id' => 6
+            'provider' => '',
+            'fbId' => '',
+            'googleId' => '',
+            'is_subscriber' => $request->has('subscriber'),
+            'remember_token' => str_random(10),
         ]);   
-        
 
-        Auth::login($user);
+        Auth::loginUsingId($customer->id);
 
-        return redirect(route('product.front.list'))->with('success','Registration Successful!');
+        return redirect(route('home'))->with('success','Registration Successful!');
     }
 
     public function get_random_code($length = 6)
@@ -88,12 +111,13 @@ class CustomerFrontController extends Controller
         return $token;
     }
 
+
     public function login(Request $request) {
 
         $page = new Page();
         $page->name = 'Login';
 
-        return view('theme.sysu.ecommerce.customer.login',compact('page'));
+        return view('theme.stpaul.ecommerce.customer.login',compact('page'));
 
     }
 
@@ -111,13 +135,10 @@ class CustomerFrontController extends Controller
 
         $cart = session('cart', []);
         
-        if (Auth::attempt($userCredentials)) {
-       
-            if(Auth::user()->role_id <> '6'){ // block cms users from using this login form
-                Auth::logout();
-                return back()->with('error', 'Administrative accounts are not allowed to login as customer.'); 
-            }
+        if (Auth::guard('customer')->attempt($userCredentials)) {
 
+            $customer = Customer::where('email',$request->email)->first();
+            Auth::loginUsingId($customer->id);
 
             foreach ($cart as $order) {
                 $product = Product::find($order['product_id']);
@@ -148,7 +169,8 @@ class CustomerFrontController extends Controller
             if($cnt > 0)
                 return redirect(route('cart.front.show'));
             else
-                return redirect(route('product.front.list'));
+                // return redirect(route('product.front.list'));
+                return redirect(route('home'));
         } else {
             Auth::logout();
             return back()->with('error', __('auth.login.incorrect_input'));    

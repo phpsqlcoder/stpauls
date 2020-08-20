@@ -10,41 +10,63 @@ class ListingHelper
     private $defaultPerPage;
     private $defaultSortBy;
     private $defaultSearchField;
+    private $requiredConditions;
 
-    public function __construct($sortBy = 'desc', $perPage = 10, $defaultSearchField = 'updated_at')
+    public function __construct($sortBy = 'desc', $perPage = 10, $searchField = 'updated_at', $requiredConditions = [])
     {
         $this->defaultSortBy = $sortBy;
         $this->defaultPerPage = $perPage;
-        $this->defaultSearchField = $defaultSearchField;
+        $this->defaultSearchField = $searchField;
+        $this->requiredConditions = $requiredConditions;
     }
 
     // $model = Model class of the listing page. Ex. User::class
     // $searchFields = Fields in the table that wants to be search. The keys should same with sa database column name. Ex. ['id', 'first_name']
     // $customerQuery = We are using orWhereRaw for the query so you can use Database function. Ex. ["CONCAT(`first_name`, ' ', CONCAT(LEFT(`middle_name`,1),'.'), ' ', `last_name`, ' ', `ext_name`) LIKE ?"]
     // $customerQueryFields = Fields that in the $searchFields and used in $customQuery. Ex. ['first_name']
-    public function simple_search($model, $searchFields, $customQuery = [], $customQueryFields = [])
+    public function simple_search($model, $searchFields, $customQuery = [], $customQueryFields = [], $joinTables = [], $selectFields = [])
     {
+        $sortFields =  (empty($this->filterFields)) ? $searchFields : $this->filterFields;
+
         $perPage = $this->get_count_per_page();
-        $orderBy = $this->get_selected_order_by($searchFields);
+        $orderBy = $this->get_selected_order_by($sortFields);
         $sortBy = $this->get_selected_sort_by();
         $showDeleted = $this->show_delete_data();
         $search =  $this->get_search_string();
 
-        $models = $model::orderBy($orderBy, $sortBy);
+        if (empty($selectFields)) {
+            $models = $model::orderBy($orderBy, $sortBy);
+        } else {
+            $models = $model::select($selectFields)->orderBy($orderBy, $sortBy);
+        }
+
+        foreach ($joinTables as $table) {
+            $models->leftJoin($table['name'], $table['field1'], $table['field2']);
+        }
 
         if ($showDeleted) {
             $models->withTrashed();
         }
 
-        foreach ($searchFields as $fieldName) {
-            if (in_array($fieldName, $customQueryFields) <= -1) {
-                $models->orWhere($fieldName, 'like', '%'.$search.'%');
+        foreach ($this->requiredConditions as $condition) {
+            if ($showDeleted && $condition['apply_to_deleted_data'] == false) {
+                continue;
             }
+
+            $models->where($condition['field'], $condition['operator'], $condition['value']);
         }
 
-        foreach ($customQuery as $query) {
-            $models->orWhereRaw($query, ['%'.$search.'%']);
-        }
+        $models->where(function($models) use ($search, $searchFields, $customQuery, $customQueryFields) {
+            foreach ($searchFields as $fieldName) {
+                if (in_array($fieldName, $customQueryFields) <= -1) {
+                    $models->orWhere($fieldName, 'like', '%' . $search . '%');
+                }
+            }
+
+            foreach ($customQuery as $query) {
+                $models->orWhereRaw($query, ['%' . $search . '%']);
+            }
+        });
 
         return $models->paginate($perPage);
     }

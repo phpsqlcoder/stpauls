@@ -79,7 +79,7 @@
                         <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
                             <form class="form-inline" id="searchForm">
                                 <div class="search-form mg-r-10">
-                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Name" value="{{ $filter->search }}">
+                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Lastname" value="{{ $filter->search }}">
                                     <button class="btn filter" type="button" id="btnSearch"><i data-feather="search"></i></button>
                                 </div>
                             </form>
@@ -101,22 +101,19 @@
                                 <tr>
                                     <th scope="col" width="30%">Name</th>
                                     <th scope="col">Email</th>
-                                    {{-- <th scope="col">Role</th> --}}
                                     <th scope="col">Status</th>
                                     <th scope="col">Options</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($users as $user)
-                                @if($user->role_id==6)
+                                @forelse($customers as $customer)
                                     <tr>
                                         <th>
-                                            <strong @if($user->is_active == 0) style="text-decoration:line-through;" @endif> {{$user->fullname}}</strong>
+                                            <strong @if($customer->is_active == 0) style="text-decoration:line-through;" @endif> {{ $customer->fullName }}</strong>
                                         </th>
-                                        <td>{{ $user->email }}</td>
-                                        {{-- <td><span class="badge badge-primary">{{ \App\User::userRole($user->role_id) }}</span></td> --}}
+                                        <td>{{ $customer->email }}</td>
                                         <td>
-                                            @if($user->is_active == 1)
+                                            @if($customer->is_active == 1)
                                                 <span class="badge badge-success">Active</span>
                                             @else
                                                 <span class="badge badge-danger">Inactive</span>
@@ -124,28 +121,24 @@
                                         </td>
                                         <td>
                                             <nav class="nav table-options justify-content-begin">
-                                                @if($user->is_active == 1)
-                                                    @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/customers/edit') == 1)
-                                                        <a style="display:none;" class="nav-link" href="{{ route('customers.edit', $user->id) }}" title="Edit User"><i data-feather="edit"></i></a>
-                                                    @endif
+                                                @if($customer->is_active == 1)
+                                                    <a style="display:none;" class="nav-link" href="{{ route('customers.edit', $customer->id) }}" title="Edit User"><i data-feather="edit"></i></a>
                                                 @endif
-{{--                                                @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/customer/show') == 1)--}}
-                                                    <a class="nav-link" target="_blank" href="{{ route('customers.show', $user->id) }}" title="View User"><i data-feather="eye"></i></a>
-{{--                                                @endif--}}
 
-                                                @if($user->is_active == 1)
+                                                <a class="nav-link" target="_blank" href="{{ route('customers.show', $customer->id) }}" title="View User"><i data-feather="eye"></i></a>
+
+                                                @if($customer->is_active == 1)
                                                     @if (auth()->user()->has_access_to_route('customer.deactivate'))
-                                                        <a class="nav-link deactivate_user" data-user_id="{{ $user->id }}" href="#" title="Deactivate User" data-toggle="modal" data-target="#modalUserDeactivate"><i data-feather="user-x"></i></a>
+                                                        <a class="nav-link deactivate_user" data-user_id="{{ $customer->id }}" href="#" title="Deactivate User" data-toggle="modal" data-target="#modalUserDeactivate"><i data-feather="user-x"></i></a>
                                                     @endif
                                                 @else
                                                     @if (auth()->user()->has_access_to_route('customer.activate'))
-                                                        <a class="nav-link activate_user" data-user_id="{{ $user->id }}" href="#" title="Activate User" data-toggle="modal" data-target="#modalUserActivate"><i data-feather="user-check"></i></a>
+                                                        <a class="nav-link activate_user" data-user_id="{{ $customer->id }}" href="#" title="Activate User" data-toggle="modal" data-target="#modalUserActivate"><i data-feather="user-check"></i></a>
                                                     @endif
                                                 @endif
                                             </nav>
                                         </td>
                                     </tr>
-                                @endif
                                 @empty
                                     <tr>
                                         <td colspan="5" style="text-align: center;"> <p class="text-danger">No customers found.</p></td>
@@ -161,10 +154,10 @@
             <!-- Start Navigation -->
             <div class="col-md-6">
                 <div class="mg-t-5">
-                    @if ($users->firstItem() == null)
+                    @if ($customers->firstItem() == null)
                         <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
                     @else
-                        <p class="tx-gray-400 tx-12 d-inline">Showing {{$users->firstItem()}} to {{$users->lastItem()}} of {{$users->total()}} users</p>
+                        <p class="tx-gray-400 tx-12 d-inline">Showing {{$customers->firstItem()}} to {{$customers->lastItem()}} of {{$customers->total()}} customers</p>
                     @endif
 
                 </div>
@@ -172,7 +165,7 @@
             <div class="col-md-6">
                 <div class="text-md-right float-md-right mg-t-5">
                     <div>
-                        {{ $users->appends((array) $filter)->links() }}
+                        {{ $customers->appends((array) $filter)->links() }}
                     </div>
                 </div>
             </div>

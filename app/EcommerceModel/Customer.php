@@ -4,22 +4,26 @@ namespace App\EcommerceModel;
 
 use App\Notifications\Ecommerce\CustomerResetPasswordNotification;
 use App\User;
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-class Customer extends Model
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class Customer extends Authenticatable
 {
     use SoftDeletes;
     use Notifiable;
 
-    protected $table = 'customers';
-    protected $fillable = ['user_id', 'first_name', 'middle_name', 'last_name', 'ext_name', 'is_email_subscriber', 'organization', 'address_1', 'address_2', 'city', 'province', 'postal_code', 'country', 'contact_numbers', 'email', 'class', 'status', 'created_by'];
+    protected $guard = 'customer';
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $table = 'customers';
+    protected $fillable = ['email','password','firstname','lastname','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','fbId','googleId','is_subscriber','user_id','remember_token'];
+
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 
     public function setIsEmailSubscriberAttribute($value)
     {
@@ -35,10 +39,10 @@ class Customer extends Model
         return json_decode($value, true);
     }
 
-    public function getIsActiveAttribute()
-    {
-        return $this->status == "active";
-    }
+    // public function getIsActiveAttribute()
+    // {
+    //     return $this->status == "active";
+    // }
 
     public function setContactNumbersAttribute($arrayValue)
     {
@@ -80,11 +84,12 @@ class Customer extends Model
     }
 
     public function getFullNameAttribute() {
-        if (empty($this->middle_name)) {
-            return "{$this->first_name} {$this->last_name} {$this->ext_name}";
-        }
+        // if (empty($this->middle_name)) {
+        //     return "{$this->first_name} {$this->last_name} {$this->ext_name}";
+        // }
 
-        return "{$this->first_name} {$this->middle_name} {$this->last_name} {$this->ext_name}";
+        // return "{$this->first_name} {$this->middle_name} {$this->last_name} {$this->ext_name}";
+        return "{$this->firstname} {$this->lastname}";
     }
 
     public function getContactNumbersStrAttribute() {

@@ -7,6 +7,7 @@ use App\EcommerceModel\ProductReview;
 use App\EcommerceModel\Cart;
 use App\User;
 use Carbon;
+use DB;
 use App\InventoryReceiverDetail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -256,4 +257,33 @@ class Product extends Model
 
         return $front;
     }
+
+    // Ryan
+    public function on_sale()
+    {
+        return $this->belongsTo('\App\StPaulModel\OnSaleProducts','id','product_id');
+    }
+
+    public function getDiscountedAmountAttribute()
+    {
+        $discount = '.'.$this->on_sale->promo_details->discount;
+
+        return ($this->price * $discount);
+    }
+
+    public function getDiscountedPriceAttribute()
+    {
+        return number_format(($this->price - $this->DiscountedAmount),2);
+    }
+
+    public static function onsale_checker($id)
+    {
+
+        $checkproduct = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','PUBLISHED')->where('promos.is_expire',0)->where('onsale_products.product_id',$id)->count();
+
+        return $checkproduct;
+    }
+
+    
+
 }

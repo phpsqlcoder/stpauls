@@ -2442,6 +2442,88 @@ p {
   color: #b82e24;
 }
 
+#cart-wrapper .cart-wrap .item .info-wrap .cart-quantity .quantity {
+  display: block;
+  margin: 0 0 10px;
+  position: relative;
+}
+
+#cart-wrapper .cart-wrap .item .info-wrap .cart-quantity .quantity .product-pcs {
+  height: 60px;
+  border: solid 1px #dfe3e9;
+  display: inline-block;
+  font-size: 1.05em;
+  font-weight: 500;
+  padding: 12px 25px;
+  margin-left: -1px;
+}
+
+#cart-wrapper .cart-wrap .item .info-wrap .cart-quantity .quantity input {
+  color: #443017;
+  background-color: #ffffff;
+  border: solid 1px #ced4da;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: .85em;
+  font-weight: 300;
+  max-width: 120px;
+  height: 38px;
+  float: left;
+  display: block;
+  padding: 0 30px 0 2px;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  -webkit-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out;
+}
+
+#cart-wrapper .cart-wrap .item .info-wrap .cart-quantity .quantity input:focus {
+  outline: 0;
+  border-color: #b82e24;
+}
+
+#cart-wrapper .cart-wrap .item .info-wrap .cart-quantity .quantity .quantity-nav {
+  float: left;
+  position: relative;
+  height: 38px;
+}
+
+#cart-wrapper .cart-wrap .item .info-wrap .cart-quantity .quantity .quantity-nav .quantity-button {
+  position: relative;
+  cursor: pointer;
+  border-left: 1px solid #ced4da;
+  width: 25px;
+  text-align: center;
+  color: #333;
+  font-size: 16px;
+  font-family: "Trebuchet MS", Helvetica, sans-serif !important;
+  line-height: 1;
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+#cart-wrapper .cart-wrap .item .info-wrap .cart-quantity .quantity .quantity-nav .quantity-button:active {
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+#cart-wrapper .cart-wrap .item .info-wrap .cart-quantity .quantity .quantity-nav .quantity-button.quantity-up {
+  position: absolute;
+  height: 50%;
+  top: 0;
+  border-bottom: 1px solid #ced4da;
+}
+
+#cart-wrapper .cart-wrap .item .info-wrap .cart-quantity .quantity .quantity-nav .quantity-button.quantity-down {
+  position: absolute;
+  bottom: 0px;
+  height: 50%;
+}
+
 #cart-wrapper .cart-wrap .item .info-wrap .cart-info {
   margin-top: 15px;
   width: 100%;
@@ -2954,7 +3036,7 @@ p {
 
 #form-wrapper {
   background: #efefef;
-  padding: 12px;
+  padding: 24px;
 }
 
 #form-wrapper form p {
@@ -2971,9 +3053,19 @@ p {
   border: 6px solid #3b5998;
 }
 
+.fb:hover {
+  background: #2d4373;
+  border-color: #2d4373;
+}
+
 .gl {
   background: #DB4437;
   border: 6px solid #DB4437;
+}
+
+.gl:hover {
+  background: #bd2e22;
+  border-color: #bd2e22;
 }
 
 #signup-wrapper h2 {

@@ -198,4 +198,19 @@ return [
         ],
     ],
 
+    // Added by Ryan 08/13/2020
+    'customers' => [
+        'status_success' => 'The customer has been :status.',
+    ],
+
+    'promos' => [
+        'create_success' => 'Promo has been added.',
+        'promo_update_success' => 'Selected promo status has been changed to :STATUS',
+        'single_delete_success' => 'The promo has been deleted.',
+        'promo_update_success' => 'Selected promo status has been changed to :STATUS',
+        'multiple_delete_success' => 'Selected promos has been deleted.',
+        'restore_promo_success' => 'Successfully restored the promo.',
+        'promo_update_details_success' => 'Promo details has been updated.'
+    ]
+
 ];

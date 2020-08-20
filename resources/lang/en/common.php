@@ -26,6 +26,7 @@ return [
 
     'no_selected_title' => 'Error',
     'no_selected' => 'Please select at least one (1) page.',
+    'no_product_selected' => 'Please select at least one (1) product.',
 
     'delete_confirmation_title' => 'Delete Item',
     'delete_mutiple_confirmation_title' => 'Delete Items',

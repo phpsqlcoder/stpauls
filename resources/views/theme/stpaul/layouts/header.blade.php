@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="rd-navbar-panel__right">
-                        <a href="cart.htm">
+                        <a href="{{ route('cart.front.show')}}">
                             <ul class="list-inline-primary">
                                 <li>
                                     <div class="unit flex-row align-items-center unit-spacing-xs">
@@ -71,7 +71,7 @@
                                     </div>
                                 </li>
                                 <li>
-                                    <p class="cart-header-counter">(3) Items</p>
+                                    <p class="cart-header-counter">(<span class="cart-counter">{!! Setting::EcommerceCartTotalItems() !!}</span>) Items</p>
                                 </li>
                             </ul>
                         </a>
@@ -89,11 +89,11 @@
                         </div>
                         <div class="col-lg-5">
                             <ul class="list-inline-secondary">
-                                <li><a href="">Register</a></li>
+                                <li><a href="{{ route('customer-front.sign-up') }}">Register @if(Auth::check()) {{ auth()->user()->id }} @endif</a></li>
                                 <li><a href="">Forgot Password</a></li>
                                 <li><a href="">Re-activate Account</a></li>
                                 <li>
-                                    <a class="acct-login-btn" href="login.htm">
+                                    <a class="acct-login-btn" href="{{ route('customer-front.login') }}">
                                         <i class="icon icon-xxxs icon-white lnr lnr-user"></i>
                                         <span class="acct-login-divider"></span>LOGIN
                                     </a>

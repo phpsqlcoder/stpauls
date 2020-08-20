@@ -313,56 +313,56 @@ $("#top").click(function() {
 
 // Quantity
 
-function customQuantity() {
-    /** Custom Input number increment js **/
-    jQuery(
-        '<div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div>'
-    ).insertAfter(".quantity input");
-    jQuery(".quantity").each(function() {
-        var spinner = jQuery(this),
-            input = spinner.find('input[type="number"]'),
-            btnUp = spinner.find(".quantity-up"),
-            btnDown = spinner.find(".quantity-down"),
-            min = input.attr("min"),
-            max = input.attr("max"),
-            valOfAmout = input.val(),
-            newVal = 0;
+// function customQuantity() {
+//     /** Custom Input number increment js **/
+//     jQuery(
+//         '<div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div>'
+//     ).insertAfter(".quantity input");
+//     jQuery(".quantity").each(function() {
+//         var spinner = jQuery(this),
+//             input = spinner.find('input[type="number"]'),
+//             btnUp = spinner.find(".quantity-up"),
+//             btnDown = spinner.find(".quantity-down"),
+//             min = input.attr("min"),
+//             max = input.attr("max"),
+//             valOfAmout = input.val(),
+//             newVal = 0;
 
-        btnUp.on("click", function() {
-            var varholder = input.val();
-            var oldValue = parseFloat(input.val());
+//         btnUp.on("click", function() {
+//             var varholder = input.val();
+//             var oldValue = parseFloat(input.val());
 
-            if (varholder === "") {
-                var newVal = 1;
-            } else {
-                if (oldValue >= max) {
-                    var newVal = oldValue;
-                } else {
-                    var newVal = oldValue + 1;
-                }
-            }
-            spinner.find("input").val(newVal);
-            spinner.find("input").trigger("change");
-        });
-        btnDown.on("click", function() {
-            var varholder = input.val();
-            var oldValue = parseFloat(input.val());
+//             if (varholder === "") {
+//                 var newVal = 1;
+//             } else {
+//                 if (oldValue >= max) {
+//                     var newVal = oldValue;
+//                 } else {
+//                     var newVal = oldValue + 1;
+//                 }
+//             }
+//             spinner.find("input").val(newVal);
+//             spinner.find("input").trigger("change");
+//         });
+//         btnDown.on("click", function() {
+//             var varholder = input.val();
+//             var oldValue = parseFloat(input.val());
 
-            if (varholder === "") {
-                var newVal = 1;
-            } else {
-                if (oldValue <= min) {
-                    var newVal = oldValue;
-                } else {
-                    var newVal = oldValue - 1;
-                }
-            }
-            spinner.find("input").val(newVal);
-            spinner.find("input").trigger("change");
-        });
-    });
-}
-customQuantity();
+//             if (varholder === "") {
+//                 var newVal = 1;
+//             } else {
+//                 if (oldValue <= min) {
+//                     var newVal = oldValue;
+//                 } else {
+//                     var newVal = oldValue - 1;
+//                 }
+//             }
+//             spinner.find("input").val(newVal);
+//             spinner.find("input").trigger("change");
+//         });
+//     });
+// }
+// customQuantity();
 
 // jQuery for Removing Product on Cart
 

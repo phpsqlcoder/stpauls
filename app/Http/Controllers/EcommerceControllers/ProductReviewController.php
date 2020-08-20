@@ -75,8 +75,8 @@ class ProductReviewController extends Controller
             'rating' => $request->rating,           
             'user_id' => Auth::id()           
         ]);
+        
         return back();
-        //return redirect()->route('products.index')->with('success', __('standard.products.product.create_success'));
     }
 
     public function restore($id){
