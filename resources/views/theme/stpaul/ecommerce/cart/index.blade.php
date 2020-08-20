@@ -65,7 +65,7 @@
                                             <div class="cart-quantity">
                                                 <label for="quantity">Quantity</label>
                                                 <div class="quantity">
-                                                    <input type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="{{ $product->Inventory }}" step="1" data-inc="1">
+                                                    <input type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="{{ $order->product->inventory }}" step="1" data-inc="1">
                                                     <div class="quantity-nav">
                                                         <div class="quantity-button quantity-up">+</div>
                                                         <div class="quantity-button quantity-down">-</div>
