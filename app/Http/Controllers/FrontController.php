@@ -29,37 +29,35 @@ class FrontController extends Controller
             abort(404);
         }
 
-        //$breadcrumb = $this->breadcrumb($page);
-
-        //$footer = Page::where('slug', 'footer')->where('name', 'footer')->first();
+        $breadcrumb = $this->breadcrumb($page);
 
         if (!empty($page->template)) {
 
             return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.'.$page->template, compact('page'))->withShortcodes();
         }
 
-        // $parentPage = null;
-        // if ($page->has_parent_page() || $page->has_sub_pages())
-        // {
-        //     if ($page->has_parent_page()) {
-        //         $parentPage = $page->parent_page;
-        //         while($parentPage->has_parent_page()) {
-        //             $parentPage = $parentPage->parent_page;
-        //         }
-        //     } else {
-        //         $parentPage = $page;
-        //     }
-        // }
+        $parentPage = null;
+        if ($page->has_parent_page() || $page->has_sub_pages())
+        {
+            if ($page->has_parent_page()) {
+                $parentPage = $page->parent_page;
+                while($parentPage->has_parent_page()) {
+                    $parentPage = $parentPage->parent_page;
+                }
+            } else {
+                $parentPage = $page;
+            }
+        }
 
-        // return view('theme.'.env('FRONTEND_TEMPLATE').'.page', compact('footer', 'page', 'parentPage','breadcrumb'))->withShortcodes();
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.page', compact('page', 'parentPage','breadcrumb'))->withShortcodes();
     }
 
-    // public function breadcrumb($page)
-    // {
-    //     return [
-    //         'home' => url('/'),
-    //         $page->name => url('/').'/'.$page->slug
-    //     ];
-    // }
+    public function breadcrumb($page)
+    {
+        return [
+            'home' => url('/'),
+            $page->name => url('/').'/'.$page->slug
+        ];
+    }
 
 }

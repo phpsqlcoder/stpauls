@@ -72,207 +72,219 @@ class ProductFrontController extends Controller
 
     }
     
-
-    public function list(Request $request) {
-        //logger($request);
-        // $page = new Page();
-        // $page->name = 'Order';
-        // $pageLimit = 16;
+    public function list($slug){
+        $category = ProductCategory::where('slug',$slug)->first();
 
         $page = new Page();
-        $page->name = 'Order';
-        $pageLimit = 40;
+        $page->name = $category->name;
 
-        if($request->has('search')){
-            $products = Product::whereStatus('PUBLISHED');
+        $products = Product::where('category_id',$category->id)->paginate(10);
+        $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->where('id','<>',$category->id)->get();
 
-            if(!empty($request->searchtxt)){  
-                $searchtxt = $request->searchtxt;      
-                $products = $products->where(function($query) use ($searchtxt){
-                        $query->where('name','like','%'.$searchtxt.'%')
-                            ->orWhere('description','like','%'.$searchtxt.'%');
-                        });
-            }
 
-            if(!empty($request->category)){            
-                $products = $products->whereIn('category_id',$request->category);
-            }
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-list',compact('products','page','categories'));
+    }    
 
-            if(!empty($request->brand)){            
-                $products = $products->whereIn('brand',$request->brand);
-            }
+    // public function list(Request $request) {
+    //     //logger($request);
+    //     // $page = new Page();
+    //     // $page->name = 'Order';
+    //     // $pageLimit = 16;
 
-            if(!empty($request->price)){
+    //     $page = new Page();
+    //     $page->name = 'Order';
+    //     $pageLimit = 40;
 
-                $priceConditions = '';
-                foreach($request->price as $price){
-                    $range = explode("-", $price);
-                    $priceConditions.=' or (price>='.$range[0].' and price<='.$range[1].')';
-                }
-                $priceConditions = "(".ltrim($priceConditions," or").")";
-                $products = $products->whereRaw($priceConditions);
+    //     if($request->has('search')){
+    //         $products = Product::whereStatus('PUBLISHED');
+
+    //         if(!empty($request->searchtxt)){  
+    //             $searchtxt = $request->searchtxt;      
+    //             $products = $products->where(function($query) use ($searchtxt){
+    //                     $query->where('name','like','%'.$searchtxt.'%')
+    //                         ->orWhere('description','like','%'.$searchtxt.'%');
+    //                     });
+    //         }
+
+    //         if(!empty($request->category)){            
+    //             $products = $products->whereIn('category_id',$request->category);
+    //         }
+
+    //         if(!empty($request->brand)){            
+    //             $products = $products->whereIn('brand',$request->brand);
+    //         }
+
+    //         if(!empty($request->price)){
+
+    //             $priceConditions = '';
+    //             foreach($request->price as $price){
+    //                 $range = explode("-", $price);
+    //                 $priceConditions.=' or (price>='.$range[0].' and price<='.$range[1].')';
+    //             }
+    //             $priceConditions = "(".ltrim($priceConditions," or").")";
+    //             $products = $products->whereRaw($priceConditions);
             
                 
-            }
+    //         }
 
-            if(!empty($request->sort)){            
-                if($request->sort == 'Price low to high'){
-                    $products = $products->orderBy('price','asc');
-                }
-                elseif($request->sort == 'Price high to low'){
-                    $products = $products->orderBy('price','desc');
-                }
-            }
+    //         if(!empty($request->sort)){            
+    //             if($request->sort == 'Price low to high'){
+    //                 $products = $products->orderBy('price','asc');
+    //             }
+    //             elseif($request->sort == 'Price high to low'){
+    //                 $products = $products->orderBy('price','desc');
+    //             }
+    //         }
 
-            if(!empty($request->limit)){ 
-                if($request->limit=='All')
-                    $pageLimit = 100000000;      
-                else
-                    $pageLimit = $request->limit;
-            }
-            $total_product = $products->count();
-            $products = $products->orderBy('name','asc')->paginate($pageLimit);
-        }
-        else{
-            $products = Product::whereStatus('PUBLISHED')
-                ->orderBy('name','asc')
-                ->orderBy('id','asc')
-                ->paginate($pageLimit);
-            $total_product = Product::whereStatus('PUBLISHED')
-                ->orderBy('name','asc')
-                ->orderBy('id','asc')->count();
-        }
-        // if(isset($_GET['type']) || isset($_GET['limit']) || isset($_GET['sort'])){
+    //         if(!empty($request->limit)){ 
+    //             if($request->limit=='All')
+    //                 $pageLimit = 100000000;      
+    //             else
+    //                 $pageLimit = $request->limit;
+    //         }
+    //         $total_product = $products->count();
+    //         $products = $products->orderBy('name','asc')->paginate($pageLimit);
+    //     }
+    //     else{
+    //         $products = Product::whereStatus('PUBLISHED')
+    //             ->orderBy('name','asc')
+    //             ->orderBy('id','asc')
+    //             ->paginate($pageLimit);
+    //         $total_product = Product::whereStatus('PUBLISHED')
+    //             ->orderBy('name','asc')
+    //             ->orderBy('id','asc')->count();
+    //     }
+    //     // if(isset($_GET['type']) || isset($_GET['limit']) || isset($_GET['sort'])){
 
-        //     if(isset($_GET['type'])){
+    //     //     if(isset($_GET['type'])){
 
-        //         if($_GET['type'] == 'searchbox'){
+    //     //         if($_GET['type'] == 'searchbox'){
 
-        //             $products = Product::where(function($query){
-        //                 $query->where('name','like','%'.$_GET['criteria'].'%')
-        //                     ->orWhere('description','like','%'.$_GET['criteria'].'%');
-        //             })->whereStatus('PUBLISHED');
-
-
-        //         }
-
-        //         elseif($_GET['type'] == 'brand'){
-
-        //             $products = Product::where(function($query){
-        //                 $query->where('brand','like','%'.$_GET['criteria'].'%');
-        //             })->whereStatus('PUBLISHED');
+    //     //             $products = Product::where(function($query){
+    //     //                 $query->where('name','like','%'.$_GET['criteria'].'%')
+    //     //                     ->orWhere('description','like','%'.$_GET['criteria'].'%');
+    //     //             })->whereStatus('PUBLISHED');
 
 
-        //         }
+    //     //         }
 
-        //         elseif($_GET['type'] == 'price'){
+    //     //         elseif($_GET['type'] == 'brand'){
 
-        //             $products = Product::where('price','>=',$_GET['price_start'])->where('price','<=',$_GET['price_end'])->whereStatus('PUBLISHED');
-
-        //         }
-        //         /*
-        //         elseif($_GET['type'] == 'rating'){
-
-        //             $prods = Product::whereStatus('PUBLISHED')->get();
-
-        //             $rs = [];
-        //             foreach($prods as $product){
-        //                 if($product->rating == $_GET['criteria']){
-        //                     array_push($rs,$product->id);
-        //                 }
-        //             }
-
-        //             $products = Product::whereIn('id',$rs);
-
-        //         }
-        //         */
-        //         elseif($_GET['type'] == 'category'){
-        //             if($_GET['criteria'] == 0) {
-        //                 $products = Product::where(function ($query) {
-        //                     $query->whereNull('category_id')->orWhere('category_id', '=', 0);
-        //                 })
-        //                     ->whereStatus('PUBLISHED');
-        //             }
-        //             else {
-        //                 $categoryId = (int) $request->criteria;
-        //                 $ids = [$categoryId];
-        //                 $category = ProductCategory::find($categoryId);
-        //                 $subCategories = $category->child_categories;
-        //                 if ($subCategories && $subCategories->count()) {
-        //                     $ids = $this->get_sub_categories_ids($ids, $subCategories);
-        //                 }
-
-        //                 $products = Product::whereIn('category_id', $ids)->whereStatus('PUBLISHED');
-        //             }
-        //         }
-        //         else{
-        //             $products = Product::whereStatus('PUBLISHED');
-
-        //         }
-
-        //     }
-        //     else{
-        //         $products = Product::whereStatus('PUBLISHED');
-        //     }
+    //     //             $products = Product::where(function($query){
+    //     //                 $query->where('brand','like','%'.$_GET['criteria'].'%');
+    //     //             })->whereStatus('PUBLISHED');
 
 
-        //     if(isset($_GET['sort'])){
-        //         if($_GET['sort'] == 'Price low to high'){
-        //             $products = $products->orderBy('price','asc');
-        //         }
-        //         elseif($_GET['sort'] == 'Price high to low'){
-        //             $products = $products->orderBy('price','desc');
-        //         }
-        //     }
+    //     //         }
 
-        //     if(isset($_GET['limit'])){
-        //         if($_GET['limit']=='All')
-        //             $pageLimit = 1000000;      
-        //         else
-        //             $pageLimit = $_GET['limit'];
-        //     }
+    //     //         elseif($_GET['type'] == 'price'){
 
-        //     $products = $products->orderBy('updated_at','desc')
-        //         ->orderBy('id','desc')
-        //         ->paginate($pageLimit);
+    //     //             $products = Product::where('price','>=',$_GET['price_start'])->where('price','<=',$_GET['price_end'])->whereStatus('PUBLISHED');
 
-        // }
-        // else{
-        //     $products = Product::whereStatus('PUBLISHED')
-        //         ->orderBy('updated_at','desc')
-        //         ->orderBy('id','desc')
-        //         ->paginate($pageLimit);
-        // }
+    //     //         }
+    //     //         /*
+    //     //         elseif($_GET['type'] == 'rating'){
 
-        /* End Search function */
+    //     //             $prods = Product::whereStatus('PUBLISHED')->get();
 
-        // Product Categories
-        $categories = ProductCategory::select('id', 'name')->where('parent_id', 0)->where('status', 'PUBLISHED')->orderBy('name')->get();
+    //     //             $rs = [];
+    //     //             foreach($prods as $product){
+    //     //                 if($product->rating == $_GET['criteria']){
+    //     //                     array_push($rs,$product->id);
+    //     //                 }
+    //     //             }
 
-        $brands = Product::distinct()->orderBy('brand')->get(['brand']);
+    //     //             $products = Product::whereIn('id',$rs);
 
-        $product = Product::where('status', 'PUBLISHED')->where(function($model) {
-            $model->orWhere('category_id', null);
-            $model->orWhere('category_id', 0);
-        })->orderBy('name')->count();
+    //     //         }
+    //     //         */
+    //     //         elseif($_GET['type'] == 'category'){
+    //     //             if($_GET['criteria'] == 0) {
+    //     //                 $products = Product::where(function ($query) {
+    //     //                     $query->whereNull('category_id')->orWhere('category_id', '=', 0);
+    //     //                 })
+    //     //                     ->whereStatus('PUBLISHED');
+    //     //             }
+    //     //             else {
+    //     //                 $categoryId = (int) $request->criteria;
+    //     //                 $ids = [$categoryId];
+    //     //                 $category = ProductCategory::find($categoryId);
+    //     //                 $subCategories = $category->child_categories;
+    //     //                 if ($subCategories && $subCategories->count()) {
+    //     //                     $ids = $this->get_sub_categories_ids($ids, $subCategories);
+    //     //                 }
 
-        if ($product) {
-            $uncategorized = new ProductCategory();
-            $uncategorized->id = 0;
-            $uncategorized->name = "Uncategorized";
-            $uncategorized->child_categories = null;
+    //     //                 $products = Product::whereIn('category_id', $ids)->whereStatus('PUBLISHED');
+    //     //             }
+    //     //         }
+    //     //         else{
+    //     //             $products = Product::whereStatus('PUBLISHED');
 
-            $categories->push($uncategorized);
+    //     //         }
 
-            $categories = $categories->sortBy(function ($category, $key) {
-                return strtolower($category->name);
-            });
-        }
-        // End Product Categories
+    //     //     }
+    //     //     else{
+    //     //         $products = Product::whereStatus('PUBLISHED');
+    //     //     }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-list',compact('brands','products','categories','total_product','page','request'));
 
-    }
+    //     //     if(isset($_GET['sort'])){
+    //     //         if($_GET['sort'] == 'Price low to high'){
+    //     //             $products = $products->orderBy('price','asc');
+    //     //         }
+    //     //         elseif($_GET['sort'] == 'Price high to low'){
+    //     //             $products = $products->orderBy('price','desc');
+    //     //         }
+    //     //     }
+
+    //     //     if(isset($_GET['limit'])){
+    //     //         if($_GET['limit']=='All')
+    //     //             $pageLimit = 1000000;      
+    //     //         else
+    //     //             $pageLimit = $_GET['limit'];
+    //     //     }
+
+    //     //     $products = $products->orderBy('updated_at','desc')
+    //     //         ->orderBy('id','desc')
+    //     //         ->paginate($pageLimit);
+
+    //     // }
+    //     // else{
+    //     //     $products = Product::whereStatus('PUBLISHED')
+    //     //         ->orderBy('updated_at','desc')
+    //     //         ->orderBy('id','desc')
+    //     //         ->paginate($pageLimit);
+    //     // }
+
+    //     /* End Search function */
+
+    //     // Product Categories
+    //     $categories = ProductCategory::select('id', 'name')->where('parent_id', 0)->where('status', 'PUBLISHED')->orderBy('name')->get();
+
+    //     $brands = Product::distinct()->orderBy('brand')->get(['brand']);
+
+    //     $product = Product::where('status', 'PUBLISHED')->where(function($model) {
+    //         $model->orWhere('category_id', null);
+    //         $model->orWhere('category_id', 0);
+    //     })->orderBy('name')->count();
+
+    //     if ($product) {
+    //         $uncategorized = new ProductCategory();
+    //         $uncategorized->id = 0;
+    //         $uncategorized->name = "Uncategorized";
+    //         $uncategorized->child_categories = null;
+
+    //         $categories->push($uncategorized);
+
+    //         $categories = $categories->sortBy(function ($category, $key) {
+    //             return strtolower($category->name);
+    //         });
+    //     }
+    //     // End Product Categories
+
+    //     return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-list',compact('brands','products','categories','total_product','page','request'));
+
+    // }
 
   
     public function get_sub_categories_ids($ids, $categories)

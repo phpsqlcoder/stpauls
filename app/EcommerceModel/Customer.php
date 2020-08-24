@@ -3,8 +3,6 @@
 namespace App\EcommerceModel;
 
 use App\Notifications\Ecommerce\CustomerResetPasswordNotification;
-use App\User;
-// use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -20,10 +18,6 @@ class Customer extends Authenticatable
     protected $table = 'customers';
     protected $fillable = ['email','password','firstname','lastname','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','fbId','googleId','is_subscriber','user_id','remember_token'];
 
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
 
     public function setIsEmailSubscriberAttribute($value)
     {
@@ -39,11 +33,6 @@ class Customer extends Authenticatable
         return json_decode($value, true);
     }
 
-    // public function getIsActiveAttribute()
-    // {
-    //     return $this->status == "active";
-    // }
-
     public function setContactNumbersAttribute($arrayValue)
     {
         $newValue = [];
@@ -58,7 +47,7 @@ class Customer extends Authenticatable
 
     public function send_reset_password_email()
     {
-        $token = app('auth.password.broker')->createToken($this->user);
+        $token = app('auth.password.broker')->createToken($this);
 
         $this->notify(new CustomerResetPasswordNotification($token));
     }
@@ -84,11 +73,7 @@ class Customer extends Authenticatable
     }
 
     public function getFullNameAttribute() {
-        // if (empty($this->middle_name)) {
-        //     return "{$this->first_name} {$this->last_name} {$this->ext_name}";
-        // }
 
-        // return "{$this->first_name} {$this->middle_name} {$this->last_name} {$this->ext_name}";
         return "{$this->firstname} {$this->lastname}";
     }
 
@@ -99,6 +84,13 @@ class Customer extends Authenticatable
     public function is_an_email_subscriber()
     {
         return $this->is_email_subscriber == 1;
+    }
+
+    public static function customer_username($id)
+    {
+        $qry = Customer::find($id);
+
+        return $qry->firstname.' '.$qry->lastname;
     }
 
 }

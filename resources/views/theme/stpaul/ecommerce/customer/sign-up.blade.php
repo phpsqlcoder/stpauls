@@ -1,6 +1,5 @@
 @extends('theme.'.env('FRONTEND_TEMPLATE').'.main')
 
-
 @section('content')
 <main>
     <section id="default-wrapper">

@@ -9,33 +9,29 @@ Route::get('facebook', function () {
 Route::get('auth/facebook', 'Auth\FacebookController@redirectToFacebook')->name('fb_signup');
 Route::get('auth/facebook/callback', 'Auth\FacebookController@handleFacebookCallback');
 
-Route::get('/home', 'HomeController@index')->name('fhome');
-
-
-
-
+//Route::get('/home', 'HomeController@index')->name('fhome');
 
 
 // Home
 Route::get('/', 'FrontController@home')->name('home');
 
-Route::get('/products/{slug}', 'Product\Front\ProductFrontController@show')->name('product.front.show');
-Route::view('/product-listing','theme.stpaul.pages.product-listing');
-//Route::get('/', 'FrontController@home')->name('home');
 
 
 ########## ECOMMERCE ROUTES #############
-    // Customer Sign Up
+    // Customer Login & Sign Up
         Route::get('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@sign_up')->name('customer-front.sign-up');
         Route::post('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@customer_sign_up')->name('customer-front.customer-sign-up');
 
         Route::get('myform/ajax/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
-    //
 
-    // Customer Login
         Route::get('/login', 'EcommerceControllers\CustomerFrontController@login')->name('customer-front.login');
         Route::post('/login', 'EcommerceControllers\CustomerFrontController@customer_login')->name('customer-front.customer_login');
         Route::get('/customer-logout', 'EcommerceControllers\CustomerFrontController@logout')->name('customer.logout');
+
+        Route::get('/forgot-password', 'EcommerceControllers\EcommerceFrontController@forgot_password')->name('ecommerce.forgot_password');
+        Route::post('/forgot-password', 'EcommerceControllers\EcommerceFrontController@sendResetLinkEmail')->name('ecommerce.send_reset_link_email');
+        Route::get('/reset-password/{token}', 'EcommerceControllers\EcommerceFrontController@showResetForm')->name('ecommerce.reset_password');
+        Route::post('/reset-password', 'EcommerceControllers\EcommerceFrontController@reset')->name('ecommerce.reset_password_post');
 
     //
 
@@ -47,6 +43,20 @@ Route::view('/product-listing','theme.stpaul.pages.product-listing');
         Route::post('cart/batch_update','EcommerceControllers\CartController@batch_update')->name('cart.front.batch_update');
         Route::post('cart/remove-product','EcommerceControllers\CartController@remove_product')->name('cart.remove_product');
     //
+
+    // Products
+        Route::get('/product-info/{slug}', 'Product\Front\ProductFrontController@show')->name('product.front.show');
+        Route::get('/products/{category}','Product\Front\ProductFrontController@list')->name('product.front.list');
+    //
+
+
+
+
+
+
+
+
+
 
     Route::group(['middleware' => ['authenticated']], function () {
         Route::get('/checkout', 'EcommerceControllers\CheckoutController@checkout')->name('cart.front.checkout');
@@ -106,19 +116,14 @@ Route::get('/albums/preview', 'FrontController@test')->name('albums.preview');
 
 
 //Product Frontend
-Route::any('/shop', 'Product\Front\ProductFrontController@list')->name('product.front.list');
+//Route::any('/shop', 'Product\Front\ProductFrontController@list')->name('product.front.list');
 //Route::post('/shop', 'Product\Front\ProductFrontController@list_search')->name('product.front.list_post');
-Route::get('/products/{slug}', 'Product\Front\ProductFrontController@show')->name('product.front.show');
 
 //Cart
 
 
 Route::post('/payment-notification', 'EcommerceControllers\CartController@receive_data_from_payment_gateway')->name('cart.payment-notification');
 
-Route::get('/forgot-password', 'EcommerceControllers\EcommerceFrontController@forgot_password')->name('ecommerce.forgot_password');
-Route::post('/forgot-password', 'EcommerceControllers\EcommerceFrontController@sendResetLinkEmail')->name('ecommerce.send_reset_link_email');
-Route::get('/reset-password/{token}', 'EcommerceControllers\EcommerceFrontController@showResetForm')->name('ecommerce.reset_password');
-Route::post('/reset-password', 'EcommerceControllers\EcommerceFrontController@reset')->name('ecommerce.reset_password_post');
 
 
 

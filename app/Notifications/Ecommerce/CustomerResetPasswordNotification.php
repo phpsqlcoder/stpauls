@@ -3,7 +3,7 @@
 namespace App\Notifications\Ecommerce;
 
 use App\Helpers\Webfocus\Setting;
-use App\Mail\Ecommerce\CustomerResetPasswordMail;
+use App\Mail\CustomerResetPasswordMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;

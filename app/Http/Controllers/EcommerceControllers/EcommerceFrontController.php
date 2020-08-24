@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
+use App\EcommerceModel\Customer;
+
 class EcommerceFrontController extends Controller
 {
     public function profile(Request $request)
@@ -150,15 +152,10 @@ class EcommerceFrontController extends Controller
     public function sendResetLinkEmail(Request $request)
     {
         $request->validate(
-            ['email' => ['required', 'email', Rule::exists('users', 'email')
-                ->where(function ($query) {
-                        $query->whereIn('role_id', ['2']);
-                    })
-                ]
-            ]
+            ['email' => ['required', 'email'] ]
         );
 
-        $user = User::where('email', $request->email)->first();
+        $user = Customer::where('email', $request->email)->first();
 
         $user->send_reset_password_email();
 

@@ -18,7 +18,7 @@ class ProductPhotoSeeder extends Seeder
                 'product_id' => '1',
                 'name' => '',
                 'description' => '',
-                'path' => '1/190c0ed631ff9203aa55d20a4f62fde1.jpg',
+                'path' => '1/new-testament.jpg',
                 'status' => 'PUBLISHED',
                 'is_primary' => '1',
                 'created_by' => 1
@@ -55,7 +55,7 @@ class ProductPhotoSeeder extends Seeder
                 'product_id' => '2',
                 'name' => '',
                 'description' => '',
-                'path' => '2/190c0ed631ff9203aa55d20a4f62fde2.jpg',
+                'path' => '2/new-testament.jpg',
                 'status' => 'PUBLISHED',
                 'is_primary' => '1',
                 'created_by' => 1
@@ -92,7 +92,7 @@ class ProductPhotoSeeder extends Seeder
                 'product_id' => '3',
                 'name' => '',
                 'description' => '',
-                'path' => '3/190c0ed631ff9203aa55d20a4f62fde3.jpg',
+                'path' => '3/new-testament.jpg',
                 'status' => 'PUBLISHED',
                 'is_primary' => '1',
                 'created_by' => 1
@@ -129,7 +129,7 @@ class ProductPhotoSeeder extends Seeder
                 'product_id' => '4',
                 'name' => '',
                 'description' => '',
-                'path' => '4/190c0ed631ff9203aa55d20a4f62fde4.jpg',
+                'path' => '4/new-testament.jpg',
                 'status' => 'PUBLISHED',
                 'is_primary' => '1',
                 'created_by' => 1
@@ -166,7 +166,7 @@ class ProductPhotoSeeder extends Seeder
                 'product_id' => '5',
                 'name' => '',
                 'description' => '',
-                'path' => '5/190c0ed631ff9203aa55d20a4f62fde5.jpg',
+                'path' => '5/new-testament.jpg',
                 'status' => 'PUBLISHED',
                 'is_primary' => '1',
                 'created_by' => 1
@@ -203,7 +203,7 @@ class ProductPhotoSeeder extends Seeder
                 'product_id' => '6',
                 'name' => '',
                 'description' => '',
-                'path' => '6/190c0ed631ff9203aa55d20a4f62fde6.jpg',
+                'path' => '6/new-testament.jpg',
                 'status' => 'PUBLISHED',
                 'is_primary' => '1',
                 'created_by' => 1
@@ -240,7 +240,7 @@ class ProductPhotoSeeder extends Seeder
                 'product_id' => '7',
                 'name' => '',
                 'description' => '',
-                'path' => '7/190c0ed631ff9203aa55d20a4f62fde7.jpg',
+                'path' => '7/new-testament.jpg',
                 'status' => 'PUBLISHED',
                 'is_primary' => '1',
                 'created_by' => 1
@@ -277,7 +277,7 @@ class ProductPhotoSeeder extends Seeder
                 'product_id' => '8',
                 'name' => '',
                 'description' => '',
-                'path' => '8/190c0ed631ff9203aa55d20a4f62fde8.jpg',
+                'path' => '8/new-testament.jpg',
                 'status' => 'PUBLISHED',
                 'is_primary' => '1',
                 'created_by' => 1

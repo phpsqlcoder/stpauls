@@ -89,15 +89,20 @@
                         </div>
                         <div class="col-lg-5">
                             <ul class="list-inline-secondary">
-                                <li><a href="{{ route('customer-front.sign-up') }}">Register @if(Auth::check()) {{ auth()->user()->id }} @endif</a></li>
-                                <li><a href="">Forgot Password</a></li>
-                                <li><a href="">Re-activate Account</a></li>
-                                <li>
-                                    <a class="acct-login-btn" href="{{ route('customer-front.login') }}">
-                                        <i class="icon icon-xxxs icon-white lnr lnr-user"></i>
-                                        <span class="acct-login-divider"></span>LOGIN
-                                    </a>
-                                </li>
+                                @if(Auth::check())
+                                    <li><a href="">Change Password</a></li>
+                                    <li><a href="" class="active-user">{{ \App\EcommerceModel\Customer::customer_username(auth()->user()->id) }}</a></li>
+                                @else
+                                    <li><a href="{{ route('customer-front.sign-up') }}">Register</a></li>
+                                    <li><a href="{{ route('ecommerce.forgot_password') }}">Forgot Password</a></li>
+                                    <li><a href="">Re-activate Account</a></li>
+                                    <li>
+                                        <a class="acct-login-btn" href="{{ route('customer-front.login') }}">
+                                            <i class="icon icon-xxxs icon-white lnr lnr-user"></i>
+                                            <span class="acct-login-divider"></span>LOGIN
+                                        </a>
+                                    </li>
+                                @endif   
                             </ul>
                         </div>
                     </div>
