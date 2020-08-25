@@ -155,6 +155,14 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
             Route::get('/admin/promo-restore/{id}', 'Promo\PromoController@restore')->name('promo.restore');
         //
 
+        // Product review
+            Route::get('/product-review/', 'EcommerceControllers\ProductReviewController@index')->name('product-review.list');
+            Route::post('/product-review/single-approve', 'EcommerceControllers\ProductReviewController@single_approve')->name('product-review.single-approve');
+            Route::post('/product-review/single-delete', 'EcommerceControllers\ProductReviewController@single_delete')->name('product-review.single-delete');
+            Route::get('/product-review/restore/{id}', 'EcommerceControllers\ProductReviewController@restore')->name('product-review.restore');
+            Route::post('/product-review-multiple-delete','EcommerceControllers\ProductReviewController@multiple_delete')->name('product-review.multiple.delete');
+            Route::post('/product-review-multiple-approve','EcommerceControllers\ProductReviewController@multiple_approve')->name('product-review.multiple-approve');      
+        //
 
 
 
@@ -205,13 +213,7 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
         Route::resource('/admin/sales-transaction', 'EcommerceControllers\SalesController');
         Route::resource('/admin/deliveryrate', 'EcommerceControllers\DeliveryRateController');
 
-        //product review
-        Route::get('/product-review/', 'EcommerceControllers\ProductReviewController@index')->name('product-review.list');
-        Route::get('/product-review-advance-search/', 'EcommerceControllers\ProductReviewController@advance_index')->name('product-review.list.advance-search');
-        Route::post('/product-review/quick', 'EcommerceControllers\ProductReviewController@change_status')->name('product-review.change_status');
-        Route::post('/product-review/', 'EcommerceControllers\ProductReviewController@quick_update')->name('product-review.quick_update');
-        Route::post('/product-review/delete', 'EcommerceControllers\ProductReviewController@delete')->name('product-review.delete');
-        Route::get('/product-review/restore/{id}', 'EcommerceControllers\ProductReviewController@restore')->name('product-review.restore');
+        
 
         //Pages
         Route::resource('/pages', 'PageController');

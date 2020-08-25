@@ -27,7 +27,7 @@
                                 <h3 class="listing-category-title">Categories</h3>
                                 <ul class="listing-category">
                                     @foreach($categories as $category)
-                                    <li><a href="">{{ $category->name }}</a></li>
+                                    <li><a href="{{ route('product.front.list',$category->slug) }}">{{ $category->name }}</a></li>
                                     @endforeach
                                 </ul>
                                 <a class="listing-view-link" href="">View all categories under Books</a>

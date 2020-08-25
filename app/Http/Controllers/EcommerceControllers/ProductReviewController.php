@@ -12,58 +12,21 @@ use Auth;
 
 class ProductReviewController extends Controller
 {
-    public function index()
+    private $searchFields = ['product_id','rating'];
+
+    public function index($param = null)
     {
-        $orderDefault = ['id', 'status'];
-        $orderDefault = 'created_at';
+        
+        $listing = new ListingHelper('desc', 10, 'updated_at');
 
-        $perPage = $this->get_count_per_page();
-        $orderBy = $this->get_selected_order_by($orderDefault);
-        $sortBy = $this->get_selected_sort_by();
-        $showDeleted = $this->show_delete_data();
-        $search = $this->get_search_string();
+        $reviews = $listing->simple_search(ProductReview::class, $this->searchFields);
 
-        $filter = [
-            'perPage' => $perPage,
-            'orderBy' => $orderBy,
-            'sortBy' => $sortBy,
-            'showDeleted' => $showDeleted,
-            'search' => $search
-        ];
+        // Simple search init data
+        $filter = $listing->get_filter($this->searchFields);
+        $searchType = 'simple_search';
 
+        return view('admin.product-review.index',compact('reviews', 'filter', 'searchType'));
 
-        if ($showDeleted == 'on') {
-            $reviews = ProductReview::withTrashed()->where('product_id', 'like', '%' . $search . '%')->orderBy($orderBy, $sortBy)->paginate($perPage);
-        } else {
-            $reviews = ProductReview::where('product_id', 'like', '%' . $search . '%')->orderBy($orderBy, $sortBy)->paginate($perPage);
-        }
-
-        if (isset($param['search_user'])) {
-            $reviews->where('created_by', '=', $param['search_user']);
-        }
-
-        $all_reviews = ProductReview::withTrashed()->get();
-       
-        return view('admin.product-review.index', compact('reviews', 'perPage', 'orderBy', 'sortBy', 'filter', 'search', 'showDeleted', 'all_reviews'));
-
-    }
-    public function edit($id)
-    {
-        $reviews = ProductReview::findOrFail($id);
-
-        return view('admin.product-review.index',compact('reviews'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $reviews = ProductReview::findOrFail($id);
-
-        $reviews->update([
-            'status' => $request->status,
-            'updated_at' => auth()->user()->id
-        ]);
-
-        return back()->with('success', 'update success');
     }
 
     public function store(Request $request)
@@ -73,95 +36,65 @@ class ProductReviewController extends Controller
             'product_id' => $request->product_id,
             'review' => $request->review,
             'rating' => $request->rating,           
-            'user_id' => Auth::id()           
+            'customer_id' => Auth::id()           
         ]);
         
         return back();
     }
 
-    public function restore($id){
-        ProductReview::withTrashed()->find($id)->update(['created_by' => auth()->user()->id ]);
-        ProductReview::whereId($id)->restore();
+    public function single_approve(Request $request)
+    {
+        $review = ProductReview::findOrFail($request->reviews)->update([
+            'is_approved' => 1,
+            'approver' => auth()->user()->id,
+            'approved_date' => now()
+        ]);
 
-        return back()->with('success', 'The Review Request has been restored.');
-
+        return back()->with('success', __('standard.product-review.single_approve_success'));
     }
 
-    public function change_status(Request $request)
+    public function single_delete(Request $request)
     {
-        $reviews = explode("|", $request->pages);
+        $review = ProductReview::findOrFail($request->reviews);
+        $review->update([ 'user_id' => auth()->user()->id ]);
+        $review->delete();
 
-        foreach ($reviews as $reviews) {
-            $publish = ProductReview::where('is_approved', '!=', 1)
-            ->whereId($reviews)
-            ->update([
-                'is_approved'  => 1,
+        return back()->with('success', __('standard.product-review.single_delete_success'));
+    }
+
+    public function restore($id){
+        $review = ProductReview::withTrashed()->find($id);
+        $review->update(['user_id' => auth()->user()->id ]);
+        $review->restore();
+
+        return back()->with('success', __('standard.product-review.restore_success'));
+
+    }
+    
+    public function multiple_delete(Request $request)
+    {
+        $reviews = explode("|",$request->reviews);
+
+        foreach($reviews as $review){
+            ProductReview::whereId($review)->update(['user_id' => Auth::id() ]);
+            ProductReview::whereId($review)->delete();
+        }
+
+        return back()->with('success', __('standard.product-review.multiple_delete_success'));
+    }
+
+    public function multiple_approve(Request $request)
+    {
+        $reviews = explode("|",$request->reviews);
+
+        foreach($reviews as $review){
+            ProductReview::whereId($review)->update([
+                'is_approved' => 1,
                 'approver' => auth()->user()->id,
                 'approved_date' => now()
             ]);
         }
 
-        return back()->with('success',  __('The review status has been changed to Approved.'));
-
-//        return 'dsds';
-    }
-
-    public function destroy(Request $request)
-    {
-        $review = ProductReview::findOrFail($request->id);
-        $review->update([ 'created_by' => auth()->user()->id ]);
-        $review->delete();
-
-        return back()->with('success','The Product Review has been deleted');
-    }
-
-    public function delete(Request $request)
-    {
-        $reviews = explode("|", $request->pages);
-        foreach ($reviews as $review) {
-            $review = ProductReview::where('id', '=', $review)->delete();
-        }
-
-        return back()->with('success', 'The Product Review has been deleted.');
-    }
-
-    public function approve_review(Request $request)
-    {
-        $productReview = ProductReview::findOrFail($request->id);
-
-        $mytime = Carbon::now();
-
-        $productReview->update(['is_approved' => 1, 'approver' => auth()->id(), 'approved_date' => $mytime->toDateTimeString()]);
-
-        return redirect()->back();
-    }
-
-//
-    public function get_count_per_page($default = 10)
-    {
-        $perPage = request('perPage') && is_numeric(request('perPage')) ? request('perPage') : $default;
-        return ($perPage > 100) ? 100 : $perPage;
-    }
-
-    public function get_selected_order_by($orderDefault = 'updated_at')
-    {
-        $orderBys = ['id', 'question', 'status'];
-        return request('orderBy') && in_array(request('orderBy'), $orderBys) ? request('orderBy') : $orderDefault;
-    }
-
-    public function get_selected_sort_by($default = 'desc')
-    {
-        $sortBy = request('sortBy') ?? $default;
-        return $sortBy == 'asc' ? 'asc' : 'desc';
-    }
-
-    public function get_search_string()
-    {
-        return request('search') ?? '';
-    }
-
-    public function show_delete_data()
-    {
-        return (request('showDeleted') && request('showDeleted') == 'on') ? 'on' : '';
+        return back()->with('success', __('standard.product-review.multiple_approve_success'));
     }
 }

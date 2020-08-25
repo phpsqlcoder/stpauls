@@ -24,7 +24,12 @@ class ProductFrontController extends Controller
         }
 
         // added by Ryan 08/07/2020
-        $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->where('id','<>',$product->category_id)->get();
+        $categories = 
+            ProductCategory::where('parent_id',0)
+            ->where('status','PUBLISHED')
+            ->where('id','<>',$product->category_id)
+            ->orderBy('name','asc')
+            ->get();
         //
 
         $page = $product;
@@ -79,7 +84,12 @@ class ProductFrontController extends Controller
         $page->name = $category->name;
 
         $products = Product::where('category_id',$category->id)->paginate(10);
-        $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->where('id','<>',$category->id)->get();
+        $categories = 
+            ProductCategory::where('parent_id',0)
+            ->where('status','PUBLISHED')
+            ->where('id','<>',$category->id)
+            ->orderBy('name','asc')
+            ->get();
 
 
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-list',compact('products','page','categories'));

@@ -202,6 +202,14 @@
 
                 <div class="gap-70"></div>
 
+                @php
+                    $onsale_items = \App\StPaulModel\OnSaleProducts::join('promos','promos.id','=','onsale_products.promo_id')->where('promos.status', 'PUBLISHED')->where('promos.is_expire',0);
+
+                    $count = $onsale_items->count();
+                    $onsale_products = $onsale_items->get();
+                @endphp
+
+                @if($count > 0)
                 <!-- Home Item on Sale Section -->
                 <div class="category-nav-2">
                     <div class="owl-product-nav">
@@ -215,21 +223,17 @@
 
                 <!-- Item on Sale Content -->
                 <div id="owl-product-5" class="owl-carousel owl-theme">
-                    @php
-                        $on_sale_items = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
-                    @endphp
-
-                    @foreach($on_sale_items as $item)
+                    @foreach($onsale_products as $product)
                         <div class="product-link">
                             <div class="product-card">
                                 <a href="{{ route('product.front.show',$b['slug'])}}">
-                                    <img src="{{ asset('storage/products/'.$item->photoPrimary) }}" alt="" />
-                                    <h3 class="product-price">Php {{ $item->getPriceWithCurrencyAttribute() }}</h3>
+                                    <img src="{{ asset('storage/products/'.$product->details->photoPrimary) }}" alt="" />
+                                    <h3 class="product-price">Php {{ $product->details->pricewithcurrency }}</h3>
                                 </a>
-                                <p class="product-title">{{ $item->name }}</p>
+                                <p class="product-title">{{ $product->details->name }}</p>
                                 <form>
-                                    @if($item->inventory > 0)
-                                        <button type="button" onclick="add_to_cart('{{$item->id}}');" id="btn{{$item->id}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                    @if($product->details->inventory > 0)
+                                        <button type="button" onclick="add_to_cart('{{$product->product_id}}');" id="btn{{$product->product_id}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
                                             <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                         </button>
                                     @else
@@ -242,6 +246,7 @@
                         </div>
                     @endforeach
                 </div>
+                @endif
                 <!-- END Item on Sale Content -->
                 <!-- END Home Item on Sale Section -->
 

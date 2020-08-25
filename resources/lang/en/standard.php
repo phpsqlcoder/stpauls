@@ -211,6 +211,14 @@ return [
         'multiple_delete_success' => 'Selected promos has been deleted.',
         'restore_promo_success' => 'Successfully restored the promo.',
         'promo_update_details_success' => 'Promo details has been updated.'
+    ],
+
+    'product-review' => [
+        'single_approve_success' => 'Selected review has been approved.',
+        'single_delete_success' => 'Selected review has been deleted.',
+        'restore_success' => 'Successfully restored the product review',
+        'multiple_delete_success' => 'Selected reviews has been deleted.',
+        'multiple_approve_success' => 'Selected reviews has been approved.',
     ]
 
 ];

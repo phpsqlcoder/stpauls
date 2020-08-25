@@ -10,12 +10,16 @@
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/pygments.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/easyzoom.css') }}" />
 
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/owl.carousel/owl.theme.default.min.css') }}" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 @endsection
 
 @section('content')
 <main>
     <section id="product-wrapper">
+    <!-- <section id="home-body"> -->
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
@@ -25,7 +29,7 @@
                         <h3 class="listing-category-title">Categories</h3>
                         <ul class="listing-category">
                             @foreach($categories as $category)
-                            <li><a href="">{{ $category->name }}</a></li>
+                            <li><a href="{{ route('product.front.list',$category->slug) }}">{{ $category->name }}</a></li>
                             @endforeach
                         </ul>
                         <a class="listing-view-link" href="">View all categories under {{ $product->category->name }}</a>
@@ -47,7 +51,7 @@
                                 <span class="fa fa-star checked"></span>
                                 <span class="fa fa-star checked"></span>
                                 <span class="fa fa-star checked"></span>
-                                <span class="rating-count">561</span>
+                                <span class="rating-count">{{\App\EcommerceModel\ProductReview::review_counter($product->id,5)}}</span>
                             </a>
                         </div>
                         <div class="rating">
@@ -57,7 +61,7 @@
                                 <span class="fa fa-star checked"></span>
                                 <span class="fa fa-star checked"></span>
                                 <span class="fa fa-star"></span>
-                                <span class="rating-count">459</span>
+                                <span class="rating-count">{{\App\EcommerceModel\ProductReview::review_counter($product->id,4)}}</span>
                             </a>
                         </div>
                         <div class="rating">
@@ -67,7 +71,7 @@
                                 <span class="fa fa-star checked"></span>
                                 <span class="fa fa-star"></span>
                                 <span class="fa fa-star"></span>
-                                <span class="rating-count">200</span>
+                                <span class="rating-count">{{\App\EcommerceModel\ProductReview::review_counter($product->id,3)}}</span>
                             </a>
                         </div>
                         <div class="rating">
@@ -77,7 +81,7 @@
                                 <span class="fa fa-star"></span>
                                 <span class="fa fa-star"></span>
                                 <span class="fa fa-star"></span>
-                                <span class="rating-count">2</span>
+                                <span class="rating-count">{{\App\EcommerceModel\ProductReview::review_counter($product->id,2)}}</span>
                             </a>
                         </div>
                         <div class="rating">
@@ -87,7 +91,7 @@
                                 <span class="fa fa-star"></span>
                                 <span class="fa fa-star"></span>
                                 <span class="fa fa-star"></span>
-                                <span class="rating-count">12</span>
+                                <span class="rating-count">{{\App\EcommerceModel\ProductReview::review_counter($product->id,1)}}</span>
                             </a>
                         </div>
                     </div>
@@ -151,7 +155,7 @@
                                                 <span class="fa fa-star checked"></span>
                                                 <span class="fa fa-star checked"></span>
                                                 <span class="fa fa-star checked"></span>
-                                                <span class="rating-count">(23) Customer ratings</span>
+                                                <span class="rating-count">({{\App\EcommerceModel\ProductReview::review_counter($product->id,5)}}) Customer ratings</span>
                                             </div>
                                             <p>{{ $product->additional_info->authors }} | Product Name: {{ $product->name }}</p>
                                             @if(\App\EcommerceModel\Product::onsale_checker($product->id) > 0)
@@ -164,6 +168,7 @@
                                                 </div>
                                             @else
                                                 <div class="product-price">
+                                                    <input type="hidden" id="product_price" value="{{ $product->price }}">
                                                     <span class="price-after">₱ {{ $product->PriceWithCurrency }} </span>
                                                 </div>
                                             @endif
@@ -213,6 +218,7 @@
                         </div>
                     </div>
                     <div class="gap-30"></div>
+                    
                     <div class="product-additional">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
@@ -265,6 +271,82 @@
                                     <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/comment.png" />
                                     <p>There are no reviews yet.<br />Be the first to review “{{ $product->name }}”</p>
                                 </div>
+
+                                <!-- START REVIEW WRAP -->
+                                <div class="review-wrap">
+                                    <div class="review-body">
+                                        <div class="vcard">
+                                            <h3>Angelina Shtolz</h3>
+                                            <span>July 7, 2018</span>
+                                        </div>
+                                      
+                                        <div class="rating small">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                        </div>
+                                      
+                                        <div class="gap-10"></div>
+                                      
+                                        <p>
+                                            Eat imagine you chiefly few end ferrars compass. Be visitor females am ferrars inquiry. Latter law remark two
+                                            lively thrown. Spot set they know rest its. Raptures law diverted believed jennings consider children the see. Had
+                                            invited beloved carried the colonel. Occasional principles discretion it as he unpleasing boisterous. She bed sing
+                                            dear now son half.
+                                        </p>
+                                    </div>
+              
+                                    <div class="review-body">
+                                        <div class="vcard">
+                                            <h3>Angelina Shtolz</h3>
+                                            <span>July 7, 2018</span>
+                                        </div>
+                                    
+                                        <div class="rating small">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                        </div>
+                                    
+                                        <div class="gap-10"></div>
+                                    
+                                        <p>
+                                            Eat imagine you chiefly few end ferrars compass. Be visitor females am ferrars inquiry. Latter law remark two
+                                            lively thrown. Spot set they know rest its. Raptures law diverted believed jennings consider children the see. Had
+                                            invited beloved carried the colonel. Occasional principles discretion it as he unpleasing boisterous. She bed sing
+                                            dear now son half.
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="gap-20"></div>
+
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" title="Back"><i class="lnr lnr-chevron-left"></i></a>
+                                        </li>
+                                        <li class="page-item active">
+                                            <a class="page-link" href="#">1</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">2</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">3 <span class="sr-only">(current)</span></a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">4</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" title="Next"><i class="lnr lnr-chevron-right"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!-- END REVIEW WRAP -->
+
                                 <div class="gap-40"></div>
                                 <form method="post" action="{{ route('product.review.store') }}">
                                     @csrf
@@ -294,60 +376,49 @@
                     </div>
 
                     <div class="gap-80"></div>
-                    <div class="product-related">
-                        <h2 class="listing-title">Related Products</h2>
-                        <div class="gap-10"></div>
-                        <div class="row">
-                            <div class="col-md-4 col-sm-6 item">
-                                <div class="product-link">
-                                    <div class="product-card">
-                                        <a href="product-profile.htm">
-                                            <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/book1.jpg" alt="" />
-                                            <h3 class="product-price">Php 180.00</h3>
-                                        </a>
-                                        <p class="product-title">The Friend of the Bridegroom</p>
-                                        <form id="addToCart1" data-source="addToCart">
-                                            <button type="button" class="btn add-cart-alt1-btn addToCartButton" data-loading-text="processing...">
-                      <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/cart.png" alt=""> Add to cart
-                    </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-6 item">
-                                <div class="product-link">
-                                    <div class="product-card">
-                                        <a href="">
-                                            <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/book1.jpg" alt="" />
-                                            <h3 class="product-price">Php 180.00</h3>
-                                        </a>
-                                        <p class="product-title">The Friend of the Bridegroom</p>
-                                        <form id="addToCart2" data-source="addToCart">
-                                            <button type="button" class="btn add-cart-alt1-btn addToCartButton" data-loading-text="processing...">
-                      <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/cart.png" alt=""> Add to cart
-                    </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-6 item">
-                                <div class="product-link">
-                                    <div class="product-card">
-                                        <a href="">
-                                            <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/book1.jpg" alt="" />
-                                            <h3 class="product-price">Php 180.00</h3>
-                                        </a>
-                                        <p class="product-title">The Friend of the Bridegroom</p>
-                                        <form id="addToCart3" data-source="addToCart">
-                                            <button type="button" class="btn add-cart-alt1-btn addToCartButton" data-loading-text="processing...">
-                      <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/cart.png" alt=""> Add to cart
-                    </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                    @php
+                        $related_products = \App\EcommerceModel\ProductTag::related_products($product->id);
+                    @endphp
+
+                    @if($related_products)
+                    <!-- Home Item on Sale Section -->
+                    <div class="category-nav-2">
+                        <div class="owl-product-nav">
+                            <a href="" class="owl-item-sale-prev"><span class="lnr lnr-arrow-left"></span></a>
+                            <a href="" class="owl-item-sale-next"><span class="lnr lnr-arrow-right"></span></a>
                         </div>
                     </div>
+                    <h2 class="category-title"><span>Related Products</span></h2>
+                    <div class="gap-40"></div>
+
+                    <div id="owl-product-5" class="owl-carousel owl-theme">
+                        @foreach(explode('|',$related_products) as $rproduct)
+                            @php
+                                $product_info = \App\EcommerceModel\Product::find($rproduct);
+                            @endphp
+                            <div class="product-link">
+                                <div class="product-card">
+                                    <a href="{{ route('product.front.show',$product_info->slug)}}">
+                                        <img src="{{ asset('storage/products/'.$product_info->photoPrimary) }}" alt="" />
+                                        <h3 class="product-price">Php {{ $product_info->pricewithcurrency }}</h3>
+                                    </a>
+                                    <p class="product-title">{{ $product_info->name }}</p>
+                                    <form>
+                                        @if($product_info->inventory > 0)
+                                            <button type="button" onclick="add_to_cart('{{$product_info->id}}');" id="btn{{$product_info->id}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                                <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn add-cart-btn addToCartButton">
+                                                Out of Stock
+                                            </button>
+                                        @endif
+                                    </form>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -365,9 +436,21 @@
     <script src="{{ asset('theme/stpaul/js/better-rating.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/easyzoom/src/easyzoom.js') }}"></script>
 
+    <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.extension.js') }}"></script>
+    <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.js') }}"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
     <script>
+        $(".js-range-slider").ionRangeSlider({
+            type: "double",
+            grid: true,
+            min:0,
+            max:1000,
+            from: 0,
+            to: $('#product_price').val()
+        });
+
         // Instantiate EasyZoom instances
         var $easyzoom = $('.easyzoom').easyZoom();
 

@@ -91,7 +91,14 @@
                             <ul class="list-inline-secondary">
                                 @if(Auth::check())
                                     <li><a href="">Change Password</a></li>
-                                    <li><a href="" class="active-user">{{ \App\EcommerceModel\Customer::customer_username(auth()->user()->id) }}</a></li>
+                                    <li>
+                                        <a class="acc-menu active-user dropdown-toggle" href="" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">{{ \App\EcommerceModel\Customer::customer_username(auth()->user()->id) }}</a>
+                                        <div class="acc-dropdown-menu dropdown-menu dropdown-menu-right " aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="#"><span class="lnr lnr-user mr-2"></span>Manage Account</a>
+                                            <a class="dropdown-item" href="{{ route('customer.logout') }}"><span class="lnr lnr-exit mr-2"></span>Log Out</a>
+                                        </div>
+                                    </li>
                                 @else
                                     <li><a href="{{ route('customer-front.sign-up') }}">Register</a></li>
                                     <li><a href="{{ route('ecommerce.forgot_password') }}">Forgot Password</a></li>

@@ -95,7 +95,7 @@
                                                         </table>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <div class="cart-product-price">₱ {{ $order->ItemTotalPrice }}</div>
+                                                        <div class="cart-product-price">₱ {{ number_format($order->ItemTotalPrice,2) }}</div>
                                                     </div>
                                                 </div>
                                             </div>
