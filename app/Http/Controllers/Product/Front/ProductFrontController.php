@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Product\Front;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+
 use App\EcommerceModel\ProductCategory;
+use App\EcommerceModel\ProductReview;
+use App\EcommerceModel\ProductPhoto;
 use App\EcommerceModel\Product;
+
 use App\Page;
 use DB;
-use Illuminate\Support\Facades\Auth;
+
 
 class ProductFrontController extends Controller
 {
@@ -30,6 +35,14 @@ class ProductFrontController extends Controller
             ->where('id','<>',$product->category_id)
             ->orderBy('name','asc')
             ->get();
+
+        $qry_reviews = 
+            ProductReview::where('product_id',$product->id)
+            ->where('is_approved',1);
+
+        $reviews = $qry_reviews->get();
+        $reviews_count = $qry_reviews->count();
+
         //
 
         $page = $product;
@@ -38,7 +51,7 @@ class ProductFrontController extends Controller
         }
 
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.profile',compact('product', 'page','sales_history','categories'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.profile',compact('product', 'page','sales_history','categories','reviews','reviews_count'));
     }
 
     public function checkIfUserPurchasedTheItem($id){

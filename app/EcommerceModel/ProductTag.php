@@ -9,6 +9,19 @@ class ProductTag extends Model
     public $table = 'product_tags';
     protected $fillable = [ 'product_id', 'tag', 'created_by' ];
 
+    public static function tags($id)
+    {
+        $datas = ProductTag::where('product_id',$id)->get();
+
+        $tags = "";
+
+        foreach($datas as $data)
+        {
+            $tags .= $data->tag.',';
+        }
+        
+        return $tags;
+    }
 
     public static function related_products($product_id)
     {

@@ -107,31 +107,15 @@
                                 </div>
 
                                 <ul class="thumbnails">
+                                    @foreach($product->photos as $photo)
+                                    @if($photo->is_primary == 0)
                                     <li>
-                                        <a href="images/misc/book1.jpg" data-standard="images/misc/book1.jpg">
-                                            <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/book1.jpg" alt="" />
+                                        <a href="{{ asset('storage/products/'.$photo->path) }}" target="_blank">
+                                            <img src="{{ asset('storage/products/'.$photo->path) }}" alt="" />
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="images/misc/book1.jpg" data-standard="images/misc/book1.jpg">
-                                            <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/book1.jpg" alt="" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="images/misc/book1.jpg" data-standard="images/misc/book1.jpg">
-                                            <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/book1.jpg" alt="" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="images/misc/book1.jpg" data-standard="images/misc/book1.jpg">
-                                            <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/book1.jpg" alt="" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="images/misc/book1.jpg" data-standard="images/misc/book1.jpg">
-                                            <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/book1.jpg" alt="" />
-                                        </a>
-                                    </li>
+                                    @endif
+                                    @endforeach
                                 </ul>
                             </div>
                             <div class="col-lg-7">
@@ -160,6 +144,7 @@
                                             <p>{{ $product->additional_info->authors }} | Product Name: {{ $product->name }}</p>
                                             @if(\App\EcommerceModel\Product::onsale_checker($product->id) > 0)
                                                 <div class="product-price">
+                                                    <input type="hidden" id="product_price" value="{{ $product->DiscountedPrice }}">
                                                     <span class="price-after">₱ {{ $product->DiscountedPrice }} </span>
                                                     <span class="price-before">
                                                       <div class="price-less">{{ $product->on_sale->promo_details->discount }}% Off</div>
@@ -218,7 +203,7 @@
                         </div>
                     </div>
                     <div class="gap-30"></div>
-                    
+
                     <div class="product-additional">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
@@ -267,85 +252,60 @@
                                 </table>
                             </div>
                             <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
-                                <div class="empty-review-wrap">
-                                    <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/comment.png" />
-                                    <p>There are no reviews yet.<br />Be the first to review “{{ $product->name }}”</p>
-                                </div>
+                                @if($reviews_count > 0)
+                                    <!-- START REVIEW WRAP -->
+                                    <div class="review-wrap">
+                                        @foreach($reviews as $review)
+                                            <div class="review-body">
+                                                <div class="vcard">
+                                                    <h3>{{ $review->customer->fullname }}</h3>
+                                                    <span>{{ date('F d, Y',strtotime($review->created_at)) }}</span>
+                                                </div>
+                                              
+                                                <div class="rating small">
+                                                    @for($x = 1; $x <= $review->rating; $x++)
+                                                    <span class="fa fa-star checked"></span>
+                                                    @endfor
+                                                </div>
+                                              
+                                                <div class="gap-10"></div>
+                                              
+                                                <p>
+                                                    {{ $review->review }}
+                                                </p>
+                                            </div>
+                                        @endforeach
+                                        
+                                        <div class="gap-20"></div>
 
-                                <!-- START REVIEW WRAP -->
-                                <div class="review-wrap">
-                                    <div class="review-body">
-                                        <div class="vcard">
-                                            <h3>Angelina Shtolz</h3>
-                                            <span>July 7, 2018</span>
-                                        </div>
-                                      
-                                        <div class="rating small">
-                                            <span class="fa fa-star checked"></span>
-                                            <span class="fa fa-star checked"></span>
-                                            <span class="fa fa-star checked"></span>
-                                            <span class="fa fa-star checked"></span>
-                                            <span class="fa fa-star checked"></span>
-                                        </div>
-                                      
-                                        <div class="gap-10"></div>
-                                      
-                                        <p>
-                                            Eat imagine you chiefly few end ferrars compass. Be visitor females am ferrars inquiry. Latter law remark two
-                                            lively thrown. Spot set they know rest its. Raptures law diverted believed jennings consider children the see. Had
-                                            invited beloved carried the colonel. Occasional principles discretion it as he unpleasing boisterous. She bed sing
-                                            dear now son half.
-                                        </p>
+                                        <ul class="pagination">
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" title="Back"><i class="lnr lnr-chevron-left"></i></a>
+                                            </li>
+                                            <li class="page-item active">
+                                                <a class="page-link" href="#">1</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">2</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">3 <span class="sr-only">(current)</span></a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">4</a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" title="Next"><i class="lnr lnr-chevron-right"></i></a>
+                                            </li>
+                                        </ul>
                                     </div>
-              
-                                    <div class="review-body">
-                                        <div class="vcard">
-                                            <h3>Angelina Shtolz</h3>
-                                            <span>July 7, 2018</span>
-                                        </div>
-                                    
-                                        <div class="rating small">
-                                            <span class="fa fa-star checked"></span>
-                                            <span class="fa fa-star checked"></span>
-                                            <span class="fa fa-star checked"></span>
-                                            <span class="fa fa-star checked"></span>
-                                            <span class="fa fa-star checked"></span>
-                                        </div>
-                                    
-                                        <div class="gap-10"></div>
-                                    
-                                        <p>
-                                            Eat imagine you chiefly few end ferrars compass. Be visitor females am ferrars inquiry. Latter law remark two
-                                            lively thrown. Spot set they know rest its. Raptures law diverted believed jennings consider children the see. Had
-                                            invited beloved carried the colonel. Occasional principles discretion it as he unpleasing boisterous. She bed sing
-                                            dear now son half.
-                                        </p>
+                                    <!-- END REVIEW WRAP -->
+                                @else
+                                    <div class="empty-review-wrap">
+                                        <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/comment.png" />
+                                        <p>There are no reviews yet.<br />Be the first to review “{{ $product->name }}”</p>
                                     </div>
-                                    
-                                    <div class="gap-20"></div>
-
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" title="Back"><i class="lnr lnr-chevron-left"></i></a>
-                                        </li>
-                                        <li class="page-item active">
-                                            <a class="page-link" href="#">1</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">2</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">3 <span class="sr-only">(current)</span></a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#">4</a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" title="Next"><i class="lnr lnr-chevron-right"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <!-- END REVIEW WRAP -->
+                                @endif
 
                                 <div class="gap-40"></div>
                                 <form method="post" action="{{ route('product.review.store') }}">
