@@ -2337,6 +2337,24 @@ p {
   width: auto !important;
 }
 
+.product-additional .tab-content .review-wrap {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 40px;
+}
+
+.product-additional .tab-content .review-wrap .review-body {
+  padding: 25px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.product-additional .tab-content .review-wrap .review-body .vcard h3 {
+  font-size: .95em;
+}
+
+.product-additional .tab-content .review-wrap .review-body .vcard span {
+  font-size: .85em !important;
+}
+
 #cart-wrapper {
   padding: 70px 1rem;
   position: relative;
