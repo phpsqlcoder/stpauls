@@ -14,26 +14,28 @@ use App\Page;
 use Auth;
 use App\Deliverablecities;
 
+use App\EcommerceModel\Customer;
+
 class CheckoutController extends Controller
 {
 
     public function checkout()
     {
-        if(Auth::user()->role_id <> 6){
-            abort(403, 'Administrator accounts are not authorized to create sales transactions.');
-        }
         $page = new Page();
         $page->name = 'Checkout';
         
+        $customer = Customer::find(Auth::id());
+
         $products = Cart::where('user_id',Auth::id())->get();        
         $locations = Deliverablecities::where('status','PUBLISHED')->orderBy('name')->get();
         $user = Auth::user();
+
         
         if ($products->count() == 0) {
             return redirect()->route('product.front.list');
         }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('products','user','locations','page'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','user','locations','page'));
     }
 
     public function payment_completed() {

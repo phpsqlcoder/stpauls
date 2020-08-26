@@ -50,7 +50,7 @@
         <br />
 
         <div style="text-align: center;">
-            <a href="{{ route('password.reset', $token) }}?email={{ $user->email }}" target="_blank" style="padding: 10px 20px; background: #0349fc; color: #fff;text-decoration: none;font-size: 14px; border-radius: 3px;">RESET MY PASSWORD</a>
+            <a href="{{ route('ecommerce.reset_password', $token) }}?email={{ $user->email }}" target="_blank" style="padding: 10px 20px; background: #0349fc; color: #fff;text-decoration: none;font-size: 14px; border-radius: 3px;">RESET MY PASSWORD</a>
         </div>
 
         <br />

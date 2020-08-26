@@ -171,11 +171,21 @@ class EcommerceFrontController extends Controller
 
     use ResetsPasswords;
 
+    public function broker()
+    {
+        return Password::broker('customers');
+    }
+
     public function showResetForm(Request $request, $token = null)
     {
+        $page = new Page();
+        $page->name = 'Reset Password';
+
         $credentials =  $request->only('email');
 
+
         if (is_null($user = $this->broker()->getUser($credentials))) {
+            dd('gsas');
             return abort(401);
         }
 
@@ -183,7 +193,7 @@ class EcommerceFrontController extends Controller
             return redirect()->route('ecommerce.forgot_password')->with('error','Your link is expired. Please reset your password again.');
         }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.reset-password')->with(
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.reset-password',compact('page'))->with(
             ['token' => $token, 'email' => $request->email]
         );
     }

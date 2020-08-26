@@ -93,4 +93,29 @@ class Customer extends Authenticatable
         return $qry->firstname.' '.$qry->lastname;
     }
 
+    public function cities()
+    {
+        return $this->belongsTo('\App\Cities','city');
+    }
+
+    public function provinces()
+    {
+        return $this->belongsTo('\App\Provinces','province');
+    }
+
+    public function getAddress1Attribute() {
+
+        return "{$this->address} {$this->barangay}";
+    }
+
+    public function getAddress2WithZipAttribute() {
+
+        return "{$this->cities->city}, {$this->provinces->province} {$this->zipcode}";
+    }
+
+    public function getAddress2Attribute() {
+
+        return "{$this->cities->city}, {$this->provinces->province}";
+    }
+
 }
