@@ -20,7 +20,7 @@ class CreateDeliverablecitiesTable extends Migration
             $table->string('city_name',250);
             $table->decimal('rate',16,2)->default(0);
             $table->integer('is_outside');
-            $table->string('status');
+            $table->string('status')->default('PRIVATE');
             $table->integer('user_id');
             $table->timestamps();
             $table->softDeletes();
