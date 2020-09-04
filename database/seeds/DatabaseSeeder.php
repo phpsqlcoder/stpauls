@@ -41,6 +41,13 @@ class DatabaseSeeder extends Seeder
             ProductAdditionalInfoSeeder::class,
         ]);
 
+        // Ecommerce Settings
+        $this->call([
+            PaymentListSeeder::class,
+            PaymentOptionSeeder::class,
+            CheckoutOptionSeeder::class,
+        ]);
+
         $this->users();
     }
 

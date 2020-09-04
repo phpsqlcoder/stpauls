@@ -137,6 +137,7 @@
                 <a href="#" class="nav-link"><i data-feather="users"></i> <span>Customers</span></a>
                 <ul>
                     <li @if (\Route::current()->getName() == 'customers.index') class="active" @endif><a href="{{ route('customers.index') }}">Manage Customers</a></li>
+                    <li @if (\Route::current()->getName() == 'customers.index') class="active" @endif><a href="{{ route('customer.reactivate-request') }}">Reactivate Request&nbsp;<span class="badge badge-danger">1</span></a></li>
                 </ul>
             </li>
         @endif
@@ -176,6 +177,18 @@
                     <li @if (\Route::current()->getName() == 'locations.index' || \Route::current()->getName() == 'locations.edit') class="active" @endif><a href="{{ route('locations.index') }}">Manage Flat Rates</a></li>
                     @if (auth()->user()->has_access_to_route('locations.create'))
                         <li @if (\Route::current()->getName() == 'locations.create') class="active" @endif><a href="{{ route('locations.create') }}">Create New Flat Rate</a></li>
+                    @endif
+                </ul>
+            </li>
+        @endif
+
+        @if (auth()->user()->has_access_to_module('branches'))
+            <li class="nav-item with-sub @if (request()->routeIs('locations*')) active show @endif">
+                <a href="" class="nav-link"><i data-feather="box"></i> <span>Branches</span></a>
+                <ul>
+                    <li @if (\Route::current()->getName() == 'branch.index' || \Route::current()->getName() == 'branch.edit') class="active" @endif><a href="{{ route('branch.index') }}">Manage Branches</a></li>
+                    @if (auth()->user()->has_access_to_route('branch.create'))
+                        <li @if (\Route::current()->getName() == 'branch.create') class="active" @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
                     @endif
                 </ul>
             </li>

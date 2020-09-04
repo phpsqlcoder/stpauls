@@ -7,6 +7,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 offset-lg-2 col-md-12">
+                    @if(Session::has('warning'))
+                    <div class="alert alert-warning alert-dismissible fade show">
+                        <strong>Warning!</strong> This account is inactive. To re-activate this account please click this <a href="{{ route('ecommerce.reactivate-account') }}"><b>link</b>.</a>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                    @endif
                     <div id="login">
                         <div class="row align-items-center">
                             <div class="col-md-8 col-sm-12">

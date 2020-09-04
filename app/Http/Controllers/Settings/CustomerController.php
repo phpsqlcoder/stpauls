@@ -61,6 +61,29 @@ class CustomerController extends Controller
         return view('admin.customers.index',compact('customers','filter', 'searchType'));
     }
 
+    public function reactivate_request($param = null)
+    {
+        $customConditions = [
+            [
+                'field' => 'reactivate_request',
+                'operator' => '=',
+                'value' => 1,
+                'apply_to_deleted_data' => false
+            ]
+        ];
+
+        $listing = new ListingHelper('desc', 10, 'updated_at', $customConditions);
+
+        $customers = $listing->simple_search(Customer::class, $this->searchFields);
+
+        // Simple search init data
+        $filter = $listing->get_filter($this->searchFields);
+
+        $searchType = 'simple_search';
+
+        return view('admin.customers.reactivate-request',compact('customers','filter', 'searchType'));
+    }
+
     // public function create()
     // {
     //     $roles = Role::get();

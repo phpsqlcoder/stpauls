@@ -70,15 +70,38 @@
                     <div id="tab-2">
                         <div class="checkout-content">
                             <p class="mb-3">Select a shipping method:</p>
-                            <div id="responsiveTabs">
-                                <ul>
-                                    <li><a href="#nav-1">Cash On Delivery (COD)</a></li>
-                                    <li><a href="#nav-2">Store Pick-up</a></li>
-                                    <li><a href="#nav-3">Same Day Delivery</a></li>
-                                    <li><a href="#nav-4">Door-to-door (D2D)</a></li>
-                                </ul>
 
-                                <div id="nav-1">
+                            <div class="tab-wrap">
+                                @if($cod->is_active == 1)
+                                    @if(\App\EcommerceModel\CheckoutOption::check_availability(1) == 1)
+                                        <input type="radio" id="tab1" name="tabGroup1" class="tab" checked>
+                                        <label for="tab1">Cash On Delivery (COD)</label>
+                                    @endif
+                                @endif
+
+                                @if($cod->is_active == 1)
+                                    @if(\App\EcommerceModel\CheckoutOption::check_availability(2) == 1)
+                                        <input type="radio" id="tab2" name="tabGroup1" class="tab">
+                                        <label for="tab2">Store Pick-up</label>
+                                    @endif
+                                @endif
+
+                                <input type="radio" id="tab3" name="tabGroup1" class="tab">
+                                <label for="tab3">Personal Courier</label>
+
+                                @if($cod->is_active == 1)
+                                    @if(\App\EcommerceModel\CheckoutOption::check_availability(4) == 1)
+                                        <input type="radio" id="tab4" name="tabGroup1" class="tab">
+                                        <label for="tab4">Door-to-door (D2D)</label>
+                                    @endif
+                                @endif
+
+                                @if($cod->is_active == 1)
+                                <div class="tab__content">
+                                    <div class="alert alert-info" role="alert">
+                                        <h4 class="alert-heading">Reminder!</h4>
+                                        <p>{{ $cod->reminder }}</p>
+                                    </div>
                                     <div class="checkout-card">
                                         <div class="edit-item">
                                             <a href="#" class="edit">Edit</a>
@@ -89,26 +112,49 @@
                                             </div>
                                             <div class="unit__body">
                                                 <h3 class="customer-name">{{ $customer->fullname }}</h3>
-                                                <p class="customer-address">{{ $customer->address1 }}
-                                                    <br> {{ $customer->address2withzip }}</p>
+                                                <p class="customer-address">{{ $customer->address1 }}<br> {{ $customer->address2withzip }}</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="gap-20"></div>
                                     <button type="button" class="btn btn-md btn-txt-3 add-cart-alt2-btn addToCartButton" data-loading-text="processing...">
-					                  	<span class="fa fa-plus mr-2"></span> Add New Address
-					                </button>
+                                        <span class="fa fa-plus mr-2"></span> Add New Address
+                                    </button>
                                 </div>
-                                <div id="nav-2"> ...2.... </div>
-                                <div id="nav-3"> ...3.... </div>
-                                <div id="nav-4"> ...4.... </div>
+                                @endif
+
+                                <div class="tab__content">
+                                    <div class="alert alert-info" role="alert">
+                                        <h4 class="alert-heading">Reminder!</h4>
+                                        <p>{{ $cod->reminder }}</p>
+                                    </div>
+                                    <h3>Store Pick-up</h3>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur temporibus ad cum totam quod nam perspiciatis nihil, necessitatibus expedita exercitationem laboriosam. Neque aliquam possimus error, nemo eum inventore ea doloremque.</p>
+                                </div>
+
+                                <div class="tab__content">
+                                    <div class="alert alert-info" role="alert">
+                                        <h4 class="alert-heading">Reminder!</h4>
+                                        <p>{{ $cod->reminder }}</p>
+                                    </div>
+                                    <h3>Same Day Delivery</h3>
+                                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore inventore omnis tenetur fuga, vitae reiciendis repellat cumque quaerat reprehenderit? Impedit aliquid voluptas dolores neque accusantium laudantium totam accusamus odit consequuntur.</p>
+                                </div>
+
+                                <div class="tab__content">
+                                    <h3>Section Four</h3>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, soluta odit fuga necessitatibus quidem voluptatum iure eaque, eos fugiat tempore illum dolore quos placeat. Quae temporibus dolorum omnis doloremque similique.</p>
+                                </div>
+
                             </div>
+
                         </div>
                         <div class="checkout-nav">
                             <a class="checkout-back-btn" href=""><span class="lnr lnr-chevron-left"></span> Back</a>
                             <a class="checkout-next-btn" href="">Next <span class="lnr lnr-chevron-right"></span></a>
                         </div>
                     </div>
+
                     <div id="tab-3">
                         <div class="checkout-content">
                             <h3>Payment Method</h3>
@@ -120,7 +166,8 @@
                             <a class="checkout-next-btn" href="">Next <span class="lnr lnr-chevron-right"></span></a>
                         </div>
                     </div>
-                    <div id="tab-4">
+                    <d
+                    iv id="tab-4">
                         <div class="checkout-content">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -152,32 +199,32 @@
                                             <td class="text-center">
                                                 <div class="checkout-quantity">
                                                     <select name="quantity" id="quantity">
-							                          	<option value="1">1</option>
-							                          	<option value="2" selected>2</option>
-							                          	<option value="3">3</option>
-							                          	<option value="4">4</option>
-							                          	<option value="5">5</option>
-							                          	<option value="6">6</option>
-							                          	<option value="7">7</option>
-							                          	<option value="8">8</option>
-							                          	<option value="9">9</option>
-							                          	<option value="10">10</option>
-							                          	<option value="11">11</option>
-							                          	<option value="12">12</option>
-							                          	<option value="13">13</option>
-							                          	<option value="14">14</option>
-							                          	<option value="15">15</option>
-							                          	<option value="16">16</option>
-							                          	<option value="17">17</option>
-							                          	<option value="18">18</option>
-							                          	<option value="19">19</option>
-							                          	<option value="20">20</option>
-							                          	<option value="21">21</option>
-							                          	<option value="22">22</option>
-							                          	<option value="23">23</option>
-							                          	<option value="24">24</option>
-							                          	<option value="25">25</option>
-							                        </select>
+                                                        <option value="1">1</option>
+                                                        <option value="2" selected>2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                        <option value="13">13</option>
+                                                        <option value="14">14</option>
+                                                        <option value="15">15</option>
+                                                        <option value="16">16</option>
+                                                        <option value="17">17</option>
+                                                        <option value="18">18</option>
+                                                        <option value="19">19</option>
+                                                        <option value="20">20</option>
+                                                        <option value="21">21</option>
+                                                        <option value="22">22</option>
+                                                        <option value="23">23</option>
+                                                        <option value="24">24</option>
+                                                        <option value="25">25</option>
+                                                    </select>
                                                 </div>
                                             </td>
                                             <td class="text-right">₱ 150.00</td>
@@ -189,32 +236,32 @@
                                             <td class="text-center">
                                                 <div class="checkout-quantity">
                                                     <select name="quantity" id="quantity">
-							                          	<option value="1" selected>1</option>
-							                          	<option value="2">2</option>
-							                          	<option value="3">3</option>
-							                          	<option value="4">4</option>
-							                          	<option value="5">5</option>
-							                          	<option value="6">6</option>
-							                          	<option value="7">7</option>
-							                          	<option value="8">8</option>
-							                          	<option value="9">9</option>
-							                          	<option value="10">10</option>
-							                          	<option value="11">11</option>
-							                          	<option value="12">12</option>
-							                          	<option value="13">13</option>
-							                          	<option value="14">14</option>
-							                          	<option value="15">15</option>
-							                          	<option value="16">16</option>
-							                          	<option value="17">17</option>
-							                          	<option value="18">18</option>
-							                          	<option value="19">19</option>
-							                          	<option value="20">20</option>
-							                          	<option value="21">21</option>
-							                          	<option value="22">22</option>
-							                          	<option value="23">23</option>
-							                          	<option value="24">24</option>
-							                          	<option value="25">25</option>
-							                        </select>
+                                                        <option value="1" selected>1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                        <option value="13">13</option>
+                                                        <option value="14">14</option>
+                                                        <option value="15">15</option>
+                                                        <option value="16">16</option>
+                                                        <option value="17">17</option>
+                                                        <option value="18">18</option>
+                                                        <option value="19">19</option>
+                                                        <option value="20">20</option>
+                                                        <option value="21">21</option>
+                                                        <option value="22">22</option>
+                                                        <option value="23">23</option>
+                                                        <option value="24">24</option>
+                                                        <option value="25">25</option>
+                                                    </select>
                                                 </div>
                                             </td>
                                             <td class="text-right">₱ 1,200.00</td>
@@ -226,32 +273,32 @@
                                             <td class="text-center">
                                                 <div class="checkout-quantity">
                                                     <select name="quantity" id="quantity">
-							                          <option value="1">1</option>
-							                          <option value="2" selected>2</option>
-							                          <option value="3">3</option>
-							                          <option value="4">4</option>
-							                          <option value="5">5</option>
-							                          <option value="6">6</option>
-							                          <option value="7">7</option>
-							                          <option value="8">8</option>
-							                          <option value="9">9</option>
-							                          <option value="10">10</option>
-							                          <option value="11">11</option>
-							                          <option value="12">12</option>
-							                          <option value="13">13</option>
-							                          <option value="14">14</option>
-							                          <option value="15">15</option>
-							                          <option value="16">16</option>
-							                          <option value="17">17</option>
-							                          <option value="18">18</option>
-							                          <option value="19">19</option>
-							                          <option value="20">20</option>
-							                          <option value="21">21</option>
-							                          <option value="22">22</option>
-							                          <option value="23">23</option>
-							                          <option value="24">24</option>
-							                          <option value="25">25</option>
-							                        </select>
+                                                        <option value="1">1</option>
+                                                        <option value="2" selected>2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                        <option value="13">13</option>
+                                                        <option value="14">14</option>
+                                                        <option value="15">15</option>
+                                                        <option value="16">16</option>
+                                                        <option value="17">17</option>
+                                                        <option value="18">18</option>
+                                                        <option value="19">19</option>
+                                                        <option value="20">20</option>
+                                                        <option value="21">21</option>
+                                                        <option value="22">22</option>
+                                                        <option value="23">23</option>
+                                                        <option value="24">24</option>
+                                                        <option value="25">25</option>
+                                                    </select>
                                                 </div>
                                             </td>
                                             <td class="text-right">₱ 850.00</td>
@@ -263,32 +310,32 @@
                                             <td class="text-center">
                                                 <div class="checkout-quantity">
                                                     <select name="quantity" id="quantity">
-							                          <option value="1">1</option>
-							                          <option value="2">2</option>
-							                          <option value="3" selected>3</option>
-							                          <option value="4">4</option>
-							                          <option value="5">5</option>
-							                          <option value="6">6</option>
-							                          <option value="7">7</option>
-							                          <option value="8">8</option>
-							                          <option value="9">9</option>
-							                          <option value="10">10</option>
-							                          <option value="11">11</option>
-							                          <option value="12">12</option>
-							                          <option value="13">13</option>
-							                          <option value="14">14</option>
-							                          <option value="15">15</option>
-							                          <option value="16">16</option>
-							                          <option value="17">17</option>
-							                          <option value="18">18</option>
-							                          <option value="19">19</option>
-							                          <option value="20">20</option>
-							                          <option value="21">21</option>
-							                          <option value="22">22</option>
-							                          <option value="23">23</option>
-							                          <option value="24">24</option>
-							                          <option value="25">25</option>
-							                        </select>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3" selected>3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="5">5</option>
+                                                        <option value="6">6</option>
+                                                        <option value="7">7</option>
+                                                        <option value="8">8</option>
+                                                        <option value="9">9</option>
+                                                        <option value="10">10</option>
+                                                        <option value="11">11</option>
+                                                        <option value="12">12</option>
+                                                        <option value="13">13</option>
+                                                        <option value="14">14</option>
+                                                        <option value="15">15</option>
+                                                        <option value="16">16</option>
+                                                        <option value="17">17</option>
+                                                        <option value="18">18</option>
+                                                        <option value="19">19</option>
+                                                        <option value="20">20</option>
+                                                        <option value="21">21</option>
+                                                        <option value="22">22</option>
+                                                        <option value="23">23</option>
+                                                        <option value="24">24</option>
+                                                        <option value="25">25</option>
+                                                    </select>
                                                 </div>
                                             </td>
                                             <td class="text-right">₱ 850.00</td>
@@ -326,10 +373,7 @@
                                             <strong>$5,987.50</strong>
                                         </li>
                                     </ul>
-
-                                    <!-- <button class="btn btn-block primary-btn mt-2"><span class="fa fa-check-circle fa-icon mr-2"></span> Place Order</button> -->
                                 </div>
-                                <!-- col -->
                             </div>
                         </div>
                         <div class="checkout-nav">
@@ -345,5 +389,5 @@
 @endsection
 
 @section('pagejs')
-	<script src="{{ asset('theme/stpaul/plugins/responsive-tabs/js/jquery.responsiveTabs.js') }}"></script>
+<script src="{{ asset('theme/stpaul/plugins/responsive-tabs/js/jquery.responsiveTabs.js') }}"></script>
 @endsection

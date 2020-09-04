@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDeliverablecitiesTable extends Migration
+class CreateBranchesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateDeliverablecitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('deliverable_cities', function (Blueprint $table) {
+        Schema::create('branches', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('province');
-            $table->integer('city');
-            $table->string('city_name',250);
-            $table->decimal('rate',16,2)->default(0);
-            $table->integer('is_outside');
-            $table->string('status');
+            $table->string('name',250);
+            $table->text('address');
+            $table->string('contact_no',250);
+            $table->string('contact_person',250);
+            $table->string('email');
+            $table->integer('is_active');
             $table->integer('user_id');
             $table->timestamps();
             $table->softDeletes();
@@ -34,6 +34,6 @@ class CreateDeliverablecitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('deliverable_cities');
+        Schema::dropIfExists('branches');
     }
 }

@@ -32,6 +32,8 @@ Route::get('/', 'FrontController@home')->name('home');
         Route::post('/forgot-password', 'EcommerceControllers\EcommerceFrontController@sendResetLinkEmail')->name('ecommerce.send_reset_link_email');
         Route::get('/reset-password/{token}', 'EcommerceControllers\EcommerceFrontController@showResetForm')->name('ecommerce.reset_password');
         Route::post('/reset-password', 'EcommerceControllers\EcommerceFrontController@reset')->name('ecommerce.reset_password_post');
+        Route::get('/reactive-account', 'EcommerceControllers\EcommerceFrontController@showReactivateForm')->name('ecommerce.reactivate-account');
+        Route::post('/reactivate-account', 'EcommerceControllers\EcommerceFrontController@sendReactivateRequestEmail')->name('ecommerce.send_reactivate_request_email');
 
     //
 
@@ -139,6 +141,7 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
 
         // Customers
             Route::resource('/admin/customers', 'Settings\CustomerController');
+            Route::get('/admin/customer/reactivate-request','Settings\CustomerController@reactivate_request')->name('customer.reactivate-request');
             Route::post('/customer/deactivate', 'Settings\CustomerController@deactivate')->name('customer.deactivate');
             Route::post('/customer/activate', 'Settings\CustomerController@activate')->name('customer.activate');
             // Route::get('/admin/customer-search/', 'Settings\CustomerController@search')->name(
@@ -162,6 +165,56 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
             Route::get('/product-review/restore/{id}', 'EcommerceControllers\ProductReviewController@restore')->name('product-review.restore');
             Route::post('/product-review-multiple-delete','EcommerceControllers\ProductReviewController@multiple_delete')->name('product-review.multiple.delete');
             Route::post('/product-review-multiple-approve','EcommerceControllers\ProductReviewController@multiple_approve')->name('product-review.multiple-approve');      
+        //
+
+        //Branches
+            Route::resource('/admin/branch', 'EcommerceControllers\BranchController');
+            Route::post('/admin/branch/single-delete', 'EcommerceControllers\BranchController@single_delete')->name('branch.single.delete');
+            Route::get('/admin/branch/restore/{id}', 'EcommerceControllers\BranchController@restore')->name('branch.restore');
+            Route::post('/admin/branch/multiple-delete','EcommerceControllers\BranchController@multiple_delete')->name('branch.multiple.delete');
+        //
+
+        // Website
+            Route::post('/website-settings/update-ecommerce', 'Settings\WebController@update_ecommerce')->name('website-settings.update-ecommerce');
+            Route::post('/website-settings/ecommerce-payment-add-bank','Settings\WebController@add_bank')->name('ecommerce-setting.add-bank');
+            Route::post('/website-settings/ecommerce-payment-update-bank','Settings\WebController@update_bank')->name('ecommerce-setting.update-bank');
+            Route::post('/website-settings/ecommerce-payment-delete-bank','Settings\WebController@delete_bank')->name('ecommerce-setting.delete-bank');
+
+            Route::post('/website-settings/ecommerce-payment-add-remittance','Settings\WebController@add_remittance')->name('ecommerce-setting.add-remittance');
+            Route::post('/website-settings/ecommerce-payment-edit-remittance','Settings\WebController@update_remittance')->name('ecommerce-setting.edit-remittance');
+            Route::post('/website-settings/ecommerce-payment-delete-remittance','Settings\WebController@delete_remittance')->name('ecommerce-setting.delete-remittance');
+
+            Route::post('/ecommerce-setting-cash-on-delivery-update','Settings\WebController@cod_update')->name('ecom-setting-cash-on-delivery-update');
+            Route::post('/ecommerce-setting-store-pickup-update','Settings\WebController@stp_update')->name('ecom-setting-store-pickup-update');
+            Route::post('/ecommerce-setting-same-day-delivery-update','Settings\WebController@sdd_update')->name('ecom-setting-same-day-delivery-update');
+            Route::post('/ecommerce-setting-bank-update','Settings\WebController@bank_update')->name('ecom-setting-bank-update');
+            Route::post('/ecommerce-setting-remittance-update','Settings\WebController@remittance_update')->name('ecom-setting-remittance-update');
+
+            Route::post('/ecommerce-setting-deactivate-payment-option','Settings\WebController@deactivate_payment_opt')->name('ecommerce-setting.deactivate-payment-opt');
+            Route::post('/ecommerce-setting-activate-payment-option','Settings\WebController@activate_payment_opt')->name('ecommerce-setting.activate-payment-opt');
+
+            Route::get('/website-settings/edit', 'Settings\WebController@edit')->name('website-settings.edit');
+            Route::put('/website-settings/update', 'Settings\WebController@update')->name('website-settings.update');
+            Route::post('/website-settings/update_contacts', 'Settings\WebController@update_contacts')->name('website-settings.update-contacts');
+            Route::post('/website-settings/update-paynamics', 'Settings\WebController@update_paynamics')->name('website-settings.update-paynamics');
+            Route::post('/website-settings/update_media_accounts', 'Settings\WebController@update_media_accounts')->name('website-settings.update-media-accounts');
+            Route::post('/website-settings/update_data_privacy', 'Settings\WebController@update_data_privacy')->name('website-settings.update-data-privacy');
+            Route::post('/website-settings/remove_logo', 'Settings\WebController@remove_logo')->name('website-settings.remove-logo');
+            Route::post('/website-settings/remove_icon', 'Settings\WebController@remove_icon')->name('website-settings.remove-icon');
+            Route::post('/website-settings/remove_media', 'Settings\WebController@remove_media')->name('website-settings.remove-media');
+        //
+
+        // Delivery Flat Rate
+            Route::resource('/locations', 'DeliverablecitiesController');
+            Route::get('/location-rate/{id}/{status}', 'DeliverablecitiesController@update_status')->name('location-rate.change-status');
+            Route::post('/location-multiple-change-status','DeliverablecitiesController@multiple_change_status')->name('location-rate.multiple.change.status');
+            Route::post('/location-rate-single-delete', 'DeliverablecitiesController@single_delete')->name('location.single.delete');
+            Route::get('/location-rate-restore/{id}', 'DeliverablecitiesController@restore')->name('location-rate.restore');
+            Route::post('/location-rate-multiple-delete','DeliverablecitiesController@multiple_delete')->name('location-rate.multiple.delete');
+
+            Route::post('/locations-enable', 'DeliverablecitiesController@enable')->name('locations.enable');
+            Route::post('/locations-disable', 'DeliverablecitiesController@disable')->name('locations.disable');
+            Route::post('/locations-delete', 'DeliverablecitiesController@delete')->name('locations.delete');
         //
 
 
@@ -285,10 +338,6 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
         Route::post('/admin/product-multiple-change-status','Product\ProductController@multiple_change_status')->name('product.multiple.change.status');
         Route::post('/admin/product-multiple-delete','Product\ProductController@multiple_delete')->name('products.multiple.delete');
 
-        Route::resource('/locations', 'DeliverablecitiesController');
-        Route::post('/locations-enable', 'DeliverablecitiesController@enable')->name('locations.enable');
-        Route::post('/locations-disable', 'DeliverablecitiesController@disable')->name('locations.disable');
-        Route::post('/locations-delete', 'DeliverablecitiesController@delete')->name('locations.delete');
         //Inventory
         Route::resource('/inventory','InventoryReceiverHeaderController');
         Route::get('/inventory-download-template','InventoryReceiverHeaderController@download_template')->name('inventory.download.template');
@@ -301,17 +350,6 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
         Route::put('/account/update', 'Settings\AccountController@update')->name('account.update');
         Route::put('/account/update_email', 'Settings\AccountController@update_email')->name('account.update-email');
         Route::put('/account/update_password', 'Settings\AccountController@update_password')->name('account.update-password');
-        // Website
-        Route::get('/website-settings/edit', 'Settings\WebController@edit')->name('website-settings.edit');
-        Route::put('/website-settings/update', 'Settings\WebController@update')->name('website-settings.update');
-        Route::post('/website-settings/update_contacts', 'Settings\WebController@update_contacts')->name('website-settings.update-contacts');
-        Route::post('/website-settings/update-ecommerce', 'Settings\WebController@update_ecommerce')->name('website-settings.update-ecommerce');
-        Route::post('/website-settings/update-paynamics', 'Settings\WebController@update_paynamics')->name('website-settings.update-paynamics');
-        Route::post('/website-settings/update_media_accounts', 'Settings\WebController@update_media_accounts')->name('website-settings.update-media-accounts');
-        Route::post('/website-settings/update_data_privacy', 'Settings\WebController@update_data_privacy')->name('website-settings.update-data-privacy');
-        Route::post('/website-settings/remove_logo', 'Settings\WebController@remove_logo')->name('website-settings.remove-logo');
-        Route::post('/website-settings/remove_icon', 'Settings\WebController@remove_icon')->name('website-settings.remove-icon');
-        Route::post('/website-settings/remove_media', 'Settings\WebController@remove_media')->name('website-settings.remove-media');
         // Audit
         Route::get('/audit-logs', 'Settings\LogsController@index')->name('audit-logs.index');
         // CMS

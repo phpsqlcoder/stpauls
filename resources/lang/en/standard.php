@@ -219,6 +219,18 @@ return [
         'restore_success' => 'Successfully restored the product review',
         'multiple_delete_success' => 'Selected reviews has been deleted.',
         'multiple_approve_success' => 'Selected reviews has been approved.',
-    ]
+    ],
+
+    'branches' => [
+        'create_success' => 'Branch has been added.',
+        'update_success' => 'Branch has been updated.',
+        'single_delete_success' => 'Selected branch has been deleted.',
+        'restore_success' => 'Successfully restored the branch.',
+        'multiple_delete_success' => 'Selected branches has been deleted.',
+    ],
+
+    'locations' => [
+        'update_success' => 'Selected location status has been changed to :STATUS',
+    ],
 
 ];

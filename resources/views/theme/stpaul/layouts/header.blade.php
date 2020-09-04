@@ -102,7 +102,7 @@
                                 @else
                                     <li><a href="{{ route('customer-front.sign-up') }}">Register</a></li>
                                     <li><a href="{{ route('ecommerce.forgot_password') }}">Forgot Password</a></li>
-                                    <li><a href="">Re-activate Account</a></li>
+                                    <li><a href="{{ route('ecommerce.reactivate-account') }}">Re-activate Account</a></li>
                                     <li>
                                         <a class="acct-login-btn" href="{{ route('customer-front.login') }}">
                                             <i class="icon icon-xxxs icon-white lnr lnr-user"></i>

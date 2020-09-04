@@ -138,6 +138,11 @@ class CustomerFrontController extends Controller
         if (Auth::guard('customer')->attempt($userCredentials)) {
 
             $customer = Customer::where('email',$request->email)->first();
+
+            if($customer->is_active == 0){
+                return back()->with('warning','account inactive');
+            }
+
             Auth::loginUsingId($customer->id);
 
             foreach ($cart as $order) {

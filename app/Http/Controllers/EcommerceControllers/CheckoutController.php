@@ -15,6 +15,7 @@ use Auth;
 use App\Deliverablecities;
 
 use App\EcommerceModel\Customer;
+use App\EcommerceModel\CheckoutOption;
 
 class CheckoutController extends Controller
 {
@@ -27,15 +28,18 @@ class CheckoutController extends Controller
         $customer = Customer::find(Auth::id());
 
         $products = Cart::where('user_id',Auth::id())->get();        
-        $locations = Deliverablecities::where('status','PUBLISHED')->orderBy('name')->get();
+        $locations = Deliverablecities::where('status','PUBLISHED')->orderBy('city_name')->get();
         $user = Auth::user();
+
+        $cod = CheckoutOption::find(1); // cash on delivery details
+
 
         
         if ($products->count() == 0) {
             return redirect()->route('product.front.list');
         }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','user','locations','page'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','user','locations','page','cod'));
     }
 
     public function payment_completed() {
