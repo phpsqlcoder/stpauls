@@ -35,10 +35,8 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $products = Cart::where('user_id',Auth::id())->get();   
 
-
-        $qry_locations = Deliverablecities::where('status','PUBLISHED');
-        $locations = $qry_locations->orderBy('city_name')->get();
-        $provinces = $qry_locations->distinct()->get(['province']);
+        $locations = Deliverablecities::where('status','PUBLISHED')->orderBy('city_name')->get();
+        $provinces = Deliverablecities::where('status','PUBLISHED')->distinct()->get(['province']);
         $branches  = Branch::where('is_active',1)->get();
         
 
