@@ -56,18 +56,23 @@ Route::get('/', 'FrontController@home')->name('home');
 
 
 
-
-
-
-
     Route::group(['middleware' => ['authenticated']], function () {
         Route::get('/checkout', 'EcommerceControllers\CheckoutController@checkout')->name('cart.front.checkout');
+        Route::get('myform/ajax/{id}','EcommerceControllers\CheckoutController@ajax_deliverable_cities')->name('ajax.get-deliverable-cities');
+
+
+        Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
+
+
+
+        Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
+
+
+
 
         Route::post('product/review/store', 'EcommerceControllers\ProductReviewController@store')->name('product.review.store');
 
-        
-        
-        Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
+    
         Route::get('/account/sales', 'EcommerceControllers\SalesFrontController@sales_list')->name('profile.sales');
         Route::post('/account/cancel/order', 'EcommerceControllers\SalesFrontController@cancel_order')->name('my-account.cancel-order');
         Route::get('/account/manage', 'EcommerceControllers\MyAccountController@manage_account')->name('my-account.manage-account');
@@ -79,7 +84,7 @@ Route::get('/', 'FrontController@home')->name('home');
 
         Route::post('/account/change-password', 'EcommerceControllers\MyAccountController@update_password')->name('my-account.update-password');
 
-        Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
+        
 
         // Paynamics Notification
     });
@@ -95,36 +100,24 @@ Route::get('/', 'FrontController@home')->name('home');
 
 
 
+        Route::get('/', 'FrontController@home')->name('home');
+        Route::get('/privacy-policy/', 'FrontController@privacy_policy')->name('privacy-policy');
+        Route::post('/contact-us', 'FrontController@contact_us')->name('contact-us');
 
+        // Custom routes
+        Route::post('/contact-us-ajax', 'FrontController@contact_us_ajax')->name('contact-us-ajax');
+        Route::get('/search', 'FrontController@search')->name('search');
+        // End Custom Routes
 
+        //News Frontend
+        Route::get('/news/', 'News\ArticleFrontController@news_list')->name('news.front.index');
+        Route::get('/news/{slug}', 'News\ArticleFrontController@news_view')->name('news.front.show');
+        Route::get('/news/{slug}/print', 'News\ArticleFrontController@news_print')->name('news.front.print');
+        Route::post('/news/{slug}/share', 'News\ArticleFrontController@news_share')->name('news.front.share');
 
+        Route::get('/albums/preview', 'FrontController@test')->name('albums.preview');
 
-Route::get('/', 'FrontController@home')->name('home');
-Route::get('/privacy-policy/', 'FrontController@privacy_policy')->name('privacy-policy');
-Route::post('/contact-us', 'FrontController@contact_us')->name('contact-us');
-
-// Custom routes
-Route::post('/contact-us-ajax', 'FrontController@contact_us_ajax')->name('contact-us-ajax');
-Route::get('/search', 'FrontController@search')->name('search');
-// End Custom Routes
-
-//News Frontend
-Route::get('/news/', 'News\ArticleFrontController@news_list')->name('news.front.index');
-Route::get('/news/{slug}', 'News\ArticleFrontController@news_view')->name('news.front.show');
-Route::get('/news/{slug}/print', 'News\ArticleFrontController@news_print')->name('news.front.print');
-Route::post('/news/{slug}/share', 'News\ArticleFrontController@news_share')->name('news.front.share');
-
-Route::get('/albums/preview', 'FrontController@test')->name('albums.preview');
-
-
-//Product Frontend
-//Route::any('/shop', 'Product\Front\ProductFrontController@list')->name('product.front.list');
-//Route::post('/shop', 'Product\Front\ProductFrontController@list_search')->name('product.front.list_post');
-
-//Cart
-
-
-Route::post('/payment-notification', 'EcommerceControllers\CartController@receive_data_from_payment_gateway')->name('cart.payment-notification');
+        Route::post('/payment-notification', 'EcommerceControllers\CartController@receive_data_from_payment_gateway')->name('cart.payment-notification');
 
 
 
@@ -134,7 +127,6 @@ Route::post('/payment-notification', 'EcommerceControllers\CartController@receiv
 Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
 
     Route::get('/', 'Auth\LoginController@showLoginForm')->name('panel.login');
-
     Auth::routes(['verify' => true]);
 
     Route::group(['middleware' => 'admin'], function () {
@@ -206,6 +198,7 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
 
         // Delivery Flat Rate
             Route::resource('/locations', 'DeliverablecitiesController');
+            Route::get('myform/ajax/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
             Route::get('/location-rate/{id}/{status}', 'DeliverablecitiesController@update_status')->name('location-rate.change-status');
             Route::post('/location-multiple-change-status','DeliverablecitiesController@multiple_change_status')->name('location-rate.multiple.change.status');
             Route::post('/location-rate-single-delete', 'DeliverablecitiesController@single_delete')->name('location.single.delete');
@@ -215,6 +208,52 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
             Route::post('/locations-enable', 'DeliverablecitiesController@enable')->name('locations.enable');
             Route::post('/locations-disable', 'DeliverablecitiesController@disable')->name('locations.disable');
             Route::post('/locations-delete', 'DeliverablecitiesController@delete')->name('locations.delete');
+        //
+
+        // Manage Sales Transactions
+            Route::resource('/admin/sales-transaction', 'EcommerceControllers\SalesController');
+            Route::post('/admin/sales-transaction/change-status', 'EcommerceControllers\SalesController@change_status')->name('sales-transaction.change.status');
+            Route::post('/admin/sales-transaction/{sales}', 'EcommerceControllers\SalesController@quick_update')->name('sales-transaction.quick_update');
+            Route::get('/admin/sales-transaction/view/{sales}', 'EcommerceControllers\SalesController@show')->name('sales-transaction.view');
+            Route::post('/admin/change-delivery-status', 'EcommerceControllers\SalesController@delivery_status')->name('sales-transaction.delivery_status');
+            Route::post('/admin/update-delivery-fee', 'EcommerceControllers\SalesController@update_delivery_fee')->name('sales-transaction.update_delivery_fee');
+            
+        //
+
+        // Loyalty
+            Route::resource('/loyalty', 'Loyalty\LoyaltyController');
+            Route::post('/loyalty-approved','Loyalty\LoyaltyController@approved')->name('loyalty.approved');
+            Route::post('/loyalty-disapproved','Loyalty\LoyaltyController@disapproved')->name('loyalty.disapproved');
+            Route::post('/loyalty-update-discount','Loyalty\LoyaltyController@update_discount')->name('loyalty.update-discount');
+        //
+
+        // Discount
+            Route::resource('/discounts', 'Loyalty\DiscountController');
+
+            Route::post('/admin/discount-single-delete', 'Loyalty\DiscountController@single_delete')->name('discount.single.delete');
+            Route::get('/admin/discount-restore/{id}', 'Loyalty\DiscountController@restore')->name('discount.restore');
+            Route::get('/admin/discount/{id}/{status}', 'Loyalty\DiscountController@update_status')->name('discount.change-status');
+            Route::post('/admin/discount-multiple-change-status','Loyalty\DiscountController@multiple_change_status')->name('discount.multiple.change.status');
+            Route::post('/admin/discount-multiple-delete','Loyalty\DiscountController@multiple_delete')->name('discount.multiple.delete');
+            
+        //
+
+        //Reports
+            Route::get('/report/sales_list', 'EcommerceControllers\ReportsController@sales_list')->name('report.sales.list');
+            Route::get('/report/unpaid_list', 'EcommerceControllers\ReportsController@unpaid_list')->name('report.sales.unpaid');
+            Route::get('/report/sales_payments', 'EcommerceControllers\ReportsController@sales_payments')->name('report.sales.payments');
+            Route::get('/report/customer_list', 'EcommerceControllers\ReportsController@customer_list')->name('report.customer.list');
+            Route::get('/report/product_list', 'EcommerceControllers\ReportsController@product_list')->name('report.product.list');
+            Route::get('/report/product_best_selling', 'EcommerceControllers\ReportsController@best_selling')->name('report.product.best-selling');
+            Route::get('/report/inventory_list', 'EcommerceControllers\ReportsController@inventory_list')->name('report.inventory.list');
+            Route::get('/report/inventory_reorder_point', 'EcommerceControllers\ReportsController@inventory_reorder_point')->name('report.inventory.reorder_point');
+
+
+
+            Route::get('/report/stock-card/{id}', 'EcommerceControllers\ReportsController@stock_card')->name('report.product.stockcard');
+            Route::get('/admin/report/sales', 'EcommerceControllers\ReportsController@sales')->name('admin.report.sales');
+            Route::get('/admin/report/delivery_status', 'EcommerceControllers\ReportsController@delivery_status')->name('admin.report.delivery_status');
+            Route::get('/admin/report/delivery_report/{id}', 'EcommerceControllers\ReportsController@delivery_report')->name('admin.report.delivery_report');
         //
 
 
@@ -231,22 +270,13 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
 
 
 
-            Route::resource('/admin/sales-transaction', 'EcommerceControllers\SalesController');
-            Route::post('/admin/sales-transaction/change-status', 'EcommerceControllers\SalesController@change_status')->name('sales-transaction.change.status');
-            Route::post('/admin/sales-transaction/{sales}', 'EcommerceControllers\SalesController@quick_update')->name('sales-transaction.quick_update');
-            Route::get('/admin/sales-transaction/view/{sales}', 'EcommerceControllers\SalesController@show')->name('sales-transaction.view');
-            Route::post('/admin/change-delivery-status', 'EcommerceControllers\SalesController@delivery_status')->name('sales-transaction.delivery_status');
+            
+            
 
 
             Route::get('/admin/sales-transaction/view-payment/{sales}', 'EcommerceControllers\SalesController@view_payment')->name('sales-transaction.view_payment');
             Route::post('/admin/sales-transaction/cancel-product', 'EcommerceControllers\SalesController@cancel_product')->name('sales-transaction.cancel_product');
             Route::get('/sales-advance-search/', 'EcommerceControllers\SalesController@advance_index')->name('admin.sales.list.advance-search');
-
-
-            Route::get('/admin/report/sales', 'EcommerceControllers\ReportsController@sales')->name('admin.report.sales');
-            Route::get('/admin/report/sales_summary', 'EcommerceControllers\ReportsController@sales_summary')->name('report.sales.summary');
-            Route::get('/admin/report/delivery_status', 'EcommerceControllers\ReportsController@delivery_status')->name('admin.report.delivery_status');
-            Route::get('/admin/report/delivery_report/{id}', 'EcommerceControllers\ReportsController@delivery_report')->name('admin.report.delivery_report');
 
             Route::get('/admin/sales-transaction/view-payment/{sales}', 'EcommerceControllers\SalesController@view_payment')->name('sales-transaction.view_payment');
             Route::post('/admin/sales-transaction/cancel-product', 'EcommerceControllers\SalesController@cancel_product')->name('sales-transaction.cancel_product');
@@ -363,15 +393,7 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
         Route::get('/user-search/', 'Settings\UserController@search')->name('user.search');
         Route::get('/profile-log-search/', 'Settings\UserController@filter')->name('user.activity.search');
 
-        //Reports
-        Route::get('/report/customer_list', 'EcommerceControllers\ReportsController@customer_list')->name('report.customer.list');
-        Route::get('/report/product_list', 'EcommerceControllers\ReportsController@product_list')->name('report.product.list');
-        Route::get('/report/sales_list', 'EcommerceControllers\ReportsController@sales_list')->name('report.sales.list');
-        Route::get('/report/unpaid_list', 'EcommerceControllers\ReportsController@unpaid_list')->name('report.sales.unpaid');
-        Route::get('/report/sales_payments', 'EcommerceControllers\ReportsController@sales_payments')->name('report.sales.payments');
-        Route::get('/report/inventory_list', 'EcommerceControllers\ReportsController@inventory_list')->name('report.inventory.list');
-        Route::get('/report/inventory_reorder_point', 'EcommerceControllers\ReportsController@inventory_reorder_point')->name('report.inventory.reorder_point');
-        Route::get('/report/stock-card/{id}', 'EcommerceControllers\ReportsController@stock_card')->name('report.product.stockcard');
+        
 
         // Roles
         Route::resource('/role', 'Settings\RoleController');

@@ -36,7 +36,7 @@
                         <ul class="cart-wrap">
                             @php $grandtotal = 0; @endphp
                             @forelse($cart as $order)
-                                @php $grandtotal += $order->ItemTotalPrice; @endphp
+                            @php $grandtotal += $order->ItemTotalPrice; @endphp
                             <li class="item">
                                 <div class="remove-item">
                                     <a href="#" onclick="remove_item('{{$order->id}}')" style="font-size: .7em;" class="text-uppercase txt-10">Remove <span class="lnr lnr-cross"></span></a>
@@ -65,7 +65,7 @@
                                             <div class="cart-quantity">
                                                 <label for="quantity">Quantity</label>
                                                 <div class="quantity">
-                                                    <input type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="{{ $order->product->inventory }}" step="1" data-inc="1">
+                                                    <input type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="{{ $order->product->inventory }}" step="1" data-inc="1" onchange="updateTotalAmount('{{$order->id}}');" id="order{{$order->id}}_qty">
                                                     <div class="quantity-nav">
                                                         <div class="quantity-button quantity-up">+</div>
                                                         <div class="quantity-button quantity-down">-</div>
@@ -89,13 +89,16 @@
                                                                     <p>Total Weight (g)</p>
                                                                 </td>
                                                                 <td>
-                                                                    <p>{{ $order->TotalWeight }}</p>
+                                                                    <input type="hidden" id="input_order{{$order->id}}_product_weight" value="{{$order->product->weight}}">
+                                                                    <p id="order{{$order->id}}_total_weight">{{ $order->TotalWeight }}</p>
                                                                 </td>
                                                             </tr>
                                                         </table>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <div class="cart-product-price">₱ {{ number_format($order->ItemTotalPrice,2) }}</div>
+                                                        <input type="hidden" class="input_product_total_price" id="input_order{{$order->id}}_product_total_price" value="{{$order->ItemTotalPrice}}">
+                                                        <input type="hidden" id="input_order{{$order->id}}_product_price" value="{{$order->product->price}}">
+                                                        <div class="cart-product-price">₱ <span id="order{{$order->id}}_total_price">{{ number_format($order->ItemTotalPrice,2) }}</span></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -104,7 +107,10 @@
                                 </div>
                             </li>
                             @empty
-
+                                <div class="gap-30"></div>
+                                <div class="alert alert-primary" role="alert">
+                                    Your shopping cart is <strong>empty</strong>.
+                                </div>
                             @endforelse
                         </ul>
                     </div>
@@ -120,7 +126,7 @@
                                             Subtotal
                                         </div>
                                         <div class="table-cell">
-                                            ₱ {{ number_format($grandtotal,2) }}
+                                            ₱ <span id="subtotal">{{ number_format($grandtotal,2) }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -132,7 +138,7 @@
                                             Grand Total
                                         </div>
                                         <div class="table-cell">
-                                            ₱ {{ number_format($grandtotal,2) }}
+                                            ₱ <span id="grandtotal">{{ number_format($grandtotal,2) }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -220,6 +226,44 @@
 
 @section('customjs')
     <script>
+        function FormatAmount(number, numberOfDigits) {
+
+            var amount = parseFloat(number).toFixed(numberOfDigits);
+            var num_parts = amount.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            return num_parts.join(".");
+        }
+
+        function updateTotalAmount(id){
+            var qty = $('#order'+id+'_qty').val();
+            var weight = $('#input_order'+id+'_product_weight').val();
+            var price = $('#input_order'+id+'_product_price').val();
+
+            total_weight = parseFloat(weight)*parseFloat(qty);
+            total_price  = parseFloat(price)*parseFloat(qty);
+
+            $('#order'+id+'_total_weight').html(FormatAmount(total_weight,2));
+            $('#order'+id+'_total_price').html(FormatAmount(total_price,2));
+            $('#input_order'+id+'_product_total_price').val(total_price);
+
+            grandTotal();
+        }
+
+        function grandTotal(){
+            var totalAmount = 0;
+
+            $(".input_product_total_price").each(function() {
+                if(!isNaN(this.value) && this.value.length!=0) {
+                    totalAmount += parseFloat(this.value);
+                }
+            });
+            
+            $('#subtotal').html(FormatAmount(totalAmount,2));
+            $('#grandtotal').html(FormatAmount(totalAmount,2));
+
+        }
+
         function remove_item(id){
             swal({
                 title: 'Are you sure?',

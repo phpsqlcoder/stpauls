@@ -38,6 +38,7 @@ class CustomerController extends Controller
 
     private $searchFields = ['firstname','lastname'];
 
+
     public function index($param = null)
     {
         $customConditions = [
@@ -84,121 +85,6 @@ class CustomerController extends Controller
         return view('admin.customers.reactivate-request',compact('customers','filter', 'searchType'));
     }
 
-    // public function create()
-    // {
-    //     $roles = Role::get();
-    //     return view('admin.customers.create',compact('roles'));
-    // }
-
-//     public function store(Request $request)
-//     {
-// //        if(User::where('name',$request->fname.' '.$request->lname)->exists()){
-// //            return back()->with('duplicate', __('standard.users.duplicate_email'));
-// //        } else {
-//         $fname = '';
-//         if($request->is_org =='1')
-//         {
-//             $fname = explode("@",$request->email);
-//             $fname = $fname[0];
-//         }
-//         else
-//         {
-//             $fname = $request->fname;
-//         }
-//             $user = User::create([
-//                 'firstname'             => $fname,
-//                 'lastname'              => $request->lname,
-//                 'name'                  => $fname.' '.$request->lname,
-//                 'password'              => str_random(32),
-//                 'email'                 => $request->email,
-//                 'role_id'               => NULL,
-//                 'is_active'             => 1,
-//                 'user_id'               => NULL,
-//                 'remember_token'        => str_random(10),
-//                 'is_org'                => $request->is_org,
-//                 'user_type'             => 'customer',
-//                 'birthday'              => $request->birthday,
-//                 'address_street'        => $request->address_street,
-//                 'address_municipality'  => $request->address_municipality,
-//                 'address_city'          => $request->address_city,
-//                 'address_region'        => $request->address_region,
-//                 'contact_person'        => $request->contact_person,
-//                 'organization'          => $request->organization,
-//                 'contact_tel'           => $request->contact_tel,
-//                 'contact_mobile'        => $request->contact_mobile,
-//                 'contact_fax'           => $request->contact_fax,
-//                 'registration_source'   => $request->registration_source,
-//                 'agent_code'            => $request->agent_code,
-//             ]);
-
-//             $user->send_reset_temporary_password_email();
-
-//             return redirect()->route('customers.index')->with('success', 'Pending for activation. Please remind the user to check the email and activate the account.');
-// //        }
-//     }
-
-    // public function edit($id)
-    // {
-    //     $customer_type='';
-
-    //     $roles = Role::get();
-    //     $user = User::where('id',$id)->first();
-
-    //     $collection= collect($user)->only([
-    //        'id'
-    //       ,'is_org'
-    //     ]);
-
-    //     if($collection['is_org']=='0')
-    //     {
-    //         $customer_type='Individual';
-    //     }
-    //     else
-    //     {
-    //         $customer_type='Organization';
-    //     }
-
-    //     return view('admin.customers.edit',compact('user','roles','collection','customer_type'));
-    // }
-
-    // public function update(Request $request, User $customer)
-    // {
-    //    $fname = '';
-    //     if($request->is_org =='1')
-    //     {
-    //         $fname = explode("@",$request->email);
-    //         $fname = $fname[0];
-    //     }
-    //     else
-    //     {
-    //         $fname = $request->fname;
-    //     }
-
-    //    $customer->update([
-    //         'firstname'             => $fname,
-    //         'lastname'              => $request->lname,
-    //         'name'                  => $fname.' '.$request->lname,
-    //         'email'                 => $request->email,
-    //         'is_org'                => $request->is_org,
-    //         'user_type'             => 'customer',
-    //         'birthday'              => $request->birthday,
-    //         'address_street'        => $request->address_street,
-    //         'address_municipality'  => $request->address_municipality,
-    //         'address_city'          => $request->address_city,
-    //         'address_region'        => $request->address_region,
-    //         'contact_person'        => $request->contact_person,
-    //         'organization'          => $request->organization,
-    //         'contact_tel'           => $request->contact_tel,
-    //         'contact_mobile'        => $request->contact_mobile,
-    //         'contact_fax'           => $request->contact_fax,
-    //         'registration_source'   => $request->registration_source,
-    //         'agent_code'            => $request->agent_code,
-
-    //     ]);
-
-    //     return back()->with('success', 'Record successfully updated');
-    // }
-
     public function deactivate(Request $request)
     {
     	Customer::find($request->customer_id)->update([
@@ -227,25 +113,5 @@ class CustomerController extends Controller
 
         return view('admin.customers.profile',compact('user','logs','param'));
     }
-
-    // public function filter()
-    // {
-    //     $params = Input::all();
-
-    //     return $this->apply_filter($params);
-    // }
-
-    // public function apply_filter($param = null)
-    // {
-    //     $user = User::where('id',$param['id'])->first();
-
-    //     if(isset($param['order'])){
-    //         $logs = Logs::where('created_by',$param['id'])->orderBy($param['sort'],$param['order'])->paginate($param['pageLimit']);
-    //     } else {
-    //         $logs = Logs::where('created_by',$param['id'])->paginate($param['pageLimit']);
-    //     }
-
-    //     return view('admin.customers.profile',compact('user','logs','param'));
-    // }
 
 }

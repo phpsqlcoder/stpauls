@@ -233,4 +233,19 @@ return [
         'update_success' => 'Selected location status has been changed to :STATUS',
     ],
 
+    'discount' => [
+        'create_success' => 'Discount has been added.',
+        'update_success' => 'Discount has been updated.',
+        'single_delete_success' => 'Discount has been deleted.',
+        'restore_discount_success' => 'Discount successfully restored.',
+        'discount_update_success' => 'Selected discount status has been changed to :STATUS',
+        'multiple_delete_success' => 'Selected discounts has been deleted.'
+    ],
+
+    'loyalty' => [
+        'approved_loyalty_success' => 'Customer loyalty has been approved and discount is applied for the next purchase.',
+        'disapproved_loyalty_success' => 'Customer loyalty has been disapproved.',
+        'update_discount_success' => 'Loyalty discount has been updated.',
+    ],
+
 ];

@@ -68,6 +68,7 @@
                     </li>
                 </ul>
                 <div class="tab-content rounded bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
+                    <!-- Website Settings Tab -->
                     <div class="tab-pane fade @if(session()->has('tabname')) @else show active @endif" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="col-md-6 mg-t-15">
                             <form method="POST" action="{{ route('website-settings.update') }}" enctype="multipart/form-data" id="selectForm2" class="parsley-style-1" data-parsley-validate novalidate>
@@ -159,6 +160,7 @@
                             </form>
                         </div>
                     </div>
+
                     <!-- Contact Tab -->
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                         <div class="col-md-6 mg-t-15">
@@ -198,6 +200,7 @@
                             </form>
                         </div>
                     </div>
+
                     <!-- Social Tab -->
                     <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="profile-tab">
                         <div class="col-lg-12 mg-t-15">
@@ -250,6 +253,7 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- Data Privacy Tab -->
                     <div class="tab-pane fade" id="privacy" role="tabpanel" aria-labelledby="privacy-tab">
                         <div class="col-lg-12 mg-t-15">
@@ -319,6 +323,7 @@
                             </form>
                         </div>
                     </div>
+
                     <!-- Ecommerce Tab -->
                     <div class="tab-pane fade @if(session()->has('tabname') && session('tabname') == 'ecommerce') show active @endif" id="ecommerce" role="tabpanel" aria-labelledby="ecommerce-tab">
                         <div class="col-lg-12 mg-t-15">
@@ -399,7 +404,7 @@
                                         <button type="submit" class="btn btn-xs btn-primary">Save Changes</button>
                                         <button type="button" onclick="add_remittance()" class="btn btn-xs btn-secondary">Add Remittance</button>
                                     </div>
-                                </tr>
+                                </form>
 
                                 <h4>Checkout Options</h4>
                                 <div class="form-group">
@@ -462,16 +467,15 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <div id="title" class="parsley-input">
-                                                <label>Allowed Time From</label>
-                                                <input type="time" name="time_from" value="{{ $cod->allowed_time_from }}" class="form-control">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div id="title" class="parsley-input">
-                                                <label>Allowed Time To</label>
-                                                <input type="time" name="time_to" value="{{ $cod->allowed_time_to }}" class="form-control">
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <label>Time From*</label>
+                                                    <input type="time" name="time_from" value="{{ $cod->allowed_time_from }}" class="form-control">
+                                                </div>
+                                                <div class="col">
+                                                    <label>Time To*</label>
+                                                    <input type="time" name="time_to" value="{{ $cod->allowed_time_to }}" class="form-control">
+                                                </div>
                                             </div>
                                         </div>
 
@@ -528,16 +532,15 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <div id="title" class="parsley-input">
-                                                <label>Allowed Time From</label>
-                                                <input type="time" name="time_from" value="{{ $stp->allowed_time_from }}" class="form-control">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div id="title" class="parsley-input">
-                                                <label>Allowed Time To</label>
-                                                <input type="time" name="time_to" value="{{ $stp->allowed_time_to }}" class="form-control">
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <label>Time From*</label>
+                                                    <input type="time" name="time_from" value="{{ $stp->allowed_time_from }}" class="form-control">
+                                                </div>
+                                                <div class="col">
+                                                    <label>Time To*</label>
+                                                    <input type="time" name="time_to" value="{{ $stp->allowed_time_to }}" class="form-control">
+                                                </div>
                                             </div>
                                         </div>
 
@@ -608,16 +611,15 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <div id="title" class="parsley-input">
-                                                <label>Allowed Time From</label>
-                                                <input type="time" name="time_from" value="{{ $sdd->allowed_time_from }}" class="form-control">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div id="title" class="parsley-input">
-                                                <label>Allowed Time To</label>
-                                                <input type="time" name="time_to" value="{{ $sdd->allowed_time_to }}" class="form-control">
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <label>Time From*</label>
+                                                    <input type="time" name="time_from" value="{{ $sdd->allowed_time_from }}" class="form-control">
+                                                </div>
+                                                <div class="col">
+                                                    <label>Time To*</label>
+                                                    <input type="time" name="time_to" value="{{ $sdd->allowed_time_to }}" class="form-control">
+                                                </div>
                                             </div>
                                         </div>
 
@@ -662,17 +664,10 @@
                                         <button type="submit" class="btn btn-xs btn-primary">Save Changes</button>
                                     </div>
                                 </form>
-
-                                <h4 class="mg-t-50">Product Settings</h4>
-                                <div class="form-group">
-                                    <div id="rev" class="parsley-input">                                            
-                                        <input type="checkbox" name="review_is_allowed"  @if($web->review_is_allowed == 1) checked @endif  data-parsley-class-handler="#rev" value="{{ old('review_is_allowed',$web->review_is_allowed) }}">
-                                        Allow product review
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- Payments Tab -->
                     <div class="tab-pane fade" id="paynamics" role="tabpanel" aria-labelledby="paynamics-tab">
                         <div class="col-lg-12 mg-t-15">

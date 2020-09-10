@@ -16,60 +16,33 @@
 @endsection
 
 @section('content')
-<div style="margin:0px 40px 200px 40px;font-family:Arial;">
-    <h4 class="mg-b-0 tx-spacing--1">Unpaid Transaction Report</h4>
-           
-    <form autocomplete="off" action="{{route('report.sales.unpaid')}}" method="get">
-        <input type="hidden" name="act" value="go">
-        @csrf
-        <table>
-            <tr>
-                <td>Start Date: <input type="date" class="form-control" name="startdate" ></td>
-                <td>End Date: <input type="date" class="form-control" name="enddate"></td>
-                <td><button type="submit" class="btn btn-primary" style="margin:20px 0px 0px 20px;">Generate</button></td>
-            </tr>
-        </table>
-    </form>
-             
-
-    @if($rs <> '')
-        <br><br>
+<div style="margin:0px 40px 200px 40px;">
+    <h4 class="mg-b-0 tx-spacing--1">Product List</h4>
         <table id="example" class="display nowrap" style="width:100%;font: normal 13px/150% Arial, sans-serif, Helvetica;">
             <thead>
                 <tr>
-                    <th>Order#</th>
-                    <th>Date</th>
-                    <th>Customer</th>
-                    <th>Product</th>
-                    <th>Delivery Status</th>
-                    <th>Price</th>
-                    <th>Qty</th>
-                    <th>Total Amount</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Category</th>                                
+                    <th>Total Number of Sales</th>                        
                 </tr>
             </thead>
             <tbody>    
-            @forelse($rs as $r)
-                <tr>
-                    <td>{{$r->order_number}}</td>
-                    <td>{{$r->hcreated}}</td>
-                    <td>{{$r->customer_name}}</td>
-                    <td>{{$r->product_name}}</td>
-                    <th>{{$r->delivery_status}}</th>
-                    <td>{{number_format($r->price,2)}}</td>
-                    <td>{{number_format($r->qty,2)}}</td>
-                    <td>{{number_format($r->price*$r->qty,2)}}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="8" class="text-center">No unpaid transactions.</td>
-                </tr>
-            @endforelse
-
+                @forelse($rs as $r)
+                    <tr>
+                        <td>{{$r->product->code}}</td>
+                        <td>{{$r->product->name}}</td>
+                        <td>{{$r->product->category->name}}</td>
+                        <td>{{$r->numberOfSales}}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7">No report result.</td>
+                    </tr>
+                @endforelse
             </tbody>
-
         </table>
-    @endif
-</div>
+    </div>
 @endsection
 
 @section('pagejs')
@@ -114,7 +87,7 @@
                         columns: ':visible'
                     }
                 },
-                 // {
+                // {
                 //     extend: 'pdf',
                 //     exportOptions: {
                 //         columns: ':visible'
@@ -133,7 +106,7 @@
                 },
                 'colvis'
             ],
-            columnDefs: [ {
+            columnDefs: [ {                
                 targets: [],
                 visible: false
             } ]

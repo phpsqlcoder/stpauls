@@ -81,4 +81,5 @@ class Cart extends Model
         return $qty;
     }
 
+
 }

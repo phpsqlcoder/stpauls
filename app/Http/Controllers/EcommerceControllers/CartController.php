@@ -20,6 +20,12 @@ use Auth;
 use Redirect;
 use DateTime;
 
+use DB;
+use App\EcommerceModel\Customer;
+use App\EcommerceModel\CheckoutOption;
+
+use App\StPaul\LoyalCustomer;
+
 
 
 class CartController extends Controller
@@ -147,13 +153,6 @@ class CartController extends Controller
                         'qty' => $qty[$key]
                     ]);
                 }
-
-                // for ($x = 1; $x <= $request->total_products; $x++) {
-                //     $upd = Cart::whereId($request->record_id[$x])->where('user_id', auth()->id())->update([
-                //         'qty' => $request->quantity[$x]
-                //     ]);
-                  
-                // }
                
                 return back()->with('success', 'Cart has beed updated successfully.');
             } else {
@@ -210,79 +209,73 @@ class CartController extends Controller
          return view('theme.paynamics.sender', compact('base64Code'));
     }
 
-    public function save_sales(Request $request) { 
-      
-        $customer_delivery_adress = $request->delivery_address ?? ' ';
-        $customer_name = Auth::user()->fullName;
-        $customer_contact_number =  $request->mobile ?? Auth::user()->mobile;
-           
-      
-        $totalPrice = $request->total_amount;
-        $ran = microtime();
+    public function save_sales(Request $request)
+    {
         $today = getdate();
-        $member = Auth::user();
-        $requestId = $today[0].substr($ran, 2,6);        
+        $ran = microtime();
+        $requestId = $today[0].substr($ran, 2,6);
+
+        $customer = Customer::find(Auth::id());
+        $delivery_type = CheckoutOption::find($request->shipOption);
+
         $salesHeader = SalesHeader::create([
-            'user_id' => auth()->id(),
             'order_number' => $requestId,
-            'customer_name' => $customer_name,
-            'customer_contact_number' => $customer_contact_number,
-            'customer_address' => $customer_delivery_adress,
-            'customer_delivery_adress' => $customer_delivery_adress,
-            'delivery_tracking_number' => ' ',
-            'delivery_fee_amount' => $request->delivery_fee,
-            'other_instruction' => $request->instruction,
-            'delivery_courier' => ' ',
-            'delivery_type' => $request->shipping_type,
-            'gross_amount' => $totalPrice ,
+            'customer_name' => $customer->fullname,
+            'customer_contact_number' => $customer->mobile,
+            'customer_address' => $customer->address1.', '.$customer->address2,
+            'customer_delivery_adress' => $customer->address1.', '.$customer->address2,
+            'order_source' => 'web',
+            'delivery_tracking_number' => '',
+            'delivery_courier' => '',
+            'delivery_type' => $delivery_type->name,
+            'delivery_fee_amount' => $request->deliveryfee,
+            'delivery_status' => 'Waiting for Payment',
+            'gross_amount' => $request->totalDue,
             'tax_amount' => 0,
-            'net_amount' => $totalPrice,
+            'net_amount' => $request->subtotal,
             'discount_amount' => 0,
             'payment_status' => 'UNPAID',
-            'delivery_status' => 'Waiting for Payment',
             'status' => 'active',
+            'other_instruction' => $request->other_instruction,
+            'user_id' => 0,
+            'customer_id' => Auth::id()
         ]);
-     
-        $grand_gross = 0;
-        $grand_tax = 0;
-
-        $coupon_code = 0;
-        $coupon_amount = 0;
-        $carts = Cart::where('user_id',Auth::id())->get();
-        foreach ($carts as $cart) {
-            
-            $product = $cart->product;
-            $gross_amount = ($product->price * $cart->qty) + ($cart->paella_price * $cart->qty);
-            $tax_amount = $gross_amount - ($gross_amount/1.12);
-            $grand_gross += $gross_amount;
-            $grand_tax += $tax_amount;
 
 
-            $data['price'] = $product->price;
-            $data['tax'] = $data['price'] - ($data['price']/1.12);
-            $data['other_cost'] = 0;
-            $data['net_price'] = $data['price'] - ($data['tax'] + $data['other_cost']);
+        $data = $request->all();
+
+        $productid = $data['productid'];
+        $qty       = $data['qty'];
+
+        foreach($productid as $key => $prodId){
+
+            $product  = Product::find($prodId);
+            $promoQry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','PUBLISHED')->where('promos.is_expire',0)->where('onsale_products.product_id',$prodId);
+
+            $promoChecker = $promoQry->count();
+            if($promoChecker == 1){
+               $promoDetails = $promoQry->first(); 
+            }
 
             SalesDetail::create([
                 'sales_header_id' => $salesHeader->id,
-                'product_id' => $product->id,
+                'product_id' => $prodId,
                 'product_name' => $product->name,
                 'product_category' => $product->category_id,
-                'price' => $product->price,              
-                'tax_amount' => $tax_amount,
-                'promo_id' => 0,
-                'promo_description' => '',
-                'discount_amount' => 0,
-                'gross_amount' => $gross_amount,
-                'net_amount' => $gross_amount,
-                'qty' => $cart->qty,             
-                'uom' => $product->uom,               
+                'price' => $product->price,
+                'tax_amount' => $product->price-($product->price/1.12),
+                'promo_id' => $promoChecker == 1 ? $promoDetails->id : 0,
+                'promo_description' => $promoChecker == 1 ? $promoDetails->name : '',
+                'discount_amount' => $promoChecker == 1 ? $product->price*('.'.$promoDetails->discount) : 0.00,
+                'gross_amount' => $request->totalDue,
+                'net_amount' => 0,
+                'qty' => $qty[$key],
+                'uom' => $product->uom,
                 'created_by' => Auth::id()
             ]);
-          
         }
 
-        Mail::to(Auth::user())->send(new SalesCompleted($salesHeader));  
+        //Mail::to(Auth::user())->send(new SalesCompleted($salesHeader));  
       
         $urls = [
             'notification' => route('cart.payment-notification'),
@@ -290,26 +283,45 @@ class CartController extends Controller
             'cancel' => route('profile.sales'),
         ];
         
-        $base64Code = PaynamicsHelper::payNow($requestId, Auth::user(), $carts, $totalPrice, $urls, false ,$request->delivery_fee);
+        //$base64Code = PaynamicsHelper::payNow($requestId, Auth::user(), $carts, $totalPrice, $urls, false ,$request->deliveryfee);
 
         Cart::where('user_id', Auth::id())->delete();
-        return view('theme.paynamics.sender', compact('base64Code'));
+        $this->check_loyalty($request->totalDue);
+
+        return redirect(route('cart.front.show'));
        
+    }
+
+    public function check_loyalty($amount)
+    {
+        $discountBracket = 10000;
+
+        if($amount >= $discountBracket){
+            $qry = LoyalCustomer::where('customer_id',Auth::id());
+
+            if($qry->exists()) {
+                $customer = $qry->first();
+
+                $qry->update(['total_purchase' => ($customer->total_purchase+1) ]);
+            } else {
+                LoyalCustomer::create([
+                    'customer_id' => Auth::id(),
+                    'total_purchase' => 1,
+                    'status' => 'PENDING'
+                ]);
+            }
+        }
     }
 
     public function receive_data_from_payment_gateway(Request $request)
     {
-
-        
         $paymentResponse = (isset($_POST['paymentresponse'])) ? $_POST['paymentresponse'] : null;
 
         if (empty($paymentResponse)) {
             return false;
         }
-
-
         
-$body = str_replace(" ", "+", $paymentResponse);
+        $body = str_replace(" ", "+", $paymentResponse);
 
         try {
             $Decodebody = base64_decode($body);

@@ -1,9 +1,5 @@
 @extends('admin.layouts.report')
 
-@section('pagetitle')
-
-@endsection
-
 @section('pagecss')
     <!-- vendor css -->
     <link href="{{ asset('lib/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
@@ -11,7 +7,6 @@
     <link href="{{ asset('lib/jqvmap/jqvmap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/bselect/dist/css/bootstrap-select.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/ion-rangeslider/css/ion.rangeSlider.min.css') }}" rel="stylesheet">
-
 
     <style>
         .row-selected {
@@ -21,53 +16,45 @@
 @endsection
 
 @section('content')
-
-  
-                        <div style="margin:0px 40px 200px 40px;">
-                            <h4 class="mg-b-0 tx-spacing--1">Customer List</h4>
-                        <table id="example" class="display nowrap" style="width:100%;font: normal 13px/150% Arial, sans-serif, Helvetica;">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Status</th>
-                                <th>Registration Date</th>
-                                <th>Mobile</th>
-                                <th>Phone</th>
-                                <th>Address Line 1</th>
-                                <th>Address Line 2</th>
-                                <th>City</th>
-                                <th>Postal</th>
-
-                            </tr>
-                            </thead>
-                            <tbody>
-                                
-                            @forelse($rs as $r)
-                                <tr>
-                                    <td>{{$r->name}}</td>
-                                    <td>{{$r->email}}</td>
-                                    <td>{{($r->is_active==1 ? 'Active':'Inactive')}}</td>
-                                    <td>{{$r->created_at}}</td>
-                                    <td>{{$r->mobile}}</td>
-                                    <td>{{$r->phone}}</td>
-                                    <td>{{$r->address_street}}</td>
-                                    <td>{{$r->address_municipality}}</td>
-                                    <td>{{$r->city}}</td>
-                                    <td>{{$r->postal}}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7">No report result.</td>
-                                </tr>
-                            @endforelse
-
-                            </tbody>
-
-                        </table>
-                    </div>
-               
-
+<div style="margin:0px 40px 200px 40px;">
+    <h4 class="mg-b-0 tx-spacing--1">Customer List</h4>
+    <table id="example" class="display nowrap" style="width:100%;font: normal 13px/150% Arial, sans-serif, Helvetica;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Registration Date</th>
+                <th>Mobile</th>
+                <th>Phone</th>
+                <th>Address 1</th>
+                <th>Address 2</th>
+                <th>City</th>
+                <th>Postal</th>
+            </tr>
+        </thead>
+        <tbody>  
+            @forelse($rs as $r)
+                <tr>
+                    <td>{{$r->fullname}}</td>
+                    <td>{{$r->email}}</td>
+                    <td>{{($r->is_active == 1 ? 'Active' : 'Inactive')}}</td>
+                    <td>{{$r->created_at}}</td>
+                    <td>{{$r->mobile}}</td>
+                    <td>{{$r->telno}}</td>
+                    <td>{{$r->address}}</td>
+                    <td>{{$r->barangay}}</td>
+                    <td>{{$r->cities->city}}</td>
+                    <td>{{$r->zipcode}}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="7">No report result.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
 @endsection
 
 @section('pagejs')
@@ -81,8 +68,6 @@
 @section('customjs')
 <script src="{{ asset('js/datatables/Buttons-1.6.1/js/buttons.colVis.min.js') }}"></script>
 <script>
-  
-
     $(document).ready(function() {
         $('#example').DataTable( {
             dom: 'Bfrtip',
@@ -112,12 +97,6 @@
                         columns: ':visible'
                     }
                 },
-                 // {
-                //     extend: 'pdf',
-                //     exportOptions: {
-                //         columns: ':visible'
-                //     }
-                // },
                 {   
                     extend: 'pdfHtml5',
                     text: 'PDF',

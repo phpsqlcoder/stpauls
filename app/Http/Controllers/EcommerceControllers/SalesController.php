@@ -17,7 +17,7 @@ use Auth;
 
 class SalesController extends Controller
 {
-    private $searchFields = ['order_number','response_code','updated_at1', 'updated_at2'];
+    private $searchFields = ['order_number','response_code','updated_at'];
 
     public function __construct()
     {
@@ -38,7 +38,6 @@ class SalesController extends Controller
 
 
         $listing = new ListingHelper('desc',10,'order_number',$customConditions);
-        //$sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
 
         $sales = SalesHeader::where('id','>','0');
         if(isset($_GET['startdate']) && $_GET['startdate']<>'')
@@ -212,6 +211,20 @@ class SalesController extends Controller
         $delivery = DeliveryStatus::where('order_id',$request->id)->get();
 
         return view('admin.sales.delivery_history',compact('delivery'));
+    }
+
+    public function update_delivery_fee(Request $request)
+    {
+        $sales = SalesHeader::find($request->salesid);
+
+        $sales->update([
+            'delivery_fee_amount' => $request->delivery_fee,
+            'gross_amount' => ($sales->gross_amount+$request->delivery_fee),
+            'net_amount' => ($sales->net_amount+$request->delivery_fee),
+            'user_id' => Auth::id()
+        ]);
+
+        return back()->with('success','Delivery has been added updated.');
     }
 
 }

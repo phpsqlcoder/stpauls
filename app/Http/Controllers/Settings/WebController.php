@@ -401,7 +401,6 @@ class WebController extends Controller
             $allowed_days .= $day.'|';
         }
 
-
         $qry = CheckoutOption::find($request->id)->update([
             'delivery_rate' => $request->delivery_rate,
             'minimum_purchase' => $request->min_purchase,

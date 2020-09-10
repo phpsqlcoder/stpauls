@@ -19,7 +19,7 @@ return [
     'login' => [
         'welcome' => 'Welcome to :company Admin Portal.',
         'invalid_email' => 'Invalid email address Please try again.',
-        'incorrect_input' => 'Invalid username and password Please try again.',
+        'incorrect_input' => 'Invalid username and password. Please try again.',
         'unregistered_email' => 'The email address does not exist. Please try again.',
         'empty_email' => 'Enter your email address in the format example@domain.com.',
         'empty_password' => 'Enter your password.',

@@ -19,6 +19,10 @@ class Customer extends Authenticatable
     protected $fillable = ['email','password','firstname','lastname','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','fbId','googleId','is_subscriber','user_id','remember_token','reactivate_request'];
 
 
+    public function delivery_rate()
+    {
+        return $this->belongsTo('\App\Deliverablecities','city','city');
+    }
     public function setIsEmailSubscriberAttribute($value)
     {
         if ($value == 0 || $value == false) {

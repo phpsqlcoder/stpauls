@@ -17,7 +17,7 @@ class Deliverablecities extends Model
         return $this->belongsTo('App\User');
     }
 
-    public function province()
+    public function province_detail()
     {
     	return $this->belongsTo('\App\Provinces','province');
     }
@@ -25,5 +25,12 @@ class Deliverablecities extends Model
     public function city()
     {
     	return $this->belongsTo('\App\Cities','city');
+    }
+
+    public static function check_area($city)
+    {
+        $qry = Deliverablecities::where('city',$city)->count();
+
+        return $qry;
     }
 }
