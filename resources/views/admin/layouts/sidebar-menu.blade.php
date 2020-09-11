@@ -137,6 +137,7 @@
                 <a href="#" class="nav-link"><i data-feather="users"></i> <span>Customers</span></a>
                 <ul>
                     <li @if (\Route::current()->getName() == 'customers.index') class="active" @endif><a href="{{ route('customers.index') }}">Manage Customers</a></li>
+                    <li @if (\Route::current()->getName() == 'customers.index') class="active" @endif><a href="{{ route('customer.reactivate-request') }}">Reactivate Request&nbsp;<span class="badge badge-danger">1</span></a></li>
                 </ul>
             </li>
         @endif
@@ -156,6 +157,17 @@
                 <ul>
                     <li @if (\Route::current()->getName() == 'promos.index') class="active" @endif><a href="{{ route('promos.index') }}">Manage Promos</a></li>
                     <li><a href="{{ route('promos.create') }}">Create a Promo</a></li>
+                </ul>
+            </li>
+        @endif
+
+        @if (auth()->user()->has_access_to_module('loyalty'))
+            <li class="nav-item with-sub @if (request()->routeIs('loyalty*') || request()->routeIs('discounts*')) active show @endif">
+                <a href="" class="nav-link"><i data-feather="users"></i> <span>Loyalty</span></a>
+                <ul>
+                    <li @if (\Route::current()->getName() == 'loyalty.index') class="active" @endif><a href="{{ route('loyalty.index') }}">Manage Loyalty</a></li>
+                    <li @if (\Route::current()->getName() == 'discounts.index') class="active" @endif><a href="{{ route('discounts.index') }}">Manage Discounts</a></li>
+                    <li @if (\Route::current()->getName() == 'discounts.create') class="active" @endif><a href="{{ route('discounts.create') }}">Create a Discount</a></li>
                 </ul>
             </li>
         @endif
@@ -181,6 +193,18 @@
             </li>
         @endif
 
+        @if (auth()->user()->has_access_to_module('branches'))
+            <li class="nav-item with-sub @if (request()->routeIs('locations*')) active show @endif">
+                <a href="" class="nav-link"><i data-feather="box"></i> <span>Branches</span></a>
+                <ul>
+                    <li @if (\Route::current()->getName() == 'branch.index' || \Route::current()->getName() == 'branch.edit') class="active" @endif><a href="{{ route('branch.index') }}">Manage Branches</a></li>
+                    @if (auth()->user()->has_access_to_route('branch.create'))
+                        <li @if (\Route::current()->getName() == 'branch.create') class="active" @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
+                    @endif
+                </ul>
+            </li>
+        @endif
+
         @if (auth()->user()->has_access_to_module('product') || auth()->user()->has_access_to_module('customer') ||
             auth()->user()->has_access_to_module('sales_transaction') || auth()->user()->has_access_to_module('inventory'))
             <li class="nav-label mg-t-25">Reports</li>
@@ -199,6 +223,7 @@
                     <a href="#" class="nav-link"><i data-feather="users"></i> <span>Products</span></a>
                     <ul>
                         <li><a href="{{ route('report.product.list') }}" target="_blank">Product List</a></li>
+                        <li><a href="{{ route('report.product.best-selling') }}" target="_blank">Best Selling</a></li>
                     </ul>
                 </li>
             @endif
@@ -208,7 +233,6 @@
                     <a href="#" class="nav-link"><i data-feather="users"></i> <span>Sales</span></a>
                     <ul>
                         <li><a href="{{ route('report.sales.list') }}" target="_blank">Sales Report</a></li>
-                        <li><a href="{{ route('report.sales.summary') }}" target="_blank">Sales Summary</a></li>
                         <li><a href="{{ route('report.sales.unpaid') }}" target="_blank">Unpaid Transactions</a></li>
                         <li><a href="{{ route('report.sales.payments') }}" target="_blank">Payments Report</a></li>
                     </ul>

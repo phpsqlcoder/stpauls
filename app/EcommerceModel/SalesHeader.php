@@ -11,9 +11,13 @@ class SalesHeader extends Model
     use SoftDeletes;
 
     protected $table = 'ecommerce_sales_headers';
-    protected $fillable = ['user_id', 'order_number', 'response_code', 'customer_name', 'customer_contact_number', 'customer_address', 'customer_delivery_adress', 'delivery_tracking_number', 'delivery_fee_amount', 'delivery_courier', 'delivery_type',
+    protected $fillable = [
+        'user_id', 'order_number', 'order_source', 'response_code', 'customer_name', 'customer_contact_number', 'customer_address', 'customer_delivery_adress', 'delivery_tracking_number', 'delivery_fee_amount', 'delivery_courier', 'delivery_type',
         'gross_amount', 'tax_amount', 'net_amount', 'discount_amount', 'payment_status',
-        'delivery_status', 'status','other_instruction'];
+        'delivery_status', 'status','other_instruction','customer_id'
+    ];
+
+    public $timestamp = true;
 
     public function user()
     {

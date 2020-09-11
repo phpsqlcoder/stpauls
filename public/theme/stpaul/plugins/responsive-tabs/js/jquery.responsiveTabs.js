@@ -710,11 +710,11 @@
 }(jQuery, window));
 
 $(document).ready(function () {
-    $("#responsiveTabs").responsiveTabs({
-        startCollapsed: "accordion",
-        active: 0,
-        scrollToAccordion: true
-    });
+    // $("#responsiveTabs").responsiveTabs({
+    //     startCollapsed: "accordion",
+    //     active: 0,
+    //     scrollToAccordion: true
+    // });
 
     $("#responsiveTabs2").responsiveTabs({
       startCollapsed: "accordion",
@@ -729,6 +729,7 @@ $(document).ready(function () {
 
         $('#responsiveTabs2').responsiveTabs('enable', parseInt(last));
         $('#responsiveTabs2').responsiveTabs('activate', parseInt(last));
+        
     });
 
     $(".checkout-back-btn").on("click", function () {

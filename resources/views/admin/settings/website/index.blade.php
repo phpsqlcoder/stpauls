@@ -6,6 +6,29 @@
 
 @section('pagecss')
     <script src="{{ asset('lib/ckeditor/ckeditor.js') }}"></script>
+
+    <style>
+        .weekDays-selector input {
+            display: none!important;
+        }
+
+        .weekDays-selector input[type=checkbox] + label {
+            display: inline-block;
+            border-radius: 6px;
+            background: #dddddd;
+            height: 40px;
+            width: 30px;
+            margin-right: 3px;
+            line-height: 40px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .weekDays-selector input[type=checkbox]:checked + label {
+            background: #2AD705;
+            color: #ffffff;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -26,7 +49,7 @@
             <div class="col-lg-12">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Website</a>
+                        <a class="nav-link @if(session()->has('tabname')) @else active @endif" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Website</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Contact</a>
@@ -38,14 +61,15 @@
                         <a class="nav-link" id="privacy-tab" data-toggle="tab" href="#privacy" role="tab" aria-controls="privacy" aria-selected="false">Data Privacy</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="ecommerce-tab" data-toggle="tab" href="#ecommerce" role="tab" aria-controls="ecommerce" aria-selected="false">Ecommerce</a>
+                        <a class="nav-link @if(session()->has('tabname') && session('tabname') == 'ecommerce') active @endif" id="ecommerce-tab" data-toggle="tab" href="#ecommerce" role="tab" aria-controls="ecommerce" aria-selected="false">Ecommerce</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="paynamics-tab" data-toggle="tab" href="#paynamics" role="tab" aria-controls="paynamics" aria-selected="false">Paynamics Accepted Payments</a>
                     </li>
                 </ul>
                 <div class="tab-content rounded bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
-                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <!-- Website Settings Tab -->
+                    <div class="tab-pane fade @if(session()->has('tabname')) @else show active @endif" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="col-md-6 mg-t-15">
                             <form method="POST" action="{{ route('website-settings.update') }}" enctype="multipart/form-data" id="selectForm2" class="parsley-style-1" data-parsley-validate novalidate>
                                 @method('PUT')
@@ -136,6 +160,7 @@
                             </form>
                         </div>
                     </div>
+
                     <!-- Contact Tab -->
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                         <div class="col-md-6 mg-t-15">
@@ -175,6 +200,7 @@
                             </form>
                         </div>
                     </div>
+
                     <!-- Social Tab -->
                     <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="profile-tab">
                         <div class="col-lg-12 mg-t-15">
@@ -227,6 +253,7 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- Data Privacy Tab -->
                     <div class="tab-pane fade" id="privacy" role="tabpanel" aria-labelledby="privacy-tab">
                         <div class="col-lg-12 mg-t-15">
@@ -297,80 +324,351 @@
                         </div>
                     </div>
 
-                    <div class="tab-pane fade" id="ecommerce" role="tabpanel" aria-labelledby="ecommerce-tab">
+                    <!-- Ecommerce Tab -->
+                    <div class="tab-pane fade @if(session()->has('tabname') && session('tabname') == 'ecommerce') show active @endif" id="ecommerce" role="tabpanel" aria-labelledby="ecommerce-tab">
                         <div class="col-lg-12 mg-t-15">
-                            <form action="{{route('website-settings.update-ecommerce')}}" method="post" class="parsley-style-1" data-parsley-validate novalidate>
+                            <div class="col-md-6">
+                                <h4>Payment Options</h4>
+                                <div class="form-group">
+                                    <div class="parsley-input">                                            
+                                        <input type="checkbox" @if(\App\EcommerceModel\PaymentList::paymentOptionstatus(1) == 1) checked @endif onclick="optionCC(1)" id="cb-credit-card">
+                                        Option 1: Credit Card Payment
+                                    </div>
+                                </div>
+                                <hr>
+
+                                <form method="post" action="{{ route('ecom-setting-bank-update') }}">
                                 @csrf
-                                <div class="col-md-6">
-                                    <h4>Checkout Options</h4>
+                                    <div class="form-group">
+                                        <div class="parsley-input">                                            
+                                            <input type="checkbox" @if(\App\EcommerceModel\PaymentList::paymentOptionstatus(2) == 1) checked @endif onclick="optionFT(2)" id="cb-fund-transfer">
+                                            Option 2: Online Fund Transfer
+
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                    @foreach($banks as $bank)
+                                                    <tr>
+                                                        <td class="text-right" width="10%"><input type="checkbox" name="bank[]" value="{{$bank->id}}" @if($bank->is_default == 1) checked disabled @endif @if($bank->is_active == 1) checked @endif id="{{ $bank->id }}"></td>
+                                                        <td>{{ $bank->name }}</td>
+                                                        <td>{{ $bank->account_no }}</td>
+                                                        <td>{{ $bank->branch }}</td>
+                                                        <td class="text-right">
+                                                            @if($bank->is_default == 0)
+                                                                @if($bank->is_active == 0)
+                                                                    <a href="javascript:void(0)" onclick="edit_bank('{{$bank->id}}','{{$bank->name}}','{{$bank->account_no}}','{{$bank->branch}}')"><i class="fa fa-edit"></i></a>
+                                                                    <a href="javascript:void(0)" onclick="delete_bank('{{$bank->id}}')"><i class="fa fa-trash"></i></a>
+                                                                @endif
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mg-l-30">
+                                        <button type="submit" class="btn btn-xs btn-primary">Save Changes</button>
+                                        <button type="button" onclick="add_bank()" class="btn btn-xs btn-secondary">Add Bank</button>
+                                    </div>
+                                </form>
+                                <hr>
+
+                                <form method="post" action="{{ route('ecom-setting-remittance-update') }}">
+                                @csrf
+                                    <div class="form-group">
+                                        <div class="parsley-input">                                            
+                                            <input type="checkbox" @if(\App\EcommerceModel\PaymentList::paymentOptionstatus(3) == 1) checked @endif onclick="optionMT(3)" id="cb-money-transfer">
+                                            Option 3: Money Transfer
+
+                                            <table class="table table-borderless">
+                                                <tbody>
+                                                    @foreach($remittances as $remittance)
+                                                    <tr>
+                                                        <td class="text-right" width="10%"><input type="checkbox" name="remittance[]" value="{{$remittance->id}}" @if($remittance->is_default == 1) checked disabled @endif @if($remittance->is_active == 1) checked @endif id="{{ $remittance->id }}"></td>
+                                                        <td>{{ $remittance->name }}</td>
+                                                        <td>{{ $remittance->qrcode }}</td>
+                                                        <td class="text-right">
+                                                            @if($remittance->is_default == 0)
+                                                                @if($remittance->is_active == 0)
+                                                                    <a href="javascript:void(0)" onclick="edit_remittance('{{$remittance->id}}','{{$remittance->name}}','{{$remittance->qrcode}}')"><i class="fa fa-edit"></i></a>
+                                                                    <a href="javascript:void(0)" onclick="delete_remittance('{{$remittance->id}}')"><i class="fa fa-trash"></i></a>
+                                                                @endif
+                                                            @endif
+                                                        </td>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="form-group mg-l-30">
+                                        <button type="submit" class="btn btn-xs btn-primary">Save Changes</button>
+                                        <button type="button" onclick="add_remittance()" class="btn btn-xs btn-secondary">Add Remittance</button>
+                                    </div>
+                                </form>
+
+                                <h4>Checkout Options</h4>
+                                <div class="form-group">
+                                    <div class="parsley-input">
+                                        Option 4: Cash on Delivery
+                                    </div>
+                                </div>
+
+                                <div class="mg-l-30">
+                                    <form method="post" action="{{ route('ecom-setting-cash-on-delivery-update') }}">
+                                        @csrf
+                                        <div class="form-group">
+                                            <div id="title" class="parsley-input">
+                                                <label>Delivery Rate</label>
+                                                <input type="hidden" name="id" value="{{$cod->id}}">
+                                                <input type="number" name="delivery_rate" id="delivery_rate" class="form-control" data-parsley-class-handler="#delivery_rate" value="{{ $cod->delivery_rate }}" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div id="title" class="parsley-input">
+                                                <label>Minimum Purchase</label>
+                                                <input type="number" name="min_purchase" id="min_purchase" class="form-control" data-parsley-class-handler="#min_purchase" value="{{ $cod->minimum_purchase }}" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div id="title" class="parsley-input">
+                                                <label>Note/Reminder</label>
+                                                <textarea name="reminder" class="form-control" cols="5">{{ $cod->reminder }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Allowed Days</label>
+                                            @php
+                                                $cod_days = [];
+
+                                                foreach(explode('|',$cod->allowed_days) as $day){
+                                                    array_push($cod_days,$day);
+                                                }
+                                            @endphp
+
+                                            <div class="weekDays-selector">
+                                                <input type="checkbox" value="Mon" name="cod_days[]" id="cod-mon" class="weekday" @if(in_array('Mon',$cod_days)) checked @endif/>
+                                                <label for="cod-mon">M</label>
+                                                <input type="checkbox" value="Tue" name="cod_days[]" id="cod-tue" class="weekday" @if(in_array('Tue',$cod_days)) checked @endif/>
+                                                <label for="cod-tue">T</label>
+                                                <input type="checkbox" value="Wed" name="cod_days[]" id="cod-wed" class="weekday" @if(in_array('Wed',$cod_days)) checked @endif/>
+                                                <label for="cod-wed">W</label>
+                                                <input type="checkbox" value="Thu" name="cod_days[]" id="cod-thu" class="weekday" @if(in_array('Thu',$cod_days)) checked @endif/>
+                                                <label for="cod-thu">T</label>
+                                                <input type="checkbox" value="Fri" name="cod_days[]" id="cod-fri" class="weekday" @if(in_array('Fri',$cod_days)) checked @endif/>
+                                                <label for="cod-fri">F</label>
+                                                <input type="checkbox" value="Sat" name="cod_days[]" id="cod-sat" class="weekday" @if(in_array('Sat',$cod_days)) checked @endif/>
+                                                <label for="cod-sat">S</label>
+                                                <input type="checkbox" value="Sun" name="cod_days[]" id="cod-sun" class="weekday" @if(in_array('Sun',$cod_days)) checked @endif/>
+                                                <label for="cod-sun">S</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <label>Time From*</label>
+                                                    <input type="time" name="time_from" value="{{ $cod->allowed_time_from }}" class="form-control">
+                                                </div>
+                                                <div class="col">
+                                                    <label>Time To*</label>
+                                                    <input type="time" name="time_to" value="{{ $cod->allowed_time_to }}" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-xs btn-primary">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <hr>
+
+                                <div class="form-group">
+                                    <div class="parsley-input">
+                                        Option 5: Store Pick up
+                                    </div>
+                                </div>
+
+                                <div class="mg-l-30">
+                                    <form method="post" action="{{ route('ecom-setting-store-pickup-update') }}">
+                                    @csrf
+                                        <div class="form-group">
+                                            <div id="title" class="parsley-input">
+                                                <label>Note/Reminder</label>
+                                                <input type="hidden" name="id" value="{{$stp->id}}">
+                                                <textarea name="reminder" class="form-control" cols="5">{{ $stp->reminder }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Allowed Days</label>
+                                            @php
+                                                $stp_days = [];
+
+                                                foreach(explode('|',$stp->allowed_days) as $day){
+                                                    array_push($stp_days,$day);
+                                                }
+                                            @endphp
+
+                                            <div class="weekDays-selector">
+                                                <input type="checkbox" value="Mon" name="stp_days[]" id="stp-mon" class="weekday" @if(in_array('Mon',$stp_days)) checked @endif/>
+                                                <label for="stp-mon">M</label>
+                                                <input type="checkbox" value="Tue" name="stp_days[]" id="stp-tue" class="weekday" @if(in_array('Tue',$stp_days)) checked @endif/>
+                                                <label for="stp-tue">T</label>
+                                                <input type="checkbox" value="Wed" name="stp_days[]" id="stp-wed" class="weekday" @if(in_array('Wed',$stp_days)) checked @endif/>
+                                                <label for="stp-wed">W</label>
+                                                <input type="checkbox" value="Thu" name="stp_days[]" id="stp-thu" class="weekday" @if(in_array('Thu',$stp_days)) checked @endif/>
+                                                <label for="stp-thu">T</label>
+                                                <input type="checkbox" value="Fri" name="stp_days[]" id="stp-fri" class="weekday" @if(in_array('Fri',$stp_days)) checked @endif/>
+                                                <label for="stp-fri">F</label>
+                                                <input type="checkbox" value="Sat" name="stp_days[]" id="stp-sat" class="weekday" @if(in_array('Sat',$stp_days)) checked @endif/>
+                                                <label for="stp-sat">S</label>
+                                                <input type="checkbox" value="Sun" name="stp_days[]" id="stp-sun" class="weekday" @if(in_array('Sun',$stp_days)) checked @endif/>
+                                                <label for="stp-sun">S</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <label>Time From*</label>
+                                                    <input type="time" name="time_from" value="{{ $stp->allowed_time_from }}" class="form-control">
+                                                </div>
+                                                <div class="col">
+                                                    <label>Time To*</label>
+                                                    <input type="time" name="time_to" value="{{ $stp->allowed_time_to }}" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-xs btn-primary">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <hr>
+
+                                <div class="form-group">
+                                    <div class="parsley-input">
+                                        Option 6: Door to Door Delivery
+                                    </div>
+                                </div>
+                                <hr>
+                                
+                                <div class="form-group">
+                                    <div class="parsley-input">
+                                        Option 7: Same Day Delivery
+                                    </div>
+                                </div>
+
+                                <div class="mg-l-30">
+                                    <form method="post" action="{{ route('ecom-setting-same-day-delivery-update') }}">
+                                    @csrf
+                                        <div class="form-group">
+                                            <div id="title" class="parsley-input">
+                                                <label>Service Fee</label>
+                                                <input type="hidden" name="id" value="{{$sdd->id}}">
+                                                <input type="number" name="service_fee" id="service_fee" class="form-control" data-parsley-class-handler="#title" value="{{ $sdd->service_fee }}" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div id="title" class="parsley-input">
+                                                <label>Note/Reminder</label>
+                                                <textarea name="reminder" class="form-control" cols="5">{{ $sdd->reminder }}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Allowed Days</label>
+                                            @php
+                                                $sdd_days = [];
+
+                                                foreach(explode('|',$sdd->allowed_days) as $day){
+                                                    array_push($sdd_days,$day);
+                                                }
+                                            @endphp
+
+                                            <div class="weekDays-selector">
+                                                <input type="checkbox" value="Mon" name="sdd_days[]" id="sdd-mon" class="weekday" @if(in_array('Mon',$sdd_days)) checked @endif/>
+                                                <label for="sdd-mon">M</label>
+                                                <input type="checkbox" value="Tue" name="sdd_days[]" id="sdd-tue" class="weekday" @if(in_array('Tue',$sdd_days)) checked @endif/>
+                                                <label for="sdd-tue">T</label>
+                                                <input type="checkbox" value="Wed" name="sdd_days[]" id="sdd-wed" class="weekday" @if(in_array('Wed',$sdd_days)) checked @endif/>
+                                                <label for="sdd-wed">W</label>
+                                                <input type="checkbox" value="Thu" name="sdd_days[]" id="sdd-thu" class="weekday" @if(in_array('Thu',$sdd_days)) checked @endif/>
+                                                <label for="sdd-thu">T</label>
+                                                <input type="checkbox" value="Fri" name="sdd_days[]" id="sdd-fri" class="weekday" @if(in_array('Fri',$sdd_days)) checked @endif/>
+                                                <label for="sdd-fri">F</label>
+                                                <input type="checkbox" value="Sat" name="sdd_days[]" id="sdd-sat" class="weekday" @if(in_array('Sat',$sdd_days)) checked @endif/>
+                                                <label for="sdd-sat">S</label>
+                                                <input type="checkbox" value="Sun" name="sdd_days[]" id="sdd-sun" class="weekday" @if(in_array('Sun',$sdd_days)) checked @endif/>
+                                                <label for="sdd-sun">S</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <label>Time From*</label>
+                                                    <input type="time" name="time_from" value="{{ $sdd->allowed_time_from }}" class="form-control">
+                                                </div>
+                                                <div class="col">
+                                                    <label>Time To*</label>
+                                                    <input type="time" name="time_to" value="{{ $sdd->allowed_time_to }}" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-xs btn-primary">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <hr>
+
+                                <form method="post" action="{{ route('website-settings.update-ecommerce') }}">
+                                @csrf
                                     <div class="form-group">
                                         <div class="parsley-input">                                            
                                             <input type="checkbox" name="min_order_is_allowed" id="min_order_is_allowed" @if($web->min_order_is_allowed == 1) checked @endif value="{{ old('min_order_is_allowed',$web->min_order_is_allowed) }}">
-                                            Option 1: Add Free delivery option upon reaching minimum order
+                                            Option 8: Add Free delivery option upon reaching minimum order
                                         </div>
                                     </div>
-                                        <div id="div1" style="display:@if($web->min_order_is_allowed > 0) block @else none @endif; padding-left:20px;">
-                                            <div class="form-group">
-                                                <div id="title" class="parsley-input">
-                                                    <label>Minimum Order for Free Delivery</label>
-                                                    <input type="number" name="min_order" id="min_order" class="form-control" data-parsley-class-handler="#title" value="{{ old('min_order',$web->min_order) }}" required>
-                                                </div>
-                                            </div>
-                                            <div class="form-group" id="promo_header" style="display:@if($web->min_order > 0) block @else none @endif">
-                                                <div id="disp" class="parsley-input">  
 
-                                                    <input type="checkbox" name="promo_is_displayed" @if($web->promo_is_displayed == 1) checked @endif  data-parsley-class-handler="#disp" value="{{ old('promo_is_displayed',$web->promo_is_displayed) }}">
-                                                    Display this promo at page header
-                                                </div>
+                                    <div id="div1" style="display:@if($web->min_order_is_allowed > 0) block @else none @endif; padding-left:20px;">
+                                        <div class="form-group">
+                                            <div id="title" class="parsley-input">
+                                                <label>Minimum Order for Free Delivery</label>
+                                                <input type="number" name="min_order" id="min_order" class="form-control" data-parsley-class-handler="#title" value="{{ old('min_order',$web->min_order) }}" required>
                                             </div>
                                         </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <div class="parsley-input">                                            
                                             <input type="checkbox" name="flatrate_is_allowed"  @if($web->flatrate_is_allowed == 1) checked @endif   value="{{ old('flatrate_is_allowed',$web->flatrate_is_allowed) }}">
-                                            Option 2: Flat Rate per area. <br><small class="mg-l-15">Note: This option requires you to specify the list of deliverable locations to <i>Delivery Rates Module</i></small>
+                                            Option 9: Flat Rate per area. <br><small class="mg-l-15">Note: This option requires you to specify the list of deliverable locations to <i>Delivery Rates Module</i></small>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div id="revd" class="parsley-input">                                            
                                             <input type="checkbox" name="delivery_collect_is_allowed"  @if($web->delivery_collect_is_allowed == 1) checked @endif  data-parsley-class-handler="#revd" value="{{ old('delivery_collect_is_allowed',$web->delivery_collect_is_allowed) }}">
-                                            Option 3: Delivery Charge Collect
+                                            Option 10: Delivery Charge Collect
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div id="revd" class="parsley-input">
-                                            
-                                            <input type="checkbox" name="pickup_is_allowed"  @if($web->pickup_is_allowed == 1) checked @endif  data-parsley-class-handler="#revd" value="{{ old('pickup_is_allowed',$web->pickup_is_allowed) }}">
-                                            Option 4: Allow Pickup option on checkout
-                                        </div>
+                                        <button type="submit" class="btn btn-xs btn-primary">Save Changes</button>
                                     </div>
-                                    <div class="form-group mg-t-30">
-                                        <div class="parsley-input">      
-                                            <label>Delivery Note: </label>
-                                            <textarea name="delivery_note" id="delivery_note" class="form-control" cols="30" rows="4">{{$web->delivery_note}}</textarea>
-                                            <small>This text will be displayed during checkout.</small>
-                                        </div>
-                                    </div>
-
-                                    <h4 class="mg-t-50">Product Settings</h4>
-                                    <div class="form-group">
-                                        <div id="rev" class="parsley-input">                                            
-                                            <input type="checkbox" name="review_is_allowed"  @if($web->review_is_allowed == 1) checked @endif  data-parsley-class-handler="#rev" value="{{ old('review_is_allowed',$web->review_is_allowed) }}">
-                                            Allow product review
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                                
-                                    
-                             
-                              
-                                <div class="col-lg-12 mg-t-30">
-                                    <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Settings</button>
-                                    <a href="{{ route('website-settings.edit') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Discard Changes</a>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Payments Tab -->
                     <div class="tab-pane fade" id="paynamics" role="tabpanel" aria-labelledby="paynamics-tab">
                         <div class="col-lg-12 mg-t-15">
                             <form action="{{route('website-settings.update-paynamics')}}" method="post" class="parsley-style-1" data-parsley-validate novalidate>
@@ -763,7 +1061,76 @@
                 $('.remove-icon').hide();
             }
         }
+    </script>
 
-        
+    <script>
+        function add_bank(){
+            $('#prompt-add-bank').modal('show');
+        }
+
+        function edit_bank(id,name,accountno,branch,isdefault,isactive){
+            $('#prompt-edit-bank').modal('show');
+            $('#bank_id').val(id);
+            $('#bankname').val(name);
+            $('#bankaccountno').val(accountno);
+            $('#bankbranch').val(branch);
+        }
+
+        function delete_bank(id){
+            $('#prompt-delete-bank').modal('show');
+            $('#dbank_id').val(id);
+        }
+
+        function add_remittance()
+        {
+            $('#prompt-add-remittance').modal('show');
+        }
+
+        function edit_remittance(id,name,qrcode)
+        {
+            $('#prompt-edit-remittance').modal('show');
+            $('#remittance_id').val(id);
+            $('#remittance_name').val(name);
+            $('#qrcode').val(qrcode);
+        }
+
+        function delete_remittance(id){
+            $('#prompt-delete-remittance').modal('show');
+            $('#dremittance_id').val(id);
+        }
+
+
+        var ckbox_cc = $('#cb-credit-card');
+        function optionCC(id){
+            if (ckbox_cc.is(':checked')) {
+                $('#prompt-opt-payment-activate').modal('show');
+                $('#apayment_id').val(id);
+            } else {
+                $('#prompt-opt-payment-deactivate').modal('show');
+                $('#dpayment_id').val(id);
+            }
+        }
+
+        var ckbox_ft = $('#cb-fund-transfer');
+        function optionFT(id){
+            if (ckbox_ft.is(':checked')) {
+                $('#prompt-opt-payment-activate').modal('show');
+                $('#apayment_id').val(id);
+            } else {
+                $('#prompt-opt-payment-deactivate').modal('show');
+                $('#dpayment_id').val(id);
+            }
+        }
+
+        var ckbox_mt = $('#cb-money-transfer');
+        function optionMT(id){
+            if (ckbox_mt.is(':checked')) {
+                $('#prompt-opt-payment-activate').modal('show');
+                $('#apayment_id').val(id);
+            } else {
+                $('#prompt-opt-payment-deactivate').modal('show');
+                $('#dpayment_id').val(id);
+            }
+        }
     </script>
 @endsection

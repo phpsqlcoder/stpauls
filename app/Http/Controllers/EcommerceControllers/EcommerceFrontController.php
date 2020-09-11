@@ -141,6 +141,22 @@ class EcommerceFrontController extends Controller
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function forgot_password(Request $request)
     {
         $page = new Page();
@@ -171,11 +187,21 @@ class EcommerceFrontController extends Controller
 
     use ResetsPasswords;
 
+    public function broker()
+    {
+        return Password::broker('customers');
+    }
+
     public function showResetForm(Request $request, $token = null)
     {
+        $page = new Page();
+        $page->name = 'Reset Password';
+
         $credentials =  $request->only('email');
 
+
         if (is_null($user = $this->broker()->getUser($credentials))) {
+            dd('gsas');
             return abort(401);
         }
 
@@ -183,7 +209,7 @@ class EcommerceFrontController extends Controller
             return redirect()->route('ecommerce.forgot_password')->with('error','Your link is expired. Please reset your password again.');
         }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.reset-password')->with(
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.reset-password',compact('page'))->with(
             ['token' => $token, 'email' => $request->email]
         );
     }
@@ -220,5 +246,41 @@ class EcommerceFrontController extends Controller
         );
 
         return redirect()->route('home');
+    }
+
+    public function showReactivateForm()
+    {
+        $page = new Page();
+        $page->name = 'Reactivate Account';
+
+       return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.reactivate',compact('page'));
+    }
+
+    public function sendReactivateRequestEmail(Request $request)
+    {
+        $request->validate(
+            ['email' => ['required', 'email'] ]
+        );
+
+        $qry_customer = Customer::where('email', $request->email);
+        $data = $qry_customer->first();
+
+        if($data){
+            $qry_customer->update(['reactivate_request' => 1]);
+
+            return back()->with('success','Account reactivation email has been sent to administrator.');
+        } else {
+            return back()->with('error','These email do not match our records.');
+        }
+
+        //$user->send_reset_password_email();
+
+        // if (Mail::failures()) {
+        //     return back()
+        //         ->withInput($request->only('email'))
+        //         ->withErrors(['email' => trans('passwords.user')]);
+        // }
+
+        return back()->with('status', trans('passwords.sent'));
     }
 }

@@ -1,9 +1,5 @@
 @extends('admin.layouts.report')
 
-@section('pagetitle')
-
-@endsection
-
 @section('pagecss')
     <!-- vendor css -->
     <link href="{{ asset('lib/@fortawesome/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
@@ -11,7 +7,6 @@
     <link href="{{ asset('lib/jqvmap/jqvmap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/bselect/dist/css/bootstrap-select.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/ion-rangeslider/css/ion.rangeSlider.min.css') }}" rel="stylesheet">
-
 
     <style>
         .row-selected {
@@ -21,67 +16,60 @@
 @endsection
 
 @section('content')
-
- <div style="margin:0px 40px 200px 40px;font-family:Arial;">
-            <h4 class="mg-b-0 tx-spacing--1">Unpaid Transaction Report</h4>
+<div style="margin:0px 40px 200px 40px;font-family:Arial;">
+    <h4 class="mg-b-0 tx-spacing--1">Unpaid Transaction Report</h4>
            
-                    <form action="{{route('report.sales.unpaid')}}" method="get">
-                        <input type="hidden" name="act" value="go">
-                        @csrf
-                        <table>
-                            <tr>
-                                <td>Start Date: <input type="date" class="form-control" name="start" autocomplete="off"></td>
-                                <td>End Date: <input type="date" class="form-control" name="end" autocomplete="off"></td>
-                                <td><button type="submit" class="btn btn-primary" style="margin:20px 0px 0px 20px;">Generate</button></td>
-                            </tr>
-                        </table>
-                    </form>
+    <form autocomplete="off" action="{{route('report.sales.unpaid')}}" method="get">
+        <input type="hidden" name="act" value="go">
+        @csrf
+        <table>
+            <tr>
+                <td>Start Date: <input type="date" class="form-control" name="startdate" ></td>
+                <td>End Date: <input type="date" class="form-control" name="enddate"></td>
+                <td><button type="submit" class="btn btn-primary" style="margin:20px 0px 0px 20px;">Generate</button></td>
+            </tr>
+        </table>
+    </form>
              
 
-            @if($rs <>'')
-                <br><br>
-                        <table id="example" class="display nowrap" style="width:100%;font: normal 13px/150% Arial, sans-serif, Helvetica;">
-                            <thead>
-                            <tr>
-                                <th>Order#</th>
-                                <th>Date</th>
-                                <th>Customer</th>
-                                <th>Product</th>
-                                <th>Delivery Status</th>
-                                <th>Price</th>
-                                <th>Qty</th>
-                                <th>Total Amount</th>
+    @if($rs <> '')
+        <br><br>
+        <table id="example" class="display nowrap" style="width:100%;font: normal 13px/150% Arial, sans-serif, Helvetica;">
+            <thead>
+                <tr>
+                    <th>Order#</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Product</th>
+                    <th>Delivery Status</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>    
+            @forelse($rs as $r)
+                <tr>
+                    <td>{{$r->order_number}}</td>
+                    <td>{{$r->hcreated}}</td>
+                    <td>{{$r->customer_name}}</td>
+                    <td>{{$r->product_name}}</td>
+                    <th>{{$r->delivery_status}}</th>
+                    <td>{{number_format($r->price,2)}}</td>
+                    <td>{{number_format($r->qty,2)}}</td>
+                    <td>{{number_format($r->price*$r->qty,2)}}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="8" class="text-center">No unpaid transactions.</td>
+                </tr>
+            @endforelse
 
-                            </tr>
-                            </thead>
-                            <tbody>
-                                
-                            @forelse($rs as $r)
-                                <tr>
-                                    <td>{{$r->order_number}}</td>
-                                    <td>{{$r->hcreated}}</td>
-                                    <td>{{$r->customer_name}}</td>
-                                    <td>{{$r->product_name}}</td>
-                                    <th>{{$r->delivery_status}}</th>
-                                    <td>{{number_format($r->price,2)}}</td>
-                                    <td>{{number_format($r->qty,2)}}</td>
-                                    <td>{{number_format(($r->price * $r->qty),2)}}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7">No report result.</td>
-                                </tr>
-                            @endforelse
+            </tbody>
 
-                            </tbody>
-
-                        </table>
-                   
-            @endif
-
-        </div>
-     
-
+        </table>
+    @endif
+</div>
 @endsection
 
 @section('pagejs')

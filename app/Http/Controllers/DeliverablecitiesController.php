@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Helpers\ListingHelper;
+use Illuminate\Http\Request;
+
 use App\Deliverablecities;
 use App\Permission;
+
+use App\Provinces;
+use App\Cities;
+
 use Auth;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class DeliverablecitiesController extends Controller
 {
+    private $searchFields = ['city_name','rate','is_outside'];
 
     public function __construct()
     {
@@ -21,10 +28,18 @@ class DeliverablecitiesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($param = null)
     {
-        $address = Deliverablecities::all();
-        return view('admin.deliverablelocations.index',compact('address'));
+        $listing = new ListingHelper('asc', 10, 'city_name');
+
+        $locations = $listing->simple_search(Deliverablecities::class, $this->searchFields);
+
+        // Simple search init data
+        $filter = $listing->get_filter($this->searchFields);
+        $searchType = 'simple_search';
+
+        return view('admin.deliverable-locations.index',compact('locations', 'filter', 'searchType'));
+
     }
 
     /**
@@ -34,7 +49,9 @@ class DeliverablecitiesController extends Controller
      */
     public function create()
     {
-        return view('admin.deliverablelocations.create');
+        $provinces = Provinces::orderBy('province','asc')->get();
+
+        return view('admin.deliverable-locations.create',compact('provinces'));
     }
 
     /**
@@ -45,13 +62,18 @@ class DeliverablecitiesController extends Controller
      */
     public function store(Request $request)
     {
-        $save = Deliverablecities::create([
-            'name' => $request->name,
+        $city = Cities::find($request->city);
+        Deliverablecities::create([
+            'province' => $request->province,
+            'city' => $city->id,
+            'city_name' => $city->city,
             'rate' => $request->rate,
+            'is_outside' => $request->has('is_outside'),
+            'status' => ($request->has('status') ? 'PUBLISHED' : 'PRIVATE'),
             'user_id' => Auth::id()
         ]);
 
-        return back()->with('success','Successfully saved new location!');
+        return redirect(route('locations.index'))->with('success','Successfully saved new location!');
     }
 
     /**
@@ -74,7 +96,12 @@ class DeliverablecitiesController extends Controller
     public function edit($id)
     {
         $rate = Deliverablecities::findOrFail($id);
-        return view('admin.deliverablelocations.edit',compact('rate'));
+
+        $provinces = Provinces::orderBy('province','asc')->get();
+        $cities = Cities::where('province',$rate->province)->orderBy('city','asc')->get();
+        
+
+        return view('admin.deliverable-locations.edit',compact('rate','provinces','cities'));
     }
 
     /**
@@ -86,13 +113,17 @@ class DeliverablecitiesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $save = Deliverablecities::findOrFail($id)->update([
-            'name' => $request->name,
+        $city = Cities::find($request->city);
+        Deliverablecities::findOrFail($id)->update([
+            'province' => $request->province,
+            'city' => $city->id,
+            'city_name' => $city->city,
             'rate' => $request->rate,
+            'is_outside' => $request->has('is_outside'),
             'user_id' => Auth::id()
         ]);
 
-        return back()->with('success','Successfully updated delivery rate!');
+        return redirect(route('locations.index'))->with('success','Successfully updated delivery rate!');
     }
 
     /**
@@ -105,20 +136,58 @@ class DeliverablecitiesController extends Controller
     {
 
     }
-    public function delete(Request $request)
+
+    public function update_status($id,$status)
     {
-        $delete = Deliverablecities::whereId($request->delete_id)->delete();
-        return back()->with('success','Successfully deleted location.');
+        Deliverablecities::find($id)->update([
+            'status' => $status,
+            'user_id' => Auth::id()
+        ]);
+
+        return back()->with('success', __('standard.locations.update_success', ['STATUS' => $status]));
     }
 
-    public function enable(Request $request)
+    public function multiple_change_status(Request $request)
     {
-        $enable = Deliverablecities::whereId($request->enable_id)->update(['status' => 'PUBLISHED']);
-        return back()->with('success','Successfully enabled location.');
+        $locations = explode("|", $request->locations);
+
+        foreach ($locations as $location) {
+            $publish = Deliverablecities::whereId($location)->update([
+                'status'  => $request->status,
+                'user_id' => Auth::id()
+            ]);
+        }
+
+        return back()->with('success',  __('standard.locations.update_success', ['STATUS' => $request->status]));
     }
-    public function disable(Request $request)
+
+    public function single_delete(Request $request)
     {
-        $disable = Deliverablecities::whereId($request->disable_id)->update(['status' => 'PRIVATE']);
-        return back()->with('success','Successfully disabled location.');
+        $rate = Deliverablecities::findOrFail($request->locations);
+        $rate->update([ 'user_id' => Auth::id() ]);
+        $rate->delete();
+
+
+        return back()->with('success', 'Location has been deleted.');
+    }
+
+    public function restore($id)
+    {
+        Deliverablecities::withTrashed()->find($id)->update(['user_id' => Auth::id() ]);
+        Deliverablecities::whereId($id)->restore();
+
+        return back()->with('success', 'Location has been restored.');
+    }
+
+    public function multiple_delete(Request $request)
+    {
+        $locations = explode("|",$request->locations);
+
+        foreach($locations as $location){
+            Deliverablecities::whereId($location)->update(['user_id' => Auth::id() ]);
+            Deliverablecities::whereId($location)->delete();
+        }
+
+        return back()->with('success', 'Selected locations has been deleted.');
     }
 }

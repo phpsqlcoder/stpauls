@@ -3,61 +3,31 @@
 namespace App\Http\Controllers\EcommerceControllers;
 
 
-use App\EcommerceModel\SalesDetail;
+
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\EcommerceModel\DeliveryStatus;
-use App\EcommerceModel\SalesHeader;
+
 use App\EcommerceModel\Product;
 use App\EcommerceModel\ProductCategory;
-use App\EcommerceModel\SalesPayment;
+
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ListingHelper;
-use DB;
+
+
+
 use Auth;
+use DB;
+
+use App\EcommerceModel\SalesPayment;
+use App\EcommerceModel\SalesHeader;
+use App\EcommerceModel\SalesDetail;
+use App\EcommerceModel\Customer;
 
 
 class ReportsController extends Controller
 {
-    public function product_list(Request $request)
-    {
-        
-        $rs = Product::all();        
-
-        return view('admin.reports.product.list',compact('rs'));
-
-    }
-
-    public function customer_list(Request $request)
-    {
-        
-        $rs = User::where('role_id','6')->get();        
-
-        return view('admin.reports.customer.list',compact('rs'));
-
-    }
-
-    public function inventory_reorder_point(Request $request)
-    {
-        
-        $rs = Product::where('reorder_point','>',0)->get();
-        
-
-        return view('admin.reports.inventory.inventory_reorder_point',compact('rs'));
-
-    }
-
-    public function inventory_list(Request $request)
-    {
-        
-        $rs = Product::all();
-        
-
-        return view('admin.reports.inventory.list',compact('rs'));
-
-    }
-
     public function sales_list(Request $request)
     {
         
@@ -75,59 +45,25 @@ class ReportsController extends Controller
         if(isset($_GET['category']) && $_GET['category']<>''){
             $qry.= " and p.category_id='".$_GET['category']."'";
         }
-        if(isset($_GET['payment_status']) && $_GET['payment_status']<>''){
-            $qry.= " and h.payment_status='".$_GET['payment_status']."'";
-        }
-      
-       
 
         if(isset($_GET['startdate']) && strlen($_GET['startdate'])>=1){
             $qry.= " and h.created_at >='".$_GET['startdate']." 00:00:00.000' and h.created_at <='".$_GET['enddate']." 23:59:59.999'";
         }
-        //dd($qry);
 
         $rs = DB::select($qry);
 
         return view('admin.reports.sales.list',compact('rs'));
-
-    }
-
-    public function sales_summary(Request $request)
-    {
-        
-        $qry = "SELECT *,created_at as hcreated,id as hid FROM ecommerce_sales_headers where status<>'CANCELLED' and delivery_status<>'CANCELLED'";
-
-       
-        if(isset($_GET['customer']) && $_GET['customer']<>''){
-            $qry.= " and customer_name='".$_GET['customer']."'";
-        }
-        if(isset($_GET['delivery_status']) && $_GET['delivery_status']<>''){
-            $qry.= " and delivery_status='".$_GET['delivery_status']."'";
-        }    
-      
-       
-
-        if(isset($_GET['startdate']) && strlen($_GET['startdate'])>=1){
-            $qry.= " and created_at >='".$_GET['startdate']." 00:00:00.000' and created_at <='".$_GET['enddate']." 23:59:59.999'";
-        }
-        //dd($qry);
-
-        $rs = DB::select($qry);
-
-        return view('admin.reports.sales.summary',compact('rs'));
-
     }
 
     public function unpaid_list(Request $request)
     {
-        $rs = '';
-        if(isset($_GET['act'])){
-            $rs = DB::select("SELECT h.*,d.*,h.created_at as hcreated           
-                    FROM `ecommerce_sales_details` d 
-                    left join ecommerce_sales_headers h on h.id=d.sales_header_id 
-                    where h.payment_status='UNPAID' and h.delivery_status<>'CANCELLED' and h.status<>'CANCELLED'
-                     ");
+        $qry = "SELECT h.*,d.*,h.created_at as hcreated,h.id as hid,p.category_id,c.name as catname,p.brand,p.code FROM `ecommerce_sales_details` d left join ecommerce_sales_headers h on h.id=d.sales_header_id left join products p on p.id=d.product_id left join product_categories c on c.id=p.category_id where h.id > 0 and h.payment_status = 'UNPAID'";
+
+        if(isset($_GET['startdate']) && strlen($_GET['startdate'])>=1){
+            $qry.= " and h.created_at >='".$_GET['startdate']." 00:00:00.000' and h.created_at <='".$_GET['enddate']." 23:59:59.999'";
         }
+
+        $rs = DB::select($qry);
 
         return view('admin.reports.sales.unpaid',compact('rs'));
 
@@ -135,18 +71,76 @@ class ReportsController extends Controller
 
     public function sales_payments(Request $request)
     {
-        $rs = '';
-        if(isset($_GET['act'])){
-            $rs = DB::select("SELECT h.*,d.*,h.created_at as hcreated           
-                    FROM `ecommerce_sales_payments` d 
-                    left join ecommerce_sales_headers h on h.id=d.sales_header_id 
-                    where h.payment_status='PAID'
-                     ");
+        $qry = "SELECT p.payment_type, p.amount as amount_paid, p.payment_date, p.receipt_number, p.created_at, h.order_number,h.customer_name, h.delivery_status FROM `ecommerce_sales_payments` p LEFT JOIN ecommerce_sales_headers h ON h.id = p.sales_header_id where p.id > 0"; 
+
+        if(isset($_GET['startdate']) && strlen($_GET['startdate'])>=1){
+            $qry.= " and p.paymment_date >='".$_GET['startdate']."' and p.paymment_date <='".$_GET['enddate']."' ";
+        } else {
+            $qry.= " and MONTH(p.payment_date) = MONTH(CURRENT_DATE()) AND YEAR(p.payment_date) = YEAR(CURRENT_DATE()) ";
         }
 
+        $rs = DB::select($qry);
+
         return view('admin.reports.sales.payment',compact('rs'));
+    }
+
+    public function customer_list(Request $request)
+    {
+        $rs = Customer::orderBy('firstname')->get();        
+
+        return view('admin.reports.customer.list',compact('rs'));
 
     }
+
+    public function product_list(Request $request)
+    {
+        $rs = Product::all();        
+
+        return view('admin.reports.product.list',compact('rs'));
+    }
+
+    public function best_selling(Request $request)
+    {
+        $rs = SalesDetail::select('product_id', DB::raw('count(product_id) numberOfSales'))->groupBy('product_id')->get();
+
+        return view('admin.reports.product.best_selling',compact('rs'));
+    }
+
+    public function inventory_list(Request $request)
+    {
+        $rs = Product::all();
+        
+        return view('admin.reports.inventory.list',compact('rs'));
+    }
+
+    public function inventory_reorder_point(Request $request)
+    {
+        $rs = Product::where('reorder_point','>',0)->get();
+        
+        return view('admin.reports.inventory.inventory_reorder_point',compact('rs'));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
 
 
     public function sales(Request $request)
@@ -172,6 +166,7 @@ class ReportsController extends Controller
         return view('admin.reports.delivery_report',compact('rs'));
 
     }
+
     public function delivery_status(Request $request)
     {
         $rs = '';

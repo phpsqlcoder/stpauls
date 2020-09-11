@@ -16,9 +16,13 @@ class Customer extends Authenticatable
     protected $guard = 'customer';
 
     protected $table = 'customers';
-    protected $fillable = ['email','password','firstname','lastname','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','fbId','googleId','is_subscriber','user_id','remember_token'];
+    protected $fillable = ['email','password','firstname','lastname','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','fbId','googleId','is_subscriber','user_id','remember_token','reactivate_request'];
 
 
+    public function delivery_rate()
+    {
+        return $this->belongsTo('\App\Deliverablecities','city','city');
+    }
     public function setIsEmailSubscriberAttribute($value)
     {
         if ($value == 0 || $value == false) {
@@ -91,6 +95,31 @@ class Customer extends Authenticatable
         $qry = Customer::find($id);
 
         return $qry->firstname.' '.$qry->lastname;
+    }
+
+    public function cities()
+    {
+        return $this->belongsTo('\App\Cities','city');
+    }
+
+    public function provinces()
+    {
+        return $this->belongsTo('\App\Provinces','province');
+    }
+
+    public function getAddress1Attribute() {
+
+        return "{$this->address} {$this->barangay}";
+    }
+
+    public function getAddress2WithZipAttribute() {
+
+        return "{$this->cities->city}, {$this->provinces->province} {$this->zipcode}";
+    }
+
+    public function getAddress2Attribute() {
+
+        return "{$this->cities->city}, {$this->provinces->province}";
     }
 
 }

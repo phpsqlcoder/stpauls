@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddStatusToUsersTable extends Migration
+class CreateDiscountTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,14 @@ class AddStatusToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('deliverable_cities', function (Blueprint $table) {
+        Schema::create('discounts', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->decimal('discount',16,2);
+            $table->string('status')->nullable();
+            $table->integer('user_id');
+            $table->timestamps();
             $table->softDeletes();
-            $table->string('status')->default('PRIVATE');
         });
     }
 
@@ -26,8 +31,6 @@ class AddStatusToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('deliverable_cities', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('discounts');
     }
 }

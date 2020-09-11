@@ -7,6 +7,18 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 offset-lg-2 col-md-12">
+                    @if(Session::has('warning'))
+                    <div class="alert alert-warning alert-dismissible fade show">
+                        <strong>Warning!</strong> This account is inactive. To re-activate this account please click this <a href="{{ route('ecommerce.reactivate-account') }}"><b>link</b>.</a>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                    @endif
+
+                    @if($message = Session::get('error'))
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <i data-feather="alert-circle" class="mg-r-10"></i> {{ $message }}
+                        </div>
+                    @endif
                     <div id="login">
                         <div class="row align-items-center">
                             <div class="col-md-8 col-sm-12">
@@ -27,7 +39,7 @@
                                         <p>Password*</p>
                                         <input type="password" name="password" class="form-control form-input" placeholder="Please enter your Password">
                                         <div class="gap-10"></div>
-                                        <p class="text-right"><a href="#">Forgot Password?</a></p>
+                                        <p class="text-right"><a href="{{ route('ecommerce.forgot_password') }}">Forgot Password?</a></p>
                                     </div>
                                     <div class="form-group col-md-5">
                                         <div class="gap-20"></div>
