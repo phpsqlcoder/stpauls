@@ -1,6 +1,7 @@
 /* Overwrite dashforge.css */
 
 @import url('https://fonts.googleapis.com/css?family=Hind:300,400,700|IBM+Plex+Sans:300,400,500,700&display=swap');
+
 body {
     overflow: hidden;
     font-family: "Segoe UI", "Hind", "IBM Plex Sans", sans-serif;
@@ -99,7 +100,7 @@ label {
 
 .signin-hero {
     height: 100vh;
-    background: #ebf7ff url(../img/logo-header.jpg) center left no-repeat;
+    background: #b81600 url(../img/cms-admin-signin-white.svg) center left no-repeat;
     background-size: 90%;
 }
 
@@ -376,9 +377,9 @@ table th {
 }
 
 .drag-handle {
-    cursor: move!important;
-    cursor: -webkit-grab!important;
-    cursor: grab!important
+    cursor: move !important;
+    cursor: -webkit-grab !important;
+    cursor: grab !important
 }
 
 .drag-indicator {
@@ -413,18 +414,22 @@ table th {
         height: 50vh;
         background-size: 75%;
     }
+
     .sign-wrapper {
         height: auto;
         text-align: center;
         margin: 0 auto;
         padding: 2em;
     }
+
     .table-options {
         visibility: visible;
     }
+
     .dashboard-widget {
         margin: 10px 0;
     }
+
     .content-header h3 {
         color: #fff;
         padding-left: 10px;
@@ -437,6 +442,7 @@ table th {
     .signin-hero {
         display: none;
     }
+
     .sign-wrapper {
         padding: 1.5em;
     }
@@ -449,4 +455,24 @@ table th {
 
 .toast {
     display: none;
+}
+
+.btn-custom-1 {
+    color: #fff;
+    background-color: #b81600;
+    border-color: #b81600;
+}
+
+.btn-custom-1:hover {
+    color: #fff;
+    background-color: #851000;
+    border-color: #851000;
+}
+
+.custom-link {
+    color: #b81600;
+}
+
+.custom-link:hover {
+    color: #851000;
 }

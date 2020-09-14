@@ -63,8 +63,8 @@
                                 <input required type="password" id="password" name="password" class="form-control" placeholder="********" >
                                 <span class="text-danger">{{ $errors->first('password') }}</span>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-sm">Log In</button>
-                            <a href="{{route('password.request')}}" class="btn btn-info btn-sm">Forgot Password</a>
+                            <div class="tx-11 mg-t-10 mg-b-40"><a href="{{route('password.request')}}" class="custom-link">Forgot Password?</a></div>
+                            <button type="submit" class="btn btn-custom-1 btn-sm mr-1">Log In</button>
                         </form>
                         <div class="cms-footer mg-t-50">
                             <hr>
