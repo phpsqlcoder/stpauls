@@ -19,4 +19,9 @@ class PaymentList extends Model
 
     	return $qry->is_active;
     }
+
+    public function paymentList()
+    {
+        return $this->hasMany('App\EcommerceModel\PaymentOption','payment_id')->where('is_active',1);
+    }
 }

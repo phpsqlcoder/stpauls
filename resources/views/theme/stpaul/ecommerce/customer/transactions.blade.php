@@ -68,7 +68,7 @@
                                                     @if($sale->payment_method == 1)
                                                         <a href="" title="Pay now" onclick="globalpay('{{$sale->id}}')" id="paybtn{{$sale->id}}" class="btn btn-success btn-xs mb-1"><i class="fa fa-credit-card pb-1"></i></a>
                                                     @else
-                                                    <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$balance}}')" id="paybtn{{$sale->id}}" class="btn btn-success btn-xs mb-1"><i class="fa fa-credit-card pb-1"></i></a>
+                                                    <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$balance}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}" class="btn btn-success btn-xs mb-1"><i class="fa fa-credit-card pb-1"></i></a>
                                                     @endif
                                                     &nbsp;
                                                     <a href="#" title="Cancel Order" class="btn btn-success btn-xs mb-1" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')"><i class="fa fa-times pb-1"></i></a>&nbsp;
@@ -77,7 +77,7 @@
                                         @endif
 
                                         <a href="#" title="view delivery history" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')" class="btn btn-success btn-xs mb-1"><i class="fa fa-truck pb-1"></i></a>
-                                        <a href="#" title="view items" onclick="view_items('{{$sale->id}}','{{$sale->order_number}}','{{date('Y-m-d',strtotime($sale->created_at))}}','{{$sale->payment_status}}')" class="btn btn-success btn-xs mb-1"><i class="fa fa-eye pb-1"></i></a>
+                                        <a href="#" title="view items" onclick="view_items('{{$sale->id}}','{{$sale->order_number}}','{{date('Y-m-d',strtotime($sale->created_at))}}','{{$sale->payment_status}}','{{$sale->delivery_type}}')" class="btn btn-success btn-xs mb-1"><i class="fa fa-eye pb-1"></i></a>
                                     </td>
                                 </tr>
                             @empty
@@ -112,8 +112,7 @@
                     <div class="form-group">
                         <input type="hidden" name="header_id" id="header_id">
                         <label for="Amount" class="col-form-label">Payment Type *</label>
-                        <select required class="form-control" name="payment_type">
-                        </select>
+                        <input readonly type="text" name="payment_type" id="payment_type" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="Amount" class="col-form-label">Payment Date *</label>
@@ -133,7 +132,7 @@
                     </div>                              
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="payCancel" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>
@@ -159,7 +158,7 @@
                     </div>                           
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="payCancel" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary">Pay Now</button>
                 </div>
             </form>
@@ -216,6 +215,7 @@
                 <div class="transaction-status">
                     <p>Date: <span id="order_date"></span></p>
                     <p>Payment Status: <span id="payment_status"></span></p>
+                    <p>Delivery Type: <span id="delivery_type"></span></p>
                 </div>
                 <div class="gap-20"></div>
                 <div class="table-modal-wrap">
@@ -264,7 +264,7 @@
             });
         }
 
-        function view_items(orderid,orderNo,date,paymentStatus){
+        function view_items(orderid,orderNo,date,paymentStatus,deliveryType){
             $.ajax({
                 type: "GET",
                 url: "{{ route('display-items') }}",
@@ -274,40 +274,22 @@
                     $('#viewModalLabel').html(orderNo);
                     $('#order_date').html(date);
                     $('#payment_status').html(paymentStatus);
+                    $('#delivery_type').html(deliveryType);
                     $('#items_modal').modal('show');
                 }
             });
         }
 
-        function pay(order_id,balance){
+        function pay(order_id,balance,paymentType){
             var bal = parseFloat(balance);
 
+            $('#payment_type').val(paymentType);
             $('#payment_modal').modal('show');
             $('#header_id').val(order_id);
             $('#balance').val(bal.toFixed(2));
 
             $('#balance').prop('max',bal);
-
-            var url = "{{ route('ajax.get-payment-types', ':order_id') }}";
-            url = url.replace(':order_id',order_id);
-
-            $.ajax({
-                url: url,
-                type: "GET",
-                dataType: "json",
-                success:function(data) {
-                    $('select[name="payment_type"]').empty();
-                     $('select[name="payment_type"]').append('<option value="" selected disabled>-- Choose One --</option>');
-                    $.each(data, function(key, value) {
-                        $('select[name="payment_type"]').append('<option value="'+value.name+'">'+value.name+'</option>');
-                    });
-                }
-            }); 
         }
-
-        $('#payCancel').click(function(){
-            $('select[name="payment_type"]').empty();
-        });
 
         function globalpay(id){
             $('#payGlobal_modal').modal('show');

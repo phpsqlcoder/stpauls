@@ -2,6 +2,14 @@
 
 @section('pagecss')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <style>
+        .sub1 { display: none; }
+
+        :checked ~ .sub1 {
+            display: block;
+            margin-left: 40px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -139,6 +147,32 @@
                         <div class="checkout-content">
                             <p class="mb-3">Select a shipping method:</p>
 
+                            @php
+                                $stp_allowed_days = "";
+                                $cod_allowed_days = "";
+
+                                $stp_days = explode('|',$stp->allowed_days);
+                                $cod_days = explode('|',$cod->allowed_days);
+
+                                foreach($stp_days as $day){
+                                    $stp_allowed_days .= date('N',strtotime($day)).',';
+                                }
+
+                                foreach($cod_days as $day){
+                                    $cod_allowed_days .= date('N',strtotime($day)).',';
+                                }
+                            @endphp
+                            <!-- Store Pick Up -->
+                            <input type="hidden" id="time_from2" value="{{ $stp->allowed_time_from }}">
+                            <input type="hidden" id="time_to2" value="{{ $stp->allowed_time_to }}">
+                            <input type="hidden" id="array_days2" value="{{ rtrim($stp_allowed_days,',') }}">
+
+                            <!-- Cash on Delivery -->
+                            <input type="hidden" id="time_from1" value="{{ $cod->allowed_time_from }}">
+                            <input type="hidden" id="time_to1" value="{{ $cod->allowed_time_to }}">
+                            <input type="hidden" id="array_days1" value="{{ rtrim($cod_allowed_days,',') }}">
+
+
                             <div class="tab-wrap">
                                 @if($cod->is_active == 1)
                                     @if(\App\EcommerceModel\CheckoutOption::check_availability(1) == 1)
@@ -171,6 +205,16 @@
                                         <h4 class="alert-heading">Reminder!</h4>
                                         <p>{{ $cod->reminder }}</p>
                                     </div>
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <label>Date *</label>
+                                            <input type="date" name="pickup_date_1" onchange="pickupDate(1)" id="pickup_date1" class="form-control">
+                                        </div>
+                                        <div class="col">
+                                            <label>Time *</label>
+                                            <input type="time" name="pickup_time_1" onchange="pickupTime(1)" id="pickup_time1" class="form-control">
+                                        </div>
+                                    </div>
                                 </div>
                                 @endif
 
@@ -191,6 +235,17 @@
                                                 <option value="{{$branch->id}}">{{ $branch->name }}</option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="gap-10"></div>
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <label>Date *</label>
+                                            <input type="date" name="pickup_date_2" onchange="pickupDate(2)" id="pickup_date2" class="form-control">
+                                        </div>
+                                        <div class="col">
+                                            <label>Time *</label>
+                                            <input type="time" name="pickup_time_2" onchange="pickupTime(2)" id="pickup_time2" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -224,12 +279,12 @@
 
                     <!-- Order Summary -->
                     <div id="tab-3">
-                        
                             <div class="checkout-content">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <label class="subtitle">Billed To</label>
                                         <h3 class="customer-name">{{ $customer->fullname }}</h3>
+                                        <p class="customer-address">Delivert Type: <span id="spanshipMethod"></span></p>
                                         <p class="customer-address"><span id="customer-address"></span></p>
                                         <p class="customer-phone" >Tel No: <span id="customer-phone"></span></p>
                                         <p class="customer-email" id="customer-email">Email: {{ $customer->email }}</p>
@@ -365,8 +420,16 @@
                             <h3>Payment Method</h3>
                             @foreach($payment_method as $method)
                             <div class="custom-control custom-radio">
-                              <input type="radio" class="custom-control-input" name="payment_method" value="{{ $method->id }}" id="method{{ $method->id }}" name="groupOfDefaultRadios">
-                              <label class="custom-control-label" for="method{{ $method->id }}">{{ $method->name }}</label>
+                                <input type="radio" class="custom-control-input" name="payment_method" value="{{ $method->id }}" id="method{{ $method->id }}" name="groupOfDefaultRadios">
+                                <label class="custom-control-label" for="method{{ $method->id }}">{{ $method->name }}</label>
+                                <div class="sub1">
+                                    @foreach($method->paymentList as $list)
+                                    <div>
+                                        <input type="radio" name="payment_option" value="{{$list->name}}" id="paylist{{$list->id}}"/>
+                                        <label for="paylist{{$list->id}}">{{ $list->name }}</label>
+                                    </div>
+                                    @endforeach
+                                </div>
                             </div>
                             @endforeach
                         </div>
@@ -380,6 +443,7 @@
         </div>
     </section>
     </form>
+    
 </main>
 @endsection
 
@@ -388,6 +452,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
     <script>
+
         $(document).ready(function(){
             /** Custom Input number increment js **/
             jQuery(".quantity").each(function() {
@@ -440,6 +505,73 @@
 
 @section('customjs')
     <script>
+        
+        function pickupDate(id){
+            var allowed_days = [];
+
+            var days = $('#array_days'+id).val();
+            var inputdate = $('#pickup_date'+id).val();
+            var day = new Date(inputdate).getUTCDay()+1;
+            var x = days.split(',');
+            
+            $.each(x, function(index, value){
+                allowed_days.push(value);
+            });
+
+            if(day == 1){
+                var d = 7;
+            } else {
+                var d = day-1;
+            }
+
+            console.log(allowed_days);
+            console.log(d);
+
+
+            if(allowed_days.includes(""+d+"")){
+  
+            } else {
+                $('#pickup_date'+id).val('');
+
+                swal({
+                    title: '',
+                    text: "Sorry! We are not available on that date.",         
+                })
+            }
+        }
+
+        function pickupTime(id){
+            var inputtime = $('#pickup_time'+id).val()+":00";
+            var time_from = $('#time_from'+id).val()+":00";
+            var time_to   = $('#time_to'+id).val()+":00";
+
+            var fr_time = time_from;
+            var a = fr_time.split(':');
+            // minutes are worth 60 seconds. Hours are worth 60 minutes.
+            var fr_time = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
+
+            var to_time = time_to;
+            var b = to_time.split(':');
+            // minutes are worth 60 seconds. Hours are worth 60 minutes.
+            var to_time = (+b[0]) * 60 * 60 + (+b[1]) * 60 + (+b[2]);
+
+            var sl_time = inputtime;
+            var c = sl_time.split(':');
+            // minutes are worth 60 seconds. Hours are worth 60 minutes.
+            var sl_time = (+c[0]) * 60 * 60 + (+c[1]) * 60 + (+c[2]);
+
+            if(sl_time >= fr_time && sl_time <= to_time ){
+                
+            } else {
+                this.value = '';
+                swal({
+                    title: '',
+                    text: "Sorry! We are not available on that time.",         
+                })
+            }
+        }
+
+        
         $(document).ready(function() {
             $('select[name="province"]').on('change', function() {
 
@@ -539,6 +671,22 @@
                     }
                 }
             }
+
+            if(type == 'dtd'){
+                var sel_address = $('#province').val();
+                if(sel_address == 0){
+                    $('#selected_deliveryfee_val').val(0);
+                } else {
+                    var city = $('#city').val();
+                    var rate = city.split('|');
+
+                    if(parseFloat(subTotal) >= parseFloat(minPurchase)){
+                        $('#selected_deliveryfee_val').val(deliveryRate);
+                    } else {
+                        $('#selected_deliveryfee_val').val(rate[1]);
+                    }
+                }
+            }
         }
 
         $('#shipOptionNxtBtn').click(function(){
@@ -546,7 +694,23 @@
             var deliveryfee = $('#selected_deliveryfee_val').val();
             var servicefee  = $('#selected_servicefee_val').val(); 
 
-            if(shipOption == 2 || shipOption == 3){
+            if(shipOption == 1){
+                $('#spanshipMethod').html('Cash on Delivery');
+            }
+            if(shipOption == 2){
+                $('#spanshipMethod').html('Store Pickup');
+            }
+            if(shipOption == 3){
+                $('#spanshipMethod').html('Door 2 Door Delivery');
+                $('#span_deliveryfee').html(FormatAmount(deliveryfee,2));
+                $('#input_servicefee').val(0);
+                delivery_fee(shipOption);
+            }
+            if(shipOption == 4){
+                $('#spanshipMethod').html('Same Day Delivery');
+            }
+
+            if(shipOption == 2){
                 $('#input_servicefee').val(0);
                 $('#span_servicefee').html('0.00');
 
@@ -554,6 +718,8 @@
                 $('#span_deliveryfee').html('0.00');
 
                 $('#spanReviewOrder').html('Next');
+
+
             } else {
                 // cash on delivery
                 if(shipOption == 1){
@@ -563,8 +729,6 @@
 
                     $('#input_servicefee').val(0);
                     $('#span_servicefee').html('0.00');
-
-
                 }
 
                 // same day delivery
@@ -618,7 +782,7 @@
             var min_order_allowed = $('#min_order_allowed').val();
             var min_order = $('#min_order').val();
 
-            if(shipOption == 1){
+            if(shipOption == 1 || shipOption == 3){
                 if(min_order_allowed == 1){
                     if(parseFloat(subtotal) >= parseFloat(min_order)){
                         $('#input_deliveryfee').val(0);

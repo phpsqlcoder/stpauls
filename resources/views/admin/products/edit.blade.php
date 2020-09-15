@@ -163,19 +163,6 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="d-block">Zoom Image</label>
-                        <div class="custom-file" @if(!empty($product->zoom_image)) style="display:none;" @endif id="zoom_div">
-                            <input type="file" id="zoom_image" name="zoom_image" accept="image/*">
-                            <p class="tx-10">
-                                Required image dimension: {{ env('PRODUCT_WIDTH') }}px by {{ env('PRODUCT_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png
-                            </p>
-                        </div>
-                        <div id="zoomimage_div" @if(empty($product->zoom_image)) style="display:none;" @endif>
-                            <img src="{{ $product->zoom_image }}" height="100" width="300" id="img_temp" alt="">  <br /><br />
-                            <a href="javascript:void(0)" class="btn btn-sm btn-danger remove-upload" >Remove Image</a>
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         <label class="d-block">Tags</label>

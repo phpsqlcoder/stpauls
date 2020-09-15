@@ -226,6 +226,9 @@ class CartController extends Controller
 
         $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province;
 
+        $pickupdate = $request->input('pickup_date_'.$request->shipOption);
+        $pickuptime = $request->input('pickup_time_'.$request->shipOption);
+
         $salesHeader = SalesHeader::create([
             'order_number' => $requestId,
             'customer_name' => $request->customer,
@@ -248,7 +251,10 @@ class CartController extends Controller
             'user_id' => 0,
             'customer_id' => Auth::id(),
             'payment_method' => (!isset($request->payment_method)) ? 0 : $request->payment_method,
-            'branch' => ($request->shipOption == 2)  ? $request->branch : 0
+            'payment_option' => (!isset($request->payment_method)) ? 0 : $request->payment_option,
+            'branch' => ($request->shipOption == 2)  ? $request->branch : 0,
+            'pickup_date' => ($request->shipOption <= 2) ? $pickupdate : NULL,
+            'pickup_time' => ($request->shipOption <= 2) ? $pickuptime : NULL
         ]);
 
         $data = $request->all();

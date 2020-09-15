@@ -25,20 +25,18 @@ class SalesFrontController extends Controller
 
         $sales = SalesHeader::where('customer_id',Auth::id())->orderBy('id','desc')->get();
 
-        $remittances = PaymentOption::where('payment_id',3)->where('is_active',1)->orderBy('name','asc')->get();
-        $banks = PaymentOption::where('payment_id',2)->where('is_active',1)->orderBy('name','asc')->get();
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.transactions', compact('sales','remittances','banks','page'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.transactions', compact('sales','page'));
     }
 
-    public function ajax_payment_types($id)
-    {
-        $sales = SalesHeader::find($id);
+    // public function ajax_payment_types($id)
+    // {
+    //     $sales = SalesHeader::find($id);
 
-        $types = PaymentOption::where('payment_id',$sales->payment_method)->where('is_active',1)->orderBy('name','asc')->get();
+    //     $types = PaymentOption::where('payment_id',$sales->payment_method)->where('is_active',1)->orderBy('name','asc')->get();
 
-        return response($types);
-    }
+    //     return response($types);
+    // }
 
     public function pay_order(Request $request)
     {

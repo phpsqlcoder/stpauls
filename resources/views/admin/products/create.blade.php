@@ -203,15 +203,7 @@
                             </ul>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="d-block">Zoom image</label>
-                        <input type="file" id="zoom_image" name="zoom_image" accept="image/*">
-                        <p class="tx-10">
-                            Required image dimension: {{ env('PRODUCT_WIDTH') }}px by {{ env('PRODUCT_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png
-                        </p>
-                    </div>
-
+                    
                     <div class="form-group">
                         <label class="d-block">Tags</label>
                         <input type="text" class="form-control @error('tags') is-invalid @enderror" data-role="tagsinput" name="tags" id="tags" value="{{ old('tags') }}">

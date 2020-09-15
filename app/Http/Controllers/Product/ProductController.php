@@ -136,7 +136,6 @@ class ProductController extends Controller
             'meta_title' => $request->seo_title,
             'meta_keyword' => $request->seo_keywords,
             'meta_description' => $request->seo_description,
-            'zoom_image' => $zoom_image,
             'created_by' => Auth::id(),
         ]);
 
@@ -272,7 +271,6 @@ class ProductController extends Controller
             'status' => ($request->has('status') ? 'PUBLISHED' : 'PRIVATE'),
             'is_featured' => $request->has('is_featured'),
             'uom' => $request->uom,
-            'zoom_image' => $zoom_image,
             'meta_title' => $request->seo_title,
             'meta_keyword' => $request->seo_keywords,
             'meta_description' => $request->seo_description,

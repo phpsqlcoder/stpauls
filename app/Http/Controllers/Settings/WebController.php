@@ -170,23 +170,23 @@ class WebController extends Controller
         }
     }
 
-    public function update_paynamics(Request $request)
-    {
-        $ecommerce = Setting::first();
-        $accepted_payments = '';
-        if( isset($request->accepted_payments) && is_array($request->accepted_payments) ) {
-            $accepted_payments = implode(',', $request->accepted_payments);
-        }
-        $ecommerce->accepted_payments = $accepted_payments;
+    // public function update_paynamics(Request $request)
+    // {
+    //     $ecommerce = Setting::first();
+    //     $accepted_payments = '';
+    //     if( isset($request->accepted_payments) && is_array($request->accepted_payments) ) {
+    //         $accepted_payments = implode(',', $request->accepted_payments);
+    //     }
+    //     $ecommerce->accepted_payments = $accepted_payments;
 
-        $ecommerce->save();
+    //     $ecommerce->save();
 
-        if($ecommerce){
-            return back()->with('success','Successfully Updated Paynamics Settings');
-        } else {
-            return back()->with('error', __('standard.settings.website.contact_update_failed'));
-        }
-    }
+    //     if($ecommerce){
+    //         return back()->with('success','Successfully Updated Paynamics Settings');
+    //     } else {
+    //         return back()->with('error', __('standard.settings.website.contact_update_failed'));
+    //     }
+    // }
 
     public function update_media_accounts(Request $request)
     {

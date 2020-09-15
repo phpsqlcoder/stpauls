@@ -74,7 +74,7 @@ Route::get('/', 'FrontController@home')->name('home');
         Route::get('/transaction-items','EcommerceControllers\SalesFrontController@display_items')->name('display-items');
         
         //populate select dropdown
-        Route::get('/ajax/get-payment-types/{id}','EcommerceControllers\SalesFrontController@ajax_payment_types')->name('ajax.get-payment-types');
+        // Route::get('/ajax/get-payment-types/{id}','EcommerceControllers\SalesFrontController@ajax_payment_types')->name('ajax.get-payment-types');
 
 
         Route::get('/account/sales', 'EcommerceControllers\SalesFrontController@sales_list')->name('profile.sales');
@@ -219,7 +219,6 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
             Route::get('/website-settings/edit', 'Settings\WebController@edit')->name('website-settings.edit');
             Route::put('/website-settings/update', 'Settings\WebController@update')->name('website-settings.update');
             Route::post('/website-settings/update_contacts', 'Settings\WebController@update_contacts')->name('website-settings.update-contacts');
-            Route::post('/website-settings/update-paynamics', 'Settings\WebController@update_paynamics')->name('website-settings.update-paynamics');
             Route::post('/website-settings/update_media_accounts', 'Settings\WebController@update_media_accounts')->name('website-settings.update-media-accounts');
             Route::post('/website-settings/update_data_privacy', 'Settings\WebController@update_data_privacy')->name('website-settings.update-data-privacy');
             Route::post('/website-settings/remove_logo', 'Settings\WebController@remove_logo')->name('website-settings.remove-logo');
