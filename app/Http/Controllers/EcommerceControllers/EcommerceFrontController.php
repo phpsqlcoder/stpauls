@@ -62,17 +62,30 @@ class EcommerceFrontController extends Controller
     public function ajax_update_address(Request $request)
     {
         $address = $request->validate([
-            'address_street' => 'required',
-            'address_barangay' => 'required',
-            'address_city' => 'required',
-            'address_province' => 'required',
-            'address_country' => 'required',
-            'address_zip' => 'required',
+            'address' => 'required',
+            'barangay' => 'required',
+            'city' => 'required',
+            'province' => 'required',
+            'mobile' => 'required',
         ]);
 
-        auth()->user()->profile->update($address);
+        $city = explode('|',$request->city);
 
-        return response()->json(['success' => true, 'message' => 'Address has bean updated.', 'address' => auth()->user()->profile->complete_address()]);
+        if($request->ajax()){
+
+            $qry = Customer::find(Auth::id())->update([
+                'mobile' => $request->mobile,
+                'address' => $request->address,
+                'barangay' => $request->barangay,
+                'province' => $request->province,
+                'city' => $city[0]
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Address has bean updated.']);
+        }
+        
+
+        
     }
 
     public function ajax_update_delivery_address(Request $request)

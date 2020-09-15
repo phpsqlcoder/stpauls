@@ -56,13 +56,6 @@
                         @endhasError
                     </div>
                     <div class="form-group">
-                        <label class="d-block">Brand *</label>
-                        <input name="brand" id="brand" value="{{ old('brand',$product->brand) }}" required type="text" class="form-control @error('brand') is-invalid @enderror" maxlength="250">
-                        
-                        @hasError(['inputName' => 'brand'])
-                        @endhasError
-                    </div>
-                    <div class="form-group">
                         <label class="d-block">Category</label>
                         <select name="category" id="category" class="selectpicker mg-b-5" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
                             <option value="0" >-- Select Category --</option>
@@ -130,7 +123,7 @@
                         <input type="file" id="upload_image" class="image_path" accept="image/*" multiple>
                         <button type="button" class="btn btn-secondary btn-sm upload" id="selectImages">Select images</button>
                         <p class="tx-10">
-                            Required image dimension: {{ env('PRODUCT_WIDTH') }}px by {{ env('PRODUCT_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png <br /> Maximum images: 5
+                            Required image dimension: {{ env('PRODUCT_WIDTH') }}px by {{ env('PRODUCT_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png <br /> Maximum images: 6
                         </p>
                         <div class="prodimg-thumb" id="bannersDiv" @if($product->photos->count() == 0) style="display: none;" @endif>
                             <ul id="banners">
@@ -160,7 +153,7 @@
                                         </label>
                                     </li>
                                 @endforeach
-                                @if($product->photos->count() < 1)
+                                @if($product->photos->count() < 6)
                                     <li id="addMoreBanner">
                                         <div class="add-more txt-center upload">
                                             <i data-feather="plus-circle"></i>
@@ -175,7 +168,7 @@
                         <div class="custom-file" @if(!empty($product->zoom_image)) style="display:none;" @endif id="zoom_div">
                             <input type="file" id="zoom_image" name="zoom_image" accept="image/*">
                             <p class="tx-10">
-                                Required image dimension: {{ env('NEWS_BANNER_WIDTH') }}px by {{ env('NEWS_BANNER_HEIGHT') }}px <br /> Maximum file size: 3MB <br /> Required file type: .jpeg .png
+                                Required image dimension: {{ env('PRODUCT_WIDTH') }}px by {{ env('PRODUCT_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png
                             </p>
                         </div>
                         <div id="zoomimage_div" @if(empty($product->zoom_image)) style="display:none;" @endif>
@@ -392,13 +385,13 @@
                 let uploadedImagesLength = $('.productImage').length;
                 let totalImages = uploadedImagesLength + files.length;
 
-                if (totalImages > 5) {
-                    $('#bannerErrorMessage').html("You can upload up to 5 images only.");
+                if (totalImages > 6) {
+                    $('#bannerErrorMessage').html("You can upload up to 6 images only.");
                     $('#prompt-banner-error').modal('show');
                     return false;
                 }
 
-                if (totalImages == 5) {
+                if (totalImages == 6) {
                     $('#addMoreBanner').hide();
                 }
 

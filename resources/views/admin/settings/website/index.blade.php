@@ -348,16 +348,14 @@
                                                 <tbody>
                                                     @foreach($banks as $bank)
                                                     <tr>
-                                                        <td class="text-right" width="10%"><input type="checkbox" name="bank[]" value="{{$bank->id}}" @if($bank->is_default == 1) checked disabled @endif @if($bank->is_active == 1) checked @endif id="{{ $bank->id }}"></td>
+                                                        <td class="text-right" width="10%"><input type="checkbox" name="bank[]" value="{{$bank->id}}" @if($bank->is_active == 1) checked @endif id="{{ $bank->id }}"></td>
                                                         <td>{{ $bank->name }}</td>
                                                         <td>{{ $bank->account_no }}</td>
                                                         <td>{{ $bank->branch }}</td>
                                                         <td class="text-right">
-                                                            @if($bank->is_default == 0)
-                                                                @if($bank->is_active == 0)
-                                                                    <a href="javascript:void(0)" onclick="edit_bank('{{$bank->id}}','{{$bank->name}}','{{$bank->account_no}}','{{$bank->branch}}')"><i class="fa fa-edit"></i></a>
-                                                                    <a href="javascript:void(0)" onclick="delete_bank('{{$bank->id}}')"><i class="fa fa-trash"></i></a>
-                                                                @endif
+                                                            @if($bank->is_active == 0)
+                                                                <a href="javascript:void(0)" onclick="edit_bank('{{$bank->id}}','{{$bank->name}}','{{$bank->account_no}}','{{$bank->branch}}')"><i class="fa fa-edit"></i></a>
+                                                                <a href="javascript:void(0)" onclick="delete_bank('{{$bank->id}}')"><i class="fa fa-trash"></i></a>
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -384,15 +382,13 @@
                                                 <tbody>
                                                     @foreach($remittances as $remittance)
                                                     <tr>
-                                                        <td class="text-right" width="10%"><input type="checkbox" name="remittance[]" value="{{$remittance->id}}" @if($remittance->is_default == 1) checked disabled @endif @if($remittance->is_active == 1) checked @endif id="{{ $remittance->id }}"></td>
+                                                        <td class="text-right" width="10%"><input type="checkbox" name="remittance[]" value="{{$remittance->id}}" @if($remittance->is_active == 1) checked @endif id="{{ $remittance->id }}"></td>
                                                         <td>{{ $remittance->name }}</td>
                                                         <td>{{ $remittance->qrcode }}</td>
                                                         <td class="text-right">
-                                                            @if($remittance->is_default == 0)
-                                                                @if($remittance->is_active == 0)
-                                                                    <a href="javascript:void(0)" onclick="edit_remittance('{{$remittance->id}}','{{$remittance->name}}','{{$remittance->qrcode}}')"><i class="fa fa-edit"></i></a>
-                                                                    <a href="javascript:void(0)" onclick="delete_remittance('{{$remittance->id}}')"><i class="fa fa-trash"></i></a>
-                                                                @endif
+                                                            @if($remittance->is_active == 0)
+                                                                <a href="javascript:void(0)" onclick="edit_remittance('{{$remittance->id}}','{{$remittance->name}}','{{$remittance->qrcode}}')"><i class="fa fa-edit"></i></a>
+                                                                <a href="javascript:void(0)" onclick="delete_remittance('{{$remittance->id}}')"><i class="fa fa-trash"></i></a>
                                                             @endif
                                                         </td>
                                                     @endforeach

@@ -263,7 +263,7 @@ class WebController extends Controller
         $data = $request->all();
         if(isset($request->bank)){
             $selected_banks = $data['bank'];
-            $bank_options = PaymentOption::where('payment_id',2)->where('is_default',0)->get();
+            $bank_options = PaymentOption::where('payment_id',2)->get();
 
             // update banks into active
             foreach($selected_banks as $key => $bank){

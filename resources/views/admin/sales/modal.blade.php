@@ -20,10 +20,7 @@
                                 <option value="Bank Deposit">Bank Deposit</option>
                                 <option value="Debit/Credit Card">Debit/Credit Card</option>
                                 <option value="M Lhuillier">M Lhuillier</option>
-                                <optgroup label="Money Transfer">
-                                    <option value="GCash">GCash</option>
-                                    <option value="PayMaya">PayMaya</option>
-                                </optgroup>
+                                <option value="Money Transfer">Money Transfer</option>
                                 <option value="Cash">Cash</option>
                             </select>
                         </div>
@@ -197,7 +194,7 @@
 </div>
 <!-- end delivery status -->
 
-<div class="modal effect-scale" id="prompt-show-added-payments" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- <div class="modal effect-scale" id="prompt-show-added-payments" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -227,7 +224,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="modal effect-scale" id="prompt-show-delivery-history" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">

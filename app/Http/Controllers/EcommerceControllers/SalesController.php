@@ -18,6 +18,7 @@ use Auth;
 class SalesController extends Controller
 {
     private $searchFields = ['order_number','response_code','updated_at'];
+    private $paymentsSearchFields = ['payment_date','receipt_number'];
 
     public function __construct()
     {
@@ -46,6 +47,7 @@ class SalesController extends Controller
             $sales = $sales->where('created_at','<=',$_GET['enddate'].' 23:59:59');
         if(isset($_GET['search']) && $_GET['search']<>'')
             $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
+
         $sales = $sales->orderBy('id','desc');
         $sales = $sales->paginate(20);
 
@@ -54,6 +56,100 @@ class SalesController extends Controller
 
         return view('admin.sales.index',compact('sales','filter','searchType'));
 
+    }
+
+    public function sales_money_transfer()
+    {
+
+        $listing = new ListingHelper('desc',10,'order_number');
+
+        $payments = 
+            SalesHeader::join('ecommerce_sales_payments','ecommerce_sales_headers.id','=','ecommerce_sales_payments.sales_header_id')
+            ->select('ecommerce_sales_payments.*','ecommerce_sales_headers.order_number','ecommerce_sales_headers.customer_name')
+            ->where('ecommerce_sales_headers.payment_method','<>',1)
+            ->where('ecommerce_sales_headers.delivery_type','<>','Cash on Delivery');
+
+        if(isset($_GET['startdate']) && $_GET['startdate']<>'')
+            $payments = $payments->where('ecommerce_sales_payments.payment_date','>=',$_GET['startdate']);
+
+        if(isset($_GET['enddate']) && $_GET['enddate']<>'')
+            $payments = $payments->where('ecommerce_sales_payments.payment_date','<=',$_GET['enddate'].' 23:59:59');
+
+        if(isset($_GET['search']) && $_GET['search']<>'')
+            $payments = $payments->where('ecommerce_sales_payments.receipt_number','like','%'.$_GET['search'].'%');
+
+        $payments = $payments->orderBy('id','desc');
+        $payments = $payments->paginate(10);
+
+        $filter = $listing->get_filter($this->paymentsSearchFields);
+        $searchType = 'simple_search';
+
+        return view('admin.sales.money-transfer',compact('payments','filter','searchType'));
+
+    }
+
+    public function sales_cash_on_delivery()
+    {
+        $listing = new ListingHelper('desc',10,'order_number');
+
+        $sales = SalesHeader::where('delivery_type','Cash on Delivery');
+
+        if(isset($_GET['search']) && $_GET['search']<>'')
+            $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
+
+        $sales = $sales->orderBy('id','desc');
+        $sales = $sales->paginate(10);
+
+        $filter = $listing->get_filter($this->searchFields);
+        $searchType = 'simple_search';
+
+        return view('admin.sales.cash-on-delivery',compact('sales','filter','searchType'));
+    }
+
+    public function payment_add_store(Request $request)
+    {   
+        $payment = SalesPayment::create([
+            'sales_header_id' => $request->sales_header_id,
+            'payment_type' => $request->payment_type,
+            'amount' => $request->amount,
+            'status' => 'PAID',
+            'payment_date' => $request->payment_dt,
+            'receipt_number' => '',
+            'remarks' => $request->payment_remarks,
+            'created_by' => Auth::id()
+        ]);
+
+        if($payment){
+            SalesHeader::find($request->sales_header_id)->update(['delivery_status' => 'Delivered']);
+        }
+
+        return back()->with('success','Payment has been added successfully.');
+    }
+
+    public function sales_same_day_delivery()
+    {
+
+        $listing = new ListingHelper('desc',10,'order_number');
+
+        $sales = SalesHeader::where('delivery_type','Same Day Delivery');
+
+        if(isset($_GET['search']) && $_GET['search']<>'')
+            $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
+
+        $sales = $sales->paginate(20);
+
+        $filter = $listing->get_filter($this->searchFields);
+        $searchType = 'simple_search';
+
+        return view('admin.sales.same-day-delivery',compact('sales','filter','searchType'));
+
+    }
+
+    public function validate_payment(Request $request)
+    {
+        SalesPayment::find($request->payment_id)->update(['is_verify' => 1]);
+
+        return back()->with('success',__('standard.sales.validate_success'));
     }
 
     public function store(Request $request)
@@ -178,22 +274,6 @@ class SalesController extends Controller
     public function cancel_product(Request $request)
     {
         return $request;
-    }
-
-    public function payment_add_store(Request $request)
-    {
-        SalesPayment::create([
-            'sales_header_id' => $request->sales_header_id,
-            'payment_type' => $request->pamenty_mode,
-            'amount' => $request->amount,
-            'status' => 'PAID',
-            'payment_date' => $request->payment_dt,
-            'receipt_number' => $request->ref_no,
-            'remarks' => $request->payment_remarks,
-            'created_by' => Auth::id()
-        ]);
-
-        return back()->with('success','Payment has been added successfully.');
     }
 
     public function display_payments(Request $request){

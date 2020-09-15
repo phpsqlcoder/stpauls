@@ -125,7 +125,6 @@ class ProductController extends Controller
             'slug' => $slug,
             'short_description' => $request->short_description,
             'description' => $request->long_description,
-            'brand' => $request->brand,
             'reorder_point' => $request->reorder_point,
             'currency' => 'PHP',
             'price' => Input::get('price'),
@@ -262,7 +261,6 @@ class ProductController extends Controller
             'code' => $request->code,
             'category_id' => $request->category,
             'name' => $request->name,
-            'brand' => $request->brand,
             'slug' => $slug,
             'short_description' => $request->short_description,
             'description' => $request->long_description,
@@ -307,7 +305,7 @@ class ProductController extends Controller
             ]);
         }
 
-        return redirect()->route('products.edit', $product->id)->with('success', __('standard.products.product.update_success'));
+        return redirect()->route('products.index')->with('success', __('standard.products.product.update_success'));
     }
 
     public function update_photos($photos)

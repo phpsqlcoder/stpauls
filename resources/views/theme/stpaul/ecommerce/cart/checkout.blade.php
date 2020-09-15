@@ -1,229 +1,238 @@
 @extends('theme.'.env('FRONTEND_TEMPLATE').'.main')
 
+@section('pagecss')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+@endsection
+
 @section('content')
 <main>
+    <form method="post" action="{{ route('cart.temp_sales') }}" id="checkout-form">
+    @csrf
     <section id="checkout-wrapper">
         <div class="container">
             <h2 class="checkout-title">Checkout</h2>
-            <form method="post" action="{{ route('cart.temp_sales') }}" id="checkout-form">
-                @csrf
-                <div class="checkout-info">
-                    <div id="responsiveTabs2">
-                        <ul>
-                            <li>
-                                <a href="#tab-1">
-                                    <span class="step">1</span>
-                                    <span class="title">Billing Information</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#tab-2">
-                                    <span class="step">2</span>
-                                    <span class="title">Shipping Options</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#tab-3">
-                                    <span class="step">3</span>
-                                    <span class="title">Review and Place Order</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#tab-4">
-                                    <span class="step">4</span>
-                                    <span class="title">Payment Method</span>
-                                </a>
-                            </li>
-                        </ul>
+            <div class="checkout-info">
+                <div id="responsiveTabs2">
+                    <ul>
+                        <li>
+                            <a href="#tab-1">
+                                <span class="step">1</span>
+                                <span class="title">Billing Information</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab-2">
+                                <span class="step">2</span>
+                                <span class="title">Shipping Options</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab-3">
+                                <span class="step">3</span>
+                                <span class="title">Review and Place Order</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab-4">
+                                <span class="step">4</span>
+                                <span class="title">Payment Method</span>
+                            </a>
+                        </li>
+                    </ul>
 
-                        <!-- Billing Info -->                    
-                        <div id="tab-1">
-                            <div class="checkout-content">
-                                <table class="customer-info">
-                                    <tr>
-                                        <td>Name</td>
-                                        <td>{{ $customer->fullname }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>E-mail Address</td>
-                                        <td>{{ $customer->email }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Contact Number</td>
-                                        <td>{{ $customer->mobile }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Address</td>
-                                        <td>
-                                            {{ $customer->address1 }}<br>{{ $customer->address2 }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Zip Code</td>
-                                        <td>{{ $customer->zipcode }}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="checkout-nav">
-                                <span></span>
-                                <a class="checkout-next-btn" href="">Next <span class="lnr lnr-chevron-right"></span></a>
-                            </div>
-                        </div>
+                    <!-- Billing Info -->                    
+                    <div id="tab-1">
+                        <div class="checkout-content">
+                            <div class="checkout-card">
+                                <div class="form-group form-wrap">
+                                    <p>Name *</p>
+                                    <input readonly type="text" class="form-control" name="customer" value="{{ $customer->fullname }}">
+                                    @hasError(['inputName' => 'customer'])
+                                    @endhasError
+                                </div>
 
-                        <!-- Shipping Options -->
-                        <div id="tab-2">
-                            <div class="checkout-content">
-                                <p class="mb-3">Select a shipping method:</p>
+                                <div class="gap-10"></div>
+                                <div class="form-group form-wrap">
+                                    <p>Email *</p>
+                                    <input readonly type="email" class="form-control" name="email" value="{{ $customer->email }}">
+                                    @hasError(['inputName' => 'email'])
+                                    @endhasError
+                                </div>
 
-                                <div class="tab-wrap">
-                                    @if($cod->is_active == 1)
-                                        @if(\App\EcommerceModel\CheckoutOption::check_availability(1) == 1)
-                                            <input type="radio" id="tab1" name="shipOption" onclick="shippingOption('cod');" value="1" class="tab">
-                                            <label for="tab1">Cash On Delivery (COD)</label>
-                                        @endif
-                                    @endif
+                                <div class="gap-10"></div>
+                                <div class="form-group form-wrap">
+                                    <p>Mobile Number *</p>
+                                    <input type="text" class="form-control" name="mobile" id="input-mobile" value="{{ $customer->mobile }}">
+                                    @hasError(['inputName' => 'mobile'])
+                                    @endhasError
+                                </div>
 
-                                    @if($cod->is_active == 1)
-                                        @if(\App\EcommerceModel\CheckoutOption::check_availability(2) == 1)
-                                            <input type="radio" id="tab2" name="shipOption" onclick="shippingOption('stp');" value="2" class="tab">
-                                            <label for="tab2">Store Pick-up</label>
-                                        @endif
-                                    @endif
+                                <div class="gap-10"></div>
+                                <div class="form-group form-wrap">
+                                    <p>Province *</p>
+                                    <select name="province" id="province" class="form-control">
+                                        <option value="" selected disabled>-- Select Province --</option>
+                                        @foreach($provinces as $province)
+                                        <option @if($customer->province == $province->province) selected @endif value="{{$province->province}}">{{ $province->province_detail->province }}</option>
+                                        @endforeach
+                                        <option value="0">Others</option>
+                                    </select>
+                                    @hasError(['inputName' => 'province'])
+                                    @endhasError
 
-                                    @if($sdd->is_active == 1)
-                                        @if(\App\EcommerceModel\CheckoutOption::check_availability(4) == 1)
-                                        <input type="radio" id="tab3" name="shipOption" onclick="shippingOption('sdd');" value="4" class="tab">
-                                        <label for="tab3">Same Day Delivery</label>
-                                        @endif
-                                    @endif
-
-                                    <input type="radio" id="tab4" name="shipOption" onclick="shippingOption('dtd');" value="3" class="tab">
-                                    <label for="tab4">Door-to-door (D2D)</label>
-
-                                    @if($cod->is_active == 1)
-                                    <div class="tab__content">
-                                        <h3>Cash on Delivery</h3>
-                                        <div class="alert alert-info" role="alert">
-                                            <h4 class="alert-heading">Reminder!</h4>
-                                            <p>{{ $cod->reminder }}</p>
-                                        </div>
-                                        <div class="checkout-card">
-                                            <div class="unit flex-row unit-spacing-s">
-                                                <div class="unit__left">
-                                                    <span class="fa fa-check-circle fa-icon"></span>
-                                                </div>
-                                                <div class="unit__body">
-                                                    <h3 class="customer-name">{{ $customer->fullname }}</h3>
-                                                    <p class="customer-address">{{ $customer->address1 }}<br> {{ $customer->address2withzip }}</p>
-                                                    @if(\App\Deliverablecities::check_area($customer->city) <> 1)
-                                                    <small class="form-text text-danger">This area is not serviceable. Please enter new address.</small>
-
-                                                    <div class="gap-20"></div>
-                                                        <div class="form-group">
-                                                            <label for="exampleInputEmail1">Address 1*</label>
-                                                            <textarea required name="add1" class="form-control" rows="2"></textarea>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="exampleInputPassword1">Address 2*</label>
-                                                            <textarea required name="add2" class="form-control" rows="2"></textarea>
-                                                        </div>
-                                                        <div class="form-row">
-                                                            <div class="col">
-                                                                <label for="exampleInputEmail1">Province*</label>
-                                                                <select class="form-control" name="province" id="province">
-                                                                    <option selected disabled value="">-- Select Province --</option>
-                                                                    @foreach($provinces as $province)
-                                                                    <option value="{{$province->province}}">{{ $province->province_detail->province }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                            <div class="col">
-                                                                <label for="exampleInputEmail1">City *</label>
-                                                                <select name="city" id="city" class="form-control">
-                                                                </select>  
-                                                                <small class="form-text text-muted">Serviceable cities.</small>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endif
-
-                                    <!-- store pick-up -->
-                                    @if($stp->is_active == 1)
-                                    <div class="tab__content">
-                                        <h3>Store Pick-up</h3>
-                                        <div class="alert alert-info" role="alert">
-                                            <h4 class="alert-heading">Reminder!</h4>
-                                            <p>{{ $stp->reminder }}</p>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="col">
-                                                <label>Select Branch*</label>
-                                                <select class="form-control" name="branch">
-                                                    <option selected disabled value="">-- Select Branch --</option>
-                                                    @foreach($branches as $branch)
-                                                    <option value="{{$branch->id}}">{{ $branch->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endif
-
-                                    <!-- same day delivery -->
-                                    @if($sdd->is_active == 1)
-                                    <div class="tab__content">
-                                        <h3>Same Day Delivery</h3>
-                                        <div class="alert alert-info" role="alert">
-                                            <h4 class="alert-heading">Reminder!</h4>
-                                            <p>{{ $cod->reminder }}</p>
-                                        </div>
-                                    </div>
-                                    @endif
-
-                                    <!-- Door-to-door -->
-                                    @if($dtd->is_active == 1)
-                                    <div class="tab__content">
-                                        <h3>Door-to-door</h3>
-                                        <div class="checkout-card">
-                                            <div class="unit flex-row unit-spacing-s">
-                                                <div class="unit__left">
-                                                    <span class="fa fa-check-circle fa-icon"></span>
-                                                </div>
-                                                <div class="unit__body">
-                                                    <h3 class="customer-name">{{ $customer->fullname }}</h3>
-                                                    <p class="customer-address">{{ $customer->address1 }}<br> {{ $customer->address2withzip }}</p>
-                                                    @if(\App\Deliverablecities::check_area($customer->city) <> 1)
-                                                    <small class="form-text text-danger">This area is not serviceable. Please enter new address.</small>
-                                                    <textarea class="form-control" cols="4" name="d2d-new-address" id="dtd-new-address"></textarea>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @if(\App\Deliverablecities::check_area($customer->city) <> 1)
+                                    <small id="alert_province" class="form-text text-danger"><b>{{ $customer->provinces->province }}</b> is not serviceable. Please select another province.</small>
                                     @endif
                                 </div>
-                            </div>
 
-                            <div class="checkout-nav">
-                                <a class="checkout-back-btn" href=""><span class="lnr lnr-chevron-left"></span> Back</a>
-                                <a class="checkout-next-btn" id="shipOptionNxtBtn" href="">Next <span class="lnr lnr-chevron-right"></span></a>
+                                <div class="gap-10"></div>
+                                <div class="form-group form-wrap">
+                                    <p>City/Municipality *</p>
+                                    <select class="form-control" name="city" id="city">
+                                        @if(\App\Deliverablecities::check_area($customer->city) <> 1)
+                                            <option value="" selected disabled>-- Select City --</option>
+                                        @else
+                                            @foreach($cities as $city)
+                                            <option @if($customer->city == $city->city) selected @endif value="{{$city->city}}|{{$city->rate}}">{{ $city->city_name }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    @hasError(['inputName' => 'city'])
+                                    @endhasError
+
+                                    @if(\App\Deliverablecities::check_area($customer->city) <> 1)
+                                    <small id="alert_city" class="form-text text-danger"><b>{{ $customer->cities->city }}</b> is not serviceable. Please select another city.</small>
+                                    @endif
+                                </div>
+
+                                <div class="gap-10"></div>
+                                <div class="form-group form-wrap">
+                                    <p>Address Line 1 *</p>
+                                    <input type="text" class="form-control" name="address" id="input-address" value="{{ $customer->address }}">
+                                    @hasError(['inputName' => 'address'])
+                                    @endhasError
+                                </div>
+
+                                <div class="gap-10"></div>
+                                <div class="form-group form-wrap">
+                                    <p>Address Line 2 *</p>
+                                    <input type="text" class="form-control" name="barangay" id="input-barangay" value="{{ $customer->barangay }}">
+                                    @hasError(['inputName' => 'barangay'])
+                                    @endhasError
+                                </div>
+
+                                <div class="gap-10"></div>
+                                <div class="form-group form-wrap" id="div_other" style="display: none;">
+                                    <p>Other Address</p>
+                                    <textarea class="form-control" cols="2" id="other_address"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="checkout-nav">
+                            <span></span>
+                            <a class="checkout-next-btn" href="" id="billingNxtBtn">Next <span class="lnr lnr-chevron-right"></span></a>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Options -->
+                    <div id="tab-2">
+                        <div class="checkout-content">
+                            <p class="mb-3">Select a shipping method:</p>
+
+                            <div class="tab-wrap">
+                                @if($cod->is_active == 1)
+                                    @if(\App\EcommerceModel\CheckoutOption::check_availability(1) == 1)
+                                        <input type="radio" id="tab1" name="shipOption" onclick="shippingOption('cod');" value="1" class="tab">
+                                        <label for="tab1">Cash On Delivery (COD)</label>
+                                    @endif
+                                @endif
+
+                                @if($cod->is_active == 1)
+                                    @if(\App\EcommerceModel\CheckoutOption::check_availability(2) == 1)
+                                        <input type="radio" id="tab2" name="shipOption" onclick="shippingOption('stp');" value="2" class="tab">
+                                        <label for="tab2">Store Pick-up</label>
+                                    @endif
+                                @endif
+
+                                @if($sdd->is_active == 1)
+                                    @if(\App\EcommerceModel\CheckoutOption::check_availability(4) == 1)
+                                    <input type="radio" id="tab3" name="shipOption" onclick="shippingOption('sdd');" value="4" class="tab">
+                                    <label for="tab3">Same Day Delivery</label>
+                                    @endif
+                                @endif
+
+                                <input type="radio" id="tab4" name="shipOption" onclick="shippingOption('dtd');" value="3" class="tab">
+                                <label for="tab4">Door-to-door (D2D)</label>
+
+                                @if($cod->is_active == 1)
+                                <div class="tab__content">
+                                    <h3>Cash on Delivery</h3>
+                                    <div class="alert alert-info" role="alert">
+                                        <h4 class="alert-heading">Reminder!</h4>
+                                        <p>{{ $cod->reminder }}</p>
+                                    </div>
+                                </div>
+                                @endif
+
+                                <!-- store pick-up -->
+                                @if($stp->is_active == 1)
+                                <div class="tab__content">
+                                    <h3>Store Pick-up</h3>
+                                    <div class="alert alert-info" role="alert">
+                                        <h4 class="alert-heading">Reminder!</h4>
+                                        <p>{{ $stp->reminder }}</p>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <label>Select Branch*</label>
+                                            <select class="form-control" name="branch">
+                                                <option selected disabled value="">-- Select Branch --</option>
+                                                @foreach($branches as $branch)
+                                                <option value="{{$branch->id}}">{{ $branch->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endif
+
+                                <!-- same day delivery -->
+                                @if($sdd->is_active == 1)
+                                <div class="tab__content">
+                                    <h3>Same Day Delivery</h3>
+                                    <div class="alert alert-info" role="alert">
+                                        <h4 class="alert-heading">Reminder!</h4>
+                                        <p>{{ $cod->reminder }}</p>
+                                    </div>
+                                </div>
+                                @endif
+
+                                <!-- Door-to-door -->
+                                @if($dtd->is_active == 1)
+                                <div class="tab__content">
+                                    <h3>Door-to-door</h3>
+                                </div>
+                                @endif
                             </div>
                         </div>
 
-                        <!-- Order Summary -->
-                        <div id="tab-3">
+                        <div class="checkout-nav">
+                            <a class="checkout-back-btn" href=""><span class="lnr lnr-chevron-left"></span> Back</a>
+                            <a class="checkout-next-btn" id="shipOptionNxtBtn" href="">Next <span class="lnr lnr-chevron-right"></span></a>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div id="tab-3">
+                        
                             <div class="checkout-content">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <label class="subtitle">Billed To</label>
                                         <h3 class="customer-name">{{ $customer->fullname }}</h3>
-                                        <p class="customer-address">{{ $customer->address1 }}, {{ $customer->address2 }} {{ $customer->zipcode }}</p>
-                                        <p class="customer-phone">Tel No: {{ $customer->mobile }}</p>
-                                        <p class="customer-email">Email: {{ $customer->email }}</p>
+                                        <p class="customer-address"><span id="customer-address"></span></p>
+                                        <p class="customer-phone" >Tel No: <span id="customer-phone"></span></p>
+                                        <p class="customer-email" id="customer-email">Email: {{ $customer->email }}</p>
                                     </div>
                                 </div>
 
@@ -238,6 +247,7 @@
                                                 <th class="w-15 text-center">Qty</th>
                                                 <th class="w-15 text-right">Unit Price</th>
                                                 <th class="w-15 text-right">Amount</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -250,7 +260,7 @@
                                                 $totalAmount = $onsaleChecker > 0 ?  $product->product->discountedprice*$product->qty : $product->product->price*$product->qty;
                                                 $subTotal  += $totalAmount;
                                             @endphp
-                                            <tr>
+                                            <tr id="cart_{{$product->id}}">
                                                 <td class="tx-nowrap text-danger">{{ $product->product->name }}</td>
                                                 <td class="d-none d-sm-table-cell tx-color-03">{{ str_limit(strip_tags($product->product->description), 80, $end ='...') }}</td>
                                                 <td class="text-center">
@@ -269,7 +279,9 @@
                                                 </td>
                                                 <td class="text-right">
                                                     <input type="hidden" class="input_product_total_amount" id="input_product_total_amount_{{$product->product_id}}" value="{{$totalAmount}}">
-                                                    ₱ <span id="product_total_amount_{{$product->product_id}}">{{ number_format($totalAmount,2) }}</span></td>
+                                                    ₱ <span id="product_total_amount_{{$product->product_id}}">{{ number_format($totalAmount,2) }}</span>
+                                                </td>
+                                                <td><a href="" onclick="deleteProduct('{{$product->id}}');">x</a></td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -299,7 +311,6 @@
 
                                         <input type="hidden" id="selected_servicefee_val">
                                         <input type="hidden" id="selected_deliveryfee_val">
-
 
                                         <ul class="list-unstyled lh-7 pd-r-10">
                                             <li class="d-flex justify-content-between">
@@ -341,50 +352,41 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="checkout-nav">
-                                <a class="checkout-back-btn" href=""><span class="lnr lnr-chevron-left"></span> Back</a>
-                                <a class="checkout-next-btn" href="">Next <span class="lnr lnr-chevron-right"></span></a>
-                            </div>
+                        
+                        <div class="checkout-nav">
+                            <a class="checkout-back-btn" href=""><span class="lnr lnr-chevron-left"></span> Back</a>
+                            <a class="checkout-next-btn" href="" id="btnReviewOrder" style="color:white;font-size:1em;font-weight: 700;"><span id="spanReviewOrder">Next</span> <span class="lnr lnr-chevron-right"></span></a>
                         </div>
+                    </div>
 
-                        <!-- Payment Method -->
-                        <div id="tab-4">
-                            <div class="checkout-content">
-                                <h3>Payment Method</h3>
-                                <!-- Group of default radios - option 1 -->
-                                <div class="custom-control custom-radio">
-                                  <input type="radio" class="custom-control-input" id="defaultGroupExample1" name="groupOfDefaultRadios">
-                                  <label class="custom-control-label" for="defaultGroupExample1">Credit Card</label>
-                                </div>
-
-                                <!-- Group of default radios - option 2 -->
-                                <div class="custom-control custom-radio">
-                                  <input type="radio" class="custom-control-input" id="defaultGroupExample2" name="groupOfDefaultRadios">
-                                  <label class="custom-control-label" for="defaultGroupExample2">Online Fund</label>
-                                </div>
-
-                                <!-- Group of default radios - option 3 -->
-                                <div class="custom-control custom-radio">
-                                  <input type="radio" class="custom-control-input" id="defaultGroupExample3" name="groupOfDefaultRadios">
-                                  <label class="custom-control-label" for="defaultGroupExample3">Money Transfer</label>
-                                </div>
-                                <div class="gap-20"></div>
+                    <!-- Payment Method -->
+                    <div id="tab-4">
+                        <div class="checkout-content">
+                            <h3>Payment Method</h3>
+                            @foreach($payment_method as $method)
+                            <div class="custom-control custom-radio">
+                              <input type="radio" class="custom-control-input" name="payment_method" value="{{ $method->id }}" id="method{{ $method->id }}" name="groupOfDefaultRadios">
+                              <label class="custom-control-label" for="method{{ $method->id }}">{{ $method->name }}</label>
                             </div>
-                            <div class="checkout-nav">
-                                <a class="checkout-back-btn" href=""><span class="lnr lnr-chevron-left"></span> Back</a>
-                                <a class="checkout-finish-btn" href="javascript:;" id="btnPlaceOrder">Place Order <span class="lnr lnr-chevron-right"></span></a>
-                            </div>
+                            @endforeach
+                        </div>
+                        <div class="checkout-nav">
+                            <a class="checkout-back-btn" href=""><span class="lnr lnr-chevron-left"></span> Back</a>
+                            <a class="checkout-finish-btn" href="" id="btnPlaceOrder">Place Order <span class="lnr lnr-chevron-right"></span></a>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </section>
+    </form>
 </main>
 @endsection
 
 @section('pagejs')
     <script src="{{ asset('theme/stpaul/plugins/responsive-tabs/js/jquery.responsiveTabs.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
     <script>
         $(document).ready(function(){
             /** Custom Input number increment js **/
@@ -438,8 +440,66 @@
 
 @section('customjs')
     <script>
+        $(document).ready(function() {
+            $('select[name="province"]').on('change', function() {
+
+                $('#alert_province').hide();
+                $('#alert_city').hide();
+
+                var provinceID = $(this).val();
+                if(provinceID == 0){
+                    $('#city').prop('disabled', true);
+                    $('#div_other').show();
+                } else {
+
+                    $('#city').prop('disabled', false);
+                    $('#div_other').hide();
+
+                    var url = "{{ route('ajax.deliverable-cities', ':provinceID') }}";
+                    url = url.replace(':provinceID',provinceID);
+
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        dataType: "json",
+                        success:function(data) {
+                            $('select[name="city"]').empty();
+                            $.each(data, function(key, value) {
+                                $('select[name="city"]').append('<option value="'+value.id+'">'+value.city+'</option>');
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+        // uncheck selected shipping option if selected city change
+        $('select[name="city"]').on('change', function() {
+            $("input:radio[name='shipOption']").each(function(i) {
+                this.checked = false;
+            });
+        });
+
         $('#btnPlaceOrder').click(function(){
             $("#checkout-form").submit();
+        });
+
+        $('#btnReviewOrder').click(function(){
+            var shipOption  = $("input:radio[name='shipOption']:checked").val();
+
+            if(shipOption == 1){ 
+                $("#checkout-form").submit();
+            } else {
+
+            }
+        });
+
+        $('#billingNxtBtn').click(function(){
+
+            $('#customer-address').html($('#input-address').val()+' '+$('#input-barangay').val()+', '+$("#province option:selected" ).text()+' '+$("#city option:selected" ).text());
+
+            $('#customer-phone').html($('#input-mobile').val());
+    
         });
 
         function shippingOption(type){
@@ -450,64 +510,78 @@
             var minPurchase = $('#min_purchase').val();
             var deliveryRate = $('#delivery_rate').val();
 
-            $('#shipOptionNxtBtn').addClass("checkout-next-btn");
+            if(type == 'stp' || type == 'dtd' || type == 'sdd'){
+                $('#btnReviewOrder').addClass('checkout-next-btn');
+
+            }
 
             if(type == 'sdd'){
                 $('#selected_servicefee_val').val(servicefee);
+
             } else {
                 $('#selected_servicefee_val').val(0);
             }
 
             if(type == 'cod'){
-                if(isServiceable == 1){
-                    var cityRate = $('#city_rate').val();
+                $('#btnReviewOrder').removeClass('checkout-next-btn');
+
+                var sel_address = $('#province').val();
+                if(sel_address == 0){
+                    $('#selected_deliveryfee_val').val(0);
+                } else {
+                    var city = $('#city').val();
+                    var rate = city.split('|');
+
                     if(parseFloat(subTotal) >= parseFloat(minPurchase)){
                         $('#selected_deliveryfee_val').val(deliveryRate);
                     } else {
-                        $('#selected_deliveryfee_val').val(cityRate);
+                        $('#selected_deliveryfee_val').val(rate[1]);
                     }
                 }
             }
         }
 
         $('#shipOptionNxtBtn').click(function(){
-            if ($('input[name=shipOption]:checked').length > 0) {
-                var shipOption  = $("input:radio[name='shipOption']:checked").val();
-                var deliveryfee = $('#selected_deliveryfee_val').val();
-                var servicefee  = $('#selected_servicefee_val').val(); 
+            var shipOption  = $("input:radio[name='shipOption']:checked").val();
+            var deliveryfee = $('#selected_deliveryfee_val').val();
+            var servicefee  = $('#selected_servicefee_val').val(); 
 
-                if(shipOption == 2 || shipOption == 3){
+            if(shipOption == 2 || shipOption == 3){
+                $('#input_servicefee').val(0);
+                $('#span_servicefee').html('0.00');
+
+                $('#input_deliveryfee').val(0);
+                $('#span_deliveryfee').html('0.00');
+
+                $('#spanReviewOrder').html('Next');
+            } else {
+                // cash on delivery
+                if(shipOption == 1){
+                    delivery_fee(shipOption);
+
+                    $('#spanReviewOrder').html('Place Order');
+
                     $('#input_servicefee').val(0);
                     $('#span_servicefee').html('0.00');
 
-                    $('#input_deliveryfee').val(0);
-                    $('#span_deliveryfee').html('0.00');
-                } else {
-                    // cash on delivery
-                    if(shipOption == 1){
-                        delivery_fee(shipOption);
 
-                        $('#input_servicefee').val(0);
-                        $('#span_servicefee').html('0.00');
-                    }
-
-                    // same day delivery
-                    if(shipOption == 4){
-                        $('#input_servicefee').val(servicefee);
-                        $('#span_servicefee').html(FormatAmount(servicefee,2));
-
-                        $('#input_deliveryfee').val(0);
-                        $('#span_deliveryfee').html('0.00');
-                    }
                 }
 
-                totalDue();
-                
-            } else {
-                $(this).removeClass("checkout-next-btn");
-                alert('Please select shipping option.');
+                // same day delivery
+                if(shipOption == 4){
+                    $('#input_servicefee').val(servicefee);
+                    $('#span_servicefee').html(FormatAmount(servicefee,2));
+
+                    $('#input_deliveryfee').val(0);
+                    $('#span_deliveryfee').html('0.00');
+
+                    $('#spanReviewOrder').html('Next');
+                }
             }
+
+            totalDue();
         });
+
 
         function updateAmount(id){
             var qty   = $('#product_qty_'+id).val();
@@ -612,5 +686,41 @@
                 }
             });
         });
+
+        function deleteProduct(cartid)
+        {
+            swal({
+                title: 'Are you sure?',
+                text: "This will remove the item from your cart.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, remove it!'            
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('checkout.remove-product') }}",
+                        data: { 
+                                cartid : cartid,
+                            },
+                        success: function( response ) {
+                            swal("Success!", "Product has been removed.", "success");
+                            $('#cart_'+cartid).remove();
+                            subTotal();
+                            
+                        },
+                        error: function( response ){
+                            swal("Error!", "Failed to remove the product.", "danger"); 
+                        }
+                    });  
+                } 
+                else {                    
+                    swal.close();                   
+                }
+            });
+        }
     </script>
 @endsection

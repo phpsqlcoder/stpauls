@@ -8,9 +8,16 @@ class SalesPayment extends Model
 {
 
     protected $table = 'ecommerce_sales_payments';
-    protected $fillable = ['sales_header_id','payment_type','amount','status', 'payment_date', 'receipt_number','created_by'
-    ,'order_number','remark','trans_id','err_desc','signature','cc_name','cc_no','bank_name','country','remarks','response_body','response_id','response_code'
-];
+    protected $fillable = [
+        'sales_header_id','payment_type','amount','status', 'payment_date', 'receipt_number','created_by',
+        'order_number','remark','trans_id','err_desc','signature','cc_name','cc_no','bank_name','country',
+        'remarks','response_body','response_id','response_code','is_verify','attachment'
+    ];
+
+    public function sales_header()
+    {
+        return $this->belongsTo('\App\EcommerceModel\SalesHeader','sales_header_id');
+    }
 
     public static function check_if_has_added_payments($id)
     {
@@ -38,6 +45,39 @@ class SalesPayment extends Model
         } else {
             return 1;
         }
+    }
 
+    public static function unpaid_cod()
+    {
+        $qry = SalesHeader::where('payment_status','UNPAID')->where('status','CANCELLED')->count();
+
+        return $qry;
+    }
+
+    public static function undelivered_sdd()
+    {
+        $qry = SalesHeader::where('delivery_type','Same Day Delivery')->where('delivery_status','!=','Delivered')->count();
+
+        return $qry;
+    }
+
+    public static function unvalidated_payments()
+    {
+        $qry = SalesHeader::join('ecommerce_sales_payments','ecommerce_sales_headers.id','=','ecommerce_sales_payments.sales_header_id')
+            ->where('ecommerce_sales_headers.payment_method','<>',1)
+            ->where('ecommerce_sales_payments.is_verify',0)
+            ->count();
+
+        return $qry;
+    }
+
+    public static function unvalidated_delivery_payments($type)
+    {
+        $qry = SalesHeader::join('ecommerce_sales_payments','ecommerce_sales_headers.id','=','ecommerce_sales_payments.sales_header_id')
+            ->where('ecommerce_sales_headers.delivery_type',$type)
+            ->where('ecommerce_sales_payments.is_verify',0)
+            ->count();
+
+        return $qry;
     }
 }

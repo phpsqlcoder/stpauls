@@ -21,6 +21,7 @@ use App\User;
 
 use App\EcommerceModel\Customer;
 
+use App\Deliverablecities;
 use App\Provinces;
 use App\Cities;
 
@@ -44,6 +45,13 @@ class CustomerFrontController extends Controller
     {
 
         $data = Cities::where('province',$id)->get();
+
+        return response($data);
+    }
+
+    public function ajax_deliverable_cities($id)
+    {
+        $data = Deliverablecities::where('province',$id)->get();
 
         return response($data);
     }

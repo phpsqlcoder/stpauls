@@ -96,6 +96,7 @@
                                         aria-expanded="false">{{ \App\EcommerceModel\Customer::customer_username(auth()->user()->id) }}</a>
                                         <div class="acc-dropdown-menu dropdown-menu dropdown-menu-right " aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="#"><span class="lnr lnr-user mr-2"></span>Manage Account</a>
+                                            <a class="dropdown-item" href="{{route('account-transactions') }}"><span class="lnr lnr-user mr-2"></span>Manage Transactions</a>
                                             <a class="dropdown-item" href="{{ route('customer.logout') }}"><span class="lnr lnr-exit mr-2"></span>Log Out</a>
                                         </div>
                                     </li>

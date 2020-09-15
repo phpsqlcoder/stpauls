@@ -144,9 +144,36 @@
 
         @if (auth()->user()->has_access_to_module('sales_transaction'))
             <li class="nav-item with-sub @if (request()->routeIs('sales-transaction*')) active show @endif">
-                <a href="" class="nav-link"><i data-feather="users"></i> <span>Sales Transaction</span></a>
+                <a href="" class="nav-link"><i data-feather="users"></i> <span>Manage Sales Transaction</span></a>
                 <ul>
-                    <li @if (\Route::current()->getName() == 'sales-transaction.index') class="active" @endif><a href="{{ route('sales-transaction.index') }}">Manage Sales Transaction</a></li>
+                    {{--<li @if (\Route::current()->getName() == 'sales-transaction.index') class="active" @endif><a href="{{ route('sales-transaction.index') }}">Sales Transactions</a></li>--}}
+                    <li @if (\Route::current()->getName() == 'sales-transaction-money-transfer') class="active" @endif>
+                        <a href="{{ route('sales-transaction-money-transfer') }}">Money Transfer 
+                            &nbsp;
+                            @if(\App\EcommerceModel\SalesPayment::unvalidated_payments() > 0)
+                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesPayment::unvalidated_payments(3)}}</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li @if (\Route::current()->getName() == 'sales-transaction-cash-on-delivery') class="active" @endif>
+                        <a href="{{ route('sales-transaction-cash-on-delivery') }}">Cash on Delivery
+                            &nbsp;
+                            @if(\App\EcommerceModel\SalesPayment::unpaid_cod() > 0)
+                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesPayment::unpaid_cod()}}</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li @if (\Route::current()->getName() == 'sales-transaction-same-day-delivery') class="active" @endif>
+                        <a href="{{ route('sales-transaction-same-day-delivery') }}">Same Day Delivery
+                            &nbsp;
+                            @if(\App\EcommerceModel\SalesPayment::undelivered_sdd() > 0)
+                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesPayment::undelivered_sdd()}}</span>
+                            @endif
+                        </a>
+                    </li>
+                    {{--<li @if (\Route::current()->getName() == 'sales-transaction-store-pickup') class="active" @endif>
+                        <a href="{{ route('sales-transaction-store-pickup') }}">Store Pick-up</a>
+                    </li>--}}
                 </ul>
             </li>
         @endif

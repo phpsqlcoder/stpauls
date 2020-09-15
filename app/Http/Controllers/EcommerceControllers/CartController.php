@@ -24,7 +24,10 @@ use DB;
 use App\EcommerceModel\Customer;
 use App\EcommerceModel\CheckoutOption;
 
-use App\StPaul\LoyalCustomer;
+use App\StPaulModel\LoyalCustomer;
+
+use App\Cities;
+use App\Provinces;
 
 
 
@@ -218,12 +221,17 @@ class CartController extends Controller
         $customer = Customer::find(Auth::id());
         $delivery_type = CheckoutOption::find($request->shipOption);
 
+        $data_city = Cities::find($request->city);
+        $data_province = Provinces::find($request->province);
+
+        $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province;
+
         $salesHeader = SalesHeader::create([
             'order_number' => $requestId,
-            'customer_name' => $customer->fullname,
-            'customer_contact_number' => $customer->mobile,
-            'customer_address' => $customer->address1.', '.$customer->address2,
-            'customer_delivery_adress' => $customer->address1.', '.$customer->address2,
+            'customer_name' => $request->customer,
+            'customer_contact_number' => $request->mobile,
+            'customer_address' => $address,
+            'customer_delivery_adress' => $address,
             'order_source' => 'web',
             'delivery_tracking_number' => '',
             'delivery_courier' => '',
@@ -232,15 +240,16 @@ class CartController extends Controller
             'delivery_status' => 'Waiting for Payment',
             'gross_amount' => $request->totalDue,
             'tax_amount' => 0,
-            'net_amount' => $request->subtotal,
+            'net_amount' => $request->totalDue,
             'discount_amount' => 0,
             'payment_status' => 'UNPAID',
             'status' => 'active',
             'other_instruction' => $request->other_instruction,
             'user_id' => 0,
-            'customer_id' => Auth::id()
+            'customer_id' => Auth::id(),
+            'payment_method' => (!isset($request->payment_method)) ? 0 : $request->payment_method,
+            'branch' => ($request->shipOption == 2)  ? $request->branch : 0
         ]);
-
 
         $data = $request->all();
 
@@ -288,7 +297,7 @@ class CartController extends Controller
         Cart::where('user_id', Auth::id())->delete();
         $this->check_loyalty($request->totalDue);
 
-        return redirect(route('cart.front.show'));
+        return redirect(route('account-transactions'))->with('success',' Order has been placed.');
        
     }
 

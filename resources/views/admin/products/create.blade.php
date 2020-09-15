@@ -67,12 +67,6 @@
                         @endhasError
                     </div>
                     <div class="form-group">
-                        <label class="d-block">Brand</label>
-                        <input name="brand" id="brand" value="{{ old('brand') }}" required type="text" class="form-control @error('brand') is-invalid @enderror" maxlength="250">
-                        @hasError(['inputName' => 'brand'])
-                        @endhasError
-                    </div>
-                    <div class="form-group">
                         <label class="d-block">Category</label>
                         <select name="category" id="category" class="selectpicker mg-b-5" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
                             <option value="0">-- Select Category --</option>
@@ -89,7 +83,7 @@
                     </div>
                     <div class="form-group">
                         <label lass="d-block" id="short_descriptionLabel">Short Description</label>
-                        <textarea rows="3" name="short_description" class="form-control" required>{{ old('short_description') }}</textarea>
+                        <textarea rows="3" name="short_description" class="form-control">{{ old('short_description') }}</textarea>
                         @hasError(['inputName' => 'short_description'])@endhasError
                         <span class="invalid-feedback" role="alert" id="short_descriptionRequired" style="display: none;">
                             <strong>The short description field is required</strong>
@@ -197,7 +191,7 @@
                         <input type="file" id="upload_image" class="image_path" accept="image/*" multiple>
                         <button type="button" class="btn btn-secondary btn-sm upload" id="selectImages">Select images</button>
                         <p class="tx-10">
-                            Required image dimension: {{ env('PRODUCT_WIDTH') }}px by {{ env('PRODUCT_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png <br /> Maximum images: 5
+                            Required image dimension: {{ env('PRODUCT_WIDTH') }}px by {{ env('PRODUCT_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png <br /> Maximum images: 6
                         </p>
                         <div class="prodimg-thumb" id="bannersDiv" style="display: none;">
                             <ul id="banners">
@@ -213,7 +207,9 @@
                     <div class="form-group">
                         <label class="d-block">Zoom image</label>
                         <input type="file" id="zoom_image" name="zoom_image" accept="image/*">
-                        
+                        <p class="tx-10">
+                            Required image dimension: {{ env('PRODUCT_WIDTH') }}px by {{ env('PRODUCT_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png
+                        </p>
                     </div>
 
                     <div class="form-group">
@@ -397,7 +393,7 @@
                 let totalImages = uploadedImagesLength + files.length;
 
                 if (totalImages > 6) {
-                    $('#bannerErrorMessage').html("You can upload up to 1 image only.");
+                    $('#bannerErrorMessage').html("You can upload up to 6 images only.");
                     $('#prompt-banner-error').modal('show');
                     return false;
                 }

@@ -132,8 +132,7 @@ Manage Customer
                                         </div>
                                     </th>
                                     <th style="width: 20%;overflow: hidden;">Name</th>
-                                    <th style="width: 15%;">Category</th>
-                                    <th style="width: 15%;">Brand</th>
+                                    <th style="width: 30%;">Category</th>
                                     <th style="width: 10%;">Price</th>
                                     <th style="width: 10%;">Inventory</th>
                                     <th style="width: 10%;">Status</th>
@@ -171,7 +170,6 @@ Manage Customer
                                         <strong @if($product->trashed()) style="text-decoration:line-through;" @endif> {{ $product->name }}</strong>
                                     </td>
                                     <td>{{ $cat }}</td>
-                                    <td>{{ $product->brand }}</td>
                                     <td>{{ $product->currency }} {{ number_format($product->price,2) }}</td>
                                     <td><a href="#" onclick='window.open("{{route('report.product.stockcard',$product->id)}}", "Stock Card", "width=1200,height=800")'>{{ number_format($product->InventoryActual,2) }}</a></td>
                                     <td>{{ $product->status }}</td>

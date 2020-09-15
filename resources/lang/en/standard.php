@@ -248,4 +248,8 @@ return [
         'update_discount_success' => 'Loyalty discount has been updated.',
     ],
 
+    'sales' => [
+        'validate_success' => 'Payment has been validated.',
+    ]
+
 ];
