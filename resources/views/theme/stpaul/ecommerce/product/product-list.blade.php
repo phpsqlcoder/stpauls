@@ -2,13 +2,8 @@
 
 @section('pagecss')
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/ion.rangeslider/css/ion.rangeSlider.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/vanilla-zoom/vanilla-zoom.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/css/better-rating.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/css/animate.min.css') }}" />
-
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/example.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/pygments.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/easyzoom.css') }}" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 @endsection
@@ -22,77 +17,88 @@
                         <h2 class="listing-title">{{ $page->name }}</h2>
                         <div class="gap-10"></div>
                         <nav class="rd-navbar rd-navbar-listing">
-                            <div class="listing-filter-wrap">
-                                <div class="rd-navbar-listing-close-toggle rd-navbar-static--hidden toggle-original"><span class="lnr lnr-cross"></span> Close</div>
-                                <h3 class="listing-category-title">Categories</h3>
-                                <ul class="listing-category">
-                                    @foreach($categories as $category)
-                                    <li><a href="{{ route('product.front.list',$category->slug) }}">{{ $category->name }}</a></li>
-                                    @endforeach
-                                </ul>
-                                <a class="listing-view-link" href="">View all categories under Books</a>
+                            <form action="{{ route('product.front.list',$category->slug) }}" id="filter_form" method="POST" class="row">
+                            @csrf
+                                <input type="hidden" name="sort" id="sort" value="@if(request()->has('sort')) {{$request->sort}}  @endif">
+                                <input type="hidden" name="limit" id="limit" value="@if(request()->has('limit')) {{$request->limit}} @else 16 @endif">
+                                <input type="hidden" name="search" value="on">  
 
-                                <div class="gap-70"></div>
+                                <div class="listing-filter-wrap">
+                                    <div class="rd-navbar-listing-close-toggle rd-navbar-static--hidden toggle-original"><span class="lnr lnr-cross"></span> Close</div>
+                                    <h3 class="listing-category-title">Categories</h3>
+                                    <ul class="listing-category">
+                                        @foreach($categories as $category)
+                                            <li><a href="{{ route('product.front.list',$category->slug) }}">{{ $category->name }}</a></li>
+                                        @endforeach
+                                    </ul>
+                                    <a class="listing-view-link" href="">View all categories under Books</a>
 
-                                <h3 class="listing-filter-title">Price Range</h3>
-                                <div class="gap-10"></div>
-                                <input type="text" class="js-range-slider" name="my_range" value="" />
+                                    <div class="gap-70"></div>
 
-                                <div class="gap-70"></div>
+                                    <h3 class="listing-filter-title">Price Range</h3>
+                                    <div class="gap-10"></div>
+                                    <input type="hidden" id="max_price_range" value="{{ $maxPrice }}">
+                                    <input type="text" class="js-range-slider" name="price" id="price" value="" />
 
-                                <h3 class="listing-filter-title">Ratings</h3>
-                                <div class="gap-10"></div>
-                                <div class="rating">
-                                    <a id="five-star" href="">
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="rating-count">561</span>
-                                    </a>
+                                    <div class="gap-70"></div>
+
+                                    <h3 class="listing-filter-title">Ratings</h3>
+                                    <div class="gap-10"></div>
+                                    <div class="rating">
+                                        <a id="five-star" href="">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="rating-count">561</span>
+                                        </a>
+                                    </div>
+                                    <div class="rating">
+                                        <a id="four-star" href="">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star unchecked"></span>
+                                            <span class="rating-count">459</span>
+                                        </a>
+                                    </div>
+                                    <div class="rating">
+                                        <a id="three-star" href="">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star unchecked"></span>
+                                            <span class="fa fa-star unchecked"></span>
+                                            <span class="rating-count">200</span>
+                                        </a>
+                                    </div>
+                                    <div class="rating">
+                                        <a id="two-star" href="">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star unchecked"></span>
+                                            <span class="fa fa-star unchecked"></span>
+                                            <span class="fa fa-star unchecked"></span>
+                                            <span class="rating-count">2</span>
+                                        </a>
+                                    </div>
+                                    <div class="rating">
+                                        <a id="one-star" href="">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star unchecked"></span>
+                                            <span class="fa fa-star unchecked"></span>
+                                            <span class="fa fa-star unchecked"></span>
+                                            <span class="fa fa-star unchecked"></span>
+                                            <span class="rating-count">12</span>
+                                        </a>
+                                    </div>
+                                    <div class="gap-30"></div>
+                                    <a href="#" class="btn btn-primary btn-sm text-light" onclick="$('#filter_form').submit();">Apply Filter</a>
+                                    <a href="#" class="btn btn-primary btn-sm text-light" onclick="reset_form();">Clear All</a>
                                 </div>
-                                <div class="rating">
-                                    <a id="four-star" href="">
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star unchecked"></span>
-                                        <span class="rating-count">459</span>
-                                    </a>
-                                </div>
-                                <div class="rating">
-                                    <a id="three-star" href="">
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star unchecked"></span>
-                                        <span class="fa fa-star unchecked"></span>
-                                        <span class="rating-count">200</span>
-                                    </a>
-                                </div>
-                                <div class="rating">
-                                    <a id="two-star" href="">
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star unchecked"></span>
-                                        <span class="fa fa-star unchecked"></span>
-                                        <span class="fa fa-star unchecked"></span>
-                                        <span class="rating-count">2</span>
-                                    </a>
-                                </div>
-                                <div class="rating">
-                                    <a id="one-star" href="">
-                                        <span class="fa fa-star checked"></span>
-                                        <span class="fa fa-star unchecked"></span>
-                                        <span class="fa fa-star unchecked"></span>
-                                        <span class="fa fa-star unchecked"></span>
-                                        <span class="fa fa-star unchecked"></span>
-                                        <span class="rating-count">12</span>
-                                    </a>
-                                </div>
-                            </div>
+                            </form>
                         </nav>
                     </div>
                     <div class="col-lg-9">
@@ -104,25 +110,31 @@
                                     </nav>
                                     <div class="btn-group">
                                         <button type="button" class="btn dropdown-filter-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Items displayed
+                                            @if(request()->has('limit'))
+                                                {{$request->limit}}
+                                            @else
+                                                40
+                                            @endif items
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">18</a>
-                                            <a class="dropdown-item" href="#">36</a>
-                                            <a class="dropdown-item" href="#">72</a>
+                                            <a class="dropdown-item" href="#" onclick="filter_limit('16')">16</a>
+                                            <a class="dropdown-item" href="#" onclick="filter_limit('24')">24</a>
+                                            <a class="dropdown-item" href="#" onclick="filter_limit('40')">40</a>
+                                            <a class="dropdown-item" href="#" onclick="filter_limit('60')">60</a>
+                                            <a class="dropdown-item" href="#" onclick="filter_limit('100')">100</a>
+                                            <a class="dropdown-item" href="#" onclick="filter_limit('All')">All</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="btn-group">
-                                        <p class="filter-item-count ml-auto">6817 Item/s found</p>
+                                        <p class="filter-item-count ml-auto">{{$total_product}} Item/s found</p>
                                         <button type="button" class="btn dropdown-filter-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Sort by
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#">18</a>
-                                            <a class="dropdown-item" href="#">36</a>
-                                            <a class="dropdown-item" href="#">72</a>
+                                            <a class="dropdown-item" href="#" onclick="filter_sort('Price low to high')">Price low to high</a>
+                                            <a class="dropdown-item" href="#" onclick="filter_sort('Price high to low')">Price high to low</a>
                                         </div>
                                     </div>
                                 </div>
@@ -157,29 +169,7 @@
                                 @endforeach
                             </div>
                         </div>
-
-                        {{ $products->links() }}
-
-                        <ul class="pagination" style="display: none;">
-                            <li class="page-item">
-                                <a class="page-link" href="#" title="Back"><i class="lnr lnr-chevron-left"></i></a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">1</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">3 <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">4</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#" title="Next"><i class="lnr lnr-chevron-right"></i></a>
-                            </li>
-                        </ul>
+                        {{ $products->appends($_POST)->links() }}
                     </div>
                 </div>
             </div>
@@ -188,83 +178,40 @@
 @endsection
 
 @section('pagejs')
-    <script src="{{ asset('theme/stpaul/plugins/aos/dist/aos.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/jssocials/jssocials.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/ion.rangeslider/js/ion.rangeSlider.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/vanilla-zoom/vanilla-zoom.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/js/better-rating.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/easyzoom/src/easyzoom.js') }}"></script>
-
+    <script src="{{ asset('theme/sysu/plugins/ion.rangeslider/js/ion.rangeSlider.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-
+    
     <script>
-        // Instantiate EasyZoom instances
-        var $easyzoom = $('.easyzoom').easyZoom();
-
-        // Setup thumbnails example
-        var api1 = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
-
-        $('.thumbnails').on('click', 'a', function(e) {
-            var $this = $(this);
-
-            e.preventDefault();
-
-            // Use EasyZoom's `swap` method
-            api1.swap($this.data('standard'), $this.attr('href'));
-        });
-        
-        $(document).ready(function(){
-            /** Custom Input number increment js **/
-            jQuery(".quantity").each(function() {
-                var spinner = jQuery(this),
-                    input = spinner.find('input[type="number"]'),
-                    btnUp = spinner.find(".quantity-up"),
-                    btnDown = spinner.find(".quantity-down"),
-                    min = input.attr("min"),
-                    max = input.attr("max"),
-                    valOfAmout = input.val(),
-                    newVal = 0;
-
-                btnUp.on("click", function() {
-                    var varholder = input.val();
-                    var oldValue = parseFloat(input.val());
-
-                    if (varholder === "") {
-                        var newVal = 1;
-                    } else {
-                        if (oldValue >= max) {
-                            var newVal = oldValue;
-                        } else {
-                            var newVal = oldValue + 1;
-                        }
-                    }
-                    spinner.find("input").val(newVal);
-                    spinner.find("input").trigger("change");
-                });
-
-                btnDown.on("click", function() {
-                    var varholder = input.val();
-                    var oldValue = parseFloat(input.val());
-
-                    if (varholder === "") {
-                        var newVal = 1;
-                    } else {
-                        if (oldValue <= min) {
-                            var newVal = oldValue;
-                        } else {
-                            var newVal = oldValue - 1;
-                        }
-                    }
-                    spinner.find("input").val(newVal);
-                    spinner.find("input").trigger("change");
-                });
-            });
+        $(".js-range-slider").ionRangeSlider({
+            type: "double",
+            grid: true,
+            min:0,
+            max:1000,
+            from: 0,
+            to: $('#max_price_range').val()
         });
     </script>
 @endsection
 
 @section('customjs')
     <script>
+        function reset_form(){        
+            $('#sort').val('');
+            $('#limit').val(40);
+            $('#price').val('0;1000');
+            $('#filter_form').submit(); 
+        }
+
+        function filter_sort(par){
+            $('#sort').val(par);
+            $('#filter_form').submit(); 
+        }
+
+        function filter_limit(par){
+            $('#limit').val(par);
+            $('#filter_form').submit();     
+        }   
+
         function add_to_cart(productID) {
             $.ajaxSetup({
                 headers: {
@@ -280,11 +227,7 @@
                 },
                 type: "post",
                 url: "{{route('cart.add')}}",
-                // beforeSend: function(){
-                //     $("#loading-overlay").show();
-                // },
                 success: function(returnData) {
-                    //$("#loading-overlay").hide();
                     if (returnData['success']) {
                         $('.cart-counter').html(returnData['totalItems']);
                         
@@ -307,7 +250,6 @@
                                 window.location.href = "{{route('cart.front.show')}}";
                             } 
                             else {
-                                // $('#btn'+product).html('<i class="fa fa-cart-plus bg-warning text-light p-1 rounded" title="Already added on cart"></i>');
                                 swal.close();
                                
                             }

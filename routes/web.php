@@ -47,34 +47,13 @@ Route::get('auth/facebook/callback', 'Auth\FacebookController@handleFacebookCall
 
     // Products
         Route::get('/product-info/{slug}', 'Product\Front\ProductFrontController@show')->name('product.front.show');
-        Route::get('/products/{category}','Product\Front\ProductFrontController@list')->name('product.front.list');
+        Route::any('/products/{category}','Product\Front\ProductFrontController@product_list')->name('product.front.list');
+        Route::any('/search-product', 'Product\Front\ProductFrontController@search_product')->name('product.front.search');
     //
 
     //
-        Route::get('/search-product', 'FrontController@search_product')->name('search-product');
-
-
-
-
-
-
-
-        Route::get('/privacy-policy/', 'FrontController@privacy_policy')->name('privacy-policy');
-        Route::post('/contact-us', 'FrontController@contact_us')->name('contact-us');
-
-        // Custom routes
-        Route::post('/contact-us-ajax', 'FrontController@contact_us_ajax')->name('contact-us-ajax');
         
-        // End Custom Routes
-
-        //News Frontend
-        Route::get('/news/', 'News\ArticleFrontController@news_list')->name('news.front.index');
-        Route::get('/news/{slug}', 'News\ArticleFrontController@news_view')->name('news.front.show');
-        Route::get('/news/{slug}/print', 'News\ArticleFrontController@news_print')->name('news.front.print');
-        Route::post('/news/{slug}/share', 'News\ArticleFrontController@news_share')->name('news.front.share');
-
-        Route::get('/albums/preview', 'FrontController@test')->name('albums.preview');
-
+        Route::get('/privacy-policy/', 'FrontController@privacy_policy')->name('privacy-policy');
         Route::post('/payment-notification', 'EcommerceControllers\CartController@receive_data_from_payment_gateway')->name('cart.payment-notification');
     ########## ECOMMERCE ROUTES #############
 
@@ -83,35 +62,29 @@ Route::get('auth/facebook/callback', 'Auth\FacebookController@handleFacebookCall
     Route::group(['middleware' => ['authenticated']], function () {
 
         // Checkout
-        Route::get('/checkout', 'EcommerceControllers\CheckoutController@checkout')->name('cart.front.checkout');
-        Route::get('/checkout/remove-product','EcommerceControllers\CheckoutController@remove_product')->name('checkout.remove-product');
-        Route::post('/update-billing-address', 'EcommerceControllers\EcommerceFrontController@ajax_update_address')->name('profile.ajax_update_billing_address');
+            Route::get('/checkout', 'EcommerceControllers\CheckoutController@checkout')->name('cart.front.checkout');
+            Route::get('/checkout/remove-product','EcommerceControllers\CheckoutController@remove_product')->name('checkout.remove-product');
+            Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
+        //
+        
+        // Account Transactions
+            Route::get('/account/transactions', 'EcommerceControllers\SalesFrontController@transactions')->name('account-transactions');
+            Route::get('/transaction/cancel-order','EcommerceControllers\SalesFrontController@cancel_order')->name('transaction.cancel-order');
+            Route::get('/transaction-deliveries','EcommerceControllers\SalesFrontController@display_delivery_history')->name('display-delivery-history');
+            Route::get('/transaction-items','EcommerceControllers\SalesFrontController@display_items')->name('display-items');
         //
 
-        Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
-
-
-        Route::get('/account/transactions', 'EcommerceControllers\SalesFrontController@transactions')->name('account-transactions');
-        Route::get('/transaction/cancel-order','EcommerceControllers\SalesFrontController@cancel_order')->name('transaction.cancel-order');
-
-        Route::get('/transaction-deliveries','EcommerceControllers\SalesFrontController@display_delivery_history')->name('display-delivery-history');
-        Route::get('/transaction-items','EcommerceControllers\SalesFrontController@display_items')->name('display-items');
-        
-        Route::get('/account/manage', 'EcommerceControllers\MyAccountController@manage_account')->name('my-account.manage-account');
-        Route::get('/account/change-password', 'EcommerceControllers\MyAccountController@change_password')->name('my-account.change-password');
-        Route::post('/account/change-password', 'EcommerceControllers\MyAccountController@update_password')->name('my-account.update-password');
-        Route::post('/account/manage', 'EcommerceControllers\MyAccountController@update_personal_info')->name('my-account.update-personal-info');
-        Route::post('/account/manage/update-contact', 'EcommerceControllers\MyAccountController@update_contact_info')->name('my-account.update-contact-info');
-        Route::post('/account/manage/update-address', 'EcommerceControllers\MyAccountController@update_address_info')->name('my-account.update-address-info');
-
+        // Account Management
+            Route::get('/account/manage', 'EcommerceControllers\MyAccountController@manage_account')->name('my-account.manage-account');
+            Route::get('/account/change-password', 'EcommerceControllers\MyAccountController@change_password')->name('my-account.change-password');
+            Route::post('/account/change-password', 'EcommerceControllers\MyAccountController@update_password')->name('my-account.update-password');
+            Route::post('/account/manage', 'EcommerceControllers\MyAccountController@update_personal_info')->name('my-account.update-personal-info');
+            Route::post('/account/manage/update-contact', 'EcommerceControllers\MyAccountController@update_contact_info')->name('my-account.update-contact-info');
+            Route::post('/account/manage/update-address', 'EcommerceControllers\MyAccountController@update_address_info')->name('my-account.update-address-info');
+        //
 
         Route::get('/ajax-province-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
 
-
-
-
-
-        Route::get('/account/sales', 'EcommerceControllers\SalesFrontController@sales_list')->name('profile.sales');
         Route::post('/transactions/pay-order','EcommerceControllers\SalesFrontController@pay_order')->name('pay-order');
 
         // Route::post('/account/cancel/order', 'EcommerceControllers\SalesFrontController@cancel_order')->name('my-account.cancel-order');
@@ -124,14 +97,12 @@ Route::get('auth/facebook/callback', 'Auth\FacebookController@handleFacebookCall
 
 
     ########## GLOBAL ROUTE ##########
-        Route::get('myform/ajax/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
+        Route::get('/ajax-get-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
         Route::get('myform/ajax/{id}','EcommerceControllers\CheckoutController@ajax_deliverable_cities')->name('ajax.get-deliverable-cities');
     ########## GLOBAL ROUTE ##########
  
 
         
-
-
 
 
 
@@ -316,6 +287,9 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
 
 
             
+
+
+
 
 
             Route::get('/admin/sales-transaction/view-payment/{sales}', 'EcommerceControllers\SalesController@view_payment')->name('sales-transaction.view_payment');

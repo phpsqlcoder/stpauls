@@ -9,7 +9,6 @@
 
 @section('content')
 	<main>
-       @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.subscribe-form')
         <!-- Home Main Body Area -->
         <section id="home-body">
             <div class="container">

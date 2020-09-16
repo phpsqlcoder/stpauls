@@ -90,7 +90,6 @@ class CustomerFrontController extends Controller
             'provider' => '',
             'fbId' => '',
             'googleId' => '',
-            'is_subscriber' => $request->has('subscriber'),
             'remember_token' => str_random(10),
         ]);   
 

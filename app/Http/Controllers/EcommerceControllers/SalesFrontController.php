@@ -84,27 +84,5 @@ class SalesFrontController extends Controller
 
         return view('admin.sales.order-items',compact('items','sales'));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public function sales_list(){
-
-        $sales = SalesHeader::where('user_id',Auth::id())->orderBy('id','desc')->take(5)->get();
-
-        $page = new Page();
-        $page->name = 'Sales Transaction';
-
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.ecommerce.sales',compact('sales','page'));
-    }
   
 }
