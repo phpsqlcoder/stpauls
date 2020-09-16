@@ -25,7 +25,7 @@
                                 <h2 class="lgin-title">Welcome to St Pauls! Please Login.</h2>
                             </div>
                             <div class="col-md-4 col-sm-12">
-                                <p class="text-right" id="new-mem">New member? <a href="#">Register</a> here.</p>
+                                <p class="text-right" id="new-mem">New member? <a href="{{ route('customer-front.sign-up') }}">Register</a> here.</p>
                             </div>
                         </div>
                         <div id="form-wrapper">

@@ -5,23 +5,17 @@
 @endsection
 
 @section('content')
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">                          
-                <div class="desk-cat d-none d-lg-block">
-                    <div class="quick-nav">
-                        <h3 class="catalog-title">My Account</h3>
-                        <ul>
-                            <li class="active"><a href="{{ route('my-account.manage-account')}}">Manage Account</a></li>
-                            <li><a href="{{ route('my-account.update-password') }}">Change Password</a></li>
-                            <li><a href="{{ route('account-transactions') }}">Manage Orders</a></li>
-                        </ul>
-                    </div>
+<main>
+    <section id="default-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.account-page-options')
                 </div>
-            </div>
-            <div class="col-lg-9">
-                <div>
+                <div class="col-lg-9">
+                    <div class="article-content">
+                        <h3 class="subpage-heading">{{ $page->name }}</h3>
+                        <div>
                     <nav>
                         <div class="nav nav-tabs account-tabs" id="nav-tab" role="tablist">
                             <a href="#tab-1" class="nav-item nav-link @if(session()->has('tabname')) @else active @endif" id="nav-home-tab" data-toggle="tab" role="tab" aria-controls="nav-home" aria-selected="true">Personal Info</a>
@@ -80,7 +74,7 @@
                                     <div class="col-lg-6">
                                         <label>Mobile Number *</label>
                                         <div class="form-group">
-                                            <input type="text" class="form-control @error('mobile') is-invalid @enderror" id="mobile" name="mobile" value="{{ old('mobile', $customer->mobile) }}">
+                                            <input type="text" class="form-control @error('mobile') is-invalid @enderror" id="mobile" name="mobile" value="{{ old('mobile', $customer->mobile) }}" maxlength="13">
                                             @hasError(['inputName' => 'mobile'])
                                             @endhasError
                                         </div>
@@ -169,10 +163,29 @@
                     </div>
                     <div class="gap-20"></div>
                 </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+</main>
+@endsection
+
+@section('pagejs')
+    <script>
+        /** form validations **/
+        $(document).ready(function () {
+            //called when key is pressed in textbox
+            $("#telno,#mobile,#zipcode").keypress(function (e) {
+                //if the letter is not digit then display error and don't type anything
+                var charCode = (e.which) ? e.which : event.keyCode
+                if (charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
+                return true;
+
+            });
+        });  
+    </script>
 @endsection
 
 @section('customjs')

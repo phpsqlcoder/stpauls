@@ -110,18 +110,13 @@ class MyAccountController extends Controller
     public function change_password()
     {
         $page = new Page();
-        $page->name = 'Manage Account';
+        $page->name = 'Change Password';
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.my-account.change-password',compact('page'));
     }
 
     public function update_password(Request $request)
     {
-        $personalInfo = $request->validate([
-            'current_password' => ['required', function ($attribute, $value, $fail) {
-                if (!\Hash::check($value, auth()->user()->password)) {
-                    return $fail(__('The current password is incorrect.'));
-                }
-            }],
+        $customerInfo = $request->validate([
             'password' => [
                 'required',
                 'min:8',
@@ -130,9 +125,15 @@ class MyAccountController extends Controller
             'confirm_password' => 'required|same:password',
         ]);
 
-        auth()->user()->update(['password' => bcrypt($personalInfo['password'])]);
+        $customer = Customer::find(Auth::id());
+        
+        if(\Hash::check($request->current_password, $customer->password)){
+            $customer->update(['password' => bcrypt($request->password)]);
 
-        return back()->with('success', 'Password has been updated');
+            return back()->with('success-change-password', 'Password has been updated.');
+        } else {
+            return back()->with('error-change-password', 'Incorrect password.');
+        }
     }
 
     public function pay_now(Request $request, $orderNumber)

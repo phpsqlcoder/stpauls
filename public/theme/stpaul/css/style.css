@@ -64,6 +64,11 @@ h3 {
   line-height: 1.4;
 }
 
+h4 {
+  font-family: "IBM Plex Sans", sans-serif;
+  color: #b82e24;
+}
+
 h6 {
   font-family: "IBM Plex Sans", sans-serif;
   color: white;
@@ -775,7 +780,9 @@ p {
 .owl-reco-title-prev,
 .owl-reco-title-next,
 .owl-item-sale-prev,
-.owl-item-sale-next {
+.owl-item-sale-next,
+.owl-recently-viewed-prev,
+.owl-recently-viewed-next {
   background: #b82e24;
   color: white;
   padding: 7px 13px;
@@ -788,7 +795,9 @@ p {
 .owl-reco-title-prev:hover,
 .owl-reco-title-next:hover,
 .owl-item-sale-prev:hover,
-.owl-item-sale-next:hover {
+.owl-item-sale-next:hover,
+.owl-recently-viewed-prev:hover,
+.owl-recently-viewed-next:hover {
   background: #8d231c;
   color: white;
 }
@@ -798,7 +807,9 @@ p {
 .owl-reco-title-prev:focus,
 .owl-reco-title-next:focus,
 .owl-item-sale-prev:focus,
-.owl-item-sale-next:focus {
+.owl-item-sale-next:focus,
+.owl-recently-viewed-prev:focus,
+.owl-recently-viewed-next:focus {
   background: #b82e24;
   color: white;
 }
@@ -1765,6 +1776,72 @@ p {
 
 #default-wrapper {
   padding: 70px 1rem;
+}
+
+#default-wrapper .category-section {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+}
+
+#default-wrapper .category-nav-1,
+#default-wrapper .category-nav-2 {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  float: right;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background: white;
+  padding-left: 5px;
+  margin-top: -10px;
+  z-index: 10;
+}
+
+#default-wrapper .category-nav-1 {
+  width: 45%;
+}
+
+#default-wrapper .category-nav-2 {
+  width: auto;
+}
+
+#default-wrapper .category-title {
+  color: #333333;
+  font-weight: 400;
+  font-size: 1.35em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+  padding-bottom: 0;
+  grid-area: title;
+  line-height: 1.2;
+}
+
+#default-wrapper .category-title span {
+  background-color: white;
+  padding-right: 10px;
+}
+
+#default-wrapper .category-title:after {
+  content: "";
+  background: #b82e24;
+  position: absolute;
+  height: 2px;
+  left: 0;
+  top: 46%;
+  right: 0;
+  z-index: -1;
 }
 
 #listing-wrapper {
@@ -3357,6 +3434,66 @@ p {
   height: 50%;
 }
 
+.card {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 1px solid rgba(72, 94, 144, 0.16);
+  border-radius: 0.25rem;
+  margin-bottom: 20px;
+}
+
+.card > hr {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.card > .list-group:first-child .list-group-item:first-child {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.card > .list-group:last-child .list-group-item:last-child {
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.card .card-subtitle {
+  color: #333333;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0px;
+  margin-bottom: 15px;
+}
+
+.card .card-title {
+  margin-bottom: 0px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.card-body {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  padding: 1.25rem;
+}
+
+#salesTransaction {
+  font-size: 0.85rem;
+}
+
 @font-face {
   font-family: 'FontAwesome';
   src: url("../plugins/font-awesome/fonts/fontawesome-webfont.eot?v=4.6.3");
@@ -3468,7 +3605,9 @@ p {
   .owl-reco-title-prev,
   .owl-reco-title-next,
   .owl-item-sale-prev,
-  .owl-item-sale-next {
+  .owl-item-sale-next,
+  .owl-recently-viewed-prev,
+  .owl-recently-viewed-next {
     font-size: 1.1em !important;
   }
 }
@@ -3706,7 +3845,9 @@ p {
   .owl-reco-title-prev,
   .owl-reco-title-next,
   .owl-item-sale-prev,
-  .owl-item-sale-next {
+  .owl-item-sale-next,
+  .owl-recently-viewed-prev,
+  .owl-recently-viewed-next {
     font-size: 1em !important;
     padding: 5px 11px;
     margin: 0 1px;

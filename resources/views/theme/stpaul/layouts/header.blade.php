@@ -98,8 +98,8 @@
                                         <a class="acc-menu active-user dropdown-toggle" href="" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">{{ \App\EcommerceModel\Customer::customer_username(auth()->user()->id) }}</a>
                                         <div class="acc-dropdown-menu dropdown-menu dropdown-menu-right " aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="{{ route('my-account.manage-account') }}"><span class="lnr lnr-user mr-2"></span>Manage Account</a>
-                                            <a class="dropdown-item" href="{{route('account-transactions') }}"><span class="lnr lnr-user mr-2"></span>Manage Orders</a>
+                                            <a class="dropdown-item" href="{{ route('my-account.manage-account') }}"><span class="lnr lnr-user mr-2"></span>Account Information</a>
+                                            <a class="dropdown-item" href="{{route('account-my-orders') }}"><span class="lnr lnr-user mr-2"></span>My Orders</a>
                                             <a class="dropdown-item" href="{{ route('customer.logout') }}"><span class="lnr lnr-exit mr-2"></span>Log Out</a>
                                         </div>
                                     </li>

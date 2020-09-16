@@ -133,6 +133,7 @@
                                             </ol>
                                             <h2>{{ $product->name }}</h2>
                                             <hr>
+                                            @if($ratingCounter > 0)
                                             <div class="rating">
                                                 <span class="fa fa-star checked"></span>
                                                 <span class="fa fa-star checked"></span>
@@ -141,6 +142,8 @@
                                                 <span class="fa fa-star checked"></span>
                                                 <span class="rating-count">({{\App\EcommerceModel\ProductReview::review_counter($product->id,5)}}) Customer ratings</span>
                                             </div>
+                                            @endif
+                                            
                                             <p>{{ $product->additional_info->authors }} | Product Name: {{ $product->name }}</p>
                                             @if(\App\EcommerceModel\Product::onsale_checker($product->id) > 0)
                                                 <div class="product-price">
@@ -173,29 +176,16 @@
                                                 <i class="fa fa-check high-stock"></i> {{ $product->inventory }} available stock
                                             </div>
                                         </div>
-
                                         <div class="product-btn">
                                             @if($product->inventory > 0)
                                             <button type="button" onclick="add_to_cart('{{$product->id}}');" class="btn btn-lg add-cart-alt2-btn addToCartButton" data-loading-text="processing...">
                                                 <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/cart.png" alt=""> Add to cart
                                             </button>
-                            
-                                            <button type="button" class="btn btn-lg buy-now-btn buyNowButton" data-loading-text="processing...">
+
+                                            <button type="button" class="btn btn-lg buy-now-btn buyNowButton" onclick="buyNow('{{$product->id}}')">
                                                 <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/blitz.png" alt=""> Buy Now
                                             </button>
-                                            @endif  
-
-                                            <div class="product-wishlist">
-                                                <input name="wishlist" id="wishlist" data-product-id="333" type="checkbox" />
-                                                <label for="wishlist">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255.7 225.13">
-                                                        <path style="color:#000000;enable-background:accumulate;"
-                                                      d="M128,69.9s-17-48.25-63-48.25S7.71,75.32,7.71,75.32s-11.36,39.74,39.74,89.29L128,233.77l80.55-69.16c51.09-49.55,39.74-89.29,39.74-89.29S236.9,21.65,191,21.65,128,69.9,128,69.9Z"
-                                                      transform="translate(-0.13 -15.15)" fill="transparent" id="heart-path" stroke="#F8332A" stroke-width="15" marker="none" visibility="visible"
-                                                        display="inline" overflow="visible" />
-                                                    </svg>
-                                                </label>
-                                            </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </form>
@@ -203,6 +193,11 @@
                         </div>
                     </div>
                     <div class="gap-30"></div>
+                    <form method="post" action="">
+                        @csrf
+                       <input type="hidden" name="buynow_qty" id="orderqty">
+                       <input type="hidden" name="buynow_productid" value="{{$product->id}}">
+                    </form>
 
                     <div class="product-additional">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -247,7 +242,7 @@
                                         <td><p><b>About the Author:</b> {!! $product->additional_info->about_author !!}</p></td>
                                     </tr>
                                     <tr>
-                                        <td><p><b>Additioanl Information:</b> {{ $product->additional_info->additional_info }}</p></td>
+                                        <td><p><b>Additional Information:</b> {{ $product->additional_info->additional_info }}</p></td>
                                     </tr>
                                 </table>
                             </div>
@@ -308,29 +303,31 @@
                                 @endif
 
                                 <div class="gap-40"></div>
-                                <form method="post" action="{{ route('product.review.store') }}">
-                                    @csrf
-                                    <div class="form-style-alt fs-sm">
-                                        <h2>We want to know your opinion!</h2>
-                                        <label for="rating-count"><b>Your Rating</b></label>
-                                        <div class="rating">
-                                            <i class="fa fa-star" data-rate="1"></i>
-                                            <i class="fa fa-star" data-rate="2"></i>
-                                            <i class="fa fa-star" data-rate="3"></i>
-                                            <i class="fa fa-star" data-rate="4"></i>
-                                            <i class="fa fa-star" data-rate="5"></i>
-                                            <input type="hidden" id="rating-count" name="rating" value="0">
+                                @if(Auth::check())
+                                    <form method="post" action="{{ route('product.review.store') }}">
+                                        @csrf
+                                        <div class="form-style-alt fs-sm">
+                                            <h2>We want to know your opinion!</h2>
+                                            <label for="rating-count"><b>Your Rating</b></label>
+                                            <div class="rating">
+                                                <i class="fa fa-star" data-rate="1"></i>
+                                                <i class="fa fa-star" data-rate="2"></i>
+                                                <i class="fa fa-star" data-rate="3"></i>
+                                                <i class="fa fa-star" data-rate="4"></i>
+                                                <i class="fa fa-star" data-rate="5"></i>
+                                                <input type="hidden" id="rating-count" name="rating" value="0">
+                                            </div>
+                                            <div class="gap-20"></div>
+                                            <div class="form-wrap">
+                                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                <textarea id="message" class="form-control form-input" name="review"></textarea>
+                                                <label class="form-label textarea" for="message">Tell us what you thought about it</label>
+                                            </div>
                                         </div>
                                         <div class="gap-20"></div>
-                                        <div class="form-wrap">
-                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                            <textarea id="message" class="form-control form-input" name="review"></textarea>
-                                            <label class="form-label textarea" for="message">Tell us what you thought about it</label>
-                                        </div>
-                                    </div>
-                                    <div class="gap-20"></div>
-                                    <button type="submit" class="btn btn-md primary-btn">Submit</button>
-                                </form>
+                                        <button type="submit" class="btn btn-md primary-btn">Submit</button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -479,6 +476,10 @@
 
 @section('customjs')
     <script>
+        function buyNow(id){
+            $('#orderqty').val($('#qty').val());
+        }
+
         function add_to_cart(productID) {
             $.ajaxSetup({
                 headers: {

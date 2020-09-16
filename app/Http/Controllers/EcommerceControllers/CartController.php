@@ -303,7 +303,7 @@ class CartController extends Controller
         Cart::where('user_id', Auth::id())->delete();
         $this->check_loyalty($request->totalDue);
 
-        return redirect(route('account-transactions'))->with('success',' Order has been placed.');
+        return redirect(route('account-my-orders'))->with('success',' Order has been placed.');
        
     }
 

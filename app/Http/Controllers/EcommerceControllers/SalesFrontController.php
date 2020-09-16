@@ -18,15 +18,15 @@ use App\EcommerceModel\SalesDetail;
 
 class SalesFrontController extends Controller
 {
-    public function transactions()
+    public function orders()
     {   
         $page = new Page();
         $page->name = 'Transaction History';
 
-        $sales = SalesHeader::where('customer_id',Auth::id())->orderBy('id','desc')->get();
+        $sales = SalesHeader::where('customer_id',Auth::id())->orderBy('id','desc')->paginate(10);
 
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.transactions', compact('sales','page'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.orders', compact('sales','page'));
     }
 
     // public function ajax_payment_types($id)

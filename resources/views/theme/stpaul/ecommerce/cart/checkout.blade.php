@@ -54,7 +54,7 @@
                             <div class="checkout-card">
                                 <div class="form-group form-wrap">
                                     <p>Name *</p>
-                                    <input readonly type="text" class="form-control" name="customer" value="{{ $customer->fullname }}">
+                                    <input type="text" class="form-control" name="customer" value="{{ $customer->fullname }}">
                                     @hasError(['inputName' => 'customer'])
                                     @endhasError
                                 </div>
@@ -62,7 +62,7 @@
                                 <div class="gap-10"></div>
                                 <div class="form-group form-wrap">
                                     <p>Email *</p>
-                                    <input readonly type="email" class="form-control" name="email" value="{{ $customer->email }}">
+                                    <input type="email" class="form-control" name="email" value="{{ $customer->email }}">
                                     @hasError(['inputName' => 'email'])
                                     @endhasError
                                 </div>
@@ -175,24 +175,18 @@
 
                             <div class="tab-wrap">
                                 @if($cod->is_active == 1)
-                                    @if(\App\EcommerceModel\CheckoutOption::check_availability(1) == 1)
-                                        <input type="radio" id="tab1" name="shipOption" onclick="shippingOption('cod');" value="1" class="tab">
-                                        <label for="tab1">Cash On Delivery (COD)</label>
-                                    @endif
+                                    <input type="radio" id="tab1" name="shipOption" onclick="shippingOption('cod');" value="1" class="tab">
+                                    <label for="tab1">Cash On Delivery (COD)</label>
                                 @endif
 
                                 @if($cod->is_active == 1)
-                                    @if(\App\EcommerceModel\CheckoutOption::check_availability(2) == 1)
-                                        <input type="radio" id="tab2" name="shipOption" onclick="shippingOption('stp');" value="2" class="tab">
-                                        <label for="tab2">Store Pick-up</label>
-                                    @endif
+                                    <input type="radio" id="tab2" name="shipOption" onclick="shippingOption('stp');" value="2" class="tab">
+                                    <label for="tab2">Store Pick-up</label>
                                 @endif
 
                                 @if($sdd->is_active == 1)
-                                    @if(\App\EcommerceModel\CheckoutOption::check_availability(4) == 1)
                                     <input type="radio" id="tab3" name="shipOption" onclick="shippingOption('sdd');" value="4" class="tab">
                                     <label for="tab3">Same Day Delivery</label>
-                                    @endif
                                 @endif
 
                                 <input type="radio" id="tab4" name="shipOption" onclick="shippingOption('dtd');" value="3" class="tab">
@@ -208,7 +202,7 @@
                                     <div class="form-row">
                                         <div class="col">
                                             <label>Date *</label>
-                                            <input type="date" name="pickup_date_1" onchange="pickupDate(1)" id="pickup_date1" class="form-control">
+                                            <input type="date" name="pickup_date_1" onchange="pickupDate(1)" id="pickup_date1" class="form-control" min="{{date('Y-m-d',strtotime(today()))}}">
                                         </div>
                                         <div class="col">
                                             <label>Time *</label>
@@ -241,7 +235,7 @@
                                     <div class="form-row">
                                         <div class="col">
                                             <label>Date *</label>
-                                            <input type="date" name="pickup_date_2" onchange="pickupDate(2)" id="pickup_date2" class="form-control">
+                                            <input type="date" name="pickup_date_2" onchange="pickupDate(2)" id="pickup_date2" class="form-control" min="{{date('Y-m-d',strtotime(today()))}}">
                                         </div>
                                         <div class="col">
                                             <label>Time *</label>

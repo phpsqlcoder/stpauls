@@ -214,7 +214,6 @@ class EcommerceFrontController extends Controller
 
 
         if (is_null($user = $this->broker()->getUser($credentials))) {
-            dd('gsas');
             return abort(401);
         }
 

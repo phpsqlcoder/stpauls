@@ -44,7 +44,7 @@
                                 <div class="row">
                                     <div class="col-lg-2 col-md-3 col-sm-4">
                                         <div class="img-wrap">
-                                            <a href="#"><img src="{{ asset('storage/products/'.$order->product->photoPrimary) }}" alt=""></a>
+                                            <a href="{{ route('product.front.show',$order->product->slug)}}"><img src="{{ asset('storage/products/'.$order->product->photoPrimary) }}" alt=""></a>
                                         </div>
                                     </div>
                                     <div class="col-lg-10 col-md-9">

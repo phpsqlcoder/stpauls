@@ -68,7 +68,7 @@ Route::get('auth/facebook/callback', 'Auth\FacebookController@handleFacebookCall
         //
         
         // Account Transactions
-            Route::get('/account/transactions', 'EcommerceControllers\SalesFrontController@transactions')->name('account-transactions');
+            Route::get('/account/my-orders', 'EcommerceControllers\SalesFrontController@orders')->name('account-my-orders');
             Route::get('/transaction/cancel-order','EcommerceControllers\SalesFrontController@cancel_order')->name('transaction.cancel-order');
             Route::get('/transaction-deliveries','EcommerceControllers\SalesFrontController@display_delivery_history')->name('display-delivery-history');
             Route::get('/transaction-items','EcommerceControllers\SalesFrontController@display_items')->name('display-items');

@@ -17,7 +17,7 @@
                         </div>
                         <div class="gap-10"></div>
                         <div id="signup-form">
-                            <form method="post" action="{{ route('customer-front.customer-sign-up') }}">
+                            <form autocomplete="off" method="post" action="{{ route('customer-front.customer-sign-up') }}">
                                 @csrf
                                 <div class="row">
                                     <div class="col-md-12">
@@ -86,7 +86,7 @@
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-md-12">
-                                                <p>Subdivision/Barangay *</p>
+                                                <p>Address 2 *</p>
                                                 <input required type="text" name="brgy" class="form-control form-input @error('brgy') is-invalid @enderror" placeholder="Name of Subdivision/Barangay" value="{{ old('brgy') }}">
                                                 @hasError(['inputName' => 'brgy'])
                                                 @endhasError
@@ -95,7 +95,7 @@
                                             <div class="col-md-12">
                                                 <p>Province *</p>
                                                 <select name="province" id="province" class="form-control form-input  @error('province') is-invalid @enderror">
-                                                    <option value="">-- Select --</option>
+                                                    <option value="">-- Select Province --</option>
                                                     @foreach($provinces as $province)
                                                     <option value="{{ $province->id }}">{{ $province->province }}</option>
                                                     @endforeach
@@ -106,7 +106,8 @@
                                             </div>
                                             <div class="col-md-7">
                                                 <p>City *</p>
-                                                <select name="city" id="city" class="form-control form-input  @error('city') is-invalid @enderror">
+                                                <select requried name="city" id="city" class="form-control form-input  @error('city') is-invalid @enderror">
+                                                    <option>-- Select City --</option>
                                                 </select>
                                                 @hasError(['inputName' => 'city'])
                                                 @endhasError
@@ -114,19 +115,19 @@
                                             </div>
                                             <div class="col-md-5">
                                                 <p>Zip Code *</p>
-                                                <input required type="number" name="zipcode" class="form-control form-input @error('zipcode') is-invalid @enderror" value="{{ old('zipcode') }}">
+                                                <input required type="text" name="zipcode" id="zipcode" class="form-control form-input @error('zipcode') is-invalid @enderror" value="{{ old('zipcode') }}" min="1">
                                                 @hasError(['inputName' => 'zipcode'])
                                                 @endhasError
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Telephone Number</p>
-                                                <input type="number" name="telno" class="form-control form-input" value="{{ old('telno') }}">
+                                                <input type="text" name="telno" id="telno" class="form-control form-input" value="{{ old('telno') }}" min="1">
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Mobile Number *</p>
-                                                <input required type="number" name="mobileno" class="form-control form-input @error('mobileno') is-invalid @enderror" value="{{ old('mobileno') }}">
+                                                <input required type="text" name="mobileno" id="mobileno" class="form-control form-input @error('mobileno') is-invalid @enderror" value="{{ old('mobileno') }}" min="1" maxlength="13">
                                                 @hasError(['inputName' => 'mobileno'])
                                                 @endhasError
                                                 <div class="gap-10"></div>    
@@ -151,6 +152,20 @@
 @endsection
 
 @section('pagejs')
+    <script>
+        /** form validations **/
+        $(document).ready(function () {
+            //called when key is pressed in textbox
+            $("#zipcode,#telno,#mobileno").keypress(function (e) {
+                //if the letter is not digit then display error and don't type anything
+                var charCode = (e.which) ? e.which : event.keyCode
+                if (charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
+                return true;
+
+            });
+        });  
+    </script>
 @endsection
 
 @section('customjs')
@@ -169,6 +184,7 @@
                         dataType: "json",
                         success:function(data) {
                             $('select[name="city"]').empty();
+                            $('select[name="city"]').append('<option selected disabled value="">-- Select City --</option>');
                             $.each(data, function(key, value) {
                                 $('select[name="city"]').append('<option value="'+value.id+'">'+value.city+'</option>');
                             });
