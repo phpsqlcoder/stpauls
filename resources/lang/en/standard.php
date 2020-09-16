@@ -198,9 +198,9 @@ return [
         ],
     ],
 
-    // Added by Ryan 08/13/2020
     'customers' => [
         'status_success' => 'The customer has been :status.',
+        'reactivate_status' => 'The reactivation request has been :STATUS.'
     ],
 
     'promos' => [

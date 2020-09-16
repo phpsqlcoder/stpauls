@@ -269,7 +269,7 @@ class EcommerceFrontController extends Controller
        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.reactivate',compact('page'));
     }
 
-    public function sendReactivateRequestEmail(Request $request)
+    public function sendReactivateRequest(Request $request)
     {
         $request->validate(
             ['email' => ['required', 'email'] ]
@@ -281,19 +281,9 @@ class EcommerceFrontController extends Controller
         if($data){
             $qry_customer->update(['reactivate_request' => 1]);
 
-            return back()->with('success','Account reactivation email has been sent to administrator.');
+            return back()->with('success','Account reactivation request has been sent to administrator.');
         } else {
             return back()->with('error','These email do not match our records.');
         }
-
-        //$user->send_reset_password_email();
-
-        // if (Mail::failures()) {
-        //     return back()
-        //         ->withInput($request->only('email'))
-        //         ->withErrors(['email' => trans('passwords.user')]);
-        // }
-
-        return back()->with('status', trans('passwords.sent'));
     }
 }

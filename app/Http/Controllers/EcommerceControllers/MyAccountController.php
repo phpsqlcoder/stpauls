@@ -9,22 +9,29 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Page;
 
+use App\EcommerceModel\Customer;
+use App\Provinces;
+
+use Auth;
+
 class MyAccountController extends Controller
 {
 
     public function manage_account(Request $request)
     {
-        $member = auth()->user();
-        $user = auth()->user();
+        $customer  = Customer::find(Auth::id());
+        $provinces = Provinces::orderBy('province','asc')->get();
+
         $selectedTab = 0;
 
         if ($request->has('tab')) {
             $selectedTab = ($request->tab == 'contact-information') ? 1 : 0;
             $selectedTab = ($request->tab == 'my-address') ? 2 : $selectedTab;
         }
+
         $page = new Page();
         $page->name = 'Manage Account';
-        return view('theme.sysu.ecommerce.my-account.manage-account', compact('member', 'user', 'selectedTab','page'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.my-account.manage-account', compact('customer', 'provinces', 'selectedTab','page'));
     }
 
     public function update_personal_info(Request $request)
@@ -36,20 +43,17 @@ class MyAccountController extends Controller
           
         ]);
 
-        auth()->user()->update([
+        Customer::find(Auth::id())->update([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname
         ]);
-   
 
-        return redirect()->back()->with('success-personal', 'Personal information has been updated');
+        return back()->with('success-personal', 'Personal information has been updated.');
     }
 
     public function update_contact_info(Request $request)
     {
-        $route = route('my-account.manage-account').'?tab=contact-information';
-
-        $contactInfo = $request->only(['mobile', 'phone']);
+        $contactInfo = $request->only(['mobile', 'telno']);
 
         $validateData = Validator::make($contactInfo, [     
             "mobile" => "required|max:150",
@@ -61,30 +65,32 @@ class MyAccountController extends Controller
                 ->withInput();
         }
 
-        auth()->user()->update($contactInfo);
+        Customer::find(Auth::id())->update($contactInfo);
 
-        return redirect($route)->with('success-contact', 'Personal information has been updated');
+        return back()->with([
+            'tabname' => 'contact-information',
+            'success-contact' =>  'Personal information has been updated.'
+        ]);
     }
 
     public function update_address_info(Request $request)
     {
-        
-        $route = route('my-account.manage-account').'?tab=my-address';
-
-        $addressInfo = $request->only(['address_city', 'address_municipality','address_street', 'address_zip']);
+        $addressInfo = $request->only(['address', 'barangay','province', 'city', 'zipcode']);
 
         $attributeNames = [
-            "address_city" => "City",
-            "address_municipality" => "Barangay",
-            "address_street" => "Street",
-            "address_zip" => "Zip Code",          
+            "address" => "Street",
+            "barangay" => "Barangay",
+            "province" => "Province",
+            "city" => "City",
+            "zipcode" => "Zip Code",          
         ];
 
         $validateData = Validator::make($addressInfo, [            
-            "address_city" => "required|max:150",
-            "address_municipality" => "required|max:150",
-            "address_street" => "required|max:150",
-            "address_zip" => "required|max:150"           
+            "address" => "required|max:150",
+            "barangay" => "required|max:150",
+            "province" => "required|max:150",
+            "city" => "required|max:150",
+            "zipcode" => "required|max:150"           
         ])->setAttributeNames($attributeNames);
 
         if ($validateData->fails()) {
@@ -93,16 +99,19 @@ class MyAccountController extends Controller
                 ->withInput();
         }
 
-        auth()->user()->update($addressInfo);
+        Customer::find(Auth::id())->update($addressInfo);
 
-        return redirect($route)->with('success-address', 'Personal information has been updated');
+        return back()->with([
+            'tabname' => 'my-address',
+            'success-address' =>  'Delivery address has been updated.'
+        ]);
     }
 
     public function change_password()
     {
         $page = new Page();
         $page->name = 'Manage Account';
-        return view('theme.sysu.ecommerce.my-account.change-password',compact('page'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.my-account.change-password',compact('page'));
     }
 
     public function update_password(Request $request)
@@ -123,7 +132,7 @@ class MyAccountController extends Controller
 
         auth()->user()->update(['password' => bcrypt($personalInfo['password'])]);
 
-        return redirect()->back()->with('success', 'Password has been updated');
+        return back()->with('success', 'Password has been updated');
     }
 
     public function pay_now(Request $request, $orderNumber)

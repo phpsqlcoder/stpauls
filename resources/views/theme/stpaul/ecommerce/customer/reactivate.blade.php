@@ -27,7 +27,7 @@
                         </div>
                         <div class="gap-10"></div>
                         <div id="form-wrapper">
-                            <form autocomplete="off" method="POST" action="{{ route('ecommerce.send_reactivate_request_email') }}">
+                            <form autocomplete="off" method="POST" action="{{ route('ecommerce.send_reactivate_request') }}">
                             @csrf
                                 <div class="row">
                                     <div class="col-md-12">

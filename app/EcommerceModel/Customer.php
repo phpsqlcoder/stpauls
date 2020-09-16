@@ -3,6 +3,7 @@
 namespace App\EcommerceModel;
 
 use App\Notifications\Ecommerce\CustomerResetPasswordNotification;
+use App\Notifications\Ecommerce\CustomerReactivateAccountNotification;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -54,6 +55,13 @@ class Customer extends Authenticatable
         $token = app('auth.password.broker')->createToken($this);
 
         $this->notify(new CustomerResetPasswordNotification($token));
+    }
+
+    public function send_reactivate_confirmation_email()
+    {
+        $token = app('auth.password.broker')->createToken($this);
+
+        $this->notify(new CustomerReactivateAccountNotification($token));
     }
 
     public function middle_name_abbreviation()
@@ -122,4 +130,10 @@ class Customer extends Authenticatable
         return "{$this->cities->city}, {$this->provinces->province}";
     }
 
+    public static function reactivation_request()
+    {
+        $qry = Customer::where('reactivate_request',1)->count();
+
+        return $qry;
+    }
 }

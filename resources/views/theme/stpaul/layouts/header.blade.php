@@ -37,17 +37,17 @@
                     <div class="rd-navbar-panel__left">
                         <!-- RD Navbar Brand -->
                         <div class="rd-navbar-brand">
-                            <a href="index.htm" class="brand-name">
-                                <img src="{{ asset('theme/stpaul/images/misc/logo.png') }}" alt="Enhanced" width="240" />
+                            <a href="{{ route('home') }}" class="brand-name">
+                                <img src="{{ asset('theme/stpaul/images/misc/logo.png') }}" alt="StPaul" width="240" />
                             </a>
                         </div>
                         <!-- END RD Navbar Brand -->
                     </div>
                     <div class="rd-navbar-panel__center">
                         <div class="rd-navbar-n-search rd-navbar-search_not-collapsable">
-                            <form class="rd-n-search" action="search-results.html" method="GET" data-search-live="rd-search-results-live">
+                            <form class="rd-n-search" action="{{ route('search-product') }}" method="GET" data-search-live="rd-search-results-live">
                                 <div class="form-wrap">
-                                    <input class="form-input" id="rd-navbar-n-search-form-input" type="text" name="s" autocomplete="off">
+                                    <input required class="form-input" id="rd-navbar-n-search-form-input" type="text" name="product" autocomplete="off">
                                     <label class="form-label rd-input-label" for="rd-navbar-n-search-form-input">Search a product</label>
                                     <div class="rd-n-search-results-live" id="rd-n-search-results-live"></div>
                                 </div>
@@ -90,13 +90,13 @@
                         <div class="col-lg-5">
                             <ul class="list-inline-secondary">
                                 @if(Auth::check())
-                                    <li><a href="">Change Password</a></li>
+                                    <li><a href="{{ route('my-account.change-password') }}">Change Password</a></li>
                                     <li>
                                         <a class="acc-menu active-user dropdown-toggle" href="" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false">{{ \App\EcommerceModel\Customer::customer_username(auth()->user()->id) }}</a>
                                         <div class="acc-dropdown-menu dropdown-menu dropdown-menu-right " aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#"><span class="lnr lnr-user mr-2"></span>Manage Account</a>
-                                            <a class="dropdown-item" href="{{route('account-transactions') }}"><span class="lnr lnr-user mr-2"></span>Manage Transactions</a>
+                                            <a class="dropdown-item" href="{{ route('my-account.manage-account') }}"><span class="lnr lnr-user mr-2"></span>Manage Account</a>
+                                            <a class="dropdown-item" href="{{route('account-transactions') }}"><span class="lnr lnr-user mr-2"></span>Manage Orders</a>
                                             <a class="dropdown-item" href="{{ route('customer.logout') }}"><span class="lnr lnr-exit mr-2"></span>Log Out</a>
                                         </div>
                                     </li>

@@ -22,75 +22,74 @@
                 @csrf
                 <div class="row">
                     <div class="col-lg-12">
-                <span onclick="openNav()" class="filter-btn d-block d-lg-none pb-3"><i class="fa fa-list"></i> Options</span>
-                <h3 class="catalog-title">Transaction History</h3>
-                <div class="table-history" style="overflow-x:auto;">
+                        <h3 class="catalog-title">Transaction History</h3>
+                        <div class="table-history" style="overflow-x:auto;">
 
-                    <table class="table table-hover small text-center overflow-auto">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col" class="align-middle">Order#</th>
-                                <th scope="col" class="align-middle">Date</th>
-                                <th scope="col" class="align-middle">Amount</th>
-                                <th scope="col" class="align-middle">Paid</th>
-                                <th scope="col" class="align-middle">Balance</th>
-                                <th scope="col" class="align-middle">Delivery Status</th>
-                                <th scope="col" class="align-middle">Status</th>
-                                <th scope="col" class="align-middle">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($sales as $sale)
-                                @php
-                                    $paid = \App\EcommerceModel\SalesHeader::paid($sale->id);
-                                    $balance = \App\EcommerceModel\SalesHeader::balance($sale->id);
-                                @endphp
-                                <tr>
-                                    <td>{{$sale->order_number}}</td>
-                                    <td>{{$sale->created_at}}</td>
-                                    <td>{{number_format($sale->gross_amount,2)}}</td>
-                                    <td>{{number_format($paid,2)}}</td>
-                                    <td>{{number_format($balance,2)}}</td>
-                                    <td>{{$sale->delivery_status}}</td>
-                                    <td id="order{{$sale->id}}_status">
-                                        @if($sale->status == 'active')
-                                            ACTIVE
-                                        @else
-                                            {{ $sale->status }}
-                                        @endif
-                                    </td>
-                                    <td align="right">
-                                        @if($sale->payment_method == 0)
-                                            <a href="#" title="Cancel Order" class="btn btn-success btn-xs mb-1" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')"><i class="fa fa-times pb-1"></i></a>&nbsp;
-                                        @else
-                                            @if($sale->status == 'active')
-                                                @if($balance > 0)
-                                                    @if($sale->payment_method == 1)
-                                                        <a href="" title="Pay now" onclick="globalpay('{{$sale->id}}')" id="paybtn{{$sale->id}}" class="btn btn-success btn-xs mb-1"><i class="fa fa-credit-card pb-1"></i></a>
-                                                    @else
-                                                    <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$balance}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}" class="btn btn-success btn-xs mb-1"><i class="fa fa-credit-card pb-1"></i></a>
-                                                    @endif
-                                                    &nbsp;
-                                                    <a href="#" title="Cancel Order" class="btn btn-success btn-xs mb-1" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')"><i class="fa fa-times pb-1"></i></a>&nbsp;
+                            <table class="table table-hover small text-center overflow-auto">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col" class="align-middle">Order#</th>
+                                        <th scope="col" class="align-middle">Date</th>
+                                        <th scope="col" class="align-middle">Amount</th>
+                                        <th scope="col" class="align-middle">Paid</th>
+                                        <th scope="col" class="align-middle">Balance</th>
+                                        <th scope="col" class="align-middle">Delivery Status</th>
+                                        <th scope="col" class="align-middle">Status</th>
+                                        <th scope="col" class="align-middle">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($sales as $sale)
+                                        @php
+                                            $paid = \App\EcommerceModel\SalesHeader::paid($sale->id);
+                                            $balance = \App\EcommerceModel\SalesHeader::balance($sale->id);
+                                        @endphp
+                                        <tr>
+                                            <td>{{$sale->order_number}}</td>
+                                            <td>{{$sale->created_at}}</td>
+                                            <td>{{number_format($sale->gross_amount,2)}}</td>
+                                            <td>{{number_format($paid,2)}}</td>
+                                            <td>{{number_format($balance,2)}}</td>
+                                            <td>{{$sale->delivery_status}}</td>
+                                            <td id="order{{$sale->id}}_status">
+                                                @if($sale->status == 'active')
+                                                    ACTIVE
+                                                @else
+                                                    {{ $sale->status }}
                                                 @endif
-                                            @endif
-                                        @endif
+                                            </td>
+                                            <td align="right">
+                                                @if($sale->payment_method == 0)
+                                                    <a href="#" title="Cancel Order" class="btn btn-success btn-xs mb-1" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')"><i class="fa fa-times pb-1"></i></a>&nbsp;
+                                                @else
+                                                    @if($sale->status == 'active')
+                                                        @if($balance > 0)
+                                                            @if($sale->payment_method == 1)
+                                                                <a href="" title="Pay now" onclick="globalpay('{{$sale->id}}')" id="paybtn{{$sale->id}}" class="btn btn-success btn-xs mb-1"><i class="fa fa-credit-card pb-1"></i></a>
+                                                            @else
+                                                            <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$balance}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}" class="btn btn-success btn-xs mb-1"><i class="fa fa-credit-card pb-1"></i></a>
+                                                            @endif
+                                                            &nbsp;
+                                                            <a href="#" title="Cancel Order" class="btn btn-success btn-xs mb-1" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')"><i class="fa fa-times pb-1"></i></a>&nbsp;
+                                                        @endif
+                                                    @endif
+                                                @endif
 
-                                        <a href="#" title="view delivery history" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')" class="btn btn-success btn-xs mb-1"><i class="fa fa-truck pb-1"></i></a>
-                                        <a href="#" title="view items" onclick="view_items('{{$sale->id}}','{{$sale->order_number}}','{{date('Y-m-d',strtotime($sale->created_at))}}','{{$sale->payment_status}}','{{$sale->delivery_type}}')" class="btn btn-success btn-xs mb-1"><i class="fa fa-eye pb-1"></i></a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <td>
-                                    <div class="alert alert-warning" role="alert">
-                                        No Transactions found
-                                    </div>
-                                </td>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                                                <a href="#" title="view delivery history" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')" class="btn btn-success btn-xs mb-1"><i class="fa fa-truck pb-1"></i></a>
+                                                <a href="#" title="view items" onclick="view_items('{{$sale->id}}','{{$sale->order_number}}','{{date('Y-m-d',strtotime($sale->created_at))}}','{{$sale->payment_status}}','{{$sale->delivery_type}}')" class="btn btn-success btn-xs mb-1"><i class="fa fa-eye pb-1"></i></a>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <td>
+                                            <div class="alert alert-warning" role="alert">
+                                                No Transactions found
+                                            </div>
+                                        </td>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>

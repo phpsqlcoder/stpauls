@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\EconmerceModel\ProductCategory;
+use App\EcommerceModel\ProductCategory;
+use App\EcommerceModel\Product;
 use App\Page;
 
 use Auth;
@@ -58,6 +59,29 @@ class FrontController extends Controller
             'home' => url('/'),
             $page->name => url('/').'/'.$page->slug
         ];
+    }
+
+    public function search_product(Request $request)
+    {
+        // $searchFields = ['name', 'label', 'contents'];
+        // $listing = new ListingHelper();
+
+        // $searchPages = $listing->simple_search(Page::class, $searchFields);
+
+        // $filter = $listing->get_filter($searchFields);
+
+        $page = new Page();
+        $page->name = 'Product Search';
+
+        $keyword = $_GET['product'];
+
+        $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->orderBy('name','asc')->get();
+        $qry_search = Product::where('name','like','%'.$keyword.'%');
+        $products   = $qry_search->paginate(5);
+        $count      = $qry_search->count();
+
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.product-search', compact('page','categories','products','count','keyword'));
     }
 
 }

@@ -85,6 +85,26 @@ class CustomerController extends Controller
         return view('admin.customers.reactivate-request',compact('customers','filter', 'searchType'));
     }
 
+    public function reactivate(Request $request)
+    {
+        $user = Customer::find($request->customer_id)->update([
+            'is_active' => $request->status,
+            'reactivate_request' => 0,
+            'user_id'   => Auth::id(),
+        ]);
+
+        $status = ($request->status == 1) ? 'approved' : 'disapproved';
+        // $user->send_reactivate_confirmation_email();
+
+        // if (Mail::failures()) {
+        //     return back()
+        //         ->withInput($request->only('email'))
+        //         ->withErrors(['email' => trans('passwords.user')]);
+        // }
+
+        return back()->with('success', __('standard.customers.reactivate_status', ['status' => $status]));
+    }
+
     public function deactivate(Request $request)
     {
     	Customer::find($request->customer_id)->update([

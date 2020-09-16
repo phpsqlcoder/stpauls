@@ -142,7 +142,7 @@
                                             <p class="product-title">{{ $product->name }}</p>
                                             <form id="addToCart" data-source="addToCart">
                                                 @if($product->inventory > 0)
-                                                <button type="button" onclick="add_to_cart('{{$product->id}}');" class="btn add-cart-alt1-btn addToCartButton" data-loading-text="processing...">
+                                                <button type="button" onclick="add_to_cart('{{$product->id}}');" class="btn add-cart-alt1-btn addToCartButton">
                                                     <img src="images/misc/cart.png" alt=""> Add to cart
                                                 </button>
                                                 @else

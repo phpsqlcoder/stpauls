@@ -137,7 +137,14 @@
                 <a href="#" class="nav-link"><i data-feather="users"></i> <span>Customers</span></a>
                 <ul>
                     <li @if (\Route::current()->getName() == 'customers.index') class="active" @endif><a href="{{ route('customers.index') }}">Manage Customers</a></li>
-                    <li @if (\Route::current()->getName() == 'customers.index') class="active" @endif><a href="{{ route('customer.reactivate-request') }}">Reactivate Request&nbsp;<span class="badge badge-danger">1</span></a></li>
+                    <li @if (\Route::current()->getName() == 'customers.index') class="active" @endif>
+                        <a href="{{ route('customer.reactivate-request') }}">Reactivation Request
+                            &nbsp;
+                            @if(\App\EcommerceModel\Customer::reactivation_request() > 0)
+                                <span class="badge badge-danger">{{\App\EcommerceModel\Customer::reactivation_request()}}</span>
+                            @endif
+                        </a>
+                    </li>
                 </ul>
             </li>
         @endif
