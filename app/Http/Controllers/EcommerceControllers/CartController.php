@@ -133,7 +133,7 @@ class CartController extends Controller
 
             foreach ($cart as $key => $order){
                 if ($order->product_id == $request->product_id) {
-                    $cart[$key]->qty = $qty;
+                    $cart[$key]->qty = $request->quantity;
                     $cart[$key]->price = $product->price;
                     $not_exist = false;
                     break;
