@@ -178,8 +178,6 @@
                 </div>
             </div>
         </section>
-        
-        
     </main>
     <div id="loading-overlay">
         <div class="loading-icon"></div>

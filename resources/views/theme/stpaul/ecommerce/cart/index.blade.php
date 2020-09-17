@@ -26,7 +26,7 @@
                     @endif
                 </div>
             </div>
-            <form method="post" action="{{route('cart.front.batch_update')}}">
+            <form method="post" action="{{route('cart.front.proceed_checkout')}}">
                 @csrf
                 <div class="row">
                     <div class="col-lg-9">
@@ -65,7 +65,7 @@
                                             <div class="cart-quantity">
                                                 <label for="quantity">Quantity</label>
                                                 <div class="quantity">
-                                                    <input type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="{{ $order->product->inventory }}" step="1" data-inc="1" onchange="updateTotalAmount('{{$order->id}}');" id="order{{$order->id}}_qty">
+                                                    <input type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="{{ $order->product->inventory }}" step="1" data-inc="1" onchange="updateTotalAmount('{{$loop->iteration}}');" id="order{{$loop->iteration}}_qty">
                                                     <div class="quantity-nav">
                                                         <div class="quantity-button quantity-up">+</div>
                                                         <div class="quantity-button quantity-down">-</div>
@@ -89,16 +89,28 @@
                                                                     <p>Total Weight (g)</p>
                                                                 </td>
                                                                 <td>
-                                                                    <input type="hidden" id="input_order{{$order->id}}_product_weight" value="{{$order->product->weight}}">
-                                                                    <p id="order{{$order->id}}_total_weight">{{ $order->TotalWeight }}</p>
+                                                                    <input type="hidden" id="input_order{{$loop->iteration}}_product_weight" value="{{$order->product->weight}}">
+                                                                    <p id="order{{$loop->iteration}}_total_weight">{{ $order->TotalWeight }}</p>
                                                                 </td>
                                                             </tr>
                                                         </table>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <input type="hidden" class="input_product_total_price" id="input_order{{$order->id}}_product_total_price" value="{{$order->ItemTotalPrice}}">
-                                                        <input type="hidden" id="input_order{{$order->id}}_product_price" value="{{$order->product->price}}">
-                                                        <div class="cart-product-price">₱ <span id="order{{$order->id}}_total_price">{{ number_format($order->ItemTotalPrice,2) }}</span></div>
+                                                        <div class="cart-product-price">₱ 
+                                                            @if(\App\EcommerceModel\Product::onsale_checker($order->product_id) > 0)
+                                                                <input type="hidden" id="input_order{{$loop->iteration}}_product_price" value="{{$order->product->discountedprice}}">
+                                                                <input type="hidden" class="input_product_total_price" id="input_order{{$loop->iteration}}_product_total_price" value="{{$order->product->discountedprice*$order->qty}}">
+                                                                <span id="order{{$loop->iteration}}_total_price">
+                                                                    {{ number_format($order->product->discountedprice*$order->qty,2) }}
+                                                                </span>
+                                                            @else
+                                                                <input type="hidden" id="input_order{{$loop->iteration}}_product_price" value="{{$order->product->price}}">
+                                                                <input type="hidden" class="input_product_total_price" id="input_order{{$loop->iteration}}_product_total_price" value="{{$order->product->price*$order->qty}}">
+                                                                <span id="order{{$loop->iteration}}_total_price">
+                                                                    {{ number_format($order->product->price*$order->qty,2) }}
+                                                                </span>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -147,10 +159,7 @@
                             <div class="cart-btn">
                                 <div class="row">
                                     <div class="col-12">
-                                        <button type="submit" name="btnUpdateCart" value="1" class="btn btn-lg secondary-btn">Update My Cart</button>
-                                    </div>
-                                    <div class="col-12">
-                                        <button type="submit" name="btnCheckout" value="1" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
+                                        <button type="submit" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
                                     </div>
                                 </div>
                             </div>

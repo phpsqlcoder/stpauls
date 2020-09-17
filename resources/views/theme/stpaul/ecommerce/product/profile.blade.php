@@ -119,7 +119,8 @@
                                 </ul>
                             </div>
                             <div class="col-lg-7">
-                                <form id="addToCart" data-source="addToCart">
+                                <form id="addToCart" data-source="addToCart" method="post" action="{{ route('product-buy-now') }}">
+                                    @csrf
                                     <div class="product-detail">
                                         <div class="product-description">
                                             <ol class="breadcrumb">
@@ -141,6 +142,11 @@
                                                 <span class="fa fa-star checked"></span>
                                                 <span class="fa fa-star checked"></span>
                                                 <span class="rating-count">({{\App\EcommerceModel\ProductReview::review_counter($product->id,5)}}) Customer ratings</span>
+                                            </div>
+                                            @else
+                                            <div class="rating">
+                                                <span class="fa fa-star checked"></span>
+                                                <span class="rating-count">(0) Customer ratings</span>
                                             </div>
                                             @endif
                                             
@@ -164,6 +170,7 @@
 
                                         <div class="product-info">
                                             <p>Quantity</p>
+                                            <input type="hidden" name="product_id" value="{{$product->id}}">
                                             <div class="quantity">
                                                 <input type="number" name="quantity" id="qty" min="1" max="{{ $product->inventory }}" step="1" value="1" data-inc="1">
                                                 <div class="quantity-nav">
@@ -178,11 +185,11 @@
                                         </div>
                                         <div class="product-btn">
                                             @if($product->inventory > 0)
-                                            <button type="button" onclick="add_to_cart('{{$product->id}}');" class="btn btn-lg add-cart-alt2-btn addToCartButton" data-loading-text="processing...">
+                                            <button type="button" onclick="add_to_cart('{{$product->id}}');" class="btn btn-lg add-cart-alt2-btn addToCartButton">
                                                 <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/cart.png" alt=""> Add to cart
                                             </button>
 
-                                            <button type="button" class="btn btn-lg buy-now-btn buyNowButton" onclick="buyNow('{{$product->id}}')">
+                                            <button type="submit" class="btn btn-lg buy-now-btn buyNowButton">
                                                 <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/blitz.png" alt=""> Buy Now
                                             </button>
                                             @endif
@@ -193,11 +200,6 @@
                         </div>
                     </div>
                     <div class="gap-30"></div>
-                    <form method="post" action="">
-                        @csrf
-                       <input type="hidden" name="buynow_qty" id="orderqty">
-                       <input type="hidden" name="buynow_productid" value="{{$product->id}}">
-                    </form>
 
                     <div class="product-additional">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -380,8 +382,6 @@
             </div>
         </div>
     </section>
-
-    @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.subscribe-form')
 </main>
 @endsection
 
@@ -476,10 +476,6 @@
 
 @section('customjs')
     <script>
-        function buyNow(id){
-            $('#orderqty').val($('#qty').val());
-        }
-
         function add_to_cart(productID) {
             $.ajaxSetup({
                 headers: {
@@ -495,11 +491,7 @@
                 },
                 type: "post",
                 url: "{{route('cart.add')}}",
-                // beforeSend: function(){
-                //     $("#loading-overlay").show();
-                // },
                 success: function(returnData) {
-                    //$("#loading-overlay").hide();
                     if (returnData['success']) {
                         $('.cart-counter').html(returnData['totalItems']);
                         
@@ -522,7 +514,6 @@
                                 window.location.href = "{{route('cart.front.show')}}";
                             } 
                             else {
-                                // $('#btn'+product).html('<i class="fa fa-cart-plus bg-warning text-light p-1 rounded" title="Already added on cart"></i>');
                                 swal.close();
                                
                             }

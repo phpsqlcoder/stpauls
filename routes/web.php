@@ -41,12 +41,13 @@ Route::get('auth/facebook/callback', 'Auth\FacebookController@handleFacebookCall
         Route::post('cart/add-product','EcommerceControllers\CartController@store')->name('cart.add');
         Route::get('/cart/view', 'EcommerceControllers\CartController@view')->name('cart.front.show');
 
-        Route::post('cart/batch_update','EcommerceControllers\CartController@batch_update')->name('cart.front.batch_update');
+        Route::post('cart/batch_update','EcommerceControllers\CartController@proceed_checkout')->name('cart.front.proceed_checkout');
         Route::post('cart/remove-product','EcommerceControllers\CartController@remove_product')->name('cart.remove_product');
     //
 
     // Products
         Route::get('/product-info/{slug}', 'Product\Front\ProductFrontController@show')->name('product.front.show');
+        Route::post('/product-buy-now','EcommerceControllers\CartController@buynow')->name('product-buy-now');
         Route::any('/products/{category}','Product\Front\ProductFrontController@product_list')->name('product.front.list');
         Route::any('/search-product', 'Product\Front\ProductFrontController@search_product')->name('product.front.search');
     //

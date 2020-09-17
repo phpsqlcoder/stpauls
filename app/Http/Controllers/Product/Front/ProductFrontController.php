@@ -44,7 +44,7 @@ class ProductFrontController extends Controller
 
         $ratingCounter = ProductReview::where('product_id',$product->id)->where('rating',5)->count();
         //
-
+        
         $page = $product;
         if (empty($product)) {
             abort(404);

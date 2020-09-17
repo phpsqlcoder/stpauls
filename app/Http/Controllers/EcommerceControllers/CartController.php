@@ -60,9 +60,7 @@ class CartController extends Controller
                 ]);
             }
 
-        } 
-        else 
-        {
+        } else {
             $cart = session('cart', []);
             $not_exist = true;
 
@@ -85,8 +83,6 @@ class CartController extends Controller
             }
 
             session(['cart' => $cart]);
-           
-
         }
        
         $inventory_remark = true;
@@ -103,6 +99,60 @@ class CartController extends Controller
                 'totalItems' => Setting::EcommerceCartTotalItems()                
             ]);
         }
+    }
+
+    public function buynow(Request $request)
+    {   
+        $product = Product::whereId($request->product_id)->first();
+
+        if (auth()->check()) {
+            
+            $cart = Cart::where('product_id', $request->product_id)
+                ->where('user_id', Auth::id())
+                ->first();
+
+            if (!empty($cart)) {
+
+                $newQty = $cart->qty + $request->quantity;
+                $save = $cart->update([
+                    'qty' => $newQty,
+                    'price' => $product->price
+                ]);
+            } else {
+                $save = Cart::create([
+                    'product_id' => $request->product_id,
+                    'user_id' => Auth::id(),
+                    'qty' => $request->quantity,
+                    'price' => $product->price
+                ]);
+            }
+
+        } else {
+            $cart = session('cart', []);
+            $not_exist = true;
+
+            foreach ($cart as $key => $order){
+                if ($order->product_id == $request->product_id) {
+                    $cart[$key]->qty = $qty;
+                    $cart[$key]->price = $product->price;
+                    $not_exist = false;
+                    break;
+                }
+            }
+
+            if ($not_exist) {
+                $order = new Cart();
+                $order->product_id = $request->product_id;
+                $order->qty = $request->quantity;
+                $order->price = $product->price;
+
+                array_push($cart, $order);
+            }
+
+            session(['cart' => $cart]);
+        }
+
+        return redirect(route('cart.front.show'));
     }
 
     public function view()
@@ -137,64 +187,41 @@ class CartController extends Controller
         return back();
     }
 
-    public function batch_update(Request $request)
+    public function proceed_checkout(Request $request)
     {
-        if($request->btnUpdateCart == 1){
+        $data   = $request->all();
+        $cartId = $data['cart_id'];
+        $qty    = $data['qty'];
 
-            $data   = $request->all();
-            $cartId = $data['cart_id'];
-            $qty    = $data['qty'];
+        if (auth()->check()) {        
 
-            if (auth()->check()) {        
-
-                if (Cart::where('user_id', auth()->id())->count() == 0) {
-                    return redirect()->route('product.front.list');
-                }
-
-                foreach($cartId as $key => $cart){
-                    Cart::whereId($cart)->update([
-                        'qty' => $qty[$key]
-                    ]);
-                }
-               
-                return back()->with('success', 'Cart has beed updated successfully.');
-            } else {
-                // $cart = session('cart', []);
-
-                // for ($x = 1; $x <= $request->total_products; $x++) {
-                //     foreach ($cart as $key => $order) {
-                //         if ($order->product_id == $request->record_id[$x]) {
-                //             $cart[$key]->qty = $request->quantity[$x];
-                //             break;
-                //         }
-                //     }
-                // }
-
-                // session(['cart' => $cart]);
-
-                // return redirect()->route('customer-front.login');
+            if (Cart::where('user_id', auth()->id())->count() == 0) {
+                return redirect()->route('product.front.list');
             }
+
+            foreach($cartId as $key => $cart){
+                Cart::whereId($cart)->update([
+                    'qty' => $qty[$key]
+                ]);
+            }
+           
+            return redirect()->route('cart.front.checkout');
+
         } else {
-            if (auth()->check()) {
+            $cart = session('cart', []);
 
-                return redirect()->route('cart.front.checkout');
-
-            } else {
-                $cart = session('cart', []);
-
-                for ($x = 1; $x <= $request->total_products; $x++) {
-                    foreach ($cart as $key => $order) {
-                        if ($order->product_id == $request->record_id[$x]) {
-                            $cart[$key]->qty = $request->quantity[$x];
-                            break;
-                        }
+            for ($x = 1; $x <= $request->total_products; $x++) {
+                foreach ($cart as $key => $order) {
+                    if ($order->product_id == $request->record_id[$x]) {
+                        $cart[$key]->qty = $request->quantity[$x];
+                        break;
                     }
                 }
-
-                session(['cart' => $cart]);
-
-                return redirect()->route('customer-front.login');
             }
+
+            session(['cart' => $cart]);
+
+            return redirect()->route('customer-front.login');
         }
     }
 
