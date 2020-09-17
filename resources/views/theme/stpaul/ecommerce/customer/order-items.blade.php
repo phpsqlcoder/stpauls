@@ -10,7 +10,7 @@
 		<td>{{ $item->product->code }}</td>
 		<td>{{ str_limit(strip_tags($item->product->description), 80, $end ='...') }}</td>
 		<td>{{ $item->qty }}</td>
-		<td>{{ $item->product->price }}</td>
+		<td>{{ number_format($item->product->price,2) }}</td>
 		<td>{{ number_format($total,2) }}</td>
 	</tr>
 @endforeach

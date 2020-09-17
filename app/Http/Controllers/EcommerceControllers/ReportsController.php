@@ -161,7 +161,7 @@ class ReportsController extends Controller
 
     public function delivery_report($id)
     {
-        $rs = SalesHeader::whereId($id)->first();
+        $rs = SalesHeader::find($id);
         
         return view('admin.reports.delivery_report',compact('rs'));
 

@@ -75,18 +75,19 @@
         @php
             $total = 0;
         @endphp
+
         @forelse($rs->items as $r)
-        @php
-            $total += ($r->net_amount * $r->qty);
-        @endphp
-        <tr>
-            <td>{{$r->product_name}}</td>
-            <td>{{number_format($r->qty,2)}}</td>
-            <td>{{number_format($r->net_amount,2)}}</td>
-            <td>{{number_format(($r->net_amount * $r->qty),2)}}</td>
-            
-        </tr>
+            @php
+                $total += ($r->product->price * $r->qty);
+            @endphp
+            <tr>
+                <td>{{$r->product_name}}</td>
+                <td>{{number_format($r->qty,2)}}</td>
+                <td>{{number_format($r->product->price,2)}}</td>
+                <td>{{number_format($r->product->price*$r->qty,2)}}</td>
+            </tr>
         @empty
+
         @endforelse
         <tr>
             <td colspan="5"><hr></td>

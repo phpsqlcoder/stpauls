@@ -20,16 +20,6 @@
                                     <div class="col-md-12">
                                         <div class="gap-10"></div>
                                         <p class="text-dark"><strong>Please enter the account that you want to reset the password.</strong></p>
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger" role="alert">
-                                                <span class="fa fa-info-circle"></span>
-                                                <ul>
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
                                         @if (session('error'))
                                             <div class="gap-20"></div>
                                             <div class="alert alert-danger" role="alert">
@@ -53,10 +43,14 @@
                                                 <input readonly type="email" class="form-control form-input" name="email" id="email" value="{{ request('email') }}">
                                                 <div class="gap-10"></div>
                                                 <p>New Password *</p>
-                                                <input required type="password" class="form-control form-input" name="password">
+                                                <input required type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password should have a minimum of 8 alphanumeric characters and has at least 1 upper case and 1 special character." class="form-control form-input @error('password') is-invalid @enderror" name="password">
+                                                @hasError(['inputName' => 'password'])
+                                                @endhasError
                                                 <div class="gap-10"></div>
                                                 <p>Confirm Password *</p>
-                                                <input required type="password" class="form-control form-input" name="password_confirmation">
+                                                <input required type="password" class="form-control form-input @error('password_confirmation') is-invalid @enderror" name="password_confirmation">
+                                                @hasError(['inputName' => 'password_confirmation'])
+                                                @endhasError
                                                 <div class="gap-10"></div>
                                             </div>
                                             <div class="col-lg-6 col-md-7">

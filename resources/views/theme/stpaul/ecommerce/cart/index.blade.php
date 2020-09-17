@@ -83,7 +83,7 @@
                                                                     <p>Weight (g)</p>
                                                                 </td>
                                                                 <td>
-                                                                    <p>{{ $order->product->weight }}</p>
+                                                                    <p>{{ number_format($order->product->weight,2) }}</p>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -92,7 +92,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <input type="hidden" id="input_order{{$loop->iteration}}_product_weight" value="{{$order->product->weight}}">
-                                                                    <p id="order{{$loop->iteration}}_total_weight">{{ $order->TotalWeight }}</p>
+                                                                    <p id="order{{$loop->iteration}}_total_weight">{{ number_format($order->TotalWeight,2) }}</p>
                                                                 </td>
                                                             </tr>
                                                         </table>

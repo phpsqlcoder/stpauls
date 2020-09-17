@@ -22,153 +22,134 @@ use App\EcommerceModel\Customer;
 
 class EcommerceFrontController extends Controller
 {
-    public function profile(Request $request)
-    {
-        $footer = Page::where('slug', 'footer')->where('name', 'footer')->first();
+    // public function profile(Request $request)
+    // {
+    //     $footer = Page::where('slug', 'footer')->where('name', 'footer')->first();
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.ecommerce.profile', compact('footer','page', 'breadcrumb'));
-    }
+    //     return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.ecommerce.profile', compact('footer','page', 'breadcrumb'));
+    // }
 
-    public function update_name(Request $request)
-    {
-        Validator::make($request->all(), [
-            'firstname' => 'required',
-            'lastname' => 'required',
-        ])->validate();
+    // public function update_name(Request $request)
+    // {
+    //     Validator::make($request->all(), [
+    //         'firstname' => 'required',
+    //         'lastname' => 'required',
+    //     ])->validate();
 
-        auth()->user()->update([
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'name' => "{$request->firstname} {$request->lastname}",
-        ]);
+    //     auth()->user()->update([
+    //         'firstname' => $request->firstname,
+    //         'lastname' => $request->lastname,
+    //         'name' => "{$request->firstname} {$request->lastname}",
+    //     ]);
 
-        auth()->user()->profile->update(['name' => "{$request->firstname} {$request->lastname}"]);
+    //     auth()->user()->profile->update(['name' => "{$request->firstname} {$request->lastname}"]);
 
-        return redirect()->back()->with('success','Successfully updated name');
-    }
+    //     return redirect()->back()->with('success','Successfully updated name');
+    // }
 
-    public function update_contact(Request $request)
-    {
-        Validator::make($request->all(), [
-            'mobile' => 'required',
-            'phone' => 'required',
-        ])->validate();
+    // public function update_contact(Request $request)
+    // {
+    //     Validator::make($request->all(), [
+    //         'mobile' => 'required',
+    //         'phone' => 'required',
+    //     ])->validate();
 
-        auth()->user()->profile->update($request->all());
+    //     auth()->user()->profile->update($request->all());
 
-        return redirect()->back()->with('success','Successfully updated contact information');
-    }
+    //     return redirect()->back()->with('success','Successfully updated contact information');
+    // }
 
-    public function ajax_update_address(Request $request)
-    {
-        $address = $request->validate([
-            'address' => 'required',
-            'barangay' => 'required',
-            'city' => 'required',
-            'province' => 'required',
-            'mobile' => 'required',
-        ]);
+    // public function ajax_update_address(Request $request)
+    // {
+    //     $address = $request->validate([
+    //         'address' => 'required',
+    //         'barangay' => 'required',
+    //         'city' => 'required',
+    //         'province' => 'required',
+    //         'mobile' => 'required',
+    //     ]);
 
-        $city = explode('|',$request->city);
+    //     $city = explode('|',$request->city);
 
-        if($request->ajax()){
+    //     if($request->ajax()){
 
-            $qry = Customer::find(Auth::id())->update([
-                'mobile' => $request->mobile,
-                'address' => $request->address,
-                'barangay' => $request->barangay,
-                'province' => $request->province,
-                'city' => $city[0]
-            ]);
+    //         $qry = Customer::find(Auth::id())->update([
+    //             'mobile' => $request->mobile,
+    //             'address' => $request->address,
+    //             'barangay' => $request->barangay,
+    //             'province' => $request->province,
+    //             'city' => $city[0]
+    //         ]);
 
-            return response()->json(['success' => true, 'message' => 'Address has bean updated.']);
-        }
-        
+    //         return response()->json(['success' => true, 'message' => 'Address has bean updated.']);
+    //     }  
+    // }
 
-        
-    }
+    // public function ajax_update_delivery_address(Request $request)
+    // {
+    //     $deliveryAddress = $request->validate([
+    //         'address_delivery_street' => 'required',
+    //         'address_delivery_barangay' => 'required',
+    //         'address_delivery_city' => 'required',
+    //         'address_delivery_province' => 'required',
+    //         'address_delivery_zip' => 'required',
+    //         'address_delivery_country' => 'required',
+    //     ]);
 
-    public function ajax_update_delivery_address(Request $request)
-    {
-        $deliveryAddress = $request->validate([
-            'address_delivery_street' => 'required',
-            'address_delivery_barangay' => 'required',
-            'address_delivery_city' => 'required',
-            'address_delivery_province' => 'required',
-            'address_delivery_zip' => 'required',
-            'address_delivery_country' => 'required',
-        ]);
+    //     auth()->user()->profile->update($deliveryAddress);
 
-        auth()->user()->profile->update($deliveryAddress);
+    //     return response()->json(['success' => true, 'message' => 'Delivery Address has bean updated.', 'delivery_address' => auth()->user()->profile->complete_delivery_address()]);
+    // }
 
-        return response()->json(['success' => true, 'message' => 'Delivery Address has bean updated.', 'delivery_address' => auth()->user()->profile->complete_delivery_address()]);
-    }
+    // public function update_email(Request $request)
+    // {
+    //     Validator::make($request->all(), [
+    //         'email' => 'required|email|max:191|unique:users,email,'.auth()->id(),
+    //     ])->validate();
 
-    public function update_email(Request $request)
-    {
-        Validator::make($request->all(), [
-            'email' => 'required|email|max:191|unique:users,email,'.auth()->id(),
-        ])->validate();
+    //     $is_updated = auth()->user()->update([
+    //         'email'   => $request->email
+    //     ]);
 
-        $is_updated = auth()->user()->update([
-            'email'   => $request->email
-        ]);
+    //     if($is_updated){
+    //         auth()->logout();
+    //         return redirect('login')->with('success', 'Email successfully changed. To login again, please use your new password!');
+    //     } else {
+    //         return back()->with('error', __('standard.settings.account.update_email_failed'));
+    //     }
+    // }
 
-        if($is_updated){
-            auth()->logout();
-            return redirect('login')->with('success', 'Email successfully changed. To login again, please use your new password!');
-        } else {
-            return back()->with('error', __('standard.settings.account.update_email_failed'));
-        }
-    }
+    // public function update_password(Request $request)
+    // {
+    //     Validator::make($request->all(), [
+    //         'old_password' => ['required', function ($attribute, $value, $fail) {
+    //             if (!\Hash::check($value, auth()->user()->password)) {
+    //                 return $fail(__('The current password is incorrect.'));
+    //             }
+    //         }],
+    //         'password' => [
+    //             'required',
+    //             'min:8',
+    //             'confirmed',
+    //             'regex:/[a-z]/', // must contain at least one lowercase letter
+    //             'regex:/[A-Z]/', // must contain at least one uppercase letter
+    //             'regex:/[0-9]/', // must contain at least one digit
+    //             'regex:/[@$!%*#?&]/', // must contain a special character
+    //         ]
+    //     ])->validate();
 
-    public function update_password(Request $request)
-    {
-        Validator::make($request->all(), [
-            'old_password' => ['required', function ($attribute, $value, $fail) {
-                if (!\Hash::check($value, auth()->user()->password)) {
-                    return $fail(__('The current password is incorrect.'));
-                }
-            }],
-            'password' => [
-                'required',
-                'min:8',
-                'confirmed',
-                'regex:/[a-z]/', // must contain at least one lowercase letter
-                'regex:/[A-Z]/', // must contain at least one uppercase letter
-                'regex:/[0-9]/', // must contain at least one digit
-                'regex:/[@$!%*#?&]/', // must contain a special character
-            ]
-        ])->validate();
+    //     $user = auth()->user();
 
-        $user = auth()->user();
+    //     $is_updated = $user->update(['password' => \Hash::make($request->password, array('rounds'=>12))]);
 
-        $is_updated = $user->update(['password' => \Hash::make($request->password, array('rounds'=>12))]);
-
-        if ($is_updated) {
-            auth()->logout();
-            \Mail::to($user->email)->send(new UpdatePasswordMail(Setting::info(), $user));
-            return redirect('login')->with('success', 'Password successfully changed. To login again, please use your new password!');
-        } else {
-            return back()->with('error', __('standard.settings.account.update_password_failed'));
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //     if ($is_updated) {
+    //         auth()->logout();
+    //         \Mail::to($user->email)->send(new UpdatePasswordMail(Setting::info(), $user));
+    //         return redirect('login')->with('success', 'Password successfully changed. To login again, please use your new password!');
+    //     } else {
+    //         return back()->with('error', __('standard.settings.account.update_password_failed'));
+    //     }
+    // }
 
     public function forgot_password(Request $request)
     {
@@ -180,21 +161,26 @@ class EcommerceFrontController extends Controller
 
     public function sendResetLinkEmail(Request $request)
     {
-        $request->validate(
-            ['email' => ['required', 'email'] ]
-        );
+        Validator::make($request->all(),[
+            'email' => 'required|email',
+        ])->validate();
 
-        $user = Customer::where('email', $request->email)->first();
+        $qry = Customer::where('email', $request->email);
+        $exist = $qry->exists();
 
-        $user->send_reset_password_email();
+        if($exist){
+            $customer = $qry->first();
+            $customer->send_reset_password_email();
 
-        if (Mail::failures()) {
-            return back()
-                ->withInput($request->only('email'))
-                ->withErrors(['email' => trans('passwords.user')]);
+            if (Mail::failures()) {
+                return back()->withInput($request->only('email'))->withErrors(['email' => trans('passwords.user')]);
+            }
+
+            return back()->with('status', trans('passwords.sent'));
+        } else {
+            return back()->with('error','Email does not match on our record.');
         }
-
-        return back()->with('status', trans('passwords.sent'));
+        
     }
 
 
@@ -231,16 +217,8 @@ class EcommerceFrontController extends Controller
         $credentials = $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            "password" => [
-                'required',
-                'confirmed',
-                'min:10',
-                'max:150',
-                'regex:/[a-z]/', // must contain at least one lowercase letter
-                'regex:/[A-Z]/', // must contain at least one uppercase letter
-                'regex:/[0-9]/', // must contain at least one digit
-                'regex:/[@$!%*#?&]/', // must contain a special character
-            ],
+            'password' => 'required|max:150|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'password_confirmation' => 'required|same:password',
         ]);
 
         if (is_null($user = $this->broker()->getUser($request->only('email')))) {
@@ -267,6 +245,12 @@ class EcommerceFrontController extends Controller
 
        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.reactivate',compact('page'));
     }
+
+
+
+
+
+    
 
     public function sendReactivateRequest(Request $request)
     {

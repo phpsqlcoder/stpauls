@@ -8,15 +8,15 @@
             <div class="row">
                 <div class="col-lg-8 offset-lg-2 col-md-12">
                     @if(Session::has('warning'))
-                    <div class="alert alert-warning alert-dismissible fade show">
-                        <strong>Warning!</strong> This account is inactive. To re-activate this account please click this <a href="{{ route('ecommerce.reactivate-account') }}"><b>link</b>.</a>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <div class="alert alert-warning" role="alert">
+                        <span class="fa fa-exclamation"></span>
+                        This account is inactive. To re-activate this account please click this <a href="{{ route('ecommerce.reactivate-account') }}"><b>link</b>.</a>
                     </div>
                     @endif
 
                     @if($message = Session::get('error'))
-                        <div class="alert alert-danger d-flex align-items-center" role="alert">
-                            <i data-feather="alert-circle" class="mg-r-10"></i> {{ $message }}
+                        <div class="alert alert-danger" role="alert">
+                            <span class="fa fa-exclamation"></span> {{ $message }}
                         </div>
                     @endif
                     <div id="login">

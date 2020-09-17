@@ -20,26 +20,17 @@
                                     <div class="col-md-12">
                                         <div class="gap-10"></div>
                                         <p class="text-dark"><strong>Please enter the account that you want to reset the password.</strong></p>
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger" role="alert">
-                                                <span class="fa fa-info-circle"></span>
-                                                <ul>
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        @endif
                                         @if (session('error'))
                                             <div class="gap-20"></div>
                                             <div class="alert alert-danger" role="alert">
-                                                {{ session('error') }}
+                                                <span class="fa fa-info-circle"></span> {{ session('error') }}
                                             </div>
                                         @endif
+
                                         @if (session('status'))
                                             <div class="gap-20"></div>
                                             <div class="alert alert-success" role="alert">
-                                                {{ session('status') }}
+                                                <span class="fa fa-check-circle"></span> {{ session('status') }}
                                             </div>
                                         @endif
                                         <div class="gap-20"></div>
@@ -49,7 +40,9 @@
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <p>Email *</p>
-                                                <input type="email" class="form-control form-input" placeholder="Please enter your Email" name="email" id="email">
+                                                <input required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="email" class="form-control form-input @error('email') is-invalid @enderror" placeholder="Please enter your Email" name="email" id="email">
+                                                @hasError(['inputName' => 'email'])
+                                                @endhasError
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-lg-6 col-md-7">

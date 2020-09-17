@@ -57,14 +57,14 @@ class CustomerFrontController extends Controller
     }
 
 
-    public function customer_sign_up(Request $request) {
-
-        Validator::make($request->all(), [
-            'fname' => 'required',
-            'lname' => 'required',
-            'email' => 'required|email|max:191|unique:users',
-            'password' => 'min:8|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:8',
+    public function customer_sign_up(Request $request)
+    {   
+        Validator::make($request->all(),[
+            'firstname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
+            'lastname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
+            'email' => 'required|email|max:191|unique:customers,email',
+            'password' => 'required|max:150|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'password_confirmation' => 'required|same:password',
             'address' => 'required',
             'brgy' => 'required',
             'province' => 'required',
@@ -72,30 +72,39 @@ class CustomerFrontController extends Controller
             'mobileno' => 'required',
             'zipcode' => 'required',
         ])->validate();
+        
+        $exist = Customer::where('email',$request->email)->exists();
 
-       
-        $customer = Customer::create([
-            'email' => $request->email,
-            'password' => \Hash::make($request->password),
-            'firstname' => $request->fname,
-            'lastname' => $request->lname,
-            'telno' => $request->telno,
-            'mobile' => $request->mobileno,
-            'address' => $request->address,
-            'barangay' => $request->brgy,
-            'city' => $request->city,
-            'province' => $request->province,
-            'zipcode' => $request->zipcode,
-            'is_active' => 1,
-            'provider' => '',
-            'fbId' => '',
-            'googleId' => '',
-            'remember_token' => str_random(10),
-        ]);   
+        if($exist){
 
-        Auth::loginUsingId($customer->id);
+            return back()->with('error','Registration Successful!');
 
-        return redirect(route('home'))->with('success','Registration Successful!');
+        } else {
+
+            $customer = Customer::create([
+                'email' => $request->email,
+                'password' => \Hash::make($request->password),
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'telno' => $request->telno,
+                'mobile' => $request->mobileno,
+                'address' => $request->address,
+                'barangay' => $request->brgy,
+                'city' => $request->city,
+                'province' => $request->province,
+                'zipcode' => $request->zipcode,
+                'is_active' => 1,
+                'provider' => '',
+                'fbId' => '',
+                'googleId' => '',
+                'remember_token' => str_random(10),
+            ]);   
+
+            Auth::loginUsingId($customer->id);
+
+            return redirect(route('home'))->with('success','Registration Successful!');
+
+        } 
     }
 
     public function get_random_code($length = 6)

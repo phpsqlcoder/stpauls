@@ -31,7 +31,6 @@ class ProductReviewController extends Controller
 
     public function store(Request $request)
     {
-        
         $product = ProductReview::create([
             'product_id' => $request->product_id,
             'review' => $request->review,

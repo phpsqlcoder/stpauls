@@ -142,7 +142,7 @@
 
                                                     @if($sale->status<>'CANCELLED')
                                                         @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status'))
-                                                            <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+                                                            <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}'')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
 
                                                             @if($sale->delivery_type == 'Door 2 Door Delivery' && $sale->delivery_fee_amount == 0)
                                                             <a class="dropdown-item" href="javascript:;" onclick="updateDeliveryFee('{{$sale->id}}');">Update Delivery Fee</a>
@@ -150,11 +150,11 @@
                                                         @endif
                                                     @endif
 
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}'')" title="Update Delivery Status" data-id="{{$sale->id}}">Show Delivery History</a>
 
                                                     @if($sale->status <> 'CANCELLED')
                                                         @if (auth()->user()->has_access_to_route('sales-transaction.destroy'))
-                                                            <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="delete_sales({{$sale->id}},'{{$sale->order_number}}')" title="Cancel Transaction">Cancel</a>
+                                                            <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="delete_sales('{{$sale->id}}','{{$sale->order_number}}')" title="Cancel Transaction">Cancel</a>
                                                         @endif
                                                     @endif
                                                 </div>

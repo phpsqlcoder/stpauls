@@ -74,7 +74,7 @@ class SalesFrontController extends Controller
     {
         $deliveries = DeliveryStatus::where('order_id',$request->orderid)->get();
 
-        return view('admin.sales.order-deliveries',compact('deliveries'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.order-deliveries',compact('deliveries'));
     }
 
     public function display_items(Request $request)
@@ -82,7 +82,7 @@ class SalesFrontController extends Controller
         $sales = SalesHeader::find($request->orderid);
         $items = SalesDetail::where('sales_header_id',$sales->id)->get();
 
-        return view('admin.sales.order-items',compact('items','sales'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.order-items',compact('items','sales'));
     }
   
 }

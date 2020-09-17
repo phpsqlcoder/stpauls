@@ -44,28 +44,28 @@
                                             <div class="col-md-6">
                                                 <input type="hidden" name="fbId" value="{{ $fbdata->fb_id }}">
                                                 <p>First Name *</p>
-                                                <input required type="text" name="fname" class="form-control form-input @error('fname') is-invalid @enderror" value="{{ old('fname',$fbdata->fname) }}">
-                                                @hasError(['inputName' => 'fname'])
+                                                <input required type="text" name="firstname" class="form-control form-input @error('firstname') is-invalid @enderror" value="{{ old('firstname',$fbdata->fname) }}">
+                                                @hasError(['inputName' => 'firstname'])
                                                 @endhasError
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-md-6">
                                                 <p>Last Name *</p>
-                                                <input required type="text" name="lname" class="form-control form-input @error('lname') is-invalid @enderror" value="{{ old('lname',$fbdata->lname) }}">
-                                                @hasError(['inputName' => 'lname'])
+                                                <input required type="text" name="lastname" class="form-control form-input @error('lastname') is-invalid @enderror" value="{{ old('lastname',$fbdata->lname) }}">
+                                                @hasError(['inputName' => 'lastname'])
                                                 @endhasError
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Email Address *</p>
-                                                <input required type="email" name="email" class="form-control form-input @error('email') is-invalid @enderror" value="{{ old('email',$fbdata->email) }}">
+                                                <input required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="email" name="email"  class="form-control form-input  @error('email') is-invalid @enderror" value="{{ old('email',$fbdata->email) }}">
                                                 @hasError(['inputName' => 'email'])
                                                 @endhasError
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Password *</p>
-                                                <input required type="password" name="password" class="form-control form-input @error('password') is-invalid @enderror">
+                                                <input required type="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password should have a minimum of 8 alphanumeric characters and has at least 1 upper case and 1 special character." class="form-control form-input @error('password') is-invalid @enderror">
                                                 @hasError(['inputName' => 'password'])
                                                 @endhasError
                                                 <div class="gap-10"></div>    
@@ -94,7 +94,7 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Province *</p>
-                                                <select name="province" id="province" class="form-control form-input  @error('province') is-invalid @enderror">
+                                                <select required name="province" id="province" class="form-control form-input  @error('province') is-invalid @enderror">
                                                     <option value="">-- Select Province --</option>
                                                     @foreach($provinces as $province)
                                                     <option value="{{ $province->id }}">{{ $province->province }}</option>
@@ -106,8 +106,8 @@
                                             </div>
                                             <div class="col-md-7">
                                                 <p>City *</p>
-                                                <select requried name="city" id="city" class="form-control form-input  @error('city') is-invalid @enderror">
-                                                    <option>-- Select City --</option>
+                                                <select required name="city" id="city" class="form-control form-input  @error('city') is-invalid @enderror">
+                                                    <option selected disabled value="">-- Select City --</option>
                                                 </select>
                                                 @hasError(['inputName' => 'city'])
                                                 @endhasError
