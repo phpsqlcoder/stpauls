@@ -118,19 +118,20 @@
                     </div>
                 </form>
             </div>
+            <div>
+                <form id="remove_form" method="post" action="{{route('cart.remove_product')}}">
+                    @csrf
+                    <input type="text" name="_method" value="POST">
+                    <input type="text" name="product_remove_id" id="product_remove_id" value="">
+                    <button type="submit" href="#" class="removed" style="font-size:.7em;text-transform:uppercase;">
+                        Remove <span class="lnr lnr-cross"></span>
+                    </button>
+                </form>
+            </div>
         </section>        
         
     </main>
-    <div style="display:none;">
-        <form id="remove_form" method="post" action="{{route('cart.remove_product')}}">
-            @csrf
-            <input type="hidden" name="_method" value="POST">
-            <input type="hidden" name="product_remove_id" id="product_remove_id" value="">
-            <button type="submit" href="#" class="removed" style="font-size:.7em;text-transform:uppercase;">
-                Remove <span class="lnr lnr-cross"></span>
-            </button>
-        </form>
-    </div>
+    
 @endsection
 
 @section('pagejs')

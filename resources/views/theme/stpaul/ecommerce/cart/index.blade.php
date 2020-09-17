@@ -35,11 +35,13 @@
                         </div>
                         <ul class="cart-wrap">
                             @php $grandtotal = 0; @endphp
-                            @forelse($cart as $order)
+
+                            @forelse($cart as $key => $order)
+
                             @php $grandtotal += $order->ItemTotalPrice; @endphp
                             <li class="item">
                                 <div class="remove-item">
-                                    <a href="#" onclick="remove_item('{{$order->id}}')" style="font-size: .7em;" class="text-uppercase txt-10">Remove <span class="lnr lnr-cross"></span></a>
+                                    <a href="#" onclick="remove_item('@if(Auth::check()) {{$order->id}} @else {{$key}} @endif')" style="font-size: .7em;" class="text-uppercase txt-10">Remove <span class="lnr lnr-cross"></span></a>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-2 col-md-3 col-sm-4">
