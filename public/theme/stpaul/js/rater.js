@@ -522,7 +522,7 @@
         selected_symbol_type: 'fontawesome_star', // Must be a key from symbols
         convert_to_utf8: false,
         cursor: 'default',
-        readonly: false,
+        readonly: true,
         change_once: false, // Determines if the rating can only be set once
         only_select_one_symbol: false, // If set to true, only selects the hovered/selected symbol and nothing prior to it
         ajax_method: 'POST',
