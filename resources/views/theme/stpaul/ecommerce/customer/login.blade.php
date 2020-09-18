@@ -19,6 +19,12 @@
                             <span class="fa fa-exclamation"></span> {{ $message }}
                         </div>
                     @endif
+
+                    @if($message = Session::get('success'))
+                        <div class="alert alert-success" role="alert">
+                            <span class="fa fa-check"></span> {{ $message }}
+                        </div>
+                    @endif
                     <div id="login">
                         <div class="row align-items-center">
                             <div class="col-md-8 col-sm-12">

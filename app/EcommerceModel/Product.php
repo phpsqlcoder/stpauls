@@ -35,6 +35,11 @@ class Product extends Model
     	return " ".number_format($this->price,2);
     }
 
+    public function ratings()
+    {
+        return $this->hasMany(ProductReview::class,'product_id');
+    }
+
    
     public function tags(){
         return $this->hasMany('App\EcommerceModel\ProductTag');

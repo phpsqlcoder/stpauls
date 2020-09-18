@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/owl.carousel/owl.theme.default.min.css') }}" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <style>
+        .product-rating .fa-star.checked {
+            color: #ffb800;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -134,21 +139,12 @@
                                             </ol>
                                             <h2>{{ $product->name }}</h2>
                                             <hr>
-                                            @if($ratingCounter > 0)
-                                            <div class="rating">
-                                                <span class="fa fa-star checked"></span>
-                                                <span class="fa fa-star checked"></span>
-                                                <span class="fa fa-star checked"></span>
-                                                <span class="fa fa-star checked"></span>
-                                                <span class="fa fa-star checked"></span>
-                                                <span class="rating-count">({{\App\EcommerceModel\ProductReview::review_counter($product->id,5)}}) Customer ratings</span>
+                                            <div class="row">
+                                                <div class="product-rating" data-rate-value="{{ $product->ratings()->avg('rating') }}"></div>
+                                                <span class="rating-count" style="font-size: .75em;color: #a7a7a7;margin-left: 5px;margin-top:4px;font-weight: 500;">
+                                                    ({{ number_format($product->ratings()->avg('rating'),2) }}) Customer ratings
+                                                </span>
                                             </div>
-                                            @else
-                                            <div class="rating">
-                                                <span class="fa fa-star checked"></span>
-                                                <span class="rating-count">(0) Customer ratings</span>
-                                            </div>
-                                            @endif
                                             
                                             <p>{{ $product->additional_info->authors }} | Product Name: {{ $product->name }}</p>
                                             @if(\App\EcommerceModel\Product::onsale_checker($product->id) > 0)
@@ -395,10 +391,12 @@
 
     <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.extension.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.js') }}"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-
+    <script src="{{ asset('theme/stpaul/js/rater.js') }}"></script>
     <script>
+        $(".product-rating").rate();
+
+
         $(".js-range-slider").ionRangeSlider({
             type: "double",
             grid: true,

@@ -63,7 +63,7 @@ class CustomerFrontController extends Controller
             'firstname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
             'lastname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
             'email' => 'required|email|max:191|unique:customers,email',
-            'password' => 'required|max:150|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'password' => 'required|max:150|min:8',
             'password_confirmation' => 'required|same:password',
             'address' => 'required',
             'brgy' => 'required',
@@ -100,9 +100,7 @@ class CustomerFrontController extends Controller
                 'remember_token' => str_random(10),
             ]);   
 
-            Auth::loginUsingId($customer->id);
-
-            return redirect(route('home'))->with('success','Registration Successful!');
+            return redirect(route('customer-front.login'))->with('success','Registration Successful!');
 
         } 
     }
