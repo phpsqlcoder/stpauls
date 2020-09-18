@@ -139,7 +139,7 @@
                                             </ol>
                                             <h2>{{ $product->name }}</h2>
                                             <hr>
-                                            <div class="row">
+                                            <div class="form-row">
                                                 <div class="product-rating" data-rate-value="{{ $product->ratings()->avg('rating') }}"></div>
                                                 <span class="rating-count" style="font-size: .75em;color: #a7a7a7;margin-left: 5px;margin-top:4px;font-weight: 500;">
                                                     ({{ number_format($product->ratings()->avg('rating'),2) }}) Customer ratings
