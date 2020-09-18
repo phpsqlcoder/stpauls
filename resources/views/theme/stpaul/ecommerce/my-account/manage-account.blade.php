@@ -111,7 +111,7 @@
                                         <div class="gap-10"></div>
                                         <div class="form-group form-wrap">
                                             <label>Address Line 1 *</label>
-                                            <input required type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" placeholder="Unit No./Building/House No./Street" value="{{ old('address', $customer->address) }}"/>
+                                            <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" placeholder="Unit No./Building/House No./Street" value="{{ old('address', $customer->address) }}"/>
                                             @hasError(['inputName' => 'address'])
                                             @endhasError
                                         </div>
@@ -119,14 +119,14 @@
                                    
                                         <div class="form-group form-wrap">
                                             <label>Address Line 2 *</label>
-                                            <input required type="text" class="form-control @error('barangay') is-invalid @enderror" id="barangay" name="barangay" placeholder="Subd/Brgy" value="{{ old('barangay', $customer->barangay) }}"/>      
+                                            <input type="text" class="form-control @error('barangay') is-invalid @enderror" id="barangay" name="barangay" placeholder="Subd/Brgy" value="{{ old('barangay', $customer->barangay) }}"/>      
                                             @hasError(['inputName' => 'barangay'])
                                             @endhasError
                                         </div>    
                                         
                                         <div class="form-group form-wrap">
                                             <label>Province *</label>
-                                            <select required name="province" id="province" class="form-control @error('province') is-invalid @enderror">
+                                            <select name="province" id="province" class="form-control @error('province') is-invalid @enderror">
                                                 @foreach($provinces as $province)
                                                 <option @if($customer->province == $province->id) selected @endif value="{{$province->id}}">{{$province->province}}</option>
                                                 @endforeach
@@ -139,7 +139,7 @@
                                         @endphp
                                         <div class="form-group form-wrap">
                                             <label>City *</label>
-                                            <select required name="city" id="city" class="form-control @error('city') is-invalid @enderror">
+                                            <select name="city" id="city" class="form-control @error('city') is-invalid @enderror">
                                                 @foreach($cities as $city)
                                                 <option @if($customer->city == $city->id) selected @endif value="{{$city->id}}">{{$city->city}}</option>
                                                 @endforeach
@@ -149,8 +149,8 @@
                                         </div>    
                                                                      
                                          <div class="form-group form-wrap">
-                                            <label>Zip </label>
-                                            <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" name="zipcode" value="{{ old('zipcode', $customer->zipcode) }}"/>                                                  
+                                            <label>Zip Code *</label>
+                                            <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" name="zipcode" value="{{ old('zipcode', $customer->zipcode) }}"/>
                                             @hasError(['inputName' => 'zipcode'])
                                             @endhasError
                                         </div>

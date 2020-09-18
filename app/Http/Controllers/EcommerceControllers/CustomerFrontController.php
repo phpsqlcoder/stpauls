@@ -170,7 +170,6 @@ class CustomerFrontController extends Controller
                     $cart->update([
                         'qty' => $newQty,
                         'price' => $product->price,
-                        'paella_price' => $order['paella_price']
                     ]);
                 } else {
                     Cart::create([
@@ -178,7 +177,6 @@ class CustomerFrontController extends Controller
                         'user_id' => Auth::id(),
                         'qty' => $order['qty'],
                         'price' => $product->price,
-                        'paella_price' => $order['paella_price']
                     ]);
                 }
             }

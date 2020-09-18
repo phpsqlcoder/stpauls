@@ -1,4 +1,4 @@
-Dear {{ $customer->name }},
+Dear {{ $customer->firstname }},
 
 We have received a request to reset your password for your account in {{ $setting->company_name }} ({{ url('/') }})
 

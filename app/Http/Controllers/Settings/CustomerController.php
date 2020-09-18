@@ -87,22 +87,36 @@ class CustomerController extends Controller
 
     public function reactivate(Request $request)
     {
-        $user = Customer::find($request->customer_id)->update([
+        $customer = Customer::find($request->customer_id);
+
+        $qry = $customer->update([
             'is_active' => $request->status,
             'reactivate_request' => 0,
             'user_id'   => Auth::id(),
         ]);
 
         $status = ($request->status == 1) ? 'approved' : 'disapproved';
-        // $user->send_reactivate_confirmation_email();
-
+        if($request->status == 1){
+            $customer->send_approved_account_reactivation_email();
+        } else {
+            $customer->send_disapproved_account_reactivation_email();
+        }
+        
         // if (Mail::failures()) {
-        //     return back()
-        //         ->withInput($request->only('email'))
-        //         ->withErrors(['email' => trans('passwords.user')]);
+        //     return back()->withInput($request->only('email'))->withErrors(['email' => trans('passwords.user')]);
         // }
 
         return back()->with('success', __('standard.customers.reactivate_status', ['status' => $status]));
+    }
+
+    public function activate(Request $request)
+    {
+        Customer::find($request->customer_id)->update([
+            'is_active' => 1,
+            'user_id'   => Auth::id(),
+        ]);
+
+        return back()->with('success', __('standard.customers.status_success', ['status' => 'activated']));
     }
 
     public function deactivate(Request $request)
@@ -115,15 +129,13 @@ class CustomerController extends Controller
         return back()->with('success', __('standard.customers.status_success', ['status' => 'deactivated']));
     }
 
-    public function activate(Request $request)
-    {
-    	Customer::find($request->customer_id)->update([
-            'is_active' => 1,
-            'user_id'   => Auth::id(),
-        ]);
+    
 
-        return back()->with('success', __('standard.customers.status_success', ['status' => 'activated']));
-    }
+
+
+
+
+
 
 
     public function show($id, $param = null)

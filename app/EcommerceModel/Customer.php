@@ -3,7 +3,8 @@
 namespace App\EcommerceModel;
 
 use App\Notifications\Ecommerce\CustomerResetPasswordNotification;
-use App\Notifications\Ecommerce\CustomerReactivateAccountNotification;
+use App\Notifications\Ecommerce\CustomerApprovedAccountReactivationNotification;
+use App\Notifications\Ecommerce\CustomerDisapprovedAccountReactivationNotification;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -24,6 +25,63 @@ class Customer extends Authenticatable
     {
         return $this->belongsTo('\App\Deliverablecities','city','city');
     }
+
+    public function cities()
+    {
+        return $this->belongsTo('\App\Cities','city');
+    }
+
+    public function provinces()
+    {
+        return $this->belongsTo('\App\Provinces','province');
+    }
+
+    public function send_reset_password_email()
+    {
+        $token = app('auth.password.broker')->createToken($this);
+
+        $this->notify(new CustomerResetPasswordNotification($token));
+    }
+
+    public function send_approved_account_reactivation_email()
+    {
+        $token = app('auth.password.broker')->createToken($this);
+
+        $this->notify(new CustomerApprovedAccountReactivationNotification($token));
+    }
+
+    public function send_disapproved_account_reactivation_email()
+    {
+        $this->notify(new CustomerDisapprovedAccountReactivationNotification());
+    }
+
+    public static function reactivation_request()
+    {
+        $qry = Customer::where('reactivate_request',1)->count();
+
+        return $qry;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function setIsEmailSubscriberAttribute($value)
     {
         if ($value == 0 || $value == false) {
@@ -50,19 +108,7 @@ class Customer extends Authenticatable
         $this->attributes['contact_numbers'] = json_encode($newValue);
     }
 
-    public function send_reset_password_email()
-    {
-        $token = app('auth.password.broker')->createToken($this);
-
-        $this->notify(new CustomerResetPasswordNotification($token));
-    }
-
-    public function send_reactivate_confirmation_email()
-    {
-        $token = app('auth.password.broker')->createToken($this);
-
-        $this->notify(new CustomerReactivateAccountNotification($token));
-    }
+   
 
     public function middle_name_abbreviation()
     {
@@ -105,16 +151,6 @@ class Customer extends Authenticatable
         return $qry->firstname.' '.$qry->lastname;
     }
 
-    public function cities()
-    {
-        return $this->belongsTo('\App\Cities','city');
-    }
-
-    public function provinces()
-    {
-        return $this->belongsTo('\App\Provinces','province');
-    }
-
     public function getAddress1Attribute() {
 
         return "{$this->address} {$this->barangay}";
@@ -128,12 +164,5 @@ class Customer extends Authenticatable
     public function getAddress2Attribute() {
 
         return "{$this->cities->city}, {$this->provinces->province}";
-    }
-
-    public static function reactivation_request()
-    {
-        $qry = Customer::where('reactivate_request',1)->count();
-
-        return $qry;
     }
 }

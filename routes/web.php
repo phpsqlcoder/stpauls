@@ -119,7 +119,7 @@ Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
 
         // Customers
             Route::resource('/admin/customers', 'Settings\CustomerController');
-            Route::get('/admin/customer/reactivate-request','Settings\CustomerController@reactivate_request')->name('customer.reactivate-request');
+            Route::get('/admin/customer/reactivate-request','Settings\CustomerController@reactivate_request')->name('customers.reactivate-request');
             Route::post('/customer/deactivate', 'Settings\CustomerController@deactivate')->name('customer.deactivate');
             Route::post('/customer/reactivate', 'Settings\CustomerController@reactivate')->name('customer.reactivate');
             Route::post('/customer/activate', 'Settings\CustomerController@activate')->name('customer.activate');

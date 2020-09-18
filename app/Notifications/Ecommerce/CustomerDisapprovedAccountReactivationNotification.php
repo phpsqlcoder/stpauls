@@ -3,13 +3,13 @@
 namespace App\Notifications\Ecommerce;
 
 use App\Helpers\Webfocus\Setting;
-use App\Mail\CustomerReactivateAccountMail;
+use App\Mail\CustomerDisapprovedAccountReactivationMail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class CustomerReactivateAccountNotification extends Notification
+class CustomerDisapprovedAccountReactivationNotification extends Notification
 {
     use Queueable;
 
@@ -21,9 +21,9 @@ class CustomerReactivateAccountNotification extends Notification
      * @param $token
      * @param $customer
      */
-    public function __construct($token)
+    public function __construct()
     {
-        $this->token = $token;
+
     }
 
     /**
@@ -47,7 +47,7 @@ class CustomerReactivateAccountNotification extends Notification
     {
         $customer = $notifiable;
 
-        return (new CustomerReactivateAccountMail(Setting::info(), $customer, $this->token))->to($customer->email);
+        return (new CustomerDisapprovedAccountReactivationMail(Setting::info(), $customer))->to($customer->email);
     }
 
     /**

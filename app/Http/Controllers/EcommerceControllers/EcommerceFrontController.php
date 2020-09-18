@@ -183,7 +183,6 @@ class EcommerceFrontController extends Controller
         
     }
 
-
     use ResetsPasswords;
 
     public function broker()
@@ -235,7 +234,7 @@ class EcommerceFrontController extends Controller
             }
         );
 
-        return redirect()->route('home');
+        return redirect()->route('customer-front.login')->with('success', 'Your password has been changed! To login, please use your new password.');
     }
 
     public function showReactivateForm()
@@ -245,12 +244,6 @@ class EcommerceFrontController extends Controller
 
        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.reactivate',compact('page'));
     }
-
-
-
-
-
-    
 
     public function sendReactivateRequest(Request $request)
     {

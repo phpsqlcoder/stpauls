@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CustomerReactivateAccountMail extends Mailable
+class CustomerApprovedAccountReactivationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -36,8 +36,8 @@ class CustomerReactivateAccountMail extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.customer.reset-password')
-            ->text('mail.customer.reset-password-plain')
-            ->subject('Reset Password Notification');
+        return $this->view('mail.customer.approved-reactivate-account')
+            ->text('mail.customer.approved-reactivate-account-plain')
+            ->subject('Reactivation Request - Approved');
     }
 }

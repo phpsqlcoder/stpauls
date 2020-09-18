@@ -18,7 +18,7 @@
                         <li class="breadcrumb-item active" aria-current="page">Customers</li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Account Re-activation</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Account Reactivation Request</h4>
             </div>
         </div>
 
@@ -76,7 +76,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" style="text-align: center;"> <p class="text-danger">No account reactivation found.</p></td>
+                                        <td colspan="3" style="text-align: center;"> <p class="text-danger">No account reactivation request found.</p></td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -118,7 +118,7 @@
     <script src="{{ asset('scripts/user/scripts.js') }}"></script>
 
     <script>
-        let listingUrl = "{{ route('customer.reactivate-request') }}";
+        let listingUrl = "{{ route('customers.reactivate-request') }}";
         let advanceListingUrl = "";
         let searchType = "{{ $searchType }}";
     </script>

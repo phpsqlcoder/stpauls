@@ -37,7 +37,9 @@
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <p>Email *</p>
-                                                <input type="email" class="form-control form-input" placeholder="Please enter your Email" name="email" id="email">
+                                                <input required type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" class="form-control form-input @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="Please enter your Email" name="email" id="email">
+                                                @hasError(['inputName' => 'email'])
+                                                @endhasError
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-lg-6 col-md-7">

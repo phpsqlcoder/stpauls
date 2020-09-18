@@ -35,18 +35,21 @@ class MyAccountController extends Controller
     }
 
     public function update_personal_info(Request $request)
-    {
-      
-        $personalInfo = $request->validate([
-            'firstname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
-            'lastname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
-          
-        ]);
+    { 
+        $personalInfo = $request->only(['firstname', 'lastname']);
 
-        Customer::find(Auth::id())->update([
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname
-        ]);
+        $this->validate(
+            $request,[
+                'firstname' => 'required',
+                'lastname' => 'required'
+            ],
+            [
+                'firstname.required' => 'The first name field is required.',
+                'lastname.required' => 'The last name field is required.'
+            ]  
+        );
+
+        Customer::find(Auth::id())->update($personalInfo);
 
         return back()->with('success-personal', 'Personal information has been updated.');
     }
@@ -55,14 +58,16 @@ class MyAccountController extends Controller
     {
         $contactInfo = $request->only(['mobile', 'telno']);
 
-        $validateData = Validator::make($contactInfo, [     
-            "mobile" => "required|max:150",
-        ]);
+        $validateData = Validator::make(
+            $contactInfo, 
+            ['mobile' => 'required'],
+            ['mobile.required' => 'The mobile number field is required.']
+        );
 
         if ($validateData->fails()) {
-            return redirect($route)
-                ->withErrors($validateData)
-                ->withInput();
+            return back()->with([
+                'tabname' => 'contact-information',
+            ])->withErrors($validateData)->withInput();
         }
 
         Customer::find(Auth::id())->update($contactInfo);
@@ -75,28 +80,28 @@ class MyAccountController extends Controller
 
     public function update_address_info(Request $request)
     {
-        $addressInfo = $request->only(['address', 'barangay','province', 'city', 'zipcode']);
+        $addressInfo = $request->only(['address', 'barangay', 'province', 'city','zipcode']);
 
-        $attributeNames = [
-            "address" => "Street",
-            "barangay" => "Barangay",
-            "province" => "Province",
-            "city" => "City",
-            "zipcode" => "Zip Code",          
-        ];
-
-        $validateData = Validator::make($addressInfo, [            
-            "address" => "required|max:150",
-            "barangay" => "required|max:150",
-            "province" => "required|max:150",
-            "city" => "required|max:150",
-            "zipcode" => "required|max:150"           
-        ])->setAttributeNames($attributeNames);
+        $validateData = Validator::make(
+            $addressInfo, 
+            [
+                'address' => 'required',
+                'barangay' => 'required',
+                'province' => 'required',
+                'city' => 'required',
+                'zipcode' => 'required'
+            ],
+            [
+                'address.required' => 'The address line 1 field is required.',
+                'barangay.required' => 'The address line 2 field is required.',
+                'zipcode.required' => 'The zip code field is required.'
+            ]
+        );
 
         if ($validateData->fails()) {
-            return redirect($route)
-                ->withErrors($validateData)
-                ->withInput();
+           return back()->with([
+                'tabname' => 'my-address',
+            ])->withErrors($validateData)->withInput();
         }
 
         Customer::find(Auth::id())->update($addressInfo);

@@ -43,8 +43,16 @@
 
         <p style="margin-top: 30px;"><strong>Dear {{ $customer->firstname }},</strong></p>
 
+        <br />
+        
         <p>
-            We have received a request to reset your password for your account in {{ $setting->company_name }} ({{ url('/') }})
+            Good day!
+        </p>
+
+        <br />
+
+        <p>
+            Please be informed that your reactivation request has been approved.
         </p>
 
         <br />
@@ -53,27 +61,25 @@
             <a href="{{ route('ecommerce.reset_password', $token) }}?email={{ $customer->email }}" target="_blank" style="padding: 10px 20px; background: #0349fc; color: #fff;text-decoration: none;font-size: 14px; border-radius: 3px;">RESET MY PASSWORD</a>
         </div>
 
-        <br />
-
-        <p><strong>Please note that this password reset link is valid for one (1) hour.</strong></p>
 
         <br />
 
-        <p>If you did not request a password reset, please ignore this email or communicate with us if you have questions.</p>
+        <p>For any inquiry or comments, please contact us at {{ $setting->email }}.</p>
 
         <br />
 
-        <p>For any inquiry or comments, please contact us at {{ $setting->email }}. Thank you.</p>
-
-        <br />
+        <p>
+            Thank you.
+        </p>
 
         <br />
 
         <p>
             <strong>
                 Regards, <br />
-                {{ $setting->company_name }}
+                {{ $setting->company_name }} <br />
             </strong>
+            Support Team
         </p>
     </div>
 
