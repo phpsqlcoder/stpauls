@@ -41,8 +41,6 @@ class ProductFrontController extends Controller
 
         $reviews = $qry_reviews->get();
         $reviews_count = $qry_reviews->count();
-
-        $ratingCounter = ProductReview::where('product_id',$product->id)->where('rating',5)->count();
         //
         
         $page = $product;
@@ -51,7 +49,7 @@ class ProductFrontController extends Controller
         }
 
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.profile',compact('product', 'page','categories','reviews','reviews_count','ratingCounter'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.profile',compact('product', 'page','categories','reviews','reviews_count'));
     }
 
     // public function checkIfUserPurchasedTheItem($id){
