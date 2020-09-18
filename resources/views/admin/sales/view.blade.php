@@ -36,10 +36,10 @@
 
                     <div class="col-sm-6 col-lg-8">
                         <label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Customer Details</label>
-                        <p class="mg-b-3 tx-semibold">{{$sales->customer_name}}</p>
-                        <p class="mg-b-3">{{$sales->customer_address}}</p>
-                        <p class="mg-b-3">Tel No: {{$sales->customer_contact_number}}</p>
-                        <p class="mg-b-3">Email: youremail@companyname.com</p>
+                        <p class="mg-b-3 tx-semibold">{{ $sales->customer_name }}</p>
+                        <p class="mg-b-3">{{ $sales->customer_address }}</p>
+                        <p class="mg-b-3">Tel No: {{ $sales->customer_contact_number }}</p>
+                        <p class="mg-b-3">Email: {{ $sales->customer_details->email }}</p>
                         <p class="mg-b-3">Instruction: {{$sales->other_instruction}}</p>
                     </div>
                     <!-- col -->
@@ -101,13 +101,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse($salesDetails as $details)
+                            @forelse($sales->items as $item)
                             <tr>
-                                <td class="tx-nowrap">{{$details->product->code}}</td>
-                                <td class="tx-nowrap">{{$details->product_name}}</td>
-                                <td class="tx-center">{{number_format($details->qty, 0)}}</td>
-                                <td class="tx-right">{{number_format($details->price, 2)}}</td>
-                                <td class="tx-right">{{number_format($details->gross_amount, 2)}}</td>
+                                <td class="tx-nowrap">{{ $item->product->code }}</td>
+                                <td class="tx-nowrap">{{ $item->product_name}}</td>
+                                <td class="tx-center">{{ number_format($item->qty,2) }}</td>
+                                <td class="tx-right">{{ number_format($item->price,2) }}</td>
+                                <td class="tx-right">{{ number_format($item->price*$item->qty,2) }}</td>
                                
                             </tr>
                             @empty

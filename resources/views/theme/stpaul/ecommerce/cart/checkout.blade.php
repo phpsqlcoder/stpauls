@@ -303,11 +303,8 @@
                                             @php $totalAmount = 0; $subTotal = 0; @endphp
                                             @foreach($products as $product)
                                             @php
-
-                                                $onsaleChecker = \App\EcommerceModel\Product::onsale_checker($product->product_id);
-                                                
-                                                $totalAmount = $onsaleChecker > 0 ?  $product->product->discountedprice*$product->qty : $product->product->price*$product->qty;
-                                                $subTotal  += $totalAmount;
+                                                $totalAmount = $product->price*$product->qty;
+                                                $subTotal   += $totalAmount;
                                             @endphp
                                             <tr id="cart_{{$product->id}}">
                                                 <td class="tx-nowrap text-danger">{{ $product->product->name }}</td>
@@ -322,9 +319,8 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="text-right">₱ 
-                                                    {{ $onsaleChecker > 0 ?  $product->product->discountedprice :  number_format($product->product->price,2) }}
-                                                    <input type="hidden" id="product_price_{{$product->product_id}}" value="{{ $onsaleChecker > 0 ?  $product->product->discountedprice :  $product->product->price }}">
+                                                <td class="text-right">₱ {{ number_format($product->price,2) }}
+                                                    <input type="hidden" name="product_price[]" id="product_price_{{$product->product_id}}" value="{{ number_format($product->price,2) }}">
                                                 </td>
                                                 <td class="text-right">
                                                     <input type="hidden" class="input_product_total_amount" id="input_product_total_amount_{{$product->product_id}}" value="{{$totalAmount}}">

@@ -49,14 +49,14 @@ class CartController extends Controller
                 $newQty = $cart->qty + $qty;
                 $save = $cart->update([
                     'qty' => $newQty,
-                    'price' => $product->price
+                    'price' => $request->price
                 ]);
             } else {
                 $save = Cart::create([
                     'product_id' => $request->product_id,
                     'user_id' => Auth::id(),
                     'qty' => $qty,
-                    'price' => $product->price
+                    'price' => $request->price
                 ]);
             }
 
@@ -192,6 +192,7 @@ class CartController extends Controller
         $data   = $request->all();
         $cartId = $data['cart_id'];
         $qty    = $data['qty'];
+        $price  = $data['product_price'];
 
         if (auth()->check()) {        
 
@@ -201,7 +202,8 @@ class CartController extends Controller
 
             foreach($cartId as $key => $cart){
                 Cart::whereId($cart)->update([
-                    'qty' => $qty[$key]
+                    'qty' => $qty[$key],
+                    'price' => $price[$key]
                 ]);
             }
            
@@ -288,6 +290,7 @@ class CartController extends Controller
 
         $productid = $data['productid'];
         $qty       = $data['qty'];
+        $price     = $data['product_price'];
 
         foreach($productid as $key => $prodId){
 
@@ -304,11 +307,11 @@ class CartController extends Controller
                 'product_id' => $prodId,
                 'product_name' => $product->name,
                 'product_category' => $product->category_id,
-                'price' => $product->price,
-                'tax_amount' => $product->price-($product->price/1.12),
+                'price' => $price[$key],
+                'tax_amount' => $price[$key]-($price[$key]/1.12),
                 'promo_id' => $promoChecker == 1 ? $promoDetails->id : 0,
                 'promo_description' => $promoChecker == 1 ? $promoDetails->name : '',
-                'discount_amount' => $promoChecker == 1 ? $product->price*('.'.$promoDetails->discount) : 0.00,
+                'discount_amount' => $promoChecker == 1 ? $price[$key]*('.'.$promoDetails->discount) : 0.00,
                 'gross_amount' => $request->totalDue,
                 'net_amount' => 0,
                 'qty' => $qty[$key],
@@ -321,8 +324,8 @@ class CartController extends Controller
       
         $urls = [
             'notification' => route('cart.payment-notification'),
-            'result' => route('profile.sales'),
-            'cancel' => route('profile.sales'),
+            'result' => route('account-my-orders'),
+            'cancel' => route('account-my-orders'),
         ];
         
         //$base64Code = PaynamicsHelper::payNow($requestId, Auth::user(), $carts, $totalPrice, $urls, false ,$request->deliveryfee);

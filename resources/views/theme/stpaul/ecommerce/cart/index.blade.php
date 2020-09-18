@@ -100,13 +100,13 @@
                                                     <div class="col-md-6">
                                                         <div class="cart-product-price">₱ 
                                                             @if(\App\EcommerceModel\Product::onsale_checker($order->product_id) > 0)
-                                                                <input type="hidden" id="input_order{{$loop->iteration}}_product_price" value="{{$order->product->discountedprice}}">
+                                                                <input type="hidden" name="product_price[]" id="input_order{{$loop->iteration}}_product_price" value="{{$order->product->discountedprice}}">
                                                                 <input type="hidden" class="input_product_total_price" id="input_order{{$loop->iteration}}_product_total_price" value="{{$order->product->discountedprice*$order->qty}}">
                                                                 <span id="order{{$loop->iteration}}_total_price">
                                                                     {{ number_format($order->product->discountedprice*$order->qty,2) }}
                                                                 </span>
                                                             @else
-                                                                <input type="hidden" id="input_order{{$loop->iteration}}_product_price" value="{{$order->product->price}}">
+                                                                <input type="hidden" name="product_price[]" id="input_order{{$loop->iteration}}_product_price" value="{{$order->product->price}}">
                                                                 <input type="hidden" class="input_product_total_price" id="input_order{{$loop->iteration}}_product_total_price" value="{{$order->product->price*$order->qty}}">
                                                                 <span id="order{{$loop->iteration}}_total_price">
                                                                     {{ number_format($order->product->price*$order->qty,2) }}

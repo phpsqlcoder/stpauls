@@ -485,6 +485,7 @@
                 data: {
                     "product_id": productID,
                     "qty": $('#qty').val(),
+                    "price": $('#product_price').val(),
                     "_token": "{{ csrf_token() }}",
                 },
                 type: "post",

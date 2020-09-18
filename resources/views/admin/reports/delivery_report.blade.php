@@ -78,13 +78,13 @@
 
         @forelse($rs->items as $r)
             @php
-                $total += ($r->product->price * $r->qty);
+                $total += ($r->price * $r->qty);
             @endphp
             <tr>
                 <td>{{$r->product_name}}</td>
                 <td>{{number_format($r->qty,2)}}</td>
-                <td>{{number_format($r->product->price,2)}}</td>
-                <td>{{number_format($r->product->price*$r->qty,2)}}</td>
+                <td>{{number_format($r->price,2)}}</td>
+                <td>{{number_format($r->price*$r->qty,2)}}</td>
             </tr>
         @empty
 
@@ -98,11 +98,11 @@
         </tr>
         <tr>
             <td>Delivery Fee</td>
-            <td colspan="4" align="right">{{number_format($r->delivery_fee_amount,2)}}</td>
+            <td colspan="4" align="right">{{number_format($rs->delivery_fee_amount,2)}}</td>
         </tr>
         <tr>
             <td>Grand Total</td>
-            <td colspan="4" align="right">{{number_format($r->delivery_fee_amount+$total,2)}}</td>
+            <td colspan="4" align="right">{{number_format($rs->delivery_fee_amount+$total,2)}}</td>
         </tr>
     </tbody>
 

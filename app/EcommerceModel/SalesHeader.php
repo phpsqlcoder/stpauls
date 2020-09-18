@@ -58,7 +58,7 @@ class SalesHeader extends Model
     }
 
     public function customer_details(){
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public static function payment_status($order_num){

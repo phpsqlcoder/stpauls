@@ -225,7 +225,7 @@
                     @foreach($onsale_products as $product)
                         <div class="product-link">
                             <div class="product-card">
-                                <a href="{{ route('product.front.show',$b['slug'])}}">
+                                <a href="{{ route('product.front.show',$product->details->slug)}}">
                                     <img src="{{ asset('storage/products/'.$product->details->photoPrimary) }}" alt="" />
                                     <h3 class="product-price">Php {{ $product->details->pricewithcurrency }}</h3>
                                 </a>

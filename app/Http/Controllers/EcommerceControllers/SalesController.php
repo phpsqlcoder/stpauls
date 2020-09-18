@@ -195,14 +195,17 @@ class SalesController extends Controller
 
     public function show($id)
     {
-        $sales = SalesHeader::where('id',$id)->first();
+        $sales         = SalesHeader::find($id);
         $salesPayments = SalesPayment::where('sales_header_id',$id)->get();
-        $salesDetails = SalesDetail::where('sales_header_id',$id)->get();
-        $totalPayment = SalesPayment::where('sales_header_id',$id)->sum('amount');
-        $totalNet = SalesHeader::where('id',$id)->sum('net_amount');
+        $salesDetails  = SalesDetail::where('sales_header_id',$id)->get();
+        
+        $totalPayment  = SalesPayment::where('sales_header_id',$id)->sum('amount');
+        $totalNet      = $sales->sum('net_amount');
+
         if($totalNet <= $totalPayment)
-        $status = 'PAID';
-        else $status = 'UNPAID';
+            $status = 'PAID';
+        else 
+            $status = 'UNPAID';
 
         return view('admin.sales.view',compact('sales','salesPayments','salesDetails','status'));
     }

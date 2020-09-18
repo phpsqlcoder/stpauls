@@ -3,14 +3,14 @@
 @foreach($items as $item)
 	@php
 		$total_qty += $item->qty;
-		$total = $item->product->price*$item->qty;
+		$total = $item->price*$item->qty;
 		$subtotal += $total;
 	@endphp
 	<tr>
 		<td>{{ $item->product->code }}</td>
 		<td>{{ str_limit(strip_tags($item->product->description), 80, $end ='...') }}</td>
 		<td>{{ $item->qty }}</td>
-		<td>{{ number_format($item->product->price,2) }}</td>
+		<td>{{ number_format($item->price,2) }}</td>
 		<td>{{ number_format($total,2) }}</td>
 	</tr>
 @endforeach
