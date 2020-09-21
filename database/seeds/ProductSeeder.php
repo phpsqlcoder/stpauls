@@ -13,7 +13,7 @@ class ProductSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        for($i=1; $i<=8; $i++){
+        for($i=10; $i<=100; $i++){
             DB::table('products')
                 ->insert([
                     'code' => 'PR000000'.$i,

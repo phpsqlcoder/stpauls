@@ -18,7 +18,7 @@ class Customer extends Authenticatable
     protected $guard = 'customer';
 
     protected $table = 'customers';
-    protected $fillable = ['email','password','firstname','lastname','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','fbId','googleId','is_subscriber','user_id','remember_token','reactivate_request'];
+    protected $fillable = ['email','password','firstname','lastname','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','provider_id','is_subscriber','user_id','remember_token','reactivate_request'];
 
 
     public function delivery_rate()

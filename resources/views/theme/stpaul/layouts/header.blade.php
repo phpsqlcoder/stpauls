@@ -38,7 +38,7 @@
                         <!-- RD Navbar Brand -->
                         <div class="rd-navbar-brand">
                             <a href="{{ route('home') }}" class="brand-name">
-                                <img src="{{ asset('theme/stpaul/images/misc/logo.png') }}" alt="StPaul" width="240" />
+                                <img src="{{  asset('storage/logos/'.Setting::getFaviconLogo()->company_logo) }}" alt="StPaul" width="240" />
                             </a>
                         </div>
                         <!-- END RD Navbar Brand -->

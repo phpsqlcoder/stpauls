@@ -1,25 +1,15 @@
 <?php
 
-
-
-Route::get('facebook', function () {
-    return view('facebook');
-})->name('fb');
-
-Route::get('auth/facebook', 'Auth\FacebookController@redirectToFacebook')->name('fb_signup');
-Route::get('auth/facebook/callback', 'Auth\FacebookController@handleFacebookCallback');
-
-//Route::get('/home', 'HomeController@index')->name('fhome');
-
-
-    
-
-
     ########## ECOMMERCE ROUTES #############
     // Home
         Route::get('/', 'FrontController@home')->name('home');
 
     // Customer Login & Sign Up
+
+        Route::get('auth/social', 'Auth\SocialiteController@show')->name('social.login');
+        Route::get('oauth/{driver}', 'Auth\SocialiteController@redirectToProvider')->name('social.oauth');
+        Route::get('oauth/{driver}/callback', 'Auth\SocialiteController@handleProviderCallback')->name('social.callback');
+
         Route::get('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@sign_up')->name('customer-front.sign-up');
         Route::post('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@customer_sign_up')->name('customer-front.customer-sign-up');
 

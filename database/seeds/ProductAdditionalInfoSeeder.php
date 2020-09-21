@@ -13,8 +13,8 @@ class ProductAdditionalInfoSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        for($i=1; $i<=8; $i++){
-            for($x=1;$x<=8;$x++){
+        for($i=10; $i<=100; $i++){
+            // for($x=1;$x<=8;$x++){
                 DB::table('product_additional_info')
                     ->insert([
                         'product_id' => $i,
@@ -27,7 +27,7 @@ class ProductAdditionalInfoSeeder extends Seeder
                         'about_author' => '<p><img src="https://stpauls.ph/file-manager/images/Books/SP/SP%20AUT/HeartLines%20AUT.jpg" /></p>',
                         'additional_info' => ''
                     ]);
-            }
+            // }
             
         }
     }
