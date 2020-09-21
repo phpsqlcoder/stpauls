@@ -38,7 +38,7 @@
 
     <div style="padding:30px 60px;">
         <div style="text-align: center;padding: 20px 0;">
-            <img src="{{ Setting::get_company_logo_storage_path() }}" alt="company logo" width="175" />
+            <img src="{{  asset('storage/logos/'.Setting::getFaviconLogo()->company_logo) }}" alt="StPaul" />
         </div>
 
         <p style="margin-top: 30px;"><strong>Dear {{ $customer->firstname }},</strong></p>

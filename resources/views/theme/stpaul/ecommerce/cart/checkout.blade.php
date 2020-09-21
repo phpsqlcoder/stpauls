@@ -409,9 +409,9 @@
                         <div class="checkout-content">
                             <h3>Payment Method</h3>
                             @foreach($payment_method as $method)
-                            <div class="custom-control custom-radio">
-                                <input type="radio" class="custom-control-input" name="payment_method" value="{{ $method->id }}" id="method{{ $method->id }}" name="groupOfDefaultRadios">
-                                <label class="custom-control-label" for="method{{ $method->id }}">{{ $method->name }}</label>
+                            <div>
+                                <input type="radio" name="payment_method" value="{{ $method->id }}" id="method{{ $method->id }}" name="groupOfDefaultRadios">
+                                <label for="method{{ $method->id }}">{{ $method->name }}</label>
                                 <div class="sub1">
                                     @foreach($method->paymentList as $list)
                                     <div>

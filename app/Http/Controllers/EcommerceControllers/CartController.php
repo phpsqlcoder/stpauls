@@ -49,14 +49,14 @@ class CartController extends Controller
                 $newQty = $cart->qty + $qty;
                 $save = $cart->update([
                     'qty' => $newQty,
-                    'price' => $request->price
+                    'price' => (isset($request->price)) ? $request->price : $product->price
                 ]);
             } else {
                 $save = Cart::create([
                     'product_id' => $request->product_id,
                     'user_id' => Auth::id(),
                     'qty' => $qty,
-                    'price' => $request->price
+                    'price' => (isset($request->price)) ? $request->price : $product->price
                 ]);
             }
 
@@ -67,7 +67,7 @@ class CartController extends Controller
             foreach ($cart as $key => $order) {
                 if ($order->product_id == $request->product_id) {
                     $cart[$key]->qty = $qty;
-                    $cart[$key]->price = $product->price;
+                    $cart[$key]->price = (isset($request->price)) ? $request->price : $product->price;
                     $not_exist = false;
                     break;
                 }
@@ -77,7 +77,7 @@ class CartController extends Controller
                 $order = new Cart();
                 $order->product_id = $request->product_id;
                 $order->qty = $qty;
-                $order->price = $product->price;
+                $order->price = (isset($request->price)) ? $request->price : $product->price;
 
                 array_push($cart, $order);
             }

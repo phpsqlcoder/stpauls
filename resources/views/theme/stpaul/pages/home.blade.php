@@ -58,7 +58,7 @@
                                     </a>
                                     <p class="product-title">{{ $book->name }}</p> 
                                     @if($book->inventory > 0)
-                                        <button type="button" onclick="add_to_cart('{{$book->id}}');" id="btn{{$book->id}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                        <button type="button" onclick="add_to_cart('{{$book->id}}');" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
                                             <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                         </button>
                                     @else
@@ -89,7 +89,7 @@
                                     </a>
                                     <p class="product-title">{{ $bible->name }}</p>
                                     @if($bible->inventory > 0)
-                                        <button type="button" onclick="add_to_cart('{{$bible->id}}');" id="btn{{$bible->id}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                        <button type="button" onclick="add_to_cart('{{$bible->id}}');" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
                                             <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                         </button>
                                     @else
@@ -121,7 +121,7 @@
                                     <p class="product-title">{{ $devo->name }}</p>
                                     <form>
                                         @if($devo->inventory > 0)
-                                            <button type="button" onclick="add_to_cart('{{$devo->id}}');" id="btn{{$devo->id}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                            <button type="button" onclick="add_to_cart('{{$devo->id}}');" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
                                                 <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                             </button>
                                         @else
@@ -182,7 +182,7 @@
                                     <p class="product-title">{{ $b['name'] }}</p>
                                     <form id="addToCart{{$b['id']}}" data-source="">
                                         @if($b['inventory'] > 0)
-                                            <button type="button" onclick="add_to_cart({{$b['id']}});" id="btn{{$b['id']}}" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
+                                            <button type="button" onclick="add_to_cart({{$b['id']}});" class="btn add-cart-btn addToCartButton" data-loading-text="processing...">
                                                 <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                             </button>
                                         @else

@@ -153,7 +153,7 @@
                                                     <span class="price-after">₱ {{ $product->DiscountedPrice }} </span>
                                                     <span class="price-before">
                                                       <div class="price-less">{{ $product->on_sale->promo_details->discount }}% Off</div>
-                                                      <div class="price-original">₱ {{ $product->price }}</div>
+                                                      <div class="price-original">₱ {{ number_format($product->price,2) }}</div>
                                                     </span>
                                                 </div>
                                             @else

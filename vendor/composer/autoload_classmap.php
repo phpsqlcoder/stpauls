@@ -42,7 +42,7 @@ return array(
     'App\\Http\\Controllers\\Auth\\LoginController' => $baseDir . '/app/Http/Controllers/Auth/LoginController.php',
     'App\\Http\\Controllers\\Auth\\RegisterController' => $baseDir . '/app/Http/Controllers/Auth/RegisterController.php',
     'App\\Http\\Controllers\\Auth\\ResetPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ResetPasswordController.php',
-    'App\\Http\\Controllers\\Auth\\SocialiteLoginController' => $baseDir . '/app/Http/Controllers/Auth/SocialiteLoginController.php',
+    'App\\Http\\Controllers\\Auth\\SocialiteController' => $baseDir . '/app/Http/Controllers/Auth/SocialiteController.php',
     'App\\Http\\Controllers\\Auth\\VerificationController' => $baseDir . '/app/Http/Controllers/Auth/VerificationController.php',
     'App\\Http\\Controllers\\Banner\\AlbumController' => $baseDir . '/app/Http/Controllers/Banner/AlbumController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',

@@ -38,7 +38,11 @@
 
                             @forelse($cart as $key => $order)
 
-                            @php $grandtotal += $order->ItemTotalPrice; @endphp
+                            @php 
+                                $onsale = \App\EcommerceModel\Product::onsale_checker($order->product_id);
+
+                                $grandtotal += ($onsale > 0 ) ? $order->product->discountedprice*$order->qty : $order->price*$order->qty;
+                            @endphp
                             <li class="item">
                                 <div class="remove-item">
                                     <a href="#" onclick="remove_item('@if(Auth::check()) {{$order->id}} @else {{$key}} @endif')" style="font-size: .7em;" class="text-uppercase txt-10">Remove <span class="lnr lnr-cross"></span></a>
