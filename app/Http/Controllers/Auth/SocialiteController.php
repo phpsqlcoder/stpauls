@@ -22,7 +22,7 @@ class SocialiteController extends Controller
 
     public function show()
     {
-        return view('auth.social-login');
+        return redirect(route('customer-front.sign-up'));
     }
 
     public function redirectToProvider($driver)
