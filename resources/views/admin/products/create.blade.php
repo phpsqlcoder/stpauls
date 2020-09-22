@@ -67,8 +67,8 @@
                         @endhasError
                     </div>
                     <div class="form-group">
-                        <label class="d-block">Category</label>
-                        <select name="category" id="category" class="selectpicker mg-b-5" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
+                        <label class="d-block">Category *</label>
+                        <select required name="category" id="category" class="selectpicker mg-b-5 @error('category') is-invalid @enderror" value="{{ old('category') }}" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
                             <option value="0">-- Select Category --</option>
                             @foreach($categories as $category)
                                 <option value="{{$category->id}}">{{strtoupper($category->name)}}</option>
