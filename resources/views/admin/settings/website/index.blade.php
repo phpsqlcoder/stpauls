@@ -570,6 +570,13 @@
 
                                         <div class="form-group">
                                             <div id="title" class="parsley-input">
+                                                <label>Minimum Purchase</label>
+                                                <input type="number" name="min_purchase" id="min_purchase" class="form-control" data-parsley-class-handler="#title" value="{{ $sdd->minimum_purchase }}" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div id="title" class="parsley-input">
                                                 <label>Note/Reminder</label>
                                                 <textarea name="reminder" class="form-control" cols="5">{{ $sdd->reminder }}</textarea>
                                             </div>

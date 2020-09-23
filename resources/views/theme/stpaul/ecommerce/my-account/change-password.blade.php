@@ -26,17 +26,14 @@
                             @endif
                             <div class="form-group">
                                 <label for="inputPasswordOld">Current Password</label>
-                                <input type="password" class="form-control col-md-6" name="current_password" required id="inputPasswordOld">
+                                <input type="password" class="form-control col-md-6" name="current_password" required id="inputPasswordOld" >
                                 @if(Session::has('error-change-password'))
                                 <p class="text-danger"><small><strong>The password is incorrect.</strong></small></p>
                                 @endif
                             </div>
                             <div class="form-group">
                                 <label for="inputPasswordNew">New Password</label>
-                                <input type="password" class="form-control col-md-6 @error('password') is-invalid @enderror" name="password" required id="inputPasswordNew">
-                                <span class="form-text small text-muted">
-                                    Minimum of 8 characters
-                                </span>
+                                <input type="password" class="form-control col-md-6 @error('password') is-invalid @enderror" name="password" required id="inputPasswordNew" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password should have a minimum of 8 alphanumeric characters and has at least 1 upper case and 1 special character.">
                                 @hasError(['inputName' => 'password'])
                                 @endhasError
 
@@ -44,12 +41,8 @@
                             <div class="form-group">
                                 <label for="inputPasswordNewVerify">Verify Password</label>
                                 <input type="password" class="form-control col-md-6 @error('confirm_password') is-invalid @enderror" name="confirm_password" required id="inputPasswordNewVerify">
-                                <span class="form-text small text-muted">
-                                    To confirm, type the new password again.
-                                </span>
                                 @hasError(['inputName' => 'confirm_password'])
                                 @endhasError
-
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn primary-btn more2">Save</button>

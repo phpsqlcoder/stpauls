@@ -62,7 +62,7 @@ class RoleController extends Controller
         $this->validate(
             $request,[
                 'name' => 'required|max:150|unique:role,name',
-                'description' => 'required',
+                'description' => 'required|max:250',
             ],
             [
                 'name.unique' => 'This role is already in the list.',

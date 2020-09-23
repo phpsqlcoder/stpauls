@@ -54,26 +54,44 @@ class Permission extends Model
         return false;
     }
 
+    // public static function modules()
+    // {
+    //     return [
+    //         'page' => 'Page',
+    //         'banner' => 'Banner',
+    //         'file_manager' => 'File Manager',
+    //         'menu' => 'Menu',
+    //         'news' => 'News',
+    //         'news_category' => 'News Category',
+    //         'website_settings' => 'Website Settings',
+    //         'audit_logs' => 'Audit Logs',
+    //         'user' => 'User',
+    //         'product' => 'Product',
+    //         'product_category' => 'Product Category',
+    //         'product_reviews' => 'Product Reviews',
+    //         'customer' => 'Customer',
+    //         'sales_transaction' => 'Sales Transaction',
+    //         'inventory' => 'Inventory',
+    //         'delivery_flat_rate' => "Delivery Flat Rate",
+    //         'report' => 'Report'
+    //     ];
+    // }
+
     public static function modules()
     {
         return [
-            'page' => 'Page',
-            'banner' => 'Banner',
-            'file_manager' => 'File Manager',
-            'menu' => 'Menu',
-            'news' => 'News',
-            'news_category' => 'News Category',
-            'website_settings' => 'Website Settings',
-            'audit_logs' => 'Audit Logs',
-            'user' => 'User',
-            'product' => 'Product',
-            'product_category' => 'Product Category',
-            'product_reviews' => 'Product Reviews',
-            'customer' => 'Customer',
-            'sales_transaction' => 'Sales Transaction',
+            'settings' => 'Settings',
+            'users' => 'Users',
+            'account_management' => 'Account Management',
+            'products' => 'Products',
+            'customers' => 'Customers',
+            'manage_sales_transaction' => 'Manage Sales Transaction',
+            'promos' => 'Promos',
+            'loyalty' => 'Loyalty',
             'inventory' => 'Inventory',
-            'delivery_flat_rate' => "Delivery Flat Rate",
-            'report' => 'Report'
+            'delivery_flat_rates' => "Delivery Flat Rates",
+            'branches' => 'Branches',
+            'reports' => 'Reports'
         ];
     }
 }

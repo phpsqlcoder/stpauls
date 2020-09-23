@@ -65,13 +65,15 @@ class PageController extends Controller
         $filter = $listing->get_filter($this->searchFields);
 
         $advanceSearchData = $listing->get_search_data($this->advanceSearchFields);
-        $uniquePagesByParent = $listing->get_unique_item_by_column(Page::class, 'parent_id');
+        // $uniquePagesByParent = $listing->get_unique_item_by_column(Page::class, 'parent_id');
         $uniquePagesByAlbum = $listing->get_unique_item_by_column(Page::class, 'album_id');
         $uniquePagesByUser = $listing->get_unique_item_by_column(Page::class, 'parent_page_id');
 
         $searchType = 'advance_search';
 
-        return view('admin.pages.index', compact('pages','filter', 'advanceSearchData', 'uniquePagesByParent', 'uniquePagesByAlbum', 'uniquePagesByUser', 'searchType'));
+        // return view('admin.pages.index', compact('pages','filter', 'advanceSearchData', 'uniquePagesByParent', 'uniquePagesByAlbum', 'uniquePagesByUser', 'searchType'));
+
+        return view('admin.pages.index', compact('pages','filter', 'advanceSearchData', 'uniquePagesByAlbum', 'uniquePagesByUser', 'searchType'));
     }
 
     public function create()

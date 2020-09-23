@@ -122,12 +122,9 @@ class MyAccountController extends Controller
     public function update_password(Request $request)
     {
         $customerInfo = $request->validate([
-            'password' => [
-                'required',
-                'min:8',
-                'max:150',               
-            ],
+            'password' => 'required|max:150|min:8',
             'confirm_password' => 'required|same:password',
+
         ]);
 
         $customer = Customer::find(Auth::id());

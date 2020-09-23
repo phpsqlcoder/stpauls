@@ -47,7 +47,7 @@
 
                                 <div class="form-group">
                                     <label class="tx-10 tx-uppercase tx-medium tx-spacing-1 mg-b-5 tx-color-03">Role Description <i class="tx-danger">*</i></label>
-                                    <textarea required class="form-control @error('description') is-invalid @enderror" name="description" id="description" rows="2" placeholder="Enter role description">{{ old('description') }}</textarea>
+                                    <textarea required class="form-control @error('description') is-invalid @enderror" name="description" id="description" rows="3" placeholder="Enter role description" maxlength="250">{{ old('description') }}</textarea>
                                     @hasError(['inputName' => 'description'])
                                     @endhasError
                                 </div>

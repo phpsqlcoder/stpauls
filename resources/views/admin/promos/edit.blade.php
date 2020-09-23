@@ -22,10 +22,10 @@
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                     <li class="breadcrumb-item" aria-current="page">CMS</li>
                     <li class="breadcrumb-item" aria-current="page">Promos</li>
-                    <li class="breadcrumb-item active" aria-current="page">Create Promo</li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit a Promo</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Create a Promo</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Edit a Promo</h4>
         </div>
     </div>
     <form autocomplete="off" action="{{ route('promos.update',$promo->id) }}" method="post" id="promo_form">

@@ -23,20 +23,14 @@
         </div>
     </div>
 
-{{--    @if($message = Session::get('duplicate'))--}}
-{{--        <div class="alert alert-warning d-flex align-items-center mg-t-15" role="alert">--}}
-{{--            <p class="mg-b-0"><i data-feather="alert-circle" class="mg-r-10"></i>{{ $message }}--}}
-{{--        </div>--}}
-{{--    @endif--}}
-
     <div class="row">
         <div class="col-md-6">
-            <form action="{{ route('product-categories.store') }}" method="post">
+            <form autocomplete="off" action="{{ route('product-categories.store') }}" method="post">
                     @csrf
                     @method('POST')
                     <div class="form-group">
                         <label class="d-block">Name *</label>
-                        <input type="text" name="name" id="name" value="{{ old('name')}}" class="form-control @error('name') is-invalid @enderror">
+                        <input type="text" name="name" id="name" value="{{ old('name')}}" class="form-control @error('name') is-invalid @enderror" maxlength="150">
                         @hasError(['inputName' => 'name'])@endhasError
                         <small id="category_slug"></small>
                     </div>
@@ -61,7 +55,9 @@
                         <label class="d-block">Page Visibility</label>
                         <div class="custom-control custom-switch @error('visibility') is-invalid @enderror">
                             <input type="checkbox" class="custom-control-input" name="visibility" {{ (old("visibility") ? "checked":"") }} id="customSwitch1">
-                            <label class="custom-control-label" id="label_visibility" for="customSwitch1">Private</label>
+                            <label class="custom-control-label" id="label_visibility" for="customSwitch1">
+                                {{ old('visibility') ? (old('visibility') == 'on') ? 'Published' : 'Private' : 'Private' }}
+                            </label>
                         </div>
                     </div>
 

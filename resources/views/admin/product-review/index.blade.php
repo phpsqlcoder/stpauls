@@ -269,7 +269,7 @@ Manage Customer
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{__('common.approve_mutiple_confirmation')}}
+                    You are about to approve the selected items. Do you want to continue?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-primary" id="btnApproveMultiple">Yes, Approve</button>

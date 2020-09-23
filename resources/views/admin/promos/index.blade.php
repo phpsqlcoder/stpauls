@@ -164,7 +164,7 @@ Manage Customer
 
                                                 <a class="nav-link" href="{{ route('promos.edit',$promo->id) }}" title="Edit Promo"><i data-feather="edit"></i></a>
 
-                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_promo('{{$promo->id}}')" title="Delete Service"><i data-feather="trash"></i></a>
+                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_promo('{{$promo->id}}')" title="Delete Promo"><i data-feather="trash"></i></a>
 
                                                 <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i data-feather="settings"></i>

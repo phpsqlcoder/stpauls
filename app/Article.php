@@ -39,6 +39,14 @@ class Article extends Model
         return $total;
     }
 
+    public static function totalDeletedArticles()
+    {
+        $withTrashed = Article::withTrashed()->get()->count();
+        $total = $withTrashed - Article::count();
+
+        return $total;
+    }
+
     public function user()
     {
         return $this->belongsTo('App\User');

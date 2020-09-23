@@ -453,6 +453,7 @@ class WebController extends Controller
 
         $qry = CheckoutOption::find($request->id)->update([
             'service_fee' => $request->service_fee,
+            'minimum_purchase' => $request->min_purchase,
             'allowed_days' => rtrim($allowed_days,'|'),
             'allowed_time_from' => date('H:i',strtotime($request->time_from)),
             'allowed_time_to' =>date('H:i',strtotime($request->time_to)),

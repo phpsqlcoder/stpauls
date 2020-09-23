@@ -61,8 +61,8 @@ class ProductCategoryController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->all(), [
-                'name' => 'required',
-                'description' => 'required|min:3|max:1000'
+                'name' => 'required|max:150|unique:product_categories,name',
+                'description' => 'required|min:3|max:250'
             ])->validate();
 
         $slug = Page::convert_to_slug($request->name);

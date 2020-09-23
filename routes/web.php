@@ -280,8 +280,26 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             
 
 
+    ####### CMS Standards #######
+        //News Frontend
+            Route::get('/new-development/', 'News\ArticleFrontController@news_list')->name('news.front.index');
+            Route::get('/new-development/{slug}', 'News\ArticleFrontController@news_view')->name('news.front.show');
+            Route::get('/new-development/{slug}/print', 'News\ArticleFrontController@news_print')->name('news.front.print');
+            Route::post('/new-development/{slug}/share', 'News\ArticleFrontController@news_share')->name('news.front.share');
+        //
+
+        //Pages
+            Route::resource('/pages', 'PageController');
+            Route::get('/pages-advance-search', 'PageController@advance_index')->name('pages.index.advance-search');
+            Route::post('/pages/get-slug', 'PageController@get_slug')->name('pages.get_slug');
+            Route::put('/pages/{page}/customize', 'PageController@update_customize')->name('pages.update-customize');
+            Route::post('/pages-change-status', 'PageController@change_status')->name('pages.change.status');
+            Route::post('/pages-delete', 'PageController@delete')->name('pages.delete');
+            Route::get('/page-restore/{page}', 'PageController@restore')->name('pages.restore');
+        //
 
 
+            
 
             Route::get('/admin/sales-transaction/view-payment/{sales}', 'EcommerceControllers\SalesController@view_payment')->name('sales-transaction.view_payment');
             Route::post('/admin/sales-transaction/cancel-product', 'EcommerceControllers\SalesController@cancel_product')->name('sales-transaction.cancel_product');
@@ -307,15 +325,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
         
 
-        //Pages
-            Route::resource('/pages', 'PageController');
-            Route::get('/pages-advance-search', 'PageController@advance_index')->name('pages.index.advance-search');
-            Route::post('/pages/get-slug', 'PageController@get_slug')->name('pages.get_slug');
-            Route::put('/pages/{page}/customize', 'PageController@update_customize')->name('pages.update-customize');
-            Route::post('/pages-change-status', 'PageController@change_status')->name('pages.change.status');
-            Route::post('/pages-delete', 'PageController@delete')->name('pages.delete');
-            Route::get('/page-restore/{page}', 'PageController@restore')->name('pages.restore');
-        //
+        
 
         // Albums
             Route::resource('/albums', 'Banner\AlbumController');
@@ -338,6 +348,8 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         Route::delete('/many/menu', 'Menu\MenuController@destroy_many')->name('menus.destroy_many');
         Route::put('/menus/quick1/{menu}', 'Menu\MenuController@quick_update')->name('menus.quick_update');
         Route::get('/menu-restore/{menu}', 'Menu\MenuController@restore')->name('menus.restore');
+
+
 
 
         // News

@@ -121,78 +121,78 @@ Manage Customer
             <div class="col-md-12">
                 <div class="table-list mg-b-10">
                     <div class="table-responsive-lg">
-                        <table class="table mg-b-0 table-light table-hover">
+                        <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                                 <tr>
-                                    <th style="width: 10%;">
+                                    <th width="10%">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="checkbox_all">
                                             <label class="custom-control-label" for="checkbox_all"></label>
                                         </div>
                                     </th>
-                                    <th style="width: 20%;overflow: hidden;">Name</th>
-                                    <th style="width: 30%;">Description</th>
-                                    <th style="width: 10%;">Status</th>
-                                    <th style="width: 15%;">Last Date Modified</th>
-                                    <th style="width: 15%;">Options</th>
+                                    <th width="20%">Name</th>
+                                    <th width="30%">Description</th>
+                                    <th width="10%">Status</th>
+                                    <th width="15%">Last Date Modified</th>
+                                    <th width="15%">Options</th>
                                 </tr>
                             </thead>
                             <tbody>
                             @forelse($categories as $category)
-                                <tr id="row{{$category->id}}">
-                                    <th>
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input cb" id="cb{{ $category->id }}">
-                                            <label class="custom-control-label" for="cb{{ $category->id }}"></label>
-                                        </div>
-                                    </th>
-                                    <td>
-                                        <strong @if($category->trashed()) style="text-decoration:line-through;" @endif> {{ $category->name }}</strong>
-                                    </td>
-                                    <td>{{ $category->description }}</td>
-                                    <td>{{ $category->status }}</td>
-                                    <td>{{ Setting::date_for_listing($category->updated_at) }}</td>
-                                    <td>
-                                        @if($category->trashed())
-                                            @if (auth()->user()->has_access_to_route('product.category.restore'))
-                                                <nav class="nav table-options">
-                                                    <a class="nav-link" href="{{route('product.category.restore', $category->id)}}" title="Restore this category"><i data-feather="rotate-ccw"></i></a>
-                                                </nav>
-                                            @endif
-                                        @else
+                            <tr id="row{{$category->id}}">
+                                <th>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input cb" id="cb{{ $category->id }}">
+                                        <label class="custom-control-label" for="cb{{ $category->id }}"></label>
+                                    </div>
+                                </th>
+                                <td>
+                                    <strong @if($category->trashed()) style="text-decoration:line-through;" @endif> {{ $category->name }}</strong>
+                                </td>
+                                <td>{{ $category->description }}</td>
+                                <td>{{ $category->status }}</td>
+                                <td>{{ Setting::date_for_listing($category->updated_at) }}</td>
+                                <td>
+                                    @if($category->trashed())
+                                        @if (auth()->user()->has_access_to_route('product.category.restore'))
                                             <nav class="nav table-options">
-
-                                                <a class="nav-link" target="_blank" href="{{route('product.index.advance-search')}}?name=&category_id={{$category->id}}&brand=&user_id=&short_description=&description=&status=&price1=&price2=&updated_at1=&updated_at2=" title="View Products"><i data-feather="eye"></i></a>
-
-                                                @if (auth()->user()->has_access_to_route('product-categories.edit'))
-                                                    <a class="nav-link" href="{{ route('product-categories.edit',$category->id) }}" title="Edit Category"><i data-feather="edit"></i></a>
-                                                @endif
-
-                                                @if (auth()->user()->has_access_to_route('product.category.single.delete'))
-                                                    <a class="nav-link" href="javascript:void(0)" onclick="delete_one_category({{$category->id}},'{{$category->name}}')" title="Delete Category"><i data-feather="trash"></i></a>
-                                                @endif
-
-                                                @if (auth()->user()->has_access_to_route('product.category.change-status'))
-                                                    <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i data-feather="settings"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        @if($category->status == 'PUBLISHED')
-                                                            <a class="dropdown-item" href="{{route('product.category.change-status',[$category->id,'PRIVATE'])}}" > Private</a>
-                                                        @else
-                                                            <a class="dropdown-item" href="{{route('product.category.change-status',[$category->id,'PUBLISHED'])}}"> Publish</a>
-                                                        @endif
-                                                    </div>
-                                                @endif
+                                                <a class="nav-link" href="{{route('product.category.restore', $category->id)}}" title="Restore this category"><i data-feather="rotate-ccw"></i></a>
                                             </nav>
                                         @endif
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <th colspan="6" style="text-align: center;"> <p class="text-danger">No categories found.</p></th>
-                                </tr>
-                                @endforelse
+                                    @else
+                                        <nav class="nav table-options">
+
+                                            <a class="nav-link" target="_blank" href="{{route('product.index.advance-search')}}?name=&category_id={{$category->id}}&brand=&user_id=&short_description=&description=&status=&price1=&price2=&updated_at1=&updated_at2=" title="View Products"><i data-feather="eye"></i></a>
+
+                                            @if (auth()->user()->has_access_to_route('product-categories.edit'))
+                                                <a class="nav-link" href="{{ route('product-categories.edit',$category->id) }}" title="Edit Category"><i data-feather="edit"></i></a>
+                                            @endif
+
+                                            @if (auth()->user()->has_access_to_route('product.category.single.delete'))
+                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_category({{$category->id}},'{{$category->name}}')" title="Delete Category"><i data-feather="trash"></i></a>
+                                            @endif
+
+                                            @if (auth()->user()->has_access_to_route('product.category.change-status'))
+                                                <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i data-feather="settings"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    @if($category->status == 'PUBLISHED')
+                                                        <a class="dropdown-item" href="{{route('product.category.change-status',[$category->id,'PRIVATE'])}}" > Private</a>
+                                                    @else
+                                                        <a class="dropdown-item" href="{{route('product.category.change-status',[$category->id,'PUBLISHED'])}}"> Publish</a>
+                                                    @endif
+                                                </div>
+                                            @endif
+                                        </nav>
+                                    @endif
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <th colspan="6" style="text-align: center;"> <p class="text-danger">No categories found.</p></th>
+                            </tr>
+                            @endforelse
                             </tbody>
                         </table>
                     </div>
