@@ -54,91 +54,96 @@
                             <div class="checkout-card">
                                 <div class="form-group form-wrap">
                                     <p>Name *</p>
-                                    <input type="text" class="form-control" name="customer" value="{{ $customer->fullname }}">
-                                    @hasError(['inputName' => 'customer'])
-                                    @endhasError
+                                    <input required type="text" class="form-control billing-info" name="customer" id="input_customer" value="{{ $customer->fullname }}">
+                                    <p id="p_name" class="text-danger" style="display: none;"><small>The name field is required.</small></p>
                                 </div>
 
                                 <div class="gap-10"></div>
                                 <div class="form-group form-wrap">
                                     <p>Email *</p>
-                                    <input type="email" class="form-control" name="email" value="{{ $customer->email }}">
-                                    @hasError(['inputName' => 'email'])
-                                    @endhasError
+                                    <input required type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" class="form-control billing-info" name="email" id="input_email" value="{{ $customer->email }}">
+                                    <p id="p_email" class="text-danger" style="display: none;"><small>The email field is required.</small></p>
+                                    <p id="p_email_invalid" class="text-danger" style="display: none;"><small>Invalid email format.</small></p>
                                 </div>
 
                                 <div class="gap-10"></div>
                                 <div class="form-group form-wrap">
                                     <p>Mobile Number *</p>
-                                    <input type="text" class="form-control" name="mobile" id="input-mobile" value="{{ $customer->mobile }}">
-                                    @hasError(['inputName' => 'mobile'])
-                                    @endhasError
+                                    <input required type="text" class="form-control billing-info" name="mobile" id="input_mobile" value="{{ $customer->mobile }}" maxlength="13">
+                                    <p id="p_mobile" class="text-danger" style="display: none;"><small>The mobile field is required.</small></p>
                                 </div>
 
                                 <div class="gap-10"></div>
                                 <div class="form-group form-wrap">
                                     <p>Province *</p>
-                                    <select name="province" id="province" class="form-control">
+                                    <select required name="province" id="province" class="form-control">
                                         <option value="" selected disabled>-- Select Province --</option>
                                         @foreach($provinces as $province)
                                         <option @if($customer->province == $province->province) selected @endif value="{{$province->province}}">{{ $province->province_detail->province }}</option>
                                         @endforeach
                                         <option value="0">Others</option>
                                     </select>
-                                    @hasError(['inputName' => 'province'])
-                                    @endhasError
+                                    <p id="p_province" class="text-danger" style="display: none;"><small>The province field is required.</small></p>
 
-                                    @if(\App\Deliverablecities::check_area($customer->city) <> 1)
+                                    @if(\App\Deliverablecities::deliverable_province($customer->province) < 1)
+                                    <input type="hidden" id="serviceable" value="0">
                                     <small id="alert_province" class="form-text text-danger"><b>{{ $customer->provinces->province }}</b> is not serviceable. Please select another province.</small>
+                                    @else
+                                    <input type="hidden" id="serviceable" value="1">
                                     @endif
                                 </div>
+                                <div id="divaddress">
+                                    <div class="gap-10"></div>
+                                    <div class="form-group form-wrap">
+                                        <p>City/Municipality *</p>
+                                        <select required class="form-control" name="city" id="city">
+                                            @if(\App\Deliverablecities::check_area($customer->city) <> 1)
+                                                <option value="0" selected>-- Select City --</option>
+                                            @else
+                                                @foreach($cities as $city)
+                                                <option @if($customer->city == $city->city) selected @endif value="{{$city->city}}|{{$city->rate}}">{{ $city->city_name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
 
-                                <div class="gap-10"></div>
-                                <div class="form-group form-wrap">
-                                    <p>City/Municipality *</p>
-                                    <select class="form-control" name="city" id="city">
                                         @if(\App\Deliverablecities::check_area($customer->city) <> 1)
-                                            <option value="" selected disabled>-- Select City --</option>
-                                        @else
-                                            @foreach($cities as $city)
-                                            <option @if($customer->city == $city->city) selected @endif value="{{$city->city}}|{{$city->rate}}">{{ $city->city_name }}</option>
-                                            @endforeach
+                                        <small id="alert_city" class="form-text text-danger"><b>{{ $customer->cities->city }}</b> is not serviceable. Please select another city.</small>
                                         @endif
-                                    </select>
-                                    @hasError(['inputName' => 'city'])
-                                    @endhasError
+                                    </div>
 
-                                    @if(\App\Deliverablecities::check_area($customer->city) <> 1)
-                                    <small id="alert_city" class="form-text text-danger"><b>{{ $customer->cities->city }}</b> is not serviceable. Please select another city.</small>
-                                    @endif
-                                </div>
+                                    <div class="gap-10"></div>
+                                    <div class="form-group form-wrap">
+                                        <p>Address Line 1 *</p>
+                                        <input required type="text" class="form-control" name="address" id="input_address" value="{{ $customer->address }}">
+                                        <p id="p_address" class="text-danger" style="display: none;"><small>The address line 1 field is required.</small></p>
+                                    </div>
 
-                                <div class="gap-10"></div>
-                                <div class="form-group form-wrap">
-                                    <p>Address Line 1 *</p>
-                                    <input type="text" class="form-control" name="address" id="input-address" value="{{ $customer->address }}">
-                                    @hasError(['inputName' => 'address'])
-                                    @endhasError
-                                </div>
-
-                                <div class="gap-10"></div>
-                                <div class="form-group form-wrap">
-                                    <p>Address Line 2 *</p>
-                                    <input type="text" class="form-control" name="barangay" id="input-barangay" value="{{ $customer->barangay }}">
-                                    @hasError(['inputName' => 'barangay'])
-                                    @endhasError
+                                    <div class="gap-10"></div>
+                                    <div class="form-group form-wrap">
+                                        <p>Address Line 2 *</p>
+                                        <input required type="text" class="form-control" name="barangay" id="input_barangay" value="{{ $customer->barangay }}">
+                                        <p id="p_barangay" class="text-danger" style="display: none;"><small>The address line 2 field is required.</small></p>
+                                    </div>
                                 </div>
 
                                 <div class="gap-10"></div>
                                 <div class="form-group form-wrap" id="div_other" style="display: none;">
                                     <p>Other Address</p>
-                                    <textarea class="form-control" cols="2" id="other_address"></textarea>
+                                    <textarea name="other_address" class="form-control" rows="3" id="other_address"></textarea>
+                                    <p id="p_other" class="text-danger" style="display: none;"><small>The other address field is required.</small></p>
+                                </div>
+
+                                <div class="gap-10"></div>
+                                <div class="form-group form-wrap">
+                                    <p>Other Instruction</p>
+                                    <textarea name="other_instruction" class="form-control" rows="3" id="other_instruction"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="checkout-nav">
                             <span></span>
-                            <a class="checkout-next-btn" href="" id="billingNxtBtn">Next <span class="lnr lnr-chevron-right"></span></a>
+                            <a class="checkout-next-btn" href="" id="billingNxtBtn" style="color:white;font-size:1em;font-weight: 700;">Next <span class="lnr lnr-chevron-right"></span></a>
                         </div>
                     </div>
 
@@ -203,10 +208,12 @@
                                         <div class="col">
                                             <label>Date *</label>
                                             <input type="date" name="pickup_date_1" onchange="pickupDate(1)" id="pickup_date1" class="form-control" min="{{date('Y-m-d',strtotime(today()))}}">
+                                            <p id="cod_date" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
                                         </div>
                                         <div class="col">
                                             <label>Time *</label>
                                             <input type="time" name="pickup_time_1" onchange="pickupTime(1)" id="pickup_time1" class="form-control">
+                                            <p id="cod_time" class="text-danger" style="display: none;"><small>The time field is required.</small></p>
                                         </div>
                                     </div>
                                 </div>
@@ -223,12 +230,13 @@
                                     <div class="form-row">
                                         <div class="col">
                                             <label>Select Branch*</label>
-                                            <select class="form-control" name="branch">
-                                                <option selected disabled value="">-- Select Branch --</option>
+                                            <select class="form-control" name="branch" id="selbranch">
+                                                <option selected value="0">-- Select Branch --</option>
                                                 @foreach($branches as $branch)
                                                 <option value="{{$branch->id}}">{{ $branch->name }}</option>
                                                 @endforeach
                                             </select>
+                                            <p id="stp_branch" class="text-danger" style="display: none;"><small>The branch field is required.</small></p>
                                         </div>
                                     </div>
                                     <div class="gap-10"></div>
@@ -236,10 +244,12 @@
                                         <div class="col">
                                             <label>Date *</label>
                                             <input type="date" name="pickup_date_2" onchange="pickupDate(2)" id="pickup_date2" class="form-control" min="{{date('Y-m-d',strtotime(today()))}}">
+                                            <p id="stp_date" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
                                         </div>
                                         <div class="col">
                                             <label>Time *</label>
                                             <input type="time" name="pickup_time_2" onchange="pickupTime(2)" id="pickup_time2" class="form-control">
+                                            <p id="stp_time" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
                                         </div>
                                     </div>
                                 </div>
@@ -267,136 +277,135 @@
 
                         <div class="checkout-nav">
                             <a class="checkout-back-btn" href=""><span class="lnr lnr-chevron-left"></span> Back</a>
-                            <a class="checkout-next-btn" id="shipOptionNxtBtn" href="">Next <span class="lnr lnr-chevron-right"></span></a>
+                            <a class="checkout-next-btn" id="shipOptionNxtBtn" href="" style="color:white;font-size:1em;font-weight: 700;">Next <span class="lnr lnr-chevron-right"></span></a>
                         </div>
                     </div>
 
                     <!-- Order Summary -->
                     <div id="tab-3">
-                            <div class="checkout-content">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <label class="subtitle">Billed To</label>
-                                        <h3 class="customer-name">{{ $customer->fullname }}</h3>
-                                        <p class="customer-address">Delivert Type: <span id="spanshipMethod"></span></p>
-                                        <p class="customer-address"><span id="customer-address"></span></p>
-                                        <p class="customer-phone" >Tel No: <span id="customer-phone"></span></p>
-                                        <p class="customer-email" id="customer-email">Email: {{ $customer->email }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="gap-40"></div>
-
-                                <div class="table-responsive mg-t-40">
-                                    <table class="table table-invoice bd-b order-table">
-                                        <thead>
-                                            <tr>
-                                                <th class="w-25">Type</th>
-                                                <th class="w-30 d-none d-sm-table-cell">Description</th>
-                                                <th class="w-15 text-center">Qty</th>
-                                                <th class="w-15 text-right">Unit Price</th>
-                                                <th class="w-15 text-right">Amount</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @php $totalAmount = 0; $subTotal = 0; @endphp
-                                            @foreach($products as $product)
-                                            @php
-                                                $totalAmount = $product->price*$product->qty;
-                                                $subTotal   += $totalAmount;
-                                            @endphp
-                                            <tr id="cart_{{$product->id}}">
-                                                <td class="tx-nowrap text-danger">{{ $product->product->name }}</td>
-                                                <td class="d-none d-sm-table-cell tx-color-03">{{ str_limit(strip_tags($product->product->description), 80, $end ='...') }}</td>
-                                                <td class="text-center">
-                                                    <div class="quantity">
-                                                        <input type="hidden" name="productid[]" value="{{ $product->product_id }}">
-                                                        <input type="number" name="qty[]" min="1" max="25" step="1" value="{{ $product->qty }}" data-inc="1" id="product_qty_{{$product->product_id}}" onchange="updateAmount('{{$product->product_id}}')">
-                                                        <div class="quantity-nav">
-                                                            <div class="quantity-button quantity-up">+</div>
-                                                            <div class="quantity-button quantity-down">-</div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="text-right">₱ {{ number_format($product->price,2) }}
-                                                    <input type="hidden" name="product_price[]" id="product_price_{{$product->product_id}}" value="{{ number_format($product->price,2) }}">
-                                                </td>
-                                                <td class="text-right">
-                                                    <input type="hidden" class="input_product_total_amount" id="input_product_total_amount_{{$product->product_id}}" value="{{$totalAmount}}">
-                                                    ₱ <span id="product_total_amount_{{$product->product_id}}">{{ number_format($totalAmount,2) }}</span>
-                                                </td>
-                                                <td><a href="" onclick="deleteProduct('{{$product->id}}');">x</a></td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="checkout-bt row justify-content-between">
-                                    <div class="col-sm-12 col-lg-6 order-2 order-sm-0 mg-t-40 mg-sm-t-0">
-                                        <div class="gap-30"></div>
-                                        <label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Notes</label>
-                                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                                        </p>
-                                    </div>
-                                    <!-- col -->
-                                    <div class="col-sm-12 col-lg-4 order-1 order-sm-0">
-                                        <div class="gap-30"></div>
-                                        <input type="hidden" id="is_serviceable" value="{{App\Deliverablecities::check_area($customer->city)}}">
-                                        @if(\App\Deliverablecities::check_area($customer->city) == 1)
-                                        <input type="hidden" id="city_rate" value="{{ $customer->delivery_rate->rate }}">
-                                        @endif
-                                        <input type="hidden" id="subTotal" value="{{ $subTotal }}">
-                                        <input type="hidden" id="min_purchase" value="{{ $cod->minimum_purchase }}">
-                                        <input type="hidden" id="delivery_rate" value="{{ $cod->delivery_rate }}">
-                                        <input type="hidden" id="service_fee" value="{{ $sdd->service_fee }}">
-                                        <input type="hidden" id="min_order_allowed" value="{{$settings->min_order_is_allowed}}">
-                                        <input type="hidden" id="min_order" value="{{$settings->min_order}}">
-
-                                        <input type="hidden" id="selected_servicefee_val">
-                                        <input type="hidden" id="selected_deliveryfee_val">
-
-                                        <ul class="list-unstyled lh-7 pd-r-10">
-                                            <li class="d-flex justify-content-between">
-                                                <span>Sub-Total</span>
-                                                <span>
-                                                    <input type="hidden" id="input_sub_total" value="{{$subTotal}}" name="subtotal">
-                                                    ₱ <span id="sub-total">{{ number_format($subTotal,2) }}</span>
-                                                </span>
-                                            </li>
-                                            <li class="d-flex justify-content-between">
-                                                <span>Delivery Fee</span>
-                                                <span>
-                                                    <input type="hidden" id="input_deliveryfee" name="deliveryfee">
-                                                    ₱ <span id="span_deliveryfee">0.00</span>
-                                                </span>
-                                            </li>
-                                            <li class="d-flex justify-content-between">
-                                                <span>Service Fee</span>
-                                                <span>
-                                                    <input type="hidden" id="input_servicefee" name="servicefee">
-                                                    ₱ <span id="span_servicefee">0.00</span>
-                                                </span>
-                                            </li>
-                                            <li class="d-flex justify-content-between">
-                                                <span>Loyalty Discount</span>
-                                                <span>
-                                                    <input type="hidden" id="input_loyalty_discount" name="loyaltydiscount" value="{{$loyalty_discount}}">
-                                                    ₱ <span id="servicefee">{{ number_format($loyalty_discount,2) }}</span>
-                                                </span>
-                                            </li>
-                                            <li class="d-flex justify-content-between">
-                                                <strong>Total Due</strong>
-                                                <strong>
-                                                    <input type="hidden" name="totalDue" id="input_total_due" name="totalDue">
-                                                    ₱ <span id="totalDue"></span>
-                                                </strong>
-                                            </li>
-                                        </ul>
-                                    </div>
+                        <div class="checkout-content">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <label class="subtitle">Billed To</label>
+                                    <h3 class="customer-name">{{ $customer->fullname }}</h3>
+                                    <p class="customer-address">Delivert Type: <span id="spanshipMethod"></span></p>
+                                    <p class="customer-address"><span id="customer-address"></span></p>
+                                    <p class="customer-phone" >Tel No: <span id="customer-phone"></span></p>
+                                    <p class="customer-email" id="customer-email">Email: {{ $customer->email }}</p>
                                 </div>
                             </div>
+
+                            <div class="gap-40"></div>
+
+                            <div class="table-responsive mg-t-40">
+                                <table class="table table-invoice bd-b order-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="w-25">Type</th>
+                                            <th class="w-30 d-none d-sm-table-cell">Description</th>
+                                            <th class="w-15 text-center">Qty</th>
+                                            <th class="w-15 text-right">Unit Price</th>
+                                            <th class="w-15 text-right">Amount</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php $totalAmount = 0; $subTotal = 0; @endphp
+                                        @foreach($products as $product)
+                                        @php
+                                            $totalAmount = $product->price*$product->qty;
+                                            $subTotal   += $totalAmount;
+                                        @endphp
+                                        <tr id="cart_{{$product->id}}">
+                                            <td class="tx-nowrap text-danger">{{ $product->product->name }}</td>
+                                            <td class="d-none d-sm-table-cell tx-color-03">{{ str_limit(strip_tags($product->product->description), 80, $end ='...') }}</td>
+                                            <td class="text-center">
+                                                <div class="quantity">
+                                                    <input type="hidden" name="productid[]" value="{{ $product->product_id }}">
+                                                    <input type="number" name="qty[]" min="1" max="25" step="1" value="{{ $product->qty }}" data-inc="1" id="product_qty_{{$product->product_id}}" onchange="updateAmount('{{$product->product_id}}')">
+                                                    <div class="quantity-nav">
+                                                        <div class="quantity-button quantity-up">+</div>
+                                                        <div class="quantity-button quantity-down">-</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-right">₱ {{ number_format($product->price,2) }}
+                                                <input type="hidden" name="product_price[]" id="product_price_{{$product->product_id}}" value="{{ number_format($product->price,2) }}">
+                                            </td>
+                                            <td class="text-right">
+                                                <input type="hidden" class="input_product_total_amount" id="input_product_total_amount_{{$product->product_id}}" value="{{$totalAmount}}">
+                                                ₱ <span id="product_total_amount_{{$product->product_id}}">{{ number_format($totalAmount,2) }}</span>
+                                            </td>
+                                            <td><a href="" onclick="deleteProduct('{{$product->id}}');">x</a></td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="checkout-bt row justify-content-between">
+                                <div class="col-sm-12 col-lg-6 order-2 order-sm-0 mg-t-40 mg-sm-t-0">
+                                    <div class="gap-30"></div>
+                                    <label class="tx-sans tx-uppercase tx-10 tx-medium tx-spacing-1 tx-color-03">Other Instructions</label>
+                                    <p id="p_instructions"></p>
+                                </div>
+                                <!-- col -->
+                                <div class="col-sm-12 col-lg-4 order-1 order-sm-0">
+                                    <div class="gap-30"></div>
+                                    <input type="hidden" id="is_serviceable" value="{{App\Deliverablecities::check_area($customer->city)}}">
+                                    @if(\App\Deliverablecities::check_area($customer->city) == 1)
+                                    <input type="hidden" id="city_rate" value="{{ $customer->delivery_rate->rate }}">
+                                    @endif
+                                    <input type="hidden" id="subTotal" value="{{ $subTotal }}">
+                                    <input type="hidden" id="min_purchase" value="{{ $cod->minimum_purchase }}">
+                                    <input type="hidden" id="delivery_rate" value="{{ $cod->delivery_rate }}">
+                                    <input type="hidden" id="service_fee" value="{{ $sdd->service_fee }}">
+                                    <input type="hidden" id="min_order_allowed" value="{{$settings->min_order_is_allowed}}">
+                                    <input type="hidden" id="min_order" value="{{$settings->min_order}}">
+
+                                    <input type="hidden" id="selected_servicefee_val">
+                                    <input type="hidden" id="selected_deliveryfee_val">
+
+                                    <ul class="list-unstyled lh-7 pd-r-10">
+                                        <li class="d-flex justify-content-between">
+                                            <span>Sub-Total</span>
+                                            <span>
+                                                <input type="hidden" id="input_sub_total" value="{{$subTotal}}" name="subtotal">
+                                                ₱ <span id="sub-total">{{ number_format($subTotal,2) }}</span>
+                                            </span>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <span>Delivery Fee</span>
+                                            <span>
+                                                <input type="hidden" id="input_deliveryfee" name="deliveryfee">
+                                                ₱ <span id="span_deliveryfee">0.00</span>
+                                            </span>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <span>Service Fee</span>
+                                            <span>
+                                                <input name="servicefee" type="hidden" id="input_servicefee" name="servicefee">
+                                                ₱ <span id="span_servicefee">0.00</span>
+                                            </span>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <span>Loyalty Discount</span>
+                                            <span>
+                                                <input type="hidden" id="input_loyalty_discount" name="loyaltydiscount" value="{{$loyalty_discount}}">
+                                                ₱ <span id="servicefee">{{ number_format($loyalty_discount,2) }}</span>
+                                            </span>
+                                        </li>
+                                        <li class="d-flex justify-content-between">
+                                            <strong>Total Due</strong>
+                                            <strong>
+                                                <input type="hidden" name="totalDue" id="input_total_due" name="totalDue">
+                                                ₱ <span id="totalDue"></span>
+                                            </strong>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                         
                         <div class="checkout-nav">
                             <a class="checkout-back-btn" href=""><span class="lnr lnr-chevron-left"></span> Back</a>
@@ -441,9 +450,18 @@
     <script src="{{ asset('theme/stpaul/plugins/responsive-tabs/js/jquery.responsiveTabs.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
-    <script>
-
+    <script> 
         $(document).ready(function(){
+            //called when key is pressed in textbox
+            $("#input_mobile").keypress(function (e) {
+                //if the letter is not digit then display error and don't type anything
+                var charCode = (e.which) ? e.which : event.keyCode
+                if (charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57))
+                    return false;
+                return true;
+
+            });
+
             /** Custom Input number increment js **/
             jQuery(".quantity").each(function() {
                 var spinner = jQuery(this),
@@ -488,6 +506,48 @@
                     spinner.find("input").val(newVal);
                     spinner.find("input").trigger("change");
                 });
+            });
+        });
+
+        $(document).ready(function() {
+            $('select[name="province"]').on('change', function() {
+
+                $('#alert_province').hide();
+                $('#alert_city').hide();
+
+                var provinceID = $(this).val();
+
+                if(provinceID == 0){
+                    $('#divaddress').hide();
+
+                    $('#p_city').hide();
+                    $('select[name="city"]').empty();
+                    $('select[name="city"]').append('<option value="0" selected>-- Select City --</option>');
+                    $('#city').prop('disabled', true);
+                    $('#div_other').show();
+                } else {
+                    $('#divaddress').show();
+
+                    $('#serviceable').val(1);
+                    $('#city').prop('disabled', false);
+                    $('#div_other').hide();
+
+                    var url = "{{ route('ajax.deliverable-cities', ':provinceID') }}";
+                    url = url.replace(':provinceID',provinceID);
+
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        dataType: "json",
+                        success:function(data) {
+                            $('select[name="city"]').empty();
+                            $('select[name="city"]').append('<option value="0" selected>-- Select City --</option>');
+                            $.each(data, function(key, value) {
+                                $('select[name="city"]').append("<option value='"+value.city+"|"+value.rate+"'>"+value.city_name+"</option>");
+                            });
+                        }
+                    });
+                }
             });
         });
     </script>
@@ -560,40 +620,39 @@
                 })
             }
         }
+   
+        // $(document).ready(function() {
+        //     $('select[name="province"]').on('change', function() {
 
-        
-        $(document).ready(function() {
-            $('select[name="province"]').on('change', function() {
+        //         $('#alert_province').hide();
+        //         $('#alert_city').hide();
 
-                $('#alert_province').hide();
-                $('#alert_city').hide();
+        //         var provinceID = $(this).val();
+        //         if(provinceID == 0){
+        //             $('#city').prop('disabled', true);
+        //             $('#div_other').show();
+        //         } else {
 
-                var provinceID = $(this).val();
-                if(provinceID == 0){
-                    $('#city').prop('disabled', true);
-                    $('#div_other').show();
-                } else {
+        //             $('#city').prop('disabled', false);
+        //             $('#div_other').hide();
 
-                    $('#city').prop('disabled', false);
-                    $('#div_other').hide();
+        //             var url = "{{ route('ajax.deliverable-cities', ':provinceID') }}";
+        //             url = url.replace(':provinceID',provinceID);
 
-                    var url = "{{ route('ajax.deliverable-cities', ':provinceID') }}";
-                    url = url.replace(':provinceID',provinceID);
-
-                    $.ajax({
-                        url: url,
-                        type: "GET",
-                        dataType: "json",
-                        success:function(data) {
-                            $('select[name="city"]').empty();
-                            $.each(data, function(key, value) {
-                                $('select[name="city"]').append('<option value="'+value.id+'">'+value.city+'</option>');
-                            });
-                        }
-                    });
-                }
-            });
-        });
+        //             $.ajax({
+        //                 url: url,
+        //                 type: "GET",
+        //                 dataType: "json",
+        //                 success:function(data) {
+        //                     $('select[name="city"]').empty();
+        //                     $.each(data, function(key, value) {
+        //                         $('select[name="city"]').append('<option value="'+value.id+'">'+value.city+'</option>');
+        //                     });
+        //                 }
+        //             });
+        //         }
+        //     });
+        // });
 
         // uncheck selected shipping option if selected city change
         $('select[name="city"]').on('change', function() {
@@ -603,7 +662,25 @@
         });
 
         $('#btnPlaceOrder').click(function(){
-            $("#checkout-form").submit();
+            var option = $('input[name="shipOption"]:checked').val();
+
+            if (!$("input[name='payment_method']:checked").val()) {
+               alert('Please select a payment method!');
+               $(this).removeClass('checkout-next-btn');
+            }
+            else {
+                if(option == 1){
+                    $("#checkout-form").submit();
+                } else {
+                    if (!$("input[name='payment_option']:checked").val()) {
+                       alert('Please select a payment option!');
+                       $(this).removeClass('checkout-next-btn');
+                    } else {
+                      $(this).addClass('checkout-next-btn');  
+                      $("#checkout-form").submit();
+                    }
+                }
+            }
         });
 
         $('#btnReviewOrder').click(function(){
@@ -616,11 +693,65 @@
             }
         });
 
+        function IsEmail(email) {
+            var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            if(!regex.test(email)) {
+                return false;
+            } else{
+                return true;
+            }
+        }
+
         $('#billingNxtBtn').click(function(){
+            var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            var name  = $('#input_customer').val(), 
+                email  = $('#input_email').val(), 
+                mobile = $('#input_mobile').val(), 
+                address = $('#input_address').val(), 
+                barangay = $('#input_barangay').val(),
+                is_serviceable = $('#serviceable').val(),
+                city = $('#city').val(),
+                others = $('#other_address').val();
 
-            $('#customer-address').html($('#input-address').val()+' '+$('#input-barangay').val()+', '+$("#province option:selected" ).text()+' '+$("#city option:selected" ).text());
 
-            $('#customer-phone').html($('#input-mobile').val());
+            if(name.length === 0){ $('#p_name').show(); } else { $('#p_name').hide(); }
+            if(email.length === 0){ $('#p_email').show(); } else { $('#p_email').hide(); }
+            if(IsEmail(email)==false){ $('#p_email_invalid').show(); } else { $('#p_email_invalid').hide(); }
+            if(mobile.length === 0){ $('#p_mobile').show(); } else { $('#p_mobile').hide(); }
+
+            if($('#province').val() == 0){
+
+            } else {
+                if(barangay.length === 0){ $('#p_barangay').show(); } else { $('#p_barangay').hide(); }
+                if(address.length === 0){ $('#p_address').show(); } else { $('#p_address').hide(); }
+            }
+            
+
+            if(is_serviceable == 0){ $('#alert_province').show(); }
+            if(is_serviceable == 1 && city == 0){ $('#p_city').show(); } else { $('#p_city').hide(); }
+
+            if($('#province').val() == 0){
+                if(others.length === 0 || name.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0){ 
+                    $('#p_other').show();
+                    $(this).removeClass('checkout-next-btn');
+                } else { 
+                    $('#p_other').hide();
+                    $(this).addClass('checkout-next-btn');
+                }
+            } else {
+                if(name.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0 || address.length === 0 || barangay.length === 0 || is_serviceable == 0 || city == 0){
+                    $(this).removeClass('checkout-next-btn');
+                } else {
+                    $(this).addClass('checkout-next-btn');
+                }
+            }
+            if($('#province').val() == 0){
+                $('#customer-address').html($('#other_address').val());
+            } else {
+                $('#customer-address').html($('#input_address').val()+' '+$('#input_barangay').val()+', '+$("#province option:selected" ).text()+' '+$("#city option:selected" ).text());
+            }
+            $('#p_instructions').html($('#other_instruction').val());
+            $('#customer-phone').html($('#input_mobile').val());
     
         });
 
@@ -680,59 +811,87 @@
         }
 
         $('#shipOptionNxtBtn').click(function(){
+            var option = $('input[name="shipOption"]:checked').val();
+            if (!$("input[name='shipOption']:checked").val()) {
+               alert('Please select a shipping method!');
+               $(this).removeClass('checkout-next-btn');
+            }
+            else {
+                $(this).addClass('checkout-next-btn');
+            }
+
+            if(option == 1){
+                var cod_date = $('#pickup_date1').val(), cod_time = $('#pickup_time1').val();
+                if(cod_date.length === 0 || cod_time === 0){
+                    $(this).removeClass('checkout-next-btn');
+                } else {
+                    $(this).addClass('checkout-next-btn'); 
+                }
+
+                if(cod_date.length === 0){ $('#cod_date').show(); } else { $('#cod_date').hide(); }
+                if(cod_time.length === 0){ $('#cod_time').show(); } else { $('#cod_time').hide(); }
+            }
+
+            if(option == 2){
+                var stp_branch = $('#selbranch').val(), stp_date = $('#pickup_date2').val(), stp_time = $('#pickup_time2').val();
+                if(stp_branch == 0 || stp_date.length === 0 || stp_time.length === 0){
+                    $(this).removeClass('checkout-next-btn');
+                } else {
+                   $(this).addClass('checkout-next-btn'); 
+                }
+
+                if($('#selbranch').val() == 0){ $('#stp_branch').show(); } else { $('#stp_branch').hide(); }
+                if($('#pickup_date2').val() == ''){ $('#stp_date').show(); } else { $('#stp_date').hide(); }
+                if($('#pickup_time2').val() == ''){ $('#stp_time').show(); } else { $('#stp_time').hide(); }
+            }
+
+
             var shipOption  = $("input:radio[name='shipOption']:checked").val();
             var deliveryfee = $('#selected_deliveryfee_val').val();
             var servicefee  = $('#selected_servicefee_val').val(); 
 
             if(shipOption == 1){
                 $('#spanshipMethod').html('Cash on Delivery');
-            }
-            if(shipOption == 2){
-                $('#spanshipMethod').html('Store Pickup');
-            }
-            if(shipOption == 3){
-                $('#spanshipMethod').html('Door 2 Door Delivery');
-                $('#span_deliveryfee').html(FormatAmount(deliveryfee,2));
+                $('#spanReviewOrder').html('Place Order');
+
                 $('#input_servicefee').val(0);
-                delivery_fee(shipOption);
-            }
-            if(shipOption == 4){
-                $('#spanshipMethod').html('Same Day Delivery');
+                $('#span_servicefee').html('0.00');
             }
 
             if(shipOption == 2){
+                $('#spanshipMethod').html('Store Pickup');
+                $('#spanReviewOrder').html('Next');
+
                 $('#input_servicefee').val(0);
                 $('#span_servicefee').html('0.00');
 
                 $('#input_deliveryfee').val(0);
                 $('#span_deliveryfee').html('0.00');
-
-                $('#spanReviewOrder').html('Next');
-
-
-            } else {
-                // cash on delivery
-                if(shipOption == 1){
-                    delivery_fee(shipOption);
-
-                    $('#spanReviewOrder').html('Place Order');
-
-                    $('#input_servicefee').val(0);
-                    $('#span_servicefee').html('0.00');
-                }
-
-                // same day delivery
-                if(shipOption == 4){
-                    $('#input_servicefee').val(servicefee);
-                    $('#span_servicefee').html(FormatAmount(servicefee,2));
-
-                    $('#input_deliveryfee').val(0);
-                    $('#span_deliveryfee').html('0.00');
-
-                    $('#spanReviewOrder').html('Next');
-                }
+   
             }
 
+            if(shipOption == 3){
+                $('#spanshipMethod').html('Door 2 Door Delivery');
+
+                $('#input_servicefee').val(0);
+                $('#span_servicefee').html('0.00');
+
+                $('#span_deliveryfee').html(FormatAmount(deliveryfee,2));
+                $('#input_servicefee').val(0);
+            }
+
+            // same day delivery
+            if(shipOption == 4){
+                $('#spanshipMethod').html('Same Day Delivery');
+                $('#input_servicefee').val(servicefee);
+                $('#span_servicefee').html(FormatAmount(servicefee,2));
+
+                $('#input_deliveryfee').val(0);
+                $('#span_deliveryfee').html('0.00');
+
+                $('#spanReviewOrder').html('Next');
+            }
+            delivery_fee(shipOption);
             totalDue();
         });
 
@@ -814,32 +973,6 @@
 
             return num_parts.join(".");
         }
-
-        $(document).ready(function() {
-            $('select[name="province"]').on('change', function() {
-                var provinceID = $(this).val();
-                if(provinceID) {
-
-                    var url = "{{ route('ajax.get-deliverable-cities', ':provinceID') }}";
-                    url = url.replace(':provinceID',provinceID);
-
-                    $.ajax({
-                        url: url,
-                        type: "GET",
-                        dataType: "json",
-                        success:function(data) {
-                            $('select[name="city"]').empty();
-                            $('select[name="city"]').append('<option value="" selected disabled>-- Select City --</option>');
-                            $.each(data, function(key, value) {
-                                $('select[name="city"]').append('<option value="'+value.city+'|'+value.rate+'">'+value.city_name+'</option>');
-                            });
-                        }
-                    });
-                } else {
-                    $('select[name="city"]').empty();
-                }
-            });
-        });
 
         function deleteProduct(cartid)
         {

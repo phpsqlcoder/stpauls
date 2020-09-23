@@ -99,7 +99,7 @@
 
 
 ##############################################################
-Route::group(['prefix' => env('APP_PANEL', 'cerebro')], function () {
+Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
     Route::get('/', 'Auth\LoginController@showLoginForm')->name('panel.login');
     Auth::routes(['verify' => true]);

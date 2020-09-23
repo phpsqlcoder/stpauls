@@ -350,17 +350,6 @@ Manage Customer
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Brand</label>
-                            <div>
-                                <select name="brand" class="form-control input-sm">
-                                    <option value="">- All Brands -</option>
-                                    @foreach($uniqueProductByBrand as $pr)
-                                        <option value="{{($pr->brand) ? $pr->brand : ''}}" @if ($advanceSearchData->brand && $advanceSearchData->brand == $pr->brand) selected @endif>{{$pr->brand}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label">Last Modified by</label>
                             <div>
                                 <select name="user_id" class="form-control input-sm">

@@ -296,12 +296,16 @@
                                 @else
                                     <div class="empty-review-wrap">
                                         <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/comment.png" />
-                                        <p>There are no reviews yet.<br />Be the first to review “{{ $product->name }}”</p>
+                                        <p>There are no reviews yet.<br />
+                                            @if(\App\EcommerceModel\SalesDetail::rate_product($product->id) > 0)
+                                                Be the first to review “{{ $product->name }}”
+                                            @endif
+                                        </p>
                                     </div>
                                 @endif
 
                                 <div class="gap-40"></div>
-                                @if(Auth::check())
+                                @if(\App\EcommerceModel\SalesDetail::rate_product($product->id) > 0)
                                     <form method="post" action="{{ route('product.review.store') }}">
                                         @csrf
                                         <div class="form-style-alt fs-sm">

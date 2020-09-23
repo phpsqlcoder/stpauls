@@ -207,7 +207,7 @@
                     <table class="table table-md table-modal" style="font-size:12px !important;">
                         <thead>
                             <tr>
-                                <th>Product Code</th>
+                                <th>Product Name</th>
                                 <th>Description</th>
                                 <th>Qty</th>
                                 <th>Price</th>

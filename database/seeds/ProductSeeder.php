@@ -13,11 +13,11 @@ class ProductSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-        for($i=10; $i<=100; $i++){
+        for($i=130; $i<=230; $i++){
             DB::table('products')
                 ->insert([
                     'code' => 'PR000000'.$i,
-                    'category_id' => $faker->numberBetween($min = 1, $max = 5),
+                    'category_id' => 5,
                     'name' => 'Product '.$i,
                     'short_description' => '<p>This is short description</p>',
                     'description' => '<p>This is description</p>',

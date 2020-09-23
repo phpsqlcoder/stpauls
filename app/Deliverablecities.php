@@ -33,4 +33,11 @@ class Deliverablecities extends Model
 
         return $qry;
     }
+
+    public static function deliverable_province($province)
+    {
+        $qry = Deliverablecities::where('province',$province)->count();
+
+        return $qry;
+    }
 }

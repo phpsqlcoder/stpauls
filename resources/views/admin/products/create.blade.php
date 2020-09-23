@@ -37,49 +37,39 @@
                 <h4 class="mg-b-0 tx-spacing--1">Create a Product</h4>
             </div>
         </div>
-        <form id="albumForm" method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
+        <form autocomplete="off" id="albumForm" method="POST" action="{{ route('products.store') }}" enctype="multipart/form-data">
             <div class="row row-sm">
                 @method('POST')
                 @csrf
-                @if ($errors->any())
-                    <div class="alert alert-solid alert-danger d-flex align-items-center" role="alert">
-                        <ul id="errorMessage">
-                            @foreach ($errors->all() as $error)
-                                <li>
-                                    <i data-feather="x-circle" class="mg-r-10"></i> {{ $error }}
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="d-block">Code</label>
-                        <input name="code" id="code" value="{{ old('code') }}" type="text" class="form-control @error('code') is-invalid @enderror" maxlength="250">
+                        <label class="d-block">Code *</label>
+                        <input required name="code" id="code" value="{{ old('code') }}" type="text" class="form-control @error('code') is-invalid @enderror" maxlength="250">
                         @hasError(['inputName' => 'code'])
                         @endhasError
                     </div>
                     <div class="form-group">
                         <label class="d-block">Name *</label>
-                        <input name="name" id="name" value="{{ old('name') }}" required type="text" class="form-control @error('name') is-invalid @enderror" maxlength="250">
+                        <input required name="name" id="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" maxlength="250">
                         @hasError(['inputName' => 'name'])
                         @endhasError
                     </div>
                     <div class="form-group">
                         <label class="d-block">Category *</label>
-                        <select required name="category" id="category" class="selectpicker mg-b-5 @error('category') is-invalid @enderror" value="{{ old('category') }}" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
+                        <select required name="category_id" id="category_id" class="selectpicker mg-b-5 @error('category_id') is-invalid @enderror" value="{{ old('category_id') }}" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
                             <option value="0">-- Select Category --</option>
                             @foreach($categories as $category)
                                 <option value="{{$category->id}}">{{strtoupper($category->name)}}</option>
                             @endforeach
                         </select>
-                        @hasError(['inputName' => 'category'])
+                        @hasError(['inputName' => 'category_id'])
                         @endhasError
                     </div>
                     <div class="form-group">
-                        <label>Price (in Php)</label>
-                        <input class="form-control" type="number" step="0.01" min="0.00" value="0.00" name="price" id="price">
+                        <label>Price (in Php) *</label>
+                        <input required class="form-control @error('price') is-invalid @enderror" type="number" step="0.01" min="0.00" value="0.00" name="price" id="price">
+                        @hasError(['inputName' => 'price'])
+                        @endhasError
                     </div>
                     <div class="form-group">
                         <label lass="d-block" id="short_descriptionLabel">Short Description</label>
@@ -112,42 +102,36 @@
                         @endhasError
                     </div>
                     <div class="form-group">
-                        <label>Weight (grams)*</label>
-                        <input required class="form-control" type="text" name="weight" id="weight">
+                        <label>Weight (grams)</label>
+                        <input class="form-control" type="text" name="weight" id="weight">
                     </div>
            
                     <div class="form-group">
-                        <label class="d-block">Size *</label>
-                        <input required name="size" id="size" value="{{ old('size') }}" type="text" class="form-control @error('size') is-invalid @enderror" maxlength="250">
-                        @hasError(['inputName' => 'size'])
-                        @endhasError
+                        <label class="d-block">Size</label>
+                        <input name="size" value="{{ old('size') }}" type="text" class="form-control" maxlength="250">
                     </div>
 
                     <div class="form-group">
                         <label>Unit of Measurement *</label>
-                        <input class="form-control" type="text" name="uom" id="uom" required="required">
+                        <input required class="form-control @error('uom') is-invalid @enderror" type="text" name="uom" id="uom">
+                        @hasError(['inputName' => 'uom'])
+                        @endhasError
                     </div>
 
                     <!-- product additional info -->
                     <div class="form-group">
-                        <label class="d-block">Author/s *</label>
-                        <input required type="text" class="form-control @error('authors') is-invalid @enderror" data-role="tagsinput" name="authors" value="{{ old('authors') }}">
-                        @hasError(['inputName' => 'authors'])
-                        @endhasError
+                        <label class="d-block">Author/s</label>
+                        <input type="text" class="form-control" data-role="tagsinput" name="authors" value="{{ old('authors') }}">
                     </div>
 
                     <div class="form-group">
-                        <label>Materials *</label>
-                        <input required name="materials" id="materials" value="{{ old('materials') }}" type="text" class="form-control @error('materials') is-invalid @enderror">
-                        @hasError(['inputName' => 'materials'])
-                        @endhasError
+                        <label>Materials</label>
+                        <input name="materials" value="{{ old('materials') }}" type="text" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label>No of Pages *</label>
-                        <input required name="no_of_pages" id="no_of_pages" value="{{ old('no_of_pages') }}" type="number" class="form-control @error('no_of_pages') is-invalid @enderror">
-                        @hasError(['inputName' => 'no_of_pages'])
-                        @endhasError
+                        <label>No of Pages</label>
+                        <input name="no_of_pages" value="{{ old('no_of_pages') }}" type="number" class="form-control">
                     </div>
 
                     <div class="form-group">

@@ -150,7 +150,7 @@ return [
             'delete_success' => 'The Role has been deleted.',
             'update_success' => 'The Role has been updated.',
             'create_success' => 'The Role has been created.',
-            'duplicate_role' => 'The role you have entered is already in the list.',
+            //'duplicate_role' => 'The role you have entered is already in the list.',
             'delete_confirmation_title' => 'Delete Role',
             'delete_confirmation' => 'You are about to delete this role. Do you want to continue?',
             'restore_success' => 'Successfully restored the role',

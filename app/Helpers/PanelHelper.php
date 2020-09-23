@@ -9,7 +9,7 @@ class PanelHelper
 {
     public static function get_routes()
     {
-        $panelName = env('APP_PANEL', 'cerebro');
+        $panelName = env('APP_PANEL', 'stpaul');
         $routes = [];
 
         foreach (Route::getRoutes() as $key => $route)

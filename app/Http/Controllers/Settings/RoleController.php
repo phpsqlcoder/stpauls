@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers\Settings;
+use Illuminate\Support\Facades\Validator;
 use App\Helpers\ListingHelper;
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 use Auth;
 
@@ -27,7 +29,7 @@ class RoleController extends Controller
 
     public function index()
     {
-        $listing = new ListingHelper();
+        $listing = new ListingHelper('desc', 10, 'updated_at');
 
         $roles = $listing->simple_search(Role::class, $this->searchFields);
 
@@ -57,16 +59,27 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        if(Role::where('name',$request->role)->exists()){
-            return back()->with('duplicate', __('standard.account_management.roles.duplicate_role'));
-        } else {
-            Role::create([
-                'name' 		  => $request->role,
-                'description' => $request->description,
-                'created_by'  => Auth::user()->id
-            ]);
-            return redirect()->route('role.index')->with('success', __('standard.account_management.roles.create_success'));
-        }
+        $this->validate(
+            $request,[
+                'name' => 'required|max:150|unique:role,name',
+                'description' => 'required',
+            ],
+            [
+                'name.unique' => 'This role is already in the list.',
+            ]  
+        );
+
+        $roleInfo = $request->validate([
+            'name' => 'required|max:150|unique:role,name',
+            'description' => 'required',
+        ]);
+
+        Role::create([
+            'name' 		  => $request->name,
+            'description' => $request->description,
+            'created_by'  => Auth::user()->id
+        ]);
+        return redirect()->route('role.index')->with('success', __('standard.account_management.roles.create_success'));
     }
 
     /**

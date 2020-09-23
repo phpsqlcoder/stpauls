@@ -59,10 +59,11 @@
 
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" id="showInactive" name="showDeleted" class="custom-control-input" @if ($filter->showDeleted) checked @endif>
-                                                <label class="custom-control-label" for="showInactive">Show Inactive User</label>
+                                                <input type="checkbox" id="showDeleted" name="showDeleted" class="custom-control-input" @if ($filter->showDeleted) checked @endif>
+                                                <label class="custom-control-label" for="showDeleted">{{__('common.show_deleted')}}</label>
                                             </div>
                                         </div>
+                                        
                                         <div class="form-group mg-b-40">
                                             <label class="d-block">{{__('common.item_displayed')}}</label>
                                             <input id="displaySize" type="text" class="js-range-slider" name="perPage" value="{{ $filter->perPage }}"/>
@@ -94,20 +95,20 @@
                         <table class="table mg-b-0 table-light table-hover" style="width:100%;">
                             <thead>
                             <tr>
-                                <th scope="col" width="40%">Name</th>
-                                <th scope="col" width="50%">Description</th>
-                                <th scope="col" width="10%">Options</th>
+                                <th scope="col" width="30%">Name</th>
+                                <th scope="col" width="40%">Description</th>
+                                <th scope="col" width="15%">Last Date Modified</th>
+                                <th scope="col" width="15%">Options</th>
                             </tr>
                             </thead>
                             <tbody>
                             @forelse($roles as $role)
-                            @if($role->id<>'2')
                                 <tr>
                                     <th>
-                                        <strong> {{ $role->name }}</strong>
+                                        <strong @if($role->trashed()) style="text-decoration:line-through;" @endif>{{ $role->name }}</strong>
                                     </th>
                                     <td>{{ $role->description }}</td>
-
+                                    <td>{{ Setting::date_for_listing($role->updated_at) }}</td>
                                     <td>
                                         @if($role->trashed())
                                             <nav class="nav table-options justify-content-end">
@@ -124,9 +125,7 @@
                                             </nav>
                                         @endif
                                     </td>
-
                                 </tr>
-                            @endif
                             @empty
                                 <tr>
                                     <td colspan="3" style="text-align: center;"> <p class="text-danger">No roles found.</p></td>

@@ -71,38 +71,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
-{{--                                        <div class="form-group">--}}
-{{--                                            <label class="tx-10 tx-uppercase tx-medium tx-spacing-1 mg-b-5 tx-color-03">Routes <i class="tx-danger">*</i></label>--}}
-{{--                                            <textarea class="form-control" name="routes" rows="4" required>@if (is_array($permission->routes)){{ implode(PHP_EOL, $permission->routes) }}@endif</textarea>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="form-group">--}}
-{{--                                            <label class="tx-10 tx-uppercase tx-medium tx-spacing-1 mg-b-5 tx-color-03">Methods <i class="tx-danger">*</i></label>--}}
-{{--                                            <textarea class="form-control" name="methods" rows="4" required>@if (is_array($permission->methods)){{ implode(PHP_EOL, $permission->methods) }}@endif</textarea>--}}
-{{--                                        </div>--}}
+
                                         <div class="form-group">
                                             <label class="tx-10 tx-uppercase tx-medium tx-spacing-1 mg-b-5 tx-color-03">Is it for view/listing page permission?</label>
                                             <input type="checkbox" name="is_view_page" class="form-control">
                                         </div>
                                     </div>
                                 </div>
-{{--                                <div class="row row-sm">--}}
-{{--                                    <div class="col-sm-3">--}}
-{{--                                        <label class="tx-10 tx-uppercase tx-medium tx-spacing-1 mg-b-5 tx-color-03">Permission Route <i class="tx-danger">*</i></label>--}}
-{{--                                        <input required type="text" class="form-control" name="permission" placeholder="Enter permission name">--}}
-{{--                                    </div>--}}
-{{--                                    <div class="col-sm-3 mg-t-20 mg-sm-t-0">--}}
-{{--                                        <label class="tx-10 tx-uppercase tx-medium tx-spacing-1 mg-b-5 tx-color-03">Module <i class="tx-danger">*</i></label>--}}
-{{--                                        <input required type="text" class="form-control" name="module"  placeholder="Enter permission module">--}}
-{{--                                    </div>--}}
-{{--                                    <div class="col-sm-3 mg-t-20 mg-sm-t-0">--}}
-{{--                                        <label class="tx-10 tx-uppercase tx-medium tx-spacing-1 mg-b-5 tx-color-03">Permission Description <i class="tx-danger">*</i></label>--}}
-{{--                                        <input required type="text" class="form-control" name="description"  placeholder="Enter permission description">--}}
-{{--                                    </div>--}}
-{{--                                    <div class="col-sm-3 mg-t-20 mg-sm-t-0">--}}
-{{--                                        <label class="tx-10 tx-uppercase tx-medium tx-spacing-1 mg-b-5 tx-color-03">Is it for view/listing page permission?</label>--}}
-{{--                                        <input type="checkbox" class="form-control" name="is_view_page">--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
                             </div>
                             <div class="modal-footer pd-x-20 pd-y-15">
                                 <a href="{{ route('permission.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>

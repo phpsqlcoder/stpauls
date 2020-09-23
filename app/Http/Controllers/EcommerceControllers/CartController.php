@@ -250,10 +250,15 @@ class CartController extends Controller
         $customer = Customer::find(Auth::id());
         $delivery_type = CheckoutOption::find($request->shipOption);
 
-        $data_city = Cities::find($request->city);
-        $data_province = Provinces::find($request->province);
 
-        $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province;
+        if($request->province == 0){
+            $address = $request->other_address;
+        } else {
+            $data_city = Cities::find($request->city);
+            $data_province = Provinces::find($request->province);
+
+            $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province;
+        }
 
         $pickupdate = $request->input('pickup_date_'.$request->shipOption);
         $pickuptime = $request->input('pickup_time_'.$request->shipOption);
@@ -283,7 +288,8 @@ class CartController extends Controller
             'payment_option' => (!isset($request->payment_method)) ? 0 : $request->payment_option,
             'branch' => ($request->shipOption == 2)  ? $request->branch : 0,
             'pickup_date' => ($request->shipOption <= 2) ? $pickupdate : NULL,
-            'pickup_time' => ($request->shipOption <= 2) ? $pickuptime : NULL
+            'pickup_time' => ($request->shipOption <= 2) ? $pickuptime : NULL,
+            'service_fee' => ($request->shipOption == 4) ? $request->servicefee : NULL
         ]);
 
         $data = $request->all();

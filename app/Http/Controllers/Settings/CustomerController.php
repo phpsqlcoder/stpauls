@@ -19,7 +19,7 @@ use Auth;
 
 use App\Mail\UpdatePasswordMail;
 use App\Role;
-// use App\Logs;
+use App\Logs;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Support\Facades\Validator;
 
@@ -138,12 +138,12 @@ class CustomerController extends Controller
 
 
 
-    public function show($id, $param = null)
-    {
-        $user = User::where('id',$id)->first();
-        $logs = Logs::where('created_by',$id)->orderBy('id','desc')->paginate(10);
+    // public function show($id, $param = null)
+    // {
+    //     $user = Customer::where('id',$id)->first();
+    //     $logs = Logs::where('created_by',$id)->orderBy('id','desc')->paginate(10);
 
-        return view('admin.customers.profile',compact('user','logs','param'));
-    }
+    //     return view('admin.customers.profile',compact('user','logs','param'));
+    // }
 
 }

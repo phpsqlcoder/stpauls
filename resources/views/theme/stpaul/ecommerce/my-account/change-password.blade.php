@@ -19,10 +19,6 @@
                             <div class="alert alert-success" role="alert"><span class="fa fa-info-circle"></span>{{ Session::get('success-change-password') }}</div>
                         @endif
 
-                        @if(Session::has('error-change-password'))
-                            <div class="alert alert-danger" role="alert"><span class="fa fa-info-circle"></span>{{ Session::get('error-change-password') }}</div>
-                        @endif
-
                         <form class="form message-form" role="form" autocomplete="off" action="{{ route('my-account.update-password') }}" method="post">
                             @csrf
                             @if (Session::has('success'))
@@ -30,9 +26,10 @@
                             @endif
                             <div class="form-group">
                                 <label for="inputPasswordOld">Current Password</label>
-                                <input type="password" class="form-control col-md-6 @error('current_password') is-invalid @enderror" name="current_password" required id="inputPasswordOld">
-                                @hasError(['inputName' => 'current_password'])
-                                @endhasError
+                                <input type="password" class="form-control col-md-6" name="current_password" required id="inputPasswordOld">
+                                @if(Session::has('error-change-password'))
+                                <p class="text-danger"><small><strong>The password is incorrect.</strong></small></p>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="inputPasswordNew">New Password</label>

@@ -164,7 +164,7 @@ Manage Customer
                                     </td>
                                 </tr>
                                 @empty
-                                    <tr><th colspan="8"><center>No promos found.</center></th></tr>
+                                    <tr><th colspan="8"><center>No Product Reviews Found.</center></th></tr>
                                 @endforelse
 
 

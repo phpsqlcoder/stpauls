@@ -6,6 +6,9 @@ use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Auth;
+use DB;
+
 class SalesDetail extends Model
 {
     use SoftDeletes;
@@ -36,6 +39,13 @@ class SalesDetail extends Model
     public function category()
     {
         return $this->belongsTo('\App\ProductCategory','product_category');
+    }
+
+    public static function rate_product($productid)
+    {
+        $qry = DB::table('ecommerce_sales_details')->join('ecommerce_sales_headers','ecommerce_sales_details.sales_header_id','ecommerce_sales_headers.id')->select('ecommerce_sales_details.product_id')->where('ecommerce_sales_details.product_id',$productid)->where('customer_id',Auth::id())->where('ecommerce_sales_headers.payment_status','PAID')->latest('ecommerce_sales_details.id')->count();
+
+        return $qry;
     }
 
 }

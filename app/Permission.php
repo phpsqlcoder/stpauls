@@ -72,7 +72,8 @@ class Permission extends Model
             'customer' => 'Customer',
             'sales_transaction' => 'Sales Transaction',
             'inventory' => 'Inventory',
-            'delivery_flat_rate' => "Delivery Flat Rate"
+            'delivery_flat_rate' => "Delivery Flat Rate",
+            'report' => 'Report'
         ];
     }
 }

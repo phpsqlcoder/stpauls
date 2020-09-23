@@ -174,9 +174,11 @@ class PromoController extends Controller
         $selected_products = $data['productid'];
         foreach($selected_products as $key => $prod){
             if(!in_array($prod,$arr_promoproducts)){
+                $product = Product::find($prod);
                 OnSaleProducts::create([
                     'promo_id' => $id,
                     'product_id' => $prod,
+                    'cost' => $product->price,
                     'user_id' => Auth::id()
                 ]);
             }

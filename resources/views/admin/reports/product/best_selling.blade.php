@@ -17,7 +17,7 @@
 
 @section('content')
 <div style="margin:0px 40px 200px 40px;">
-    <h4 class="mg-b-0 tx-spacing--1">Product List</h4>
+    <h4 class="mg-b-0 tx-spacing--1">Best Selling Products</h4>
         <table id="example" class="display nowrap" style="width:100%;font: normal 13px/150% Arial, sans-serif, Helvetica;">
             <thead>
                 <tr>

@@ -24,15 +24,14 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => 'max:250',
+            'code' => 'required|max:250',
             'name' => 'required|max:250',
-            'category_id' => 'required|exists:product_categories',
-            'short_description' => '',
-            'long_description' => '', 
-            'uom' => '',
+            'category_id' => 'required',
+            'uom' => 'required',
             'meta_title' => 'max:60',
             'meta_keyword' => 'max:160',
             'meta_description' => 'max:160',
+            'price' => 'required'
         ];
     }
 }

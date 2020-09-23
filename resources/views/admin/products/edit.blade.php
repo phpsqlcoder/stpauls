@@ -43,32 +43,32 @@
                 @csrf
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="d-block">Code</label>
-                        <input name="code" id="code" value="{{ old('code', $product->code) }}" type="text" class="form-control @error('code') is-invalid @enderror" maxlength="250">
+                        <label class="d-block">Code *</label>
+                        <input required name="code" id="code" value="{{ old('code', $product->code) }}" type="text" class="form-control @error('code') is-invalid @enderror" maxlength="250">
                         @hasError(['inputName' => 'code'])
                         @endhasError
                     </div>
                     <div class="form-group">
                         <label class="d-block">Name *</label>
-                        <input name="name" id="name" value="{{ old('name',$product->name) }}" required type="text" class="form-control @error('name') is-invalid @enderror" maxlength="250">
+                        <input required name="name" id="name" value="{{ old('name',$product->name) }}" type="text" class="form-control @error('name') is-invalid @enderror" maxlength="250">
                         <small id="product_slug"><a target="_blank" href="{{ $product->get_url() }}">{{ $product->get_url() }}</a></small>
                         @hasError(['inputName' => 'name'])
                         @endhasError
                     </div>
                     <div class="form-group">
-                        <label class="d-block">Category</label>
-                        <select name="category" id="category" class="selectpicker mg-b-5" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
+                        <label class="d-block">Category *</label>
+                        <select required name="category_id" id="category_id" class="selectpicker mg-b-5" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
                             <option value="0" >-- Select Category --</option>
                             @foreach($categories as $category)
                                 <option value="{{$category->id}}" @if($product->category_id == $category->id) selected @endif>{{strtoupper($category->name)}}</option>
                             @endforeach
                         </select>
-                        @hasError(['inputName' => 'category'])
+                        @hasError(['inputName' => 'category_id'])
                         @endhasError
                     </div>
                     <div class="form-group">
                         <label class="d-block">Price (in Php) *</label>
-                        <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" id="price" value="{{ old('price', number_format($product->price,2,'.','')) }}" required min="0.00" step="0.01">
+                        <input required type="number" class="form-control @error('price') is-invalid @enderror" name="price" id="price" value="{{ old('price', number_format($product->price,2,'.','')) }}" min="0.00" step="0.01">
                         @hasError(['inputName' => 'price'])
                         @endhasError
                     </div>
@@ -101,23 +101,72 @@
                     </div>
                     <div class="form-group">
                         <label class="d-block">Weight</label>
-                        <input type="text" class="form-control @error('weight') is-invalid @enderror" name="weight" id="weight" value="{{ old('weight', $product->weight) }}" >
-                        @hasError(['inputName' => 'weight'])
-                        @endhasError
+                        <input type="text" class="form-control" name="weight" value="{{ old('weight', $product->weight) }}" >
                     </div>
                     <div class="form-group">
                         <label class="d-block">Size</label>
-                        <input type="text" class="form-control @error('size') is-invalid @enderror" name="size" id="size" value="{{ old('size', $product->size) }}" min="0" step="1">
-                        @hasError(['inputName' => 'size'])
-                        @endhasError
+                        <input type="text" class="form-control" name="size" value="{{ old('size', $product->size) }}" min="0" step="1">
                     </div>
                     <div class="form-group">
-                        <label class="d-block">Unit of Measurement</label>
-                        <input type="text" class="form-control @error('uom') is-invalid @enderror" name="uom" id="uom" value="{{ old('uom', $product->uom) }}" min="0" step="1">
+                        <label class="d-block">Unit of Measurement *</label>
+                        <input required type="text" class="form-control @error('uom') is-invalid @enderror" name="uom" id="uom" value="{{ old('uom', $product->uom) }}" min="0" step="1">
                         @hasError(['inputName' => 'uom'])
                         @endhasError
-                    </div>                   
-                    
+                    </div> 
+
+                    <!-- product additional info -->
+                    <div class="form-group">
+                        <label class="d-block">Author/s</label>
+                        <input type="text" class="form-control" data-role="tagsinput" name="authors" value="{{ old('authors',$product->additional_info->authors) }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Materials</label>
+                        <input name="materials" value="{{ old('materials',$product->additional_info->materials) }}" type="text" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>No of Pages</label>
+                        <input name="no_of_pages" value="{{ old('no_of_pages',$product->additional_info->no_of_pages) }}" type="number" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ISBN</label>
+                        <input class="form-control" type="text" name="isbn" value="{{ old('isbn',$product->additional_info->isbn) }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Editorial Reviews</label>
+                        <textarea rows="3" name="editorial_review" class="form-control">
+                            {{ old('editorial_review',$product->additional_info->editorial_reviews) }}
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="d-block" id="synopsisLabel">Synopsis</label>
+                        <textarea name="synopsis" rows="10" cols="80">
+                            {!! old('synopsis',$product->additional_info->synopsis) !!}
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="d-block" id="about_authorLabel">About Author</label>
+                        <textarea name="about_author" rows="10" cols="80">
+                            {!! old('about_author',$product->additional_info->about_author) !!}
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mg-t-20">
+                    <div class="form-group">
+                        <label>Additional Information</label>
+                        <textarea rows="3" name="add_info" class="form-control">{{ old('add_info',$product->additional_info->additional_info) }}</textarea>
+                    </div>
+                    <!-- product additional info -->
                     <div class="form-group">
                         <label class="d-block">Upload images</label>
                         <input type="file" id="upload_image" class="image_path" accept="image/*" multiple>
@@ -180,6 +229,7 @@
                         @hasError(['inputName' => 'status'])
                         @endhasError
                     </div>
+
                     <div class="form-group">
                         <label class="d-block">Display</label>
                         <div class="custom-control custom-switch @error('is_featured') is-invalid @enderror">
@@ -327,6 +377,8 @@
             allowedContent: true,
 
         };
+        CKEDITOR.replace('about_author', options);
+        CKEDITOR.replace('synopsis', options);
         let editor = CKEDITOR.replace('long_description', options);
         editor.on('required', function (evt) {
             if ($('.invalid-feedback').length == 1) {
@@ -400,7 +452,6 @@
                     success: function(returnData) {
                         $('#bannersDiv').show();
                         $('#selectImages').hide();
-                        console.log(returnData);
                         if (returnData.status == "success") {
                             while ($('input[name="photos['+image_count+'][image_path]"]').length) {
                                 image_count += 1;

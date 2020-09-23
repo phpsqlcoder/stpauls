@@ -56,12 +56,11 @@ class ProductController extends Controller
 
         $advanceSearchData = $listing->get_search_data($this->advanceSearchFields);
         $uniqueProductByCategory = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'category_id');
-        $uniqueProductByBrand = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'brand');
         $uniqueProductByUser = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'created_by');
 
         $searchType = 'simple_search';
 
-        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByBrand','uniqueProductByUser','advanceSearchData'));
+        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByUser','advanceSearchData'));
 
     }
 
@@ -84,13 +83,12 @@ class ProductController extends Controller
         $filter = $listing->get_filter($this->searchFields);
 
         $advanceSearchData = $listing->get_search_data($this->advanceSearchFields);
-        $uniqueProductByCategory = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'category_id');
         $uniqueProductByBrand = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'brand');
         $uniqueProductByUser = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'created_by');
 
         $searchType = 'advance_search';
 
-        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByBrand','uniqueProductByUser','advanceSearchData'));
+        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByBrand','uniqueProductByUser','advanceSearchData'));
     }
 
     /**
@@ -113,14 +111,11 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        $zoom_image = '';
-
-
         $slug = Page::convert_to_slug($request->name);
 
         $product = Product::create([
             'code' => $request->code,
-            'category_id' => $request->category,
+            'category_id' => $request->category_id,
             'name' => $request->name,
             'slug' => $slug,
             'short_description' => $request->short_description,
@@ -139,11 +134,6 @@ class ProductController extends Controller
             'created_by' => Auth::id(),
         ]);
 
-        if($request->hasFile('zoom_image'))
-        {
-            $newFile = $this->upload_file_to_storage('zoom_image/'.$product->id, $request->file('zoom_image'));
-            $zoom_image = $newFile['url'];
-        }
 
         $this->store_product_additional_info($product->id,$request);
         $this->tags($product->id, $request->tags);
@@ -165,10 +155,7 @@ class ProductController extends Controller
             ]);
         }
 
-
         return redirect()->route('products.index')->with('success', __('standard.products.product.create_success'));
-
-        //return $request;
     }
 
     public function store_product_additional_info($prodID,$request)
@@ -233,21 +220,7 @@ class ProductController extends Controller
      */
     public function update(ProductRequest $request, $id)
     {
-
         $product = Product::findOrFail($id);
-
-        $zoom_image = $product->zoom_image;
-        if (isset($request->delete_zoom)) {
-            $zoom_image = '';
-        }
-
-        if($request->hasFile('zoom_image'))
-        {
-            $newFile = $this->upload_file_to_storage('zoom_image/'.$id, $request->file('zoom_image'));
-            $zoom_image = $newFile['url'];
-        }
-//        $colors = ProductVariation::colors($id);
-//        $sizes  = ProductVariation::sizes($id);
 
         if($product->name == $request->name){
             $slug = $product->slug;
@@ -258,7 +231,7 @@ class ProductController extends Controller
 
         $product->update([
             'code' => $request->code,
-            'category_id' => $request->category,
+            'category_id' => $request->category_id,
             'name' => $request->name,
             'slug' => $slug,
             'short_description' => $request->short_description,
@@ -277,14 +250,11 @@ class ProductController extends Controller
             'created_by' => Auth::id()
         ]);
 
-
-
+        $this->update_product_additional_info($product->id,$request);
         $this->update_tags($product->id,$request->tags);
 
         $photos = $this->set_order(request('photos'));
-
         $this->update_photos($this->get_product_photos($photos));
-
         $this->remove_photos_from_product(request('remove_photos'));
 
         $newPhotos = $this->get_new_photos($photos);
@@ -304,6 +274,20 @@ class ProductController extends Controller
         }
 
         return redirect()->route('products.index')->with('success', __('standard.products.product.update_success'));
+    }
+
+    public function update_product_additional_info($prodID,$request)
+    {
+        ProductAdditionalInfo::where('product_id',$prodID)->update([
+            'synopsis' => $request->synopsis,
+            'authors' => $request->authors,
+            'materials' => $request->materials,
+            'no_of_pages' => $request->no_of_pages,
+            'isbn' => $request->isbn,
+            'editorial_reviews' => $request->editorial_review,
+            'about_author' => $request->about_author,
+            'additional_info' => $request->add_info
+        ]);
     }
 
     public function update_photos($photos)

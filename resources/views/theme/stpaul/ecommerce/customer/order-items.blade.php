@@ -7,7 +7,7 @@
 		$subtotal += $total;
 	@endphp
 	<tr>
-		<td>{{ $item->product->code }}</td>
+		<td>{{ $item->product->name }}</td>
 		<td>{{ str_limit(strip_tags($item->product->description), 80, $end ='...') }}</td>
 		<td>{{ $item->qty }}</td>
 		<td>{{ number_format($item->price,2) }}</td>
@@ -25,6 +25,10 @@
         <td>{{ number_format($sales->delivery_fee_amount,2) }}</td>
     </tr>
     <tr style="font-weight:bold;">
+        <td colspan="4">Service Fee</td>                                 
+        <td>{{ number_format($sales->service_fee,2) }}</td>
+    </tr>
+    <tr style="font-weight:bold;">
         <td colspan="4">Grand total</td>
-        <td>{{ number_format($subtotal+$sales->delivery_fee_amount,2) }}</td>
+        <td>{{ number_format($subtotal+$sales->delivery_fee_amount+$sales->service_fee,2) }}</td>
     </tr>

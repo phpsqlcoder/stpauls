@@ -84,9 +84,6 @@ class CheckoutController extends Controller
 
     public function ajax_deliverable_cities($id)
     {
-
-        $data = Deliverablecities::where('province',$id)->get();
-
-        return response($data);
+        
     }
 }
