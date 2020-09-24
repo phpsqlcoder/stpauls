@@ -19,7 +19,7 @@ class ProductSeeder extends Seeder
                     'code' => 'PR000000'.$i,
                     'category_id' => 5,
                     'name' => 'Product '.$i,
-                    'short_description' => '<p>This is short description</p>',
+                    'short_description' => 'This is short description',
                     'description' => '<p>This is description</p>',
                     'price' => number_format($faker->numberBetween($min = 1, $max = 1000),4),
                     'currency' => 'PHP',

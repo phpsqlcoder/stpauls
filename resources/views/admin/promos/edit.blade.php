@@ -35,7 +35,7 @@
             <div class="col-lg-6">
             	<div class="form-group">
             		<label class="d-block">Name*</label>
-            		<input required type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name',$promo->name) }}">
+            		<input required type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name',$promo->name) }}" maxlength="150">
             		@hasError(['inputName' => 'name'])
                     @endhasError
             	</div>
@@ -43,7 +43,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label class="d-block">Promotion Date & Time*</label>
-                            <input required type="text" name="promotion_dt" class="form-control wd-100p @error('promotion_dt') is-invalid @enderror" placeholder="Choose daterange" id="date1" value="{{ date('Y-m-d H:i',strtotime($promo->promo_start)) }}-{{ date('Y-m-d H:i',strtotime($promo->promo_end)) }}">
+                            <input required type="text" name="promotion_dt" class="form-control wd-100p @error('promotion_dt') is-invalid @enderror" placeholder="Choose date range" id="date1" value="{{ date('Y-m-d H:i',strtotime($promo->promo_start)) }} - {{ date('Y-m-d H:i',strtotime($promo->promo_end)) }}">
                             @hasError(['inputName' => 'promotion_dt'])
                     		@endhasError
                         </div>
@@ -60,7 +60,7 @@
                 <div class="form-group">
                     <label class="d-block">Visibility</label>
                     <div class="custom-control custom-switch @error('status') is-invalid @enderror">
-                        <input type="checkbox" class="custom-control-input" name="status" {{ (old("status") == "ON" || $promo->status == "PUBLISHED" ? "checked":"") }} id="customSwitch1">
+                        <input type="checkbox" class="custom-control-input" name="status" {{ (old("status") == "ON" || $promo->status == "ACTIVE" ? "checked":"") }} id="customSwitch1">
                         <label class="custom-control-label" id="label_visibility" for="customSwitch1">{{ucfirst(strtolower($promo->status))}}</label>
                     </div>
                     @hasError(['inputName' => 'status'])
@@ -91,7 +91,6 @@
                     </thead>
                     <tbody>
                     @foreach($categories as $category)
-                        @if($category->products->count())
                             <tr>
                                 <td width="50%"><p class="mg-0 pd-t-5 pd-b-5 tx-uppercase tx-semibold tx-primary">{{ $category->name }}</p></td>
                                 <td class="text-right">
@@ -101,32 +100,28 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                @forelse($products as $product)
-                                    @php $row = $loop->iteration; @endphp
-                                    @if($product->category_id == $category->id)
-                                        <tr>
-                                            <td>{{ $product->name }}</td>
-                                            <td class="text-right">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" name="productid[]" value="{{$product->id}}" @if(\App\EcommerceModel\ProductCategory::check_product_in_promo($promo->id,$product->id) > 0) checked @endif class="custom-control-input cb category_{{$product->category_id}}" id="pcategory{{$product->id}}">
-                                                    <label class="custom-control-label" for="pcategory{{$product->id}}"></label>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                @empty
-                                    <tr><td>No Products</td></tr>
-                                @endforelse
-                            @endif
-                        </tr>
+                            @forelse($products as $product)
+                                @if($product->category_id == $category->id)
+                                <tr>
+                                    <td>{{ $product->name }}</td>
+                                    <td class="text-right">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" name="productid[]" value="{{$product->id}}" @if(\App\EcommerceModel\ProductCategory::check_product_in_promo($promo->id,$product->id) > 0) checked @endif class="custom-control-input cb category_{{$product->category_id}}" id="pcategory{{$product->id}}">
+                                            <label class="custom-control-label" for="pcategory{{$product->id}}"></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endif
+                            @empty
+                                <tr><td>No Products</td></tr>
+                            @endforelse
                     @endforeach
                     </tbody>
                 </table>
             </div>
 
             <div class="col-lg-12 mg-t-20 mg-b-30">
-                <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Submit Promotion</button>
+                <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Update Promo</button>
                 <a href="{{ route('promos.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
             </div>
         </div>
@@ -188,10 +183,10 @@
 
         $("#customSwitch1").change(function() {
             if(this.checked) {
-                $('#label_visibility').html('Published');
+                $('#label_visibility').html('Active');
             }
             else{
-                $('#label_visibility').html('Private');
+                $('#label_visibility').html('Inactive');
             }
         });
     </script>

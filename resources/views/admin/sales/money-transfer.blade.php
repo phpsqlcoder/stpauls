@@ -74,8 +74,9 @@
                                 <th>Payment Type</th>
                                 <th>Payment Date</th>
                                 <th>Order Number</th>
-                                <th>Customer</th>
                                 <th>Amount</th>
+                                <th>Payment Status</th>
+                                <th>Delivery Status</th>
                                 <th>Status</th>
                                 <th>Attachment</th>
                                 <th>Action</th>
@@ -83,33 +84,37 @@
                             </thead>
                             <tbody>
 
-                            @forelse($payments as $payment)
+                            @forelse($sales as $sale)
                                 <tr>
-                                    <td><strong>{{ $payment->receipt_number }}</strong></td>
-                                    <td>{{ $payment->payment_type }}</td>
-                                    <td>{{ $payment->payment_date }}</td>
-                                    <td>{{ $payment->order_number }}</td>
-                                    <td>{{ $payment->customer_name }}</td>
-                                    <td>{{ number_format($payment->amount,2) }}</td>
+                                    <td><strong>{{ $sale->receipt_number }}</strong></td>
+                                    <td>{{ $sale->payment_type }}</td>
+                                    <td>{{ $sale->payment_date }}</td>
+                                    <td>{{ $sale->order_number }}</td>
+                                    <td>{{ number_format($sale->amount,2) }}</td>
+                                    <td>{{ $sale->payment_status }}</td>
+                                    <td>{{ $sale->delivery_status }}</td>
                                     <td>
-                                        @if($payment->is_verify == 0)
-                                            <span class="badge badge-secondary">UNVALIDATED</span>
+                                        @if($sale->is_verify == 0)
+                                            <span class="badge badge-secondary">PENDING</span>
                                         @else
                                             <span class="badge badge-success">VALIDATED</span>
                                         @endif
                                     </td>
-                                    <td><a target="_blank" href="{{ asset('storage/payments/'.$payment->id.'/'.$payment->attachment) }}">{{ $payment->attachment }}</a></td>
+                                    <td><a target="_blank" href="{{ asset('storage/payments/'.$sale->id.'/'.$sale->attachment) }}">{{ $sale->attachment }}</a></td>
                                     <td>
                                         <nav class="nav table-options">
-                                            @if($payment->is_verify == 0)
+                                            @if($sale->is_verify == 0)
                                             <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i data-feather="settings"></i>
                                             </a>
                                             @endif
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                @if($payment->is_verify == 0)
-                                                    <a class="dropdown-item" href="javascript:void(0)" title="Validate Payment" onclick="validate_payment('{{$payment->id}}')">Validate</a>
+                                                @if($sale->is_verify == 0)
+                                                    <a class="dropdown-item" href="javascript:void(0)" title="Confirm Payment" onclick="validate_payment('{{$sale->id}}')">Confirm Payment</a>
                                                 @endif
+                                                <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+
+                                                <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Show Delivery History</a>
                                             </div>
                                         </nav>
                                     </td>
@@ -127,17 +132,17 @@
             <!-- End Pages -->
             <div class="col-md-6">
                 <div class="mg-t-5">
-                    @if ($payments->firstItem() == null)
+                    @if ($sales->firstItem() == null)
                         <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
                     @else
-                        <p class="tx-gray-400 tx-12 d-inline">Showing {{ $payments->firstItem() }} to {{ $payments->lastItem() }} of {{ $payments->total() }} items</p>
+                        <p class="tx-gray-400 tx-12 d-inline">Showing {{ $sales->firstItem() }} to {{ $sales->lastItem() }} of {{ $sales->total() }} items</p>
                     @endif
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="text-md-right float-md-right mg-t-5">
                     <div>
-                        {{ $payments->appends((array) $filter)->links() }}
+                        {{ $sales->appends((array) $filter)->links() }}
                     </div>
                 </div>
             </div>
@@ -173,6 +178,8 @@
             </div>
         </div>
     </div>
+
+    @include('admin.sales.modal')
 @endsection
 
 @section('pagejs')
@@ -211,6 +218,25 @@
 
         }
 
+        function change_delivery_status(id){
+            $('#prompt-change-delivery-status').modal('show');
+            $('#del_id').val(id);
+        }
+
+        function show_delivery_history(id){
+            $.ajax({
+                type: "GET",
+                url: "{{ route('display.delivery-history') }}",
+                data: { id : id },
+                success: function( response ) {
+                    $('#delivery_history_tbl').html(response);
+                    $('#prompt-show-delivery-history').modal('show');
+                }
+            });
+        }
+
+
+
         function delete_sales(x,order_number){
             $('#frm_delete').attr('action',"{{route('sales-transaction.destroy',"x")}}");
             $('#id_delete').val(x);
@@ -233,18 +259,6 @@
                 success: function( response ) {
                     $('#added_payments_tbl').html(response);
                     $('#prompt-show-added-payments').modal('show');
-                }
-            });
-        }
-
-        function show_delivery_history(id){
-            $.ajax({
-                type: "GET",
-                url: "{{ route('display.delivery-history') }}",
-                data: { id : id },
-                success: function( response ) {
-                    $('#delivery_history_tbl').html(response);
-                    $('#prompt-show-delivery-history').modal('show');
                 }
             });
         }
@@ -288,14 +302,7 @@
 
         });
 
-        function change_delivery_status(id){
-            $('#prompt-change-delivery-status').modal('show');
-            $('#del_id').val(id);
-            // $('#btnChangeDeliveryStatus').on('click', function() {
-            //     let sales = $('#delivery_status').val();
-            //     post_form("{{route('sales-transaction.delivery_status')}}",sales,id)
-            // });
-        }
+        
 
 
 

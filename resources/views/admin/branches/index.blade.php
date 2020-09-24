@@ -148,12 +148,12 @@
                                         <nav class="nav table-options">
                                             @if($branch->trashed())
                                                 <nav class="nav table-options">
-                                                    <a class="nav-link" href="{{route('branch.restore',$branch->id)}}" title="Restore this product"><i data-feather="rotate-ccw"></i></a>
+                                                    <a class="nav-link" href="{{route('branch.restore',$branch->id)}}" title="Restore this branch"><i data-feather="rotate-ccw"></i></a>
                                                 </nav>
                                             @else
-                                            <a class="nav-link" href="{{ route('branch.edit',$branch->id) }}" title="Edit Product"><i data-feather="edit"></i></a>
+                                            <a class="nav-link" href="{{ route('branch.edit',$branch->id) }}" title="Edit Branch"><i data-feather="edit"></i></a>
 
-                                            <a class="nav-link" href="javascript:void(0)" onclick="delete_one_branch({{$branch->id}},'{{$branch->name}}')" title="Delete Product"><i data-feather="trash"></i></a>
+                                            <a class="nav-link" href="javascript:void(0)" onclick="delete_one_branch('{{$branch->id}}','{{$branch->name}}')" title="Delete Branch"><i data-feather="trash"></i></a>
                                             @endif
                                         </nav>
                                     </td>

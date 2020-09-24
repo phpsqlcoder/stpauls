@@ -288,7 +288,7 @@
                                 <div class="col-lg-12">
                                     <label class="subtitle">Billed To</label>
                                     <h3 class="customer-name">{{ $customer->fullname }}</h3>
-                                    <p class="customer-address">Delivert Type: <span id="spanshipMethod"></span></p>
+                                    <p class="customer-address">Delivery Type: <span id="spanshipMethod"></span></p>
                                     <p class="customer-address"><span id="customer-address"></span></p>
                                     <p class="customer-phone" >Tel No: <span id="customer-phone"></span></p>
                                     <p class="customer-email" id="customer-email">Email: {{ $customer->email }}</p>

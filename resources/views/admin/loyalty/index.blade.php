@@ -129,7 +129,7 @@
                                                     <a class="nav-link" href="javascript:;" onclick="updateDiscount('{{$customer->id}}','{{$customer->discount_id}}')" title="Edit Discount"><i data-feather="edit"></i></a>
                                                 @endif
 
-                                                <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#customer_{{$customer->customer_id}}" class="accordion-toggle" title="View Purchases"><i data-feather="eye"></i></a>
+                                                <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#customer_{{$customer->customer_id}}" class="accordion-toggle" title="View Transactions"><i data-feather="eye"></i></a>
 
                                                 @if($customer->status == 'PENDING')
                                                 <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

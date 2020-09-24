@@ -162,7 +162,7 @@ Manage Customer
                                     @else
                                         <nav class="nav table-options">
 
-                                            <a class="nav-link" target="_blank" href="{{route('product.index.advance-search')}}?name=&category_id={{$category->id}}&brand=&user_id=&short_description=&description=&status=&price1=&price2=&updated_at1=&updated_at2=" title="View Products"><i data-feather="eye"></i></a>
+                                            <a class="nav-link" target="_blank" href="{{route('product.index.advance-search')}}?name=&category_id={{$category->id}}&user_id=&short_description=&description=&status=&price1=&price2=&updated_at1=&updated_at2=" title="View Products"><i data-feather="eye"></i></a>
 
                                             @if (auth()->user()->has_access_to_route('product-categories.edit'))
                                                 <a class="nav-link" href="{{ route('product-categories.edit',$category->id) }}" title="Edit Category"><i data-feather="edit"></i></a>

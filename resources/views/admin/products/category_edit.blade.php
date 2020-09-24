@@ -30,8 +30,9 @@
                     @method('PUT')
                     <div class="form-group">
                         <label class="d-block">Name *</label>
-                        <input type="text" name="name" id="name" value="{{ old('name',$category->name)}}" class="form-control @error('name') is-invalid @enderror">
-                        @hasError(['inputName' => 'name']) @endhasError
+                        <input required type="text" name="name" id="name" value="{{ old('name',$category->name)}}" class="form-control @error('name') is-invalid @enderror" maxlength="150">
+                        @hasError(['inputName' => 'name'])
+                        @endhasError
                         <small id="category_slug"><a target="_blank" href="{{ url('/').'/products-list?type=category&criteria='.$category->id }}">{{ url('/').'/?type=category&criteria='.$category->id }}</a></small>
                     </div>
 
@@ -46,9 +47,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="d-block">Description *</label>
-                        <textarea rows="3" class="form-control @error('description') is-invalid @enderror" name="description">{{ old('description',$category->description) }}</textarea>
-                        @hasError(['inputName' => 'description' ]) @endhasError
+                        <label class="d-block">Description</label>
+                        <textarea rows="3" class="form-control @error('description') is-invalid @enderror" name="description" maxlength="250">
+                            {{ old('description',$category->description) }}
+                        </textarea>
+                        @hasError(['inputName' => 'description' ])
+                        @endhasError
                     </div>
 
                     <div class="form-group">

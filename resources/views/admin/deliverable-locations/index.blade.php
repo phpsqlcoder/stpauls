@@ -147,13 +147,13 @@ Manage Customer
                                     <td>
                                         @if($location->trashed())
                                             <nav class="nav table-options">
-                                                <a class="nav-link" href="{{route('location-rate.restore',$location->id)}}" title="Restore this service"><i data-feather="rotate-ccw"></i></a>
+                                                <a class="nav-link" href="{{route('location-rate.restore',$location->id)}}" title="Restore this flat rate"><i data-feather="rotate-ccw"></i></a>
                                             </nav>
                                         @else
                                             <nav class="nav table-options">
-                                                <a class="nav-link" href="{{ route('locations.edit',$location->id) }}" title="Edit Rate"><i data-feather="edit"></i></a>
+                                                <a class="nav-link" href="{{ route('locations.edit',$location->id) }}" title="Edit Flat Rate"><i data-feather="edit"></i></a>
 
-                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_rate('{{$location->id}}')" title="Delete Service"><i data-feather="trash"></i></a>
+                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_rate('{{$location->id}}')" title="Delete Flat Rate"><i data-feather="trash"></i></a>
 
                                                 <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i data-feather="settings"></i>

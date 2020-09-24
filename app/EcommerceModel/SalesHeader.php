@@ -83,6 +83,11 @@ class SalesHeader extends Model
         return $data;
     }
 
+    // public function payment()
+    // {
+    //     return $this->belongsTo('\App\EcommerceModel\SalesPayment','sales_header_id');
+    // }
+
     public function salesheader_payments()
     {
         return $this->hasMany('\App\EcommerceModel\SalesPayment','id','sales_header_id');

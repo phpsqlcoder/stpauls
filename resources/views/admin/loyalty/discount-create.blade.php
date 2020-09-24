@@ -34,7 +34,7 @@
             <div class="col-lg-6">
             	<div class="form-group">
             		<label class="d-block">Name*</label>
-            		<input required type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}">
+            		<input required type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" maxlength="150">
             		@hasError(['inputName' => 'name'])
                     @endhasError
             	</div>
@@ -58,7 +58,7 @@
             </div>
 
             <div class="col-lg-12 mg-t-20 mg-b-30">
-                <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Submit Discount</button>
+                <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Discount</button>
                 <a href="{{ route('promos.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
             </div>
         </div>

@@ -47,7 +47,7 @@ class ProductCategoryController extends Controller
      */
     public function create()
     {
-        $productCategories = ProductCategory::all();
+        $productCategories = ProductCategory::where('status','PUBLISHED')->orderBy('name','asc')->get();
 
         return view('admin.products.category_create', compact('productCategories'));
     }
@@ -61,9 +61,9 @@ class ProductCategoryController extends Controller
     public function store(Request $request)
     {
         Validator::make($request->all(), [
-                'name' => 'required|max:150|unique:product_categories,name',
-                'description' => 'required|min:3|max:250'
-            ])->validate();
+            'name' => 'required|max:150|unique:product_categories,name',
+            'description' => 'max:250'
+        ])->validate();
 
         $slug = Page::convert_to_slug($request->name);
 
@@ -101,7 +101,7 @@ class ProductCategoryController extends Controller
     {
         $category = ProductCategory::findOrFail($id);
 
-        $productCategories = ProductCategory::all();
+        $productCategories = ProductCategory::where('status','PUBLISHED')->orderBy('name','asc')->get();
 
         return view('admin.products.category_edit',compact('category', 'productCategories'));
     }
@@ -116,8 +116,8 @@ class ProductCategoryController extends Controller
     public function update(Request $request, $id)
     {
         Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required|min:3|max:1000'
+            'name' => 'required|max:150',
+            'description' => 'max:250'
         ])->validate();
 
         $productCategory = ProductCategory::findOrFail($id);

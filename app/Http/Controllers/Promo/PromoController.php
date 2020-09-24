@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Promo;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Helpers\ListingHelper;
@@ -54,14 +55,14 @@ class PromoController extends Controller
     {
 
         $products = 
-            Product::whereNotIn('id', function($query){
+            Product::where('status','PUBLISHED')->whereNotIn('id', function($query){
                 $query->select('product_id')->from('onsale_products')
                 ->join('promos','promos.id','=','onsale_products.promo_id')
-                ->where('promos.status','PUBLISHED')
+                ->where('promos.status','ACTIVE')
                 ->where('promos.is_expire', 0);
             })->get();
 
-        $categories = ProductCategory::orderBy('name','asc')->get();
+        $categories = ProductCategory::where('status','PUBLISHED')->orderBy('name','asc')->get();
 
         return view('admin.promos.create',compact('categories','products'));
     }
@@ -74,6 +75,17 @@ class PromoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate(
+            $request,[
+                'name' => 'required|max:150|unique:promos,name',
+                'promotion_dt' => 'required',
+                'discount' => 'required'
+            ],
+            [
+                'name.unique' => 'This promo is already in the list.',
+            ]  
+        );
+
         $data = $request->all();
         $prodId = $data['productid'];
 
@@ -84,7 +96,7 @@ class PromoController extends Controller
             'promo_start' => $date[0].':00.000',
             'promo_end' => $date[1].':00.000',
             'discount' => $request->discount,
-            'status' => ($request->has('status') ? 'PUBLISHED' : 'PRIVATE'),
+            'status' => ($request->has('status') ? 'ACTIVE' : 'INACTIVE'),
             'is_expire' => 0,
             'user_id' => Auth::id()
         ]);
@@ -126,26 +138,22 @@ class PromoController extends Controller
     public function edit($id)
     {
         $unsale_products = 
-            Product::whereNotIn('id', function($query){
+            Product::where('status','PUBLISHED')->whereNotIn('id', function($query){
                 $query->select('product_id')->from('onsale_products')
                 ->join('promos','promos.id','=','onsale_products.promo_id')
-                ->where('promos.status','PUBLISHED')
+                ->where('promos.status','ACTIVE')
                 ->where('promos.is_expire', 0);
             })->get();
 
         $onsale_products = 
-            Product::whereIn('id', function($query) use ($id){
+            Product::where('status','PUBLISHED')->whereIn('id', function($query) use ($id){
                 $query->select('product_id')->from('onsale_products')
                 ->join('promos','promos.id','=','onsale_products.promo_id')
                 ->where('promos.id',$id);
             })->get();
 
-
+        $categories = ProductCategory::where('status','PUBLISHED')->orderBy('name','asc')->get();
         $products = $unsale_products->merge($onsale_products);
-
-
-        $categories = ProductCategory::orderBy('name','asc')->get();
-
         $promo = Promo::find($id);
 
         return view('admin.promos.edit',compact('products','categories','promo'));
@@ -160,40 +168,54 @@ class PromoController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $data = $request->all();
+
+        $date = explode(' - ',$request->promotion_dt);
+
+        $promo = Promo::find($id)->update([
+            'name' => $request->name,
+            'promo_start' => $date[0].':00.000',
+            'promo_end' => $date[1].':00.000',
+            'discount' => $request->discount,
+            'status' => ($request->has('status') ? 'ACTIVE' : 'INACTIVE'),
+            'user_id' => Auth::id()
+        ]);
         
-        $arr_promoproducts = [];
-        $promo_products = OnSaleProducts::where('promo_id',$id)->get();
+        if($promo){
 
-        foreach($promo_products as $p){
-            array_push($arr_promoproducts,$p->product_id);
-        }
+            $arr_promoproducts = [];
+            $promo_products = OnSaleProducts::where('promo_id',$id)->get();
 
-        // save new promotional products
-        $selected_products = $data['productid'];
-        foreach($selected_products as $key => $prod){
-            if(!in_array($prod,$arr_promoproducts)){
-                $product = Product::find($prod);
-                OnSaleProducts::create([
-                    'promo_id' => $id,
-                    'product_id' => $prod,
-                    'cost' => $product->price,
-                    'user_id' => Auth::id()
-                ]);
+            foreach($promo_products as $p){
+                array_push($arr_promoproducts,$p->product_id);
             }
-        }
 
-        // delete existing promotional product that is not selected
-        $arr_selectedproducts = [];
-        foreach($selected_products as $key => $sprod){
-            array_push($arr_selectedproducts,$sprod);
-        }
-
-        foreach($promo_products as $product){
-            if(!in_array($product->product_id,$arr_selectedproducts)){
-                OnSaleProducts::where('promo_id',$id)->where('product_id',$product->product_id)->delete();
+            // save new promotional products
+            $selected_products = $data['productid'];
+            foreach($selected_products as $key => $prod){
+                if(!in_array($prod,$arr_promoproducts)){
+                    $product = Product::find($prod);
+                    OnSaleProducts::create([
+                        'promo_id' => $id,
+                        'product_id' => $prod,
+                        'cost' => $product->price,
+                        'user_id' => Auth::id()
+                    ]);
+                }
             }
+
+            // delete existing promotional product that is not selected
+            $arr_selectedproducts = [];
+            foreach($selected_products as $key => $sprod){
+                array_push($arr_selectedproducts,$sprod);
+            }
+
+            foreach($promo_products as $product){
+                if(!in_array($product->product_id,$arr_selectedproducts)){
+                    OnSaleProducts::where('promo_id',$id)->where('product_id',$product->product_id)->delete();
+                }
+            }
+
         }
 
         return redirect(route('promos.index'))->with('success', __('standard.promos.promo_update_details_success'));

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Loyalty;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Helpers\ListingHelper;
 use App\Http\Controllers\Controller;
@@ -50,6 +51,13 @@ class DiscountController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate(
+            $request,[
+                'name' => 'required|max:150|unique:discounts,name',
+                'discount' => 'required'
+            ]
+        );
+
         Discount::create([
             'name' => $request->name,
             'discount' => $request->discount,

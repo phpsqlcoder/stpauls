@@ -55,13 +55,17 @@ class ProductCategory extends Model
     } 
 
     public static function count_unsale_products($catid)
-    {
-        $products = DB::table('products')->where('category_id',$catid)->get();
+    {   
+        $products = DB::table('products')->where('status','PUBLISHED')->where('category_id',$catid)->get();
 
         $count = 0;
         foreach($products as $product){
-            $qry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','PUBLISHED')->where('promos.is_expire',0)->where('onsale_products.product_id',$product->id)->count();
-            $count += $qry;
+            $qry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$product->id)->exists();
+
+            if($qry){
+            } else {
+               $count += 1; 
+            } 
         }
 
         return $count;

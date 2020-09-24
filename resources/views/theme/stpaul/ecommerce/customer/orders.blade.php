@@ -299,7 +299,7 @@
                                 orderid : orderid,
                             },
                         success: function( response ) {
-                            swal("Success!", "Product has been removed.", "success");
+                            swal("Success!", "Order has been cancelled.", "success");
                             $('#paybtn'+orderid).hide();
                             $('#cancelbtn'+orderid).hide();
                             $('#order'+orderid+'_status').html('CANCELLED');

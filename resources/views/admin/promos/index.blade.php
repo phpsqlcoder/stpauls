@@ -84,10 +84,10 @@ Manage Customer
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/page/publish') == 1)
-                                            <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('PUBLISHED')">{{__('common.publish')}}</a>
+                                            <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('ACTIVE')">Active</a>
                                         @endif
                                         @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/page/private') == 1)
-                                            <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('PRIVATE')">{{__('common.private')}}</a>
+                                            <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('INACTIVE')">Inactive</a>
                                         @endif
                                         @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/page/delete') == 1)
                                             <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_promos()">{{__('common.delete')}}</a>
@@ -156,11 +156,11 @@ Manage Customer
                                     <td>
                                         @if($promo->trashed())
                                             <nav class="nav table-options">
-                                                <a class="nav-link" href="{{route('promo.restore',$promo->id)}}" title="Restore this service"><i data-feather="rotate-ccw"></i></a>
+                                                <a class="nav-link" href="{{route('promo.restore',$promo->id)}}" title="Restore this promo"><i data-feather="rotate-ccw"></i></a>
                                             </nav>
                                         @else
                                             <nav class="nav table-options">
-                                                <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#promo-details_{{$promo->id}}" class="accordion-toggle"><i data-feather="eye"></i></a>
+                                                <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#promo-details_{{$promo->id}}" class="accordion-toggle" title="View Items"><i data-feather="list"></i></a>
 
                                                 <a class="nav-link" href="{{ route('promos.edit',$promo->id) }}" title="Edit Promo"><i data-feather="edit"></i></a>
 
@@ -170,10 +170,10 @@ Manage Customer
                                                     <i data-feather="settings"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    @if($promo->status == 'PUBLISHED')
-                                                        <a class="dropdown-item" href="{{route('promo.change-status',[$promo->id,'PRIVATE'])}}" > Private</a>
+                                                    @if($promo->status == 'ACTIVE')
+                                                        <a class="dropdown-item" href="{{route('promo.change-status',[$promo->id,'INACTIVE'])}}"> Inactive</a>
                                                     @else
-                                                        <a class="dropdown-item" href="{{route('promo.change-status',[$promo->id,'PUBLISHED'])}}"> Publish</a>
+                                                        <a class="dropdown-item" href="{{route('promo.change-status',[$promo->id,'ACTIVE'])}}"> Active</a>
                                                     @endif
                                                 </div>
                                             </nav>
@@ -184,21 +184,27 @@ Manage Customer
                                     <td colspan="8" class="hiddenRow">
                                         <div class="accordian-body collapse" id="promo-details_{{$promo->id}}">
                                             <div class="autoship-table">
-                                                <div class="table-responsive mg-b-20">
+                                                <div class="table-responsive mg-b-30">
                                                     <table class="table table-sm table-hover mg-0">
-                                                        <thead>
+                                                        <thead class="mg-b-20">
                                                             <tr>
                                                                 <th scope="col" width="30%">Product Name</th>
-                                                                <th scope="col">Price</th>
+                                                                <th scope="col">Original Price</th>
                                                                 <th scope="col">Discounted Price</th>
+                                                                <th scope="col"></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @foreach($promo->products as $product)
                                                                 <tr>
-                                                                    <th scope="row">{{ $product->details->name }}</th>
-                                                                    <td>{{ $product->details->price }}</td>
+                                                                    <td>{{ $product->details->name }}</td>
+                                                                    <td>{{ number_format($product->details->price,2) }}</td>
                                                                     <td>{{ $product->details->DiscountedPrice }}</td>
+                                                                    <td>
+                                                                        <nav class="nav table-options">
+                                                                            <a class="nav-link" target="_blank" href="{{ route('product.front.show', $product->details->slug) }}" title="View Product Profile"><i data-feather="eye"></i></a>
+                                                                        </nav>
+                                                                    </td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>

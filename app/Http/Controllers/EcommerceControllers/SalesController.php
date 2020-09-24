@@ -63,28 +63,29 @@ class SalesController extends Controller
 
         $listing = new ListingHelper('desc',10,'order_number');
 
-        $payments = 
-            SalesHeader::join('ecommerce_sales_payments','ecommerce_sales_headers.id','=','ecommerce_sales_payments.sales_header_id')
-            ->select('ecommerce_sales_payments.*','ecommerce_sales_headers.order_number','ecommerce_sales_headers.customer_name')
-            ->where('ecommerce_sales_headers.payment_method','<>',1)
-            ->where('ecommerce_sales_headers.delivery_type','<>','Cash on Delivery');
+        $sales = SalesHeader::where('payment_method','<>',1);
+
+            // SalesHeader::join('ecommerce_sales_payments','ecommerce_sales_headers.id','=','ecommerce_sales_payments.sales_header_id')
+            // ->select('ecommerce_sales_payments.*','ecommerce_sales_headers.order_number','ecommerce_sales_headers.customer_name')
+            // ->where('ecommerce_sales_headers.payment_method','<>',1)
+            // ->where('ecommerce_sales_headers.delivery_type','<>','Cash on Delivery');
 
         if(isset($_GET['startdate']) && $_GET['startdate']<>'')
-            $payments = $payments->where('ecommerce_sales_payments.payment_date','>=',$_GET['startdate']);
+            $sales = $sales->where('ecommerce_sales_payments.payment_date','>=',$_GET['startdate']);
 
         if(isset($_GET['enddate']) && $_GET['enddate']<>'')
-            $payments = $payments->where('ecommerce_sales_payments.payment_date','<=',$_GET['enddate'].' 23:59:59');
+            $sales = $sales->where('ecommerce_sales_payments.payment_date','<=',$_GET['enddate'].' 23:59:59');
 
         if(isset($_GET['search']) && $_GET['search']<>'')
-            $payments = $payments->where('ecommerce_sales_payments.receipt_number','like','%'.$_GET['search'].'%');
+            $sales = $sales->where('ecommerce_sales_payments.receipt_number','like','%'.$_GET['search'].'%');
 
-        $payments = $payments->orderBy('id','desc');
-        $payments = $payments->paginate(10);
+        $sales = $sales->orderBy('id','desc');
+        $sales = $sales->paginate(10);
 
         $filter = $listing->get_filter($this->paymentsSearchFields);
         $searchType = 'simple_search';
 
-        return view('admin.sales.money-transfer',compact('payments','filter','searchType'));
+        return view('admin.sales.money-transfer',compact('sales','filter','searchType'));
 
     }
 

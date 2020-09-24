@@ -112,15 +112,15 @@
                                     <td>
                                         @if($role->trashed())
                                             <nav class="nav table-options justify-content-end">
-                                                <a class="nav-link" href="{{route('role.restore', $role->id)}}" title="Restore this page"><i data-feather="rotate-ccw"></i></a>
+                                                <a class="nav-link" href="{{route('role.restore', $role->id)}}" title="Restore this role"><i data-feather="rotate-ccw"></i></a>
                                             </nav>
                                         @else
                                             <nav class="nav table-options justify-content-end">
                                                 @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/role/edit') == 1)
-                                                    <a href="{{ route('role.edit',$role->id) }}" class="nav-link"><i data-feather="edit"></i></a>
+                                                    <a href="{{ route('role.edit',$role->id) }}" class="nav-link" title="Edit Role"><i data-feather="edit"></i></a>
                                                 @endif
                                                 @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/role/delete') == 1)
-                                                    <a href="#modalDeleteRole" class="nav-link delete_role"  data-rid="{{ $role->id }}" data-toggle="modal"><i data-feather="trash"></i></a>
+                                                    <a href="#modalDeleteRole" class="nav-link delete_role"  data-rid="{{ $role->id }}" data-toggle="modal" title="Delete Role"><i data-feather="trash"></i></a>
                                                 @endif
                                             </nav>
                                         @endif

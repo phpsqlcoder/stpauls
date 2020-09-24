@@ -152,13 +152,13 @@ Manage Customer
                                     <td>
                                         @if($discount->trashed())
                                             <nav class="nav table-options">
-                                                <a class="nav-link" href="{{route('discount.restore',$discount->id)}}" title="Restore this service"><i data-feather="rotate-ccw"></i></a>
+                                                <a class="nav-link" href="{{route('discount.restore',$discount->id)}}" title="Restore this discount"><i data-feather="rotate-ccw"></i></a>
                                             </nav>
                                         @else
                                             <nav class="nav table-options">
                                                 <a class="nav-link" href="{{ route('discounts.edit',$discount->id) }}" title="Edit Discount"><i data-feather="edit"></i></a>
 
-                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_discount('{{$discount->id}}')" title="Delete Service"><i data-feather="trash"></i></a>
+                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_discount('{{$discount->id}}')" title="Delete Discount"><i data-feather="trash"></i></a>
 
                                                 <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i data-feather="settings"></i>

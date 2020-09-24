@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\EcommerceControllers;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\EcommerceModel\Branch;
@@ -55,6 +56,18 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate(
+            $request,[
+                'name' => 'required|max:150|unique:branches,name',
+                'address' => 'required|max:250',
+                'contact_no' => 'required',
+                'email_address' => 'required'
+            ],
+            [
+                'name.unique' => 'This branch is already in the list.',
+            ]  
+        );
+
         Branch::create([
             'name' => $request->name,
             'address' => $request->address,
@@ -87,8 +100,8 @@ class BranchController extends Controller
      */
     public function edit($id)
     {
-        $branches = Branch::findOrFail($id);
-        return view('admin.branches.edit',compact('branches'));
+        $branch = Branch::findOrFail($id);
+        return view('admin.branches.edit',compact('branch'));
     }
 
     /**

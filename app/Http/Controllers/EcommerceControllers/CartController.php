@@ -301,7 +301,7 @@ class CartController extends Controller
         foreach($productid as $key => $prodId){
 
             $product  = Product::find($prodId);
-            $promoQry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','PUBLISHED')->where('promos.is_expire',0)->where('onsale_products.product_id',$prodId);
+            $promoQry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$prodId);
 
             $promoChecker = $promoQry->count();
             if($promoChecker == 1){

@@ -37,39 +37,39 @@
                     <div class="row row-sm">
                         <div class="col-sm-6">
                             <div class="form-group mg-b-20">
-                                <label class="mg-b-5 tx-color-03">Branch Name <i class="tx-danger">*</i></label>
-                                <input required type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="category_title" @htmlValidationMessage({{__('standard.empty_all_field')}})>
+                                <label class="mg-b-5 tx-color-03">Name*</label>
+                                <input required type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{ old('name') }}" maxlength="150">
                                 @hasError(['inputName' => 'name'])
                                 @endhasError
                             </div>
 
                             <div class="form-group mg-b-20">
-                                <label class="mg-b-5 tx-color-03">Address <i class="tx-danger">*</i></label>
-                                <input required type="text" class="form-control @error('address') is-invalid @enderror" name="address" id="category_title" @htmlValidationMessage({{__('standard.empty_all_field')}})>
+                                <label class="mg-b-5 tx-color-03">Address*</label>
+                                <input required type="text" class="form-control @error('address') is-invalid @enderror" name="address" id="address" value="{{old('address')}}" maxlength="250">
                                 @hasError(['inputName' => 'address'])
                                 @endhasError
                             </div>
                             <div class="form-group mg-b-20">
-                                <label class="mg-b-5 tx-color-03">Contact Number <i class="tx-danger">*</i></label>
-                                <input required type="text" class="form-control @error('contact_no') is-invalid @enderror" name="contact_no" id="contact_no" maxlength="250" @htmlValidationMessage({{__('standard.empty_all_field')}})>
+                                <label class="mg-b-5 tx-color-03">Contact Number*</label>
+                                <input required type="text" class="form-control @error('contact_no') is-invalid @enderror" name="contact_no" id="contact_no" maxlength="250" value="{{old('contact_no')}}">
                                 @hasError(['inputName' => 'contact_no'])
                                 @endhasError
                             </div>
                             <div class="form-group mg-b-20">
                                 <label class="mg-b-5 tx-color-03">Contact Person</label>
-                                <input type="text" class="form-control @error('contact_person') is-invalid @enderror" name="contact_person" id="category_title" >
+                                <input type="text" class="form-control @error('contact_person') is-invalid @enderror" name="contact_person" id="contact_person" value="{{old('contact_person')}}">
                                 @hasError(['inputName' => 'contact_person'])
                                 @endhasError
                             </div>
                             <div class="form-group mg-b-20">
-                                <label class="mg-b-5 tx-color-03">Email Address <i class="tx-danger">*</i></label>
-                                <input type="email" class="form-control @error('email_address') is-invalid @enderror" name="email_address" id="category_title" >
+                                <label class="mg-b-5 tx-color-03">Email Address*</label>
+                                <input required type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" class="form-control @error('email_address') is-invalid @enderror" name="email_address" id="email_address" value="{{old('email_address')}}">
                                 @hasError(['inputName' => 'email_address'])
                                 @endhasError
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-sm btn-primary btn-uppercase">Save Branch</button>
+                    <button type="submit" class="btn btn-sm btn-primary btn-uppercase">Submit Branch</button>
                     <a href="{{ route('branch.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
                 </form>
             </div>
@@ -98,7 +98,7 @@
 
         $(document).ready(function () {
             //called when key is pressed in textbox
-            $("#contact_nos").keypress(function (e) {
+            $("#contact_no").keypress(function (e) {
 
                 var charCode = (e.which) ? e.which : event.keyCode
                 if (charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57))

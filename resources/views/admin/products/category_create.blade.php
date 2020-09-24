@@ -29,9 +29,10 @@
                     @csrf
                     @method('POST')
                     <div class="form-group">
-                        <label class="d-block">Name *</label>
-                        <input type="text" name="name" id="name" value="{{ old('name')}}" class="form-control @error('name') is-invalid @enderror" maxlength="150">
-                        @hasError(['inputName' => 'name'])@endhasError
+                        <label class="d-block">Name*</label>
+                        <input required type="text" name="name" id="name" value="{{ old('name')}}" class="form-control @error('name') is-invalid @enderror" maxlength="150">
+                        @hasError(['inputName' => 'name'])
+                        @endhasError
                         <small id="category_slug"></small>
                     </div>
 
@@ -47,8 +48,9 @@
 
                     <div class="form-group">
                         <label class="d-block">Description</label>
-                        <textarea rows="3" class="form-control @error('description') is-invalid @enderror" name="description">{{ old('description') }}</textarea>
-                        @hasError(['inputName' => 'description'])@endhasError
+                        <textarea rows="3" class="form-control @error('description') is-invalid @enderror" name="description" maxlength="250">{{ old('description') }}</textarea>
+                        @hasError(['inputName' => 'description'])
+                        @endhasError
                     </div>
 
                     <div class="form-group">
@@ -61,7 +63,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Create Category</button>
+                    <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Category</button>
                     <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('product-categories.index') }}">Cancel</a>
                 </form>
             </div>

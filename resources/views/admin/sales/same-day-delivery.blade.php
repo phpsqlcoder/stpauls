@@ -125,7 +125,7 @@
                                     <td><a href="{{route('admin.report.delivery_report',$sale->id)}}" target="_blank">{{$sale->delivery_status}}</a></td>
                                     <td>
                                         <nav class="nav table-options">
-                                                <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Page"><i data-feather="eye"></i></a>
+                                                <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Transaction"><i data-feather="eye"></i></a>
                                                 @if($sale->status != 'CANCELLED')
                                                     @if($sale->delivery_status != 'Delivered')
                                                     <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

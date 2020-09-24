@@ -202,7 +202,7 @@
                 <div class="gap-70"></div>
 
                 @php
-                    $onsale_items = \App\StPaulModel\OnSaleProducts::join('promos','promos.id','=','onsale_products.promo_id')->where('promos.status', 'PUBLISHED')->where('promos.is_expire',0);
+                    $onsale_items = \App\StPaulModel\OnSaleProducts::join('promos','promos.id','=','onsale_products.promo_id')->where('promos.status', 'ACTIVE')->where('promos.is_expire',0);
 
                     $count = $onsale_items->count();
                     $onsale_products = $onsale_items->get();

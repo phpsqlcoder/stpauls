@@ -153,7 +153,7 @@
             <li class="nav-item with-sub @if (request()->routeIs('sales-transaction*')) active show @endif">
                 <a href="" class="nav-link"><i data-feather="users"></i> <span>Manage Sales Transaction</span></a>
                 <ul>
-                    {{--<li @if (\Route::current()->getName() == 'sales-transaction.index') class="active" @endif><a href="{{ route('sales-transaction.index') }}">Sales Transactions</a></li>--}}
+                    <li @if (\Route::current()->getName() == 'sales-transaction.index') class="active" @endif><a href="{{ route('sales-transaction.index') }}">Sales Transactions</a></li>
                     <li @if (\Route::current()->getName() == 'sales-transaction-money-transfer') class="active" @endif>
                         <a href="{{ route('sales-transaction-money-transfer') }}">Money Transfer 
                             &nbsp;
@@ -178,9 +178,15 @@
                             @endif
                         </a>
                     </li>
-                    {{--<li @if (\Route::current()->getName() == 'sales-transaction-store-pickup') class="active" @endif>
-                        <a href="{{ route('sales-transaction-store-pickup') }}">Store Pick-up</a>
-                    </li>--}}
+                    <li>
+                        <a href="">Store Pick-up</a>
+                    </li>
+                    <li>
+                        <a href="">Door To Door</a>
+                    </li>
+                    <li>
+                        <a href="">Credit/Debit</a>
+                    </li>
                 </ul>
             </li>
         @endif
@@ -228,7 +234,7 @@
         @endif
 
         @if (auth()->user()->has_access_to_module('branches'))
-            <li class="nav-item with-sub @if (request()->routeIs('locations*')) active show @endif">
+            <li class="nav-item with-sub @if (request()->routeIs('branch*')) active show @endif">
                 <a href="" class="nav-link"><i data-feather="box"></i> <span>Branches</span></a>
                 <ul>
                     <li @if (\Route::current()->getName() == 'branch.index' || \Route::current()->getName() == 'branch.edit') class="active" @endif><a href="{{ route('branch.index') }}">Manage Branches</a></li>

@@ -83,12 +83,12 @@ class ProductController extends Controller
         $filter = $listing->get_filter($this->searchFields);
 
         $advanceSearchData = $listing->get_search_data($this->advanceSearchFields);
-        $uniqueProductByBrand = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'brand');
+        $uniqueProductByCategory = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'category_id');
         $uniqueProductByUser = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'created_by');
 
         $searchType = 'advance_search';
 
-        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByBrand','uniqueProductByUser','advanceSearchData'));
+        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByUser','advanceSearchData'));
     }
 
     /**

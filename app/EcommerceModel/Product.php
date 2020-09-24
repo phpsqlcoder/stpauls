@@ -283,7 +283,7 @@ class Product extends Model
 
     public static function onsale_checker($id)
     {
-        $checkproduct = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','PUBLISHED')->where('promos.is_expire',0)->where('onsale_products.product_id',$id)->count();
+        $checkproduct = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$id)->count();
 
         return $checkproduct;
     }

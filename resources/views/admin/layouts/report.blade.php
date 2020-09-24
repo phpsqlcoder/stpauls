@@ -29,7 +29,7 @@
    
             <table width="100%" align="center" class="text-center">
                 <tr>
-                    <td style="font-size:25px;"><b>StPauls Catholic Online Bookstore</b></td>
+                    <td style="font-size:25px;"><b>St.Pauls Catholic Online Bookstore</b></td>
                 </tr>
                 <tr>
                     <td style="font-size:15px;">7708 St. Paul Road, San Antonio Village, 1203 Makati City, Philippines</td>
