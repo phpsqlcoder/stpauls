@@ -63,7 +63,7 @@ class CustomerFrontController extends Controller
             'firstname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
             'lastname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
             'email' => 'required|email|max:191|unique:customers,email',
-            'password' => 'required|max:150|min:8|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+            'password' => 'required|max:150|min:8',
             'password_confirmation' => 'required|same:password',
             'address' => 'required',
             'brgy' => 'required',
