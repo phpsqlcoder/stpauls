@@ -35,20 +35,21 @@ class SalesHeader extends Model
         $paid = SalesPayment::where('sales_header_id',$id)->whereStatus('PAID')->sum('amount');
         return $paid;
     }
-    public function getPaymentstatusAttribute(){
-        $paid = SalesPayment::where('sales_header_id',$this->id)->whereStatus('PAID')->sum('amount');
+    
+    // public function getPaymentstatusAttribute(){
+    //     $paid = SalesPayment::where('sales_header_id',$this->id)->whereStatus('PAID')->sum('amount');
   
-        if($paid >= $this->net_amount){
-            $tag_as_paid = SalesHeader::whereId($this->id)->update(['payment_status' => 'PAID']);
-            if($this->delivery_status == 'Waiting for Payment'){
-                $update_delivery_status = SalesHeader::whereId($this->id)->update(['delivery_status' => 'Processing Stock']);
-            }
-            return 'PAID';
-        }else{
-            return 'UNPAID';
-        }
+    //     if($paid >= $this->net_amount){
+    //         $tag_as_paid = SalesHeader::whereId($this->id)->update(['payment_status' => 'PAID']);
+    //         if($this->delivery_status == 'Waiting for Payment'){
+    //             $update_delivery_status = SalesHeader::whereId($this->id)->update(['delivery_status' => 'Processing Stock']);
+    //         }
+    //         return 'PAID';
+    //     }else{
+    //         return 'UNPAID';
+    //     }
        
-    }
+    // }
 
     public function items(){
     	return $this->hasMany('App\EcommerceModel\SalesDetail','sales_header_id');

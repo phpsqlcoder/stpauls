@@ -34,13 +34,13 @@
                             <h2>My Cart</h2>
                         </div>
                         <ul class="cart-wrap">
-                            @php $grandtotal = 0; @endphp
+                            @php $grandtotal = 0; $totalproducts = 0; @endphp
 
                             @forelse($cart as $key => $order)
 
                             @php 
+                                $totalproducts += 1;
                                 $onsale = \App\EcommerceModel\Product::onsale_checker($order->product_id);
-
                                 $grandtotal += ($onsale > 0 ) ? $order->product->discountedprice*$order->qty : $order->price*$order->qty;
                             @endphp
                             <li class="item">
@@ -125,6 +125,7 @@
                                 </div>
                             </li>
                             @empty
+                                @php $totalproducts = 0; @endphp
                                 <div class="gap-30"></div>
                                 <div class="alert alert-primary" role="alert">
                                     Your shopping cart is <strong>empty</strong>.
@@ -165,7 +166,7 @@
                             <div class="cart-btn">
                                 <div class="row">
                                     <div class="col-12">
-                                        <button type="submit" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
+                                        <button @if($totalproducts > 0) @else disabled @endif type="submit" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
                                     </div>
                                 </div>
                             </div>

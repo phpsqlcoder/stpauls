@@ -249,7 +249,7 @@ return [
     ],
 
     'sales' => [
-        'validate_success' => 'Payment has been validated.',
+        'approve_success' => 'Payment has been approved.',
     ]
 
 ];

@@ -1,58 +1,5 @@
 
 <!-- Add Payment modal -->
-<div class="modal effect-scale" id="prompt-add-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Add Payment</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form autocomplete="off" action="{{ route('payment.add.store') }}" method="post">
-            @csrf
-                <div class="modal-body">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="d-block">Mode of Payment *</label>
-                            <select required class="custom-select" name="pamenty_mode">
-                                <option value="">Select</option>
-                                <option value="Bank Deposit">Bank Deposit</option>
-                                <option value="Debit/Credit Card">Debit/Credit Card</option>
-                                <option value="M Lhuillier">M Lhuillier</option>
-                                <option value="Money Transfer">Money Transfer</option>
-                                <option value="Cash">Cash</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" id="sales_header_id" name="sales_header_id">
-                            <label class="d-block">Reference # *</label>
-                            <input required type="text" class="form-control" name="ref_no">
-                        </div>
-                        <div class="form-group">
-                            <label class="d-block">Payment Date *</label>
-                            <input required type="date" name="payment_dt" class="form-control" id="payment_dt" placeholder="Choose date" value="{{ old('date') }}">
-                            @hasError(['inputName' => 'payment_dt'])@endhasError
-                        </div>
-                        <div class="form-group">
-                            <label class="d-block">Amount *</label>
-                            <input required type="number" step="0.01" value="0.00" class="form-control text-right" name="amount" id="payment_amount">
-                        </div>
-                        <div class="form-group">
-                            <label class="d-block">Remarks</label>
-                            <textarea name="payment_remarks" class="form-control" id="payment_remarks" cols="30" rows="5"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 <div class="modal effect-scale" id="prompt-change-status" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -226,8 +173,8 @@
     </div>
 </div> -->
 
-<div class="modal effect-scale" id="prompt-show-delivery-history" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+<!-- <div class="modal effect-scale" id="prompt-show-delivery-history" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Delivery History</h5>
@@ -254,7 +201,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- update delivery fee for door-2-door delivery -->
 <div class="modal effect-scale" id="prompt-update-deliveryfee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

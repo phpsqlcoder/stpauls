@@ -25,7 +25,6 @@ class SalesFrontController extends Controller
 
         $sales = SalesHeader::where('customer_id',Auth::id())->orderBy('id','desc')->paginate(10);
 
-
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.orders', compact('sales','page'));
     }
 
@@ -52,7 +51,11 @@ class SalesFrontController extends Controller
             'created_by' => Auth::id()
         ]);
 
-        if($payment){
+        SalesHeader::find($request->header_id)->update(['delivery_status' => 'WAITING FOR VALIDATION']);
+            
+            
+        if(isset($request->attachment)){
+
             $file = $request->attachment;
 
             Storage::makeDirectory('/public/payments/'.$payment->id);

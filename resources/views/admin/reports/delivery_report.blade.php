@@ -87,7 +87,7 @@
                 <td>{{number_format($r->price*$r->qty,2)}}</td>
             </tr>
         @empty
-
+            <tr><td colspan="4"><center>No products found.</center></td></tr>
         @endforelse
         <tr>
             <td colspan="5"><hr></td>
@@ -101,8 +101,12 @@
             <td colspan="4" align="right">{{number_format($rs->delivery_fee_amount,2)}}</td>
         </tr>
         <tr>
+            <td>Service Fee</td>
+            <td colspan="4" align="right">{{number_format($rs->service_fee,2)}}</td>
+        </tr>
+        <tr>
             <td>Grand Total</td>
-            <td colspan="4" align="right">{{number_format($rs->delivery_fee_amount+$total,2)}}</td>
+            <td colspan="4" align="right">{{number_format($rs->delivery_fee_amount+$rs->service_fee+$total,2)}}</td>
         </tr>
     </tbody>
 

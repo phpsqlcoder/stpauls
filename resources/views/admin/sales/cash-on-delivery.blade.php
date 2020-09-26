@@ -58,63 +58,77 @@
                     <div class="table-responsive-lg">
                         <table class="table mg-b-0 table-light table-hover">
                             <thead>
-                                <th>Order#</th>
-                                <th>Customer</th>
+                                <th>Order #</th>
+                                <th>Order Date</th>
                                 <th>Payment Date</th>
-                                <th>Amount</th>
-                                <th>Paid Amount</th>
-                                <th>Status</th>
+                                <th>Customer Name</th>
+                                <th>Total Amount</th>
+                                <th>Order Status</th>
+                                <th>Delivery Status</th>
+                                <th>Delivery Type</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
 
                             @forelse($sales as $sale)
+                                @php
+                                    $payment = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->first();
+                                @endphp
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
+                                    <td>{{ $sale->created_at }}</td>
+                                    <td>@if($sale->payment_status == 'PAID') {{$payment->payment_date}} @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
-                                    <td>{{ $sale->payment_date }}</td>
-                                    <td>
-                                        @if(\App\EcommerceModel\SalesPayment::check_if_has_added_payments($sale->id) == 1)
-                                            <a href="javascript:;" onclick="show_added_payments('{{$sale->id}}');">{{ number_format($sale->gross_amount,2) }}</a>
-                                        @else
-                                            {{ number_format($sale->gross_amount,2) }}
-                                        @endif
-                                    </td>
-                                    <td>{{number_format(\App\EcommerceModel\SalesHeader::paid($sale->id),2)}}</td>
+                                    <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
                                         @if($sale->status == 'CANCELLED')
-                                            <span class="badge badge-danger">CANCELLED</span>
+                                            CANCELLED
                                         @else
-                                            @if($sale->payment_status == 'UNPAID')
-                                                <span class="badge badge-secondary">UNPAID</span>
+                                            @if($sale->payment_status == 'UNPAID') 
+                                                PENDING
                                             @else
-                                                <span class="badge badge-success">PAID</span>
+                                                PAID
                                             @endif
                                         @endif
                                     </td>
+                                    <td><a href="{{route('admin.report.delivery_report',$sale->id)}}" target="_blank">{{ $sale->delivery_status }}</a></td>
+                                    <td>{{ $sale->delivery_type }}</td>
                                     <td>
                                         <nav class="nav table-options">
+                                            @if($sale->status != 'CANCELLED')
                                             <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Transaction"><i data-feather="eye"></i></a>
+                                            @endif
                                             
-                                            @if($sale->status<>'CANCELLED')
-                                                @if($sale->payment_status == 'UNPAID')
-                                                    <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i data-feather="settings"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        @if (auth()->user()->has_access_to_route('payment.add.store'))
-                                                            <a class="dropdown-item" href="javascript:;" onclick="addPayment('{{$sale->id}}','{{\App\EcommerceModel\SalesPayment::remaining_balance($sale->gross_amount,$sale->id)}}');">Add Payment</a>
+                                            @if($sale->status != 'CANCELLED')
+                                                <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i data-feather="settings"></i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    @if($sale->delivery_status == 'Waiting for Approval')
+
+                                                    <a class="dropdown-item" href="javascript:;" onclick="order_response('{{$sale->id}}','{{$sale->order_number}}','APPROVE');">Approve Order</a>
+
+                                                    <a class="dropdown-item" href="javascript:;" onclick="order_response('{{$sale->id}}','{{$sale->order_number}}','REJECT');">Reject Order</a>
+                                                    @endif
+
+                                                    @if($sale->delivery_status != 'Waiting for Approval')
+                                                        @if($sale->payment_status == 'UNPAID')
+                                                        <a class="dropdown-item" href="javascript:;" onclick="addPayment('{{$sale->id}}','{{$sale->net_amount}}');">Add Payment</a>
                                                         @endif
-                                                    </div>
-                                                @endif
+                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history({{$sale->id}})" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                    @endif
+                                                    
+                                                </div>
                                             @endif
                                         </nav>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <th colspan="8" style="text-align: center;"> <p class="text-danger">No payments found.</p></th>
+                                    <th colspan="9" style="text-align: center;"> <p class="text-danger">No payments found.</p></th>
                                 </tr>
                             @endforelse
                             </tbody>
@@ -142,9 +156,11 @@
         </div>
     </div>
 
-    <!-- Add Payment modal -->
+    @include('admin.sales.modals.cash-on-delivery')
+    @include('admin.sales.modals.common')
+
     <div class="modal effect-scale" id="prompt-add-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalCenterTitle">Add Payment</h5>
@@ -156,14 +172,12 @@
                 @csrf
                     <div class="modal-body">
                         <div class="modal-body">
+                            <input type="hidden" name="pamenty_mode" value="Cash">
                             <div class="form-group">
-                                <label class="d-block">Mode of Payment *</label>
-                                <input required readonly type="text" class="form-control" name="payment_type" value="Cash">
-                                @hasError(['inputName' => 'payment_type'])@endhasError
+                                <input type="hidden" id="sales_header_id" name="sales_header_id">
                             </div>
                             <div class="form-group">
                                 <label class="d-block">Payment Date *</label>
-                                <input type="hidden" name="sales_header_id" id="sales_header_id">
                                 <input required type="date" name="payment_dt" class="form-control" id="payment_dt" placeholder="Choose date" value="{{ old('date') }}">
                                 @hasError(['inputName' => 'payment_dt'])@endhasError
                             </div>
@@ -180,59 +194,6 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-sm btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="modal effect-scale" id="prompt-validate-payment" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Payment Validation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="POST" action="{{route('sales.validate-payment')}}">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="cs-search">
-                            <label class="d-block tx-semibold">Payment Details</label>
-                            <div class="table-responsive">
-                                <table class="table table-sm table-borderless">
-                                    <tbody>
-                                        <tr>
-                                            <input type="hidden" name="payment_id" id="pay_id">
-                                            <th scope="row">Order #</th>
-                                            <td id="orderno"></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Reference #</th>
-                                            <td id="refno"></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Type</th>
-                                            <td id="pay_type"></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Date</th>
-                                            <td id="pay_date"></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Attachment</th>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-sm btn-primary">Validate</button>
-                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
@@ -259,7 +220,7 @@
     </script>
 
     <script>
-        let listingUrl = "{{ route('sales-transaction-cash-on-delivery') }}";
+        let listingUrl = "{{ route('sales-transaction.cash-on-delivery') }}";
         let searchType = "{{ $searchType }}";
     </script>
 
@@ -268,6 +229,52 @@
 
 @section('customjs')
     <script>
+
+        function order_response(id,order,status){
+            if(status == 'APPROVE'){
+                $('#id_approve').val(id);
+                $('#span_approve_order').html(order);
+                $('#prompt-approve-order').modal('show');
+            } else {
+                $('#id_reject').val(id);
+                $('#span_reject_order').html(order);
+                $('#prompt-reject-order').modal('show');
+            }
+        }
+
+        function change_delivery_status(id){
+            $('#prompt-change-delivery-status').modal('show');
+            $('#del_id').val(id);
+        }
+
+        function show_delivery_history(id){
+            $.ajax({
+                type: "GET",
+                url: "{{ route('display.delivery-history') }}",
+                data: { id : id },
+                success: function( response ) {
+                    $('#delivery_history_tbl').html(response);
+                    $('#prompt-show-delivery-history').modal('show');
+                }
+            });
+        }
+
+        function addPayment(id,amount){
+            $('#prompt-add-payment').modal('show');
+            $('#sales_header_id').val(id);
+            $("#payment_amount").attr({
+                "max" : amount,
+                "min" : amount
+            });
+        }
+
+
+
+
+
+
+
+
 
         function validate_payment(id,orderno,refno,type,date){
             $('#prompt-validate-payment').modal('show');
@@ -285,15 +292,6 @@
             $('#id_delete').val(x);
             $('#delete_order_div').html(order_number);
             $('#prompt-delete').modal('show');
-        }
-
-        function addPayment(id,balance){
-            $('#prompt-add-payment').modal('show');
-            $('#sales_header_id').val(id);
-            $("#payment_amount").attr({
-                "max" : balance,
-                "min" : balance
-            });
         }
 
         function show_added_payments(id){

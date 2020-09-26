@@ -120,6 +120,14 @@ class ReportsController extends Controller
         return view('admin.reports.inventory.inventory_reorder_point',compact('rs'));
     }
 
+    public function delivery_report($id)
+    {
+        $rs = SalesHeader::find($id);
+        
+        return view('admin.reports.delivery_report',compact('rs'));
+
+    }
+
 
 
 
@@ -159,13 +167,7 @@ class ReportsController extends Controller
     }
 
 
-    public function delivery_report($id)
-    {
-        $rs = SalesHeader::find($id);
-        
-        return view('admin.reports.delivery_report',compact('rs'));
-
-    }
+    
 
     public function delivery_status(Request $request)
     {

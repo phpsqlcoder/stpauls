@@ -56,13 +56,14 @@
             Route::get('/checkout', 'EcommerceControllers\CheckoutController@checkout')->name('cart.front.checkout');
             Route::get('/checkout/remove-product','EcommerceControllers\CheckoutController@remove_product')->name('checkout.remove-product');
             Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
+            Route::get('/cybs-return','EcommerceControllers\CartController@cybs_return')->name('cybs.return');
         //
         
         // Account Transactions
             Route::get('/account/my-orders', 'EcommerceControllers\SalesFrontController@orders')->name('account-my-orders');
             Route::get('/transaction/cancel-order','EcommerceControllers\SalesFrontController@cancel_order')->name('transaction.cancel-order');
             Route::get('/transaction-deliveries','EcommerceControllers\SalesFrontController@display_delivery_history')->name('display-delivery-history');
-            Route::get('/transaction-items','EcommerceControllers\SalesFrontController@display_items')->name('display-items');
+            Route::any('/transaction-items','EcommerceControllers\SalesFrontController@display_items')->name('display-items');
         //
 
         // Account Management
@@ -189,17 +190,29 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         // Manage Sales Transactions
             Route::resource('/admin/sales-transaction', 'EcommerceControllers\SalesController');
 
-            Route::get('/admin/sales/money-transfer','EcommerceControllers\SalesController@sales_money_transfer')->name('sales-transaction-money-transfer');
-            Route::get('/admin/sales/cash-on-delivery','EcommerceControllers\SalesController@sales_cash_on_delivery')->name('sales-transaction-cash-on-delivery');
+            // Money Transfer
+            Route::get('/admin/sales/money-transfer','EcommerceControllers\SalesController@sales_money_transfer')->name('sales-transaction.money-transfer');
+            Route::get('/display-payment-details/{id}', 'EcommerceControllers\SalesController@display_payment_details')->name('display.payment-details');
+            Route::post('/sales-approve-payment','EcommerceControllers\SalesController@approve_payment')->name('sales.approve-payment');
+            // Cash on Delivery
+            Route::get('/admin/sales/cash-on-delivery','EcommerceControllers\SalesController@sales_cash_on_delivery')->name('sales-transaction.cash-on-delivery');
+            Route::post('/cod-approve-order','EcommerceControllers\SalesController@approve_order')->name('cod-approve-order');
             Route::post('/payment-add-store','EcommerceControllers\SalesController@payment_add_store')->name('payment.add.store');
 
-            Route::get('/admin/sales/same-day-delivery','EcommerceControllers\SalesController@sales_same_day_delivery')->name('sales-transaction-same-day-delivery');
-            // Route::get('/admin/sales/store-pickup','EcommerceControllers\SalesController@sales_store_pickup')->name('sales-transaction-store-pickup');
-            Route::post('/sales/validate-payment','EcommerceControllers\SalesController@validate_payment')->name('sales.validate-payment');
+            // Card Payment
+            Route::get('/admin/sales/card-payment','EcommerceControllers\SalesController@sales_card_payment')->name('sales-transaction.card-payment');
+            // Report
+            Route::get('/admin/report/delivery_report/{id}', 'EcommerceControllers\ReportsController@delivery_report')->name('admin.report.delivery_report');
+
+            
+
+
+            
 
 
             Route::post('/admin/sales-transaction/change-status', 'EcommerceControllers\SalesController@change_status')->name('sales-transaction.change.status');
-            Route::post('/admin/sales-transaction/{sales}', 'EcommerceControllers\SalesController@quick_update')->name('sales-transaction.quick_update');
+            Route::post('/admin/sales-transaction/{sales}', 'EcommerceControllers\SalesController@quick_update')->name('sales-transaction.quick_update'); // for verification
+
             Route::get('/admin/sales-transaction/view/{sales}', 'EcommerceControllers\SalesController@show')->name('sales-transaction.view');
             Route::post('/admin/change-delivery-status', 'EcommerceControllers\SalesController@delivery_status')->name('sales-transaction.delivery_status');
             Route::post('/admin/update-delivery-fee', 'EcommerceControllers\SalesController@update_delivery_fee')->name('sales-transaction.update_delivery_fee');
@@ -237,7 +250,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/report/stock-card/{id}', 'EcommerceControllers\ReportsController@stock_card')->name('report.product.stockcard');
             Route::get('/admin/report/sales', 'EcommerceControllers\ReportsController@sales')->name('admin.report.sales');
             Route::get('/admin/report/delivery_status', 'EcommerceControllers\ReportsController@delivery_status')->name('admin.report.delivery_status');
-            Route::get('/admin/report/delivery_report/{id}', 'EcommerceControllers\ReportsController@delivery_report')->name('admin.report.delivery_report');
+            
         //
 
         // Products

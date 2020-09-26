@@ -20,6 +20,8 @@ use Auth;
 use Redirect;
 use DateTime;
 
+use Str;
+
 use DB;
 use App\EcommerceModel\Customer;
 use App\EcommerceModel\CheckoutOption;
@@ -247,9 +249,7 @@ class CartController extends Controller
         $ran = microtime();
         $requestId = $today[0].substr($ran, 2,6);
 
-        $customer = Customer::find(Auth::id());
         $delivery_type = CheckoutOption::find($request->shipOption);
-
 
         if($request->province == 0){
             $address = $request->other_address;
@@ -257,7 +257,7 @@ class CartController extends Controller
             $data_city = Cities::find($request->city);
             $data_province = Provinces::find($request->province);
 
-            $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province;
+            $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province.', '.$request->zipcode;
         }
 
         $pickupdate = $request->input('pickup_date_'.$request->shipOption);
@@ -265,7 +265,8 @@ class CartController extends Controller
 
         $salesHeader = SalesHeader::create([
             'order_number' => $requestId,
-            'customer_name' => $request->customer,
+            'customer_id' => Auth::id(),
+            'customer_name' => $request->fname.' '.$request->lname,
             'customer_contact_number' => $request->mobile,
             'customer_address' => $address,
             'customer_delivery_adress' => $address,
@@ -274,26 +275,24 @@ class CartController extends Controller
             'delivery_courier' => '',
             'delivery_type' => $delivery_type->name,
             'delivery_fee_amount' => $request->deliveryfee,
-            'delivery_status' => 'Waiting for Payment',
+            'delivery_status' => ($request->shipOption == 1) ? 'Waiting for Approval' : 'Waiting for Payment',
             'gross_amount' => $request->totalDue,
             'tax_amount' => 0,
             'net_amount' => $request->totalDue,
-            'discount_amount' => 0,
+            'discount_amount' => $request->loyaltydiscount,
             'payment_status' => 'UNPAID',
             'status' => 'active',
             'other_instruction' => $request->other_instruction,
             'user_id' => 0,
-            'customer_id' => Auth::id(),
             'payment_method' => (!isset($request->payment_method)) ? 0 : $request->payment_method,
             'payment_option' => (!isset($request->payment_method)) ? 0 : $request->payment_option,
             'branch' => ($request->shipOption == 2)  ? $request->branch : 0,
             'pickup_date' => ($request->shipOption <= 2) ? $pickupdate : NULL,
             'pickup_time' => ($request->shipOption <= 2) ? $pickuptime : NULL,
-            'service_fee' => ($request->shipOption == 4) ? $request->servicefee : NULL
+            'service_fee' => $request->servicefee
         ]);
 
         $data = $request->all();
-
         $productid = $data['productid'];
         $qty       = $data['qty'];
         $price     = $data['product_price'];
@@ -326,22 +325,24 @@ class CartController extends Controller
             ]);
         }
 
-        //Mail::to(Auth::user())->send(new SalesCompleted($salesHeader));  
-      
-        $urls = [
-            'notification' => route('cart.payment-notification'),
-            'result' => route('account-my-orders'),
-            'cancel' => route('account-my-orders'),
-        ];
-        
-        //$base64Code = PaynamicsHelper::payNow($requestId, Auth::user(), $carts, $totalPrice, $urls, false ,$request->deliveryfee);
-
         Cart::where('user_id', Auth::id())->delete();
         $this->check_loyalty($request->totalDue);
 
-        return redirect(route('account-my-orders'))->with('success',' Order has been placed.');
+        if($request->payment_method == 1){
+            $address_line1 = $request->address;
+            $address_line2 = $request->barangay;
+            $city          = $data_city->city;
+            $province      = $data_province->province;
+            $zipcode       = $request->zipcode;
+            $order         = $request;
+            $uniqID        = $salesHeader->order_number;
+            return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
+        } else {
+            return redirect(route('account-my-orders'))->with('success',' Order has been placed.');
+        }
        
     }
+
 
     public function check_loyalty($amount)
     {

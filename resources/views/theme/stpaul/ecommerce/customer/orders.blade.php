@@ -15,10 +15,15 @@
                 <div class="col-lg-9">
                     <div class="article-content">
                         <h3 class="subpage-heading">My Orders</h3>
+                        @if(session('success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
                         <table id="salesTransaction" class="table table-md table-hover" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th scope="col">Order#</th>
+                                    <th scope="col">Order #</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Amount</th>
                                     <th scope="col">Payment Status</th>

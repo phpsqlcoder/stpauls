@@ -38,7 +38,7 @@
                         <div class="ml-auto bd-highlight mg-t-10">
                             <form class="form-inline" id="searchForm">
                                 <div class="mg-b-10 mg-r-5">
-                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Receipt #" value="{{ $filter->search }}">
+                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Order #" value="{{ $filter->search }}">
                                 </div>
                                 <div class="mg-b-8">
                                     <button class="btn btn-sm btn-info" type="button" id="btnSearch">Search</button>
@@ -72,29 +72,19 @@
 
                             @forelse($sales as $sale)
                                 @php
-                                    $qry = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id);
-                                    $count = $qry->count();
-                                    $payment = $qry->first();
+                                    $payment = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->first();
                                 @endphp
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
                                     <td>{{ $sale->created_at }}</td>
-                                    <td>@if($sale->payment_status == 'PAID') {{$payment->payment_date}} @endif</td>
+                                    <td>{{ $payment->payment_date }}</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
                                         @if($sale->status == 'CANCELLED')
                                             CANCELLED
                                         @else
-                                            @if($sale->payment_status == 'UNPAID') 
-                                                @if($count > 0)
-                                                    <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>PENDING [{{$count}}]</strong></a>
-                                                @else
-                                                    PENDING
-                                                @endif
-                                            @else
-                                                PAID
-                                            @endif
+                                            {{ $sale->payment_status }}
                                         @endif
                                     </td>
                                     <td><a href="{{route('admin.report.delivery_report',$sale->id)}}" target="_blank">{{ $sale->delivery_status }}</a></td>
@@ -103,11 +93,9 @@
                                         <nav class="nav table-options">
                                             <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Page"><i data-feather="eye"></i></a>
 
-                                            @if($sale->payment_status == 'PAID')
                                             <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i data-feather="settings"></i>
                                             </a>
-                                            @endif
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
 
@@ -191,23 +179,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
     <script>
-        //var dateToday = new Date();
-        $(function(){
-            'use strict'
-
-            $('#payment_dt').datepicker({
-                //minDate: dateToday,
-                dateFormat: 'yy-mm-dd',
-            });
-        });
-    </script>
-
-    <script>
-        let listingUrl = "{{ route('sales-transaction.money-transfer') }}";
+        let listingUrl = "{{ route('sales-transaction.card-payment') }}";
         let searchType = "{{ $searchType }}";
     </script>
-
-    <script src="{{ asset('js/listing.js') }}"></script>
 @endsection
 
 @section('customjs')
