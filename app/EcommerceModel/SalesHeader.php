@@ -15,7 +15,7 @@ class SalesHeader extends Model
         'user_id', 'order_number', 'order_source', 'response_code', 'customer_name', 'customer_contact_number', 'customer_address', 'customer_delivery_adress', 'delivery_tracking_number', 'delivery_fee_amount', 'delivery_courier', 'delivery_type',
         'gross_amount', 'tax_amount', 'net_amount', 'discount_amount', 'payment_status',
         'delivery_status', 'status','other_instruction','customer_id','payment_method','branch','pickup_date','pickup_time','payment_option',
-        'service_fee'
+        'service_fee','is_approve'
     ];
 
     public $timestamp = true;
@@ -92,5 +92,13 @@ class SalesHeader extends Model
     public function salesheader_payments()
     {
         return $this->hasMany('\App\EcommerceModel\SalesPayment','id','sales_header_id');
+    }
+
+
+    public static function pending_cod()
+    {
+        $qry = SalesHeader::where('payment_method',0)->where('is_approve',0)->where('status','<>','CANCELLED')->count();
+
+        return $qry;
     }
 }

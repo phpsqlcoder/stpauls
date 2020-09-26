@@ -77,7 +77,7 @@
                                 @endphp
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
-                                    <td>{{ $sale->created_at }}</td>
+                                    <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
                                     <td>@if($sale->payment_status == 'PAID') {{$payment->payment_date}} @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
@@ -85,10 +85,10 @@
                                         @if($sale->status == 'CANCELLED')
                                             CANCELLED
                                         @else
-                                            @if($sale->payment_status == 'UNPAID') 
-                                                PENDING
+                                            @if($sale->status == 'COMPLETED')
+                                                COMPLETED
                                             @else
-                                                PAID
+                                                {{ $sale->payment_status }}
                                             @endif
                                         @endif
                                     </td>
@@ -105,7 +105,7 @@
                                                     <i data-feather="settings"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    @if($sale->delivery_status == 'Waiting for Approval')
+                                                    @if($sale->is_approve == 0)
 
                                                     <a class="dropdown-item" href="javascript:;" onclick="order_response('{{$sale->id}}','{{$sale->order_number}}','APPROVE');">Approve Order</a>
 

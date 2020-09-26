@@ -124,17 +124,17 @@ Manage Customer
                         <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                                 <tr>
-                                    <th width="10%">
+                                    <th width="5%">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="checkbox_all">
                                             <label class="custom-control-label" for="checkbox_all"></label>
                                         </div>
                                     </th>
                                     <th width="20%">Name</th>
-                                    <th width="30%">Description</th>
+                                    <th width="35%">Description</th>
                                     <th width="10%">Status</th>
                                     <th width="15%">Last Date Modified</th>
-                                    <th width="15%">Options</th>
+                                    <th width="10%">Options</th>
                                 </tr>
                             </thead>
                             <tbody>

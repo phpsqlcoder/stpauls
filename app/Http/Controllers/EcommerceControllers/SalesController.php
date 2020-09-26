@@ -131,7 +131,11 @@ class SalesController extends Controller
     {
         if($request->status == 'APPROVE'){
 
-            SalesHeader::find($request->orderid)->update(['delivery_status' => 'Processing']);
+            SalesHeader::find($request->orderid)->update([
+                'delivery_status' => 'Processing',
+                'is_approve' => 1
+            ]);
+
             return back()->with('success', 'Order has been approved.');
 
         } else {
@@ -162,7 +166,7 @@ class SalesController extends Controller
             SalesHeader::find($request->sales_header_id)->update([
                 'delivery_status' => 'Delivered',
                 'payment_status' => 'PAID',
-                'status' => 'PAID'
+                'status' => 'COMPLETED'
             ]);
 
             DeliveryStatus::create([

@@ -281,7 +281,7 @@ class CartController extends Controller
             'net_amount' => $request->totalDue,
             'discount_amount' => $request->loyaltydiscount,
             'payment_status' => 'UNPAID',
-            'status' => 'active',
+            'status' => 'PENDING',
             'other_instruction' => $request->other_instruction,
             'user_id' => 0,
             'payment_method' => (!isset($request->payment_method)) ? 0 : $request->payment_method,
@@ -289,7 +289,8 @@ class CartController extends Controller
             'branch' => ($request->shipOption == 2)  ? $request->branch : 0,
             'pickup_date' => ($request->shipOption <= 2) ? $pickupdate : NULL,
             'pickup_time' => ($request->shipOption <= 2) ? $pickuptime : NULL,
-            'service_fee' => $request->servicefee
+            'service_fee' => $request->servicefee,
+            'is_approve' => 0
         ]);
 
         $data = $request->all();

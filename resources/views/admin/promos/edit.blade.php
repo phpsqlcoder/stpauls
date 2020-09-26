@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="d-block">Visibility</label>
+                    <label class="d-block">Status</label>
                     <div class="custom-control custom-switch @error('status') is-invalid @enderror">
                         <input type="checkbox" class="custom-control-input" name="status" {{ (old("status") == "ON" || $promo->status == "ACTIVE" ? "checked":"") }} id="customSwitch1">
                         <label class="custom-control-label" id="label_visibility" for="customSwitch1">{{ucfirst(strtolower($promo->status))}}</label>

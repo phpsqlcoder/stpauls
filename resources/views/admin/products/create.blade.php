@@ -44,13 +44,13 @@
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label class="d-block">Code *</label>
-                        <input required name="code" id="code" value="{{ old('code') }}" type="text" class="form-control @error('code') is-invalid @enderror" maxlength="250">
+                        <input required name="code" id="code" value="{{ old('code') }}" type="text" class="form-control @error('code') is-invalid @enderror" maxlength="150">
                         @hasError(['inputName' => 'code'])
                         @endhasError
                     </div>
                     <div class="form-group">
                         <label class="d-block">Name *</label>
-                        <input required name="name" id="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" maxlength="250">
+                        <input required name="name" id="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" maxlength="150">
                         @hasError(['inputName' => 'name'])
                         @endhasError
                     </div>
@@ -103,7 +103,7 @@
            
                     <div class="form-group">
                         <label class="d-block">Size</label>
-                        <input name="size" value="{{ old('size') }}" type="text" class="form-control" maxlength="250">
+                        <input name="size" value="{{ old('size') }}" type="text" class="form-control" maxlength="30">
                     </div>
 
                     <div class="form-group">

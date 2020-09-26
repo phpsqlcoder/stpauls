@@ -172,8 +172,8 @@
                     <li @if (\Route::current()->getName() == 'sales-transaction.cash-on-delivery') class="active" @endif>
                         <a href="{{ route('sales-transaction.cash-on-delivery') }}">Cash on Delivery
                             &nbsp;
-                            @if(\App\EcommerceModel\SalesPayment::unpaid_cod() > 0)
-                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesPayment::unpaid_cod()}}</span>
+                            @if(\App\EcommerceModel\SalesHeader::pending_cod() > 0)
+                                <span class="badge badge-danger">{{ \App\EcommerceModel\SalesHeader::pending_cod() }}</span>
                             @endif
                         </a>
                     </li>

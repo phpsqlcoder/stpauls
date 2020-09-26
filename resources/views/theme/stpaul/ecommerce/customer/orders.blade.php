@@ -26,46 +26,47 @@
                                     <th scope="col">Order #</th>
                                     <th scope="col">Date</th>
                                     <th scope="col">Amount</th>
-                                    <th scope="col">Payment Status</th>
+                                    <th scope="col">Order Status</th>
                                     <th scope="col">Delivery Status</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($sales as $sale)
-                                @php
-                                    $balance = \App\EcommerceModel\SalesHeader::balance($sale->id);
-                                @endphp
                                 <tr>
                                     <td>{{ $sale->order_number }}</td>
                                     <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
                                     <td>{{ number_format($sale->gross_amount,2) }}</td>
-                                    <td class="text-uppercase">{{ $sale->payment_status }}</td>
-                                    <td class="text-uppercase">{{ $sale->delivery_status }}</td>
-                                    <td align="right">
-                                        @if($sale->payment_method == 0)
-                                            @if($sale->status != 'CANCELLED')
-                                            <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
-                                                <span class="lnr lnr-cross mr-2"></span>
-                                            </a>
-                                            @endif
+                                    <td class="text-uppercase">
+                                        @if($sale->status == 'CANCELLED')
+                                            CANCELLED
                                         @else
-                                            @if($sale->status == 'active')
-                                                @if($balance > 0)
-                                                    @if($sale->payment_method == 1)
-                                                        <a href="" title="Pay now" onclick="globalpay('{{$sale->id}}')" id="paybtn{{$sale->id}}">
-                                                            <span class="lnr lnr-inbox mr-2"></span>
-                                                        </a>
-                                                    @else
-                                                        <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$balance}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
-                                                            <span class="lnr lnr-inbox mr-2"></span>
-                                                        </a>
-                                                    @endif
-                                                    <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
-                                                        <span class="lnr lnr-cross mr-2"></span>
-                                                    </a>
+                                            @if($sale->status == 'COMPLETED')
+                                                COMPLETED
+                                            @else
+                                                @if($sale->payment_status == 'UNPAID')
+                                                    {{ $sale->status }}
+                                                @else
+                                                    {{ $sale->payment_status }}
                                                 @endif
                                             @endif
+                                        @endif
+                                    </td>
+                                    <td class="text-uppercase">{{ $sale->delivery_status }}</td>
+                                    <td align="right">
+                                        @if($sale->status != 'CANCELLED')
+                                            @if($sale->payment_method > 1)
+                                                @if($sale->payment_status == 'UNPAID')
+                                                <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
+                                                    <span class="lnr lnr-inbox mr-2"></span>
+                                                </a>
+                                                @endif
+                                            @endif
+                                                @if($sale->payment_status == 'UNPAID')
+                                                <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
+                                                    <span class="lnr lnr-cross mr-2"></span>
+                                                </a> 
+                                                @endif
                                         @endif
 
                                         <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
@@ -124,32 +125,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="payGlobal_modal" tabindex="-1" role="dialog" aria-labelledby="payment_modal" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Payment Form</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form autocomplete="off" action="" method="post">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="Amount" class="col-form-label">Amount *</label>
-                        <input required type="number" step="0.1" name="amount" class="form-control">
-                    </div>                           
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Pay Now</button>
                 </div>
             </form>
         </div>
@@ -279,10 +254,6 @@
             $('#balance').val(bal.toFixed(2));
 
             $('#balance').prop('max',bal);
-        }
-
-        function globalpay(id){
-            $('#payGlobal_modal').modal('show');
         }
 
         function cancelOrder(orderid){

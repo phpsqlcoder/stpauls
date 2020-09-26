@@ -47,13 +47,6 @@ class SalesPayment extends Model
         }
     }
 
-    public static function unpaid_cod()
-    {
-        $qry = SalesHeader::where('payment_status','UNPAID')->where('status','CANCELLED')->count();
-
-        return $qry;
-    }
-
     public static function undelivered_sdd()
     {
         $qry = SalesHeader::where('delivery_type','Same Day Delivery')->where('delivery_status','!=','Delivered')->count();
@@ -64,7 +57,7 @@ class SalesPayment extends Model
     public static function unvalidated_payments()
     {
         $qry = SalesHeader::join('ecommerce_sales_payments','ecommerce_sales_headers.id','=','ecommerce_sales_payments.sales_header_id')
-            ->where('ecommerce_sales_headers.payment_method','<>',1)
+            ->where('ecommerce_sales_headers.payment_method','>',1)
             ->where('ecommerce_sales_payments.is_verify',0)
             ->count();
 

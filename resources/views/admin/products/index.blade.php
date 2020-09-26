@@ -1,16 +1,7 @@
 @extends('admin.layouts.app')
 
-@section('pagetitle')
-Manage Customer
-@endsection
-
 @section('pagecss')
-<link href="{{ asset('lib/ion-rangeslider/css/ion.rangeSlider.min.css') }}" rel="stylesheet">
-<style>
-    .row-selected {
-        background-color: #92b7da !important;
-    }
-</style>
+    <link href="{{ asset('lib/ion-rangeslider/css/ion.rangeSlider.min.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -125,19 +116,19 @@ Manage Customer
                         <table class="table mg-b-0 table-light table-hover">
                             <thead>
                                 <tr>
-                                    <th style="width: 10%;">
+                                    <th style="width: 5%;">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="checkbox_all">
                                             <label class="custom-control-label" for="checkbox_all"></label>
                                         </div>
                                     </th>
-                                    <th style="width: 20%;overflow: hidden;">Name</th>
-                                    <th style="width: 30%;">Category</th>
-                                    <th style="width: 10%;">Price</th>
-                                    <th style="width: 10%;">Inventory</th>
-                                    <th style="width: 10%;">Status</th>
-                                    <th style="width: 10%;">Last Date Modified</th>
-                                    <th style="width: 10%;">Options</th>
+                                    <th width="25%">Name</th>
+                                    <th width="25%">Category</th>
+                                    <th width="10%">Price</th>
+                                    <th width="5%">Inventory</th>
+                                    <th width="5%">Status</th>
+                                    <th width="15%">Last Date Modified</th>
+                                    <th width="10%">Options</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -152,7 +143,6 @@ Manage Customer
                                         else{
                                             $cat = $category->name;
                                         }
-
                                     @endphp
                                 @else
                                     @php
