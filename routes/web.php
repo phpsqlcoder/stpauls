@@ -56,7 +56,6 @@
             Route::get('/checkout', 'EcommerceControllers\CheckoutController@checkout')->name('cart.front.checkout');
             Route::get('/checkout/remove-product','EcommerceControllers\CheckoutController@remove_product')->name('checkout.remove-product');
             Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
-            Route::get('/cybs-return','EcommerceControllers\CartController@cybs_return')->name('cybs.return');
         //
         
         // Account Transactions
