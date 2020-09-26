@@ -266,7 +266,7 @@ class CartController extends Controller
         $salesHeader = SalesHeader::create([
             'order_number' => $requestId,
             'customer_id' => Auth::id(),
-            'customer_name' => $request->fname.' '.$request->lname,
+            'customer_name' => $request->firstname.' '.$request->lastname,
             'customer_contact_number' => $request->mobile,
             'customer_address' => $address,
             'customer_delivery_adress' => $address,
