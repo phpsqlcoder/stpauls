@@ -106,8 +106,8 @@
                         <div class="row">
                             <div class="col-lg-5">
                                 <div class="easyzoom easyzoom--adjacent easyzoom--with-thumbnails">
-                                    <a href="{{ asset('storage/products/'.$product->photoPrimary) }}">
-                                        <img src="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="" width="100%" height="100%" />
+                                    <a id="photo_source" href="{{ asset('storage/products/'.$product->photoPrimary) }}">
+                                        <img id="display_product" src="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="" width="100%" height="100%" />
                                     </a>
                                 </div>
 
@@ -115,9 +115,8 @@
                                     @foreach($product->photos as $photo)
                                     @if($photo->is_primary == 0)
                                     <li>
-                                        <a href="{{ asset('storage/products/'.$photo->path) }}" target="_blank">
-                                            <img src="{{ asset('storage/products/'.$photo->path) }}" alt="" />
-                                        </a>
+                                        <img onclick="changePhoto('{{$photo->id}}')" src="{{ asset('storage/products/'.$photo->path) }}" alt="" />
+                                        <input type="hidden" id="photo_path{{$photo->id}}" value="{{ asset('storage/products/'.$photo->path) }}">
                                     </li>
                                     @endif
                                     @endforeach
@@ -412,18 +411,6 @@
 
         // Instantiate EasyZoom instances
         var $easyzoom = $('.easyzoom').easyZoom();
-
-        // Setup thumbnails example
-        var api1 = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
-
-        $('.thumbnails').on('click', 'a', function(e) {
-            var $this = $(this);
-
-            e.preventDefault();
-
-            // Use EasyZoom's `swap` method
-            api1.swap($this.data('standard'), $this.attr('href'));
-        });
         
         $(document).ready(function(){
             /** Custom Input number increment js **/
@@ -478,6 +465,17 @@
 
 @section('customjs')
     <script>
+        function changePhoto(id){
+            var url = $('#photo_path'+id).val();
+            $("#photo_source").attr("href", url);
+            $('#display_product').attr('src',url);
+
+            // Setup thumbnails example
+            var api1 = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
+
+            api1.swap($("#photo_source").data('standard'), $("#photo_source").attr('href'));
+        }
+
         function add_to_cart(productID) {
             $.ajaxSetup({
                 headers: {

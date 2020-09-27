@@ -250,6 +250,7 @@ return [
 
     'sales' => [
         'approve_success' => 'Payment has been approved.',
+        'reject_success' => 'Payment rejected and order has been cancelled.',
     ]
 
 ];

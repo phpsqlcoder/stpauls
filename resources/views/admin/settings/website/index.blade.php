@@ -68,7 +68,7 @@
                     <!-- Website Settings Tab -->
                     <div class="tab-pane fade @if(session()->has('tabname')) @else show active @endif" id="home" role="tabpanel" aria-labelledby="home-tab">
                         <div class="col-md-6 mg-t-15">
-                            <form method="POST" action="{{ route('website-settings.update') }}" enctype="multipart/form-data" id="selectForm2" class="parsley-style-1" data-parsley-validate novalidate>
+                            <form method="POST" action="{{ route('website-settings.update') }}" enctype="multipart/form-data" id="selectForm1" class="parsley-style-1" data-parsley-validate novalidate>
                                 @method('PUT')
                                 @csrf
                                 <div class="form-group">
@@ -232,9 +232,9 @@
                                                 <option value="facebook">Facebook</option>
                                                 <option value="twitter">Twitter</option>
                                                 <option value="instagram">Instagram</option>
-                                                {{--                                            <option value="youtube">Youtube</option>--}}
-                                                {{--                                            <option value="google">Google</option>--}}
-                                                {{--                                            <option value="dribble">Dribble</option>--}}
+                                                {{--<option value="youtube">Youtube</option>--}}
+                                                {{--<option value="google">Google</option>--}}
+                                                {{--<option value="dribble">Dribble</option>--}}
                                             </select>
                                             &nbsp;
                                             <input type="text" class="form-control" name="url[]" placeholder="URL">
@@ -342,6 +342,13 @@
                                             Option 2: Online Fund Transfer
 
                                             <table class="table table-borderless">
+                                                <thead>
+                                                    <th></th>
+                                                    <th>Name</th>
+                                                        <th>Account #</th>
+                                                        <th>Branch</th>
+                                                        <th></th>
+                                                </thead>
                                                 <tbody>
                                                     @foreach($banks as $bank)
                                                     <tr>
@@ -376,15 +383,25 @@
                                             Option 3: Money Transfer
 
                                             <table class="table table-borderless">
+                                                <thead>
+                                                    <th></th>
+                                                    <th>Name</th>
+                                                    <th>Account #</th>
+                                                    <th>Recipient</th>
+                                                    <th>QR Code</th>
+                                                    <th></th>
+                                                </thead>
                                                 <tbody>
                                                     @foreach($remittances as $remittance)
                                                     <tr>
                                                         <td class="text-right" width="10%"><input type="checkbox" name="remittance[]" value="{{$remittance->id}}" @if($remittance->is_active == 1) checked @endif id="{{ $remittance->id }}"></td>
                                                         <td>{{ $remittance->name }}</td>
-                                                        <td>{{ $remittance->qrcode }}</td>
+                                                        <td>{{ $remittance->account_no }}</td>
+                                                        <td>{{ $remittance->recipient }}</td>
+                                                        <td><a href="{{ asset('storage/qrcodes/'.$remittance->id.'/'.$remittance->qrcode) }}" target="_blank">{{ $remittance->qrcode }}</a></td>
                                                         <td class="text-right">
                                                             @if($remittance->is_active == 0)
-                                                                <a href="javascript:void(0)" onclick="edit_remittance('{{$remittance->id}}','{{$remittance->name}}','{{$remittance->qrcode}}')"><i class="fa fa-edit"></i></a>
+                                                                <a href="javascript:void(0)" onclick="edit_remittance('{{$remittance->id}}','{{$remittance->name}}','{{$remittance->qrcode}}','{{$remittance->account_no}}','{{$remittance->recipient}}')"><i class="fa fa-edit"></i></a>
                                                                 <a href="javascript:void(0)" onclick="delete_remittance('{{$remittance->id}}')"><i class="fa fa-trash"></i></a>
                                                             @endif
                                                         </td>
@@ -420,7 +437,7 @@
                                         <div class="form-group">
                                             <div id="title" class="parsley-input">
                                                 <label>Minimum Purchase</label>
-                                                <input type="number" name="min_purchase" id="min_purchase" class="form-control" data-parsley-class-handler="#min_purchase" value="{{ $cod->minimum_purchase }}" required>
+                                                <input type="number" name="min_purchase" id="cod_min_purchase" class="form-control" data-parsley-class-handler="#cod_min_purchase" value="{{ $cod->minimum_purchase }}" required>
                                             </div>
                                         </div>
 
@@ -571,7 +588,7 @@
                                         <div class="form-group">
                                             <div id="title" class="parsley-input">
                                                 <label>Minimum Purchase</label>
-                                                <input type="number" name="min_purchase" id="min_purchase" class="form-control" data-parsley-class-handler="#title" value="{{ $sdd->minimum_purchase }}" required>
+                                                <input type="number" name="min_purchase" id="sdd_min_purchase" class="form-control" data-parsley-class-handler="#title" value="{{ $sdd->minimum_purchase }}" required>
                                             </div>
                                         </div>
 
@@ -830,9 +847,11 @@
             $('#prompt-add-remittance').modal('show');
         }
 
-        function edit_remittance(id,name,qrcode)
+        function edit_remittance(id,name,qrcode,accountno,recipient)
         {
             $('#prompt-edit-remittance').modal('show');
+            $('#recipient').val(recipient);
+            $('#remittance_account_no').val(accountno);
             $('#remittance_id').val(id);
             $('#remittance_name').val(name);
             $('#qrcode').val(qrcode);

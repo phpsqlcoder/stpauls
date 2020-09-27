@@ -55,18 +55,31 @@
                                     <td class="text-uppercase">{{ $sale->delivery_status }}</td>
                                     <td align="right">
                                         @if($sale->status != 'CANCELLED')
-                                            @if($sale->payment_method > 1)
-                                                @if($sale->payment_status == 'UNPAID')
-                                                <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
-                                                    <span class="lnr lnr-inbox mr-2"></span>
+
+                                            <!-- Cash On Delivery -->
+                                            @if($sale->payment_method == 0)
+                                                @if($sale->is_approve == 0)
+                                                <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
+                                                    <span class="lnr lnr-cross mr-2"></span>
                                                 </a>
                                                 @endif
                                             @endif
-                                                @if($sale->payment_status == 'UNPAID')
-                                                <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
-                                                    <span class="lnr lnr-cross mr-2"></span>
-                                                </a> 
+
+                                            @php
+                                                $payment_status = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->count();
+                                            @endphp
+                                            <!-- Money Transfer -->
+                                            @if($sale->payment_method > 1)
+                                                @if($payment_status == 0)
+                                                    <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
+                                                        <span class="lnr lnr-inbox mr-2"></span>
+                                                    </a>
+                                                    <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
+                                                        <span class="lnr lnr-cross mr-2"></span>
+                                                    </a> 
                                                 @endif
+                                            @endif
+
                                         @endif
 
                                         <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>

@@ -85,11 +85,7 @@
                                         @if($sale->status == 'CANCELLED')
                                             CANCELLED
                                         @else
-                                            @if($sale->status == 'COMPLETED')
-                                                COMPLETED
-                                            @else
-                                                {{ $sale->payment_status }}
-                                            @endif
+                                            {{ $sale->status }}
                                         @endif
                                     </td>
                                     <td><a href="{{route('admin.report.delivery_report',$sale->id)}}" target="_blank">{{ $sale->delivery_status }}</a></td>

@@ -121,10 +121,13 @@ class CustomerController extends Controller
 
     public function deactivate(Request $request)
     {
-    	Customer::find($request->customer_id)->update([
+        $customer = Customer::find($request->customer_id);
+    	$customer->update([
             'is_active' => 0,
             'user_id'   => Auth::id(),
         ]);
+
+        $customer->send_account_deactivated_email();
 
         return back()->with('success', __('standard.customers.status_success', ['status' => 'deactivated']));
     }

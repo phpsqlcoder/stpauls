@@ -178,15 +178,21 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('ecommerce-setting.add-remittance')}}" method="post">
+            <form action="{{route('ecommerce-setting.add-remittance')}}" method="post" enctype="multipart/form-data">
                 @method('POST')
                 @csrf
                 <div class="modal-body">
                     <label class="d-block">Name *</label>
-                    <input required type="text" name="name" class="form-control">
+                    <input required type="text" name="name" class="form-control" maxlength="150">
+
+                    <label class="d-block">Recepient Name *</label>
+                    <input required type="text" name="recipient" class="form-control" maxlength="150">
+
+                    <label class="d-block">Number *</label>
+                    <input required type="text" name="account_no" class="form-control" maxlength="50">
 
                     <label class="d-block">Upload QR</label>
-                    <input required type="text" name="qrcode" class="form-control">
+                    <input type="file" name="qrcode" class="form-control">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-sm btn-primary">Submit</button>
@@ -201,12 +207,12 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Add Remittance</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Edit Remittance</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('ecommerce-setting.edit-remittance')}}" method="post">
+            <form action="{{route('ecommerce-setting.edit-remittance')}}" method="post" enctype="multipart/form-data">
                 @method('POST')
                 @csrf
                 <div class="modal-body">
@@ -214,8 +220,14 @@
                     <input type="hidden" name="id" id="remittance_id">
                     <input required type="text" name="name" id="remittance_name" class="form-control">
 
+                    <label class="d-block">Recepient Name *</label>
+                    <input required type="text" name="recipient" id="recipient" class="form-control" maxlength="150">
+
+                    <label class="d-block">Number *</label>
+                    <input required type="text" name="account_no" id="remittance_account_no" class="form-control" maxlength="50">
+
                     <label class="d-block">Upload QR</label>
-                    <input required type="text" name="qrcode" id="qrcode" class="form-control">
+                    <input type="file" name="qrcode" id="qrcode" class="form-control">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>

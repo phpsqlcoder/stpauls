@@ -78,8 +78,12 @@
                                 @endphp
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
-                                    <td>{{ $sale->created_at }}</td>
-                                    <td>@if($sale->payment_status == 'PAID') {{$payment->payment_date}} @endif</td>
+                                    <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
+                                    <td>
+                                        @if($sale->payment_status == 'PAID') 
+                                        {{ $payment->payment_date }} 
+                                        @endif
+                                    </td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
@@ -93,7 +97,7 @@
                                                     PENDING
                                                 @endif
                                             @else
-                                                PAID
+                                                {{ $sale->status }}
                                             @endif
                                         @endif
                                     </td>
@@ -109,9 +113,9 @@
                                             </a>
                                             @endif
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+                                                <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
 
-                                                <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history({{$sale->id}})" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
                                             </div>
                                         </nav>
                                     </td>
@@ -146,6 +150,15 @@
         </div>
     </div>
 
+    <div>
+        <form style="display: none;" id="payment_form" method="post" action="{{route('sales.validate-payment')}}">
+            @csrf
+            <input type="text" name="payment_id" id="payment_id" value="">
+            <input type="text" name="status" id="status" value="">
+        </form>
+    </div>
+
+
     <div class="modal effect-scale" id="prompt-show-payment-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -157,23 +170,20 @@
                 </div>
                 <div class="modal-body">
                     <div class="table-responsive">
-                        <form method="post" action="{{route('sales.approve-payment')}}">
-                            @csrf
-                            <table class="table table-bordered payment_details">
-                                <thead>
-                                    <th>Reference #</th>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Attachment</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </thead>
-                                <tbody id="payment_details_tbl">
+                        <table class="table table-bordered payment_details">
+                            <thead>
+                                <th>Reference #</th>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Attachment</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </thead>
+                            <tbody id="payment_details_tbl">
 
-                                </tbody>
-                            </table>
-                        </form>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -183,7 +193,7 @@
         </div>
     </div>
 
-    @include('admin.sales.modal')
+    @include('admin.sales.modals.common')
 @endsection
 
 @section('pagejs')
@@ -227,20 +237,29 @@
             });
         }
 
-        function approve_payment(){
+        function approve_payment(id,status){
+            if(status == 'APPROVE'){
+                var text = 'approve';
+                var btnColor = '#8CD4F5';
+            } else {
+                var text = 'reject'
+                var btnColor = '#d33';
+            }
+
             swal({
                 title: '',
-                text: "You are about to approve this payment. Do you want to continue?",
+                text: "You are about to "+text+" this payment. Do you want to continue?",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#8CD4F5',
+                confirmButtonColor: btnColor,
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, approve it!'            
+                confirmButtonText: 'Yes, '+text+' it!'            
             },
             function(isConfirm) {
                 if (isConfirm) {
-                    $('#order_id').val(id);
-                    $('#remove_order_form').submit();
+                    $('#payment_id').val(id);
+                    $('#status').val(status);
+                    $('#payment_form').submit();
                 } 
                 else {                    
                     swal.close();                   

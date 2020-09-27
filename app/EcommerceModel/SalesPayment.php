@@ -54,12 +54,9 @@ class SalesPayment extends Model
         return $qry;
     }
 
-    public static function unvalidated_payments()
+    public static function pending_money_transfer()
     {
-        $qry = SalesHeader::join('ecommerce_sales_payments','ecommerce_sales_headers.id','=','ecommerce_sales_payments.sales_header_id')
-            ->where('ecommerce_sales_headers.payment_method','>',1)
-            ->where('ecommerce_sales_payments.is_verify',0)
-            ->count();
+        $qry = SalesHeader::where('status','PENDING')->where('payment_method','>',1)->count();
 
         return $qry;
     }

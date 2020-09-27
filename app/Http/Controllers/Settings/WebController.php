@@ -351,15 +351,24 @@ class WebController extends Controller
 
     public function add_remittance(Request $request)
     {
-        PaymentOption::create([
+        $data = PaymentOption::create([
             'payment_id' => 3,
             'name' => $request->name,
+            'recipient' => $request->recipient,
+            'account_no' => $request->account_no,
             'type' => 'remittance',
-            'qrcode' => $request->qrcode,
+            'qrcode' => isset($request->qrcode) ? $request->qrcode->getClientOriginalName() : '',
             'is_default' => 0,
             'is_active' => 0,
             'user_id' => Auth::id()
         ]);
+
+        if(isset($request->qrcode)){
+            $file = $request->qrcode;
+
+            Storage::makeDirectory('/public/qrcodes/'.$data->id);
+            Storage::putFileAs('/public/qrcodes/'.$data->id, $file, $file->getClientOriginalName());
+        }
 
         return back()->with([
             'tabname' => 'ecommerce',
@@ -369,11 +378,25 @@ class WebController extends Controller
 
     public function update_remittance(Request $request)
     {
-        PaymentOption::find($request->id)->update([
+        $qry = PaymentOption::find($request->id);
+
+        $qry->update([
             'name' => $request->name,
-            'qrcode' => $request->qrcode,
+            'recipient' => $request->recipient,
+            'account_no' => $request->account_no,
+            'qrcode' => isset($request->qrcode) ? $request->qrcode->getClientOriginalName() : '',
             'user_id' => Auth::id()
         ]);
+
+        if(isset($request->qrcode)){
+            $file = $request->qrcode;
+
+            if($qry->qrcode == ''){
+               Storage::makeDirectory('/public/qrcodes/'.$qry->id);
+            }
+            
+            Storage::putFileAs('/public/qrcodes/'.$qry->id, $file, $file->getClientOriginalName());
+        }
 
         return back()->with([
             'tabname' => 'ecommerce',

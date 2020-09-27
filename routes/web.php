@@ -192,7 +192,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             // Money Transfer
             Route::get('/admin/sales/money-transfer','EcommerceControllers\SalesController@sales_money_transfer')->name('sales-transaction.money-transfer');
             Route::get('/display-payment-details/{id}', 'EcommerceControllers\SalesController@display_payment_details')->name('display.payment-details');
-            Route::post('/sales-approve-payment','EcommerceControllers\SalesController@approve_payment')->name('sales.approve-payment');
+            Route::post('/sales-validate-payment','EcommerceControllers\SalesController@validate_payment')->name('sales.validate-payment');
             // Cash on Delivery
             Route::get('/admin/sales/cash-on-delivery','EcommerceControllers\SalesController@sales_cash_on_delivery')->name('sales-transaction.cash-on-delivery');
             Route::post('/cod-approve-order','EcommerceControllers\SalesController@approve_order')->name('cod-approve-order');

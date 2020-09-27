@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Helpers\ListingHelper;
 use App\Page;
 use Auth;
+use App\EcommerceModel\Customer;
 
 class SalesController extends Controller
 {
@@ -91,24 +92,7 @@ class SalesController extends Controller
         return view('admin.sales.payment-details',compact('payment'));
     }
 
-    public function approve_payment(Request $request)
-    {
-        $payment = SalesPayment::find($request->payment_id);
-
-        $approve = $payment->update(['is_verify' => 1]);
-
-        if($approve){
-            SalesHeader::find($payment->sales_header_id)->update([
-                'payment_status' => 'PAID',
-                'delivery_status' => 'Processing',
-                'user_id' => Auth::id()
-            ]);
-        }
-
-        return back()->with('success',__('standard.sales.approve_success'));
-    }
-
-    // BEGIN COD
+    // BEGIN Cash On Delivery
     public function sales_cash_on_delivery()
     {
         $listing = new ListingHelper('desc',10,'order_number');
@@ -128,25 +112,71 @@ class SalesController extends Controller
     }
 
     public function approve_order(Request $request)
-    {
-        if($request->status == 'APPROVE'){
+    {   
+        $qry = SalesHeader::find($request->orderid);
+        $customer = Customer::find($qry->customer_id);
 
-            SalesHeader::find($request->orderid)->update([
-                'delivery_status' => 'Processing',
-                'is_approve' => 1
-            ]);
-
-            return back()->with('success', 'Order has been approved.');
-
+        if($qry->status == 'CANCELLED'){
+            return back()->with('error', 'Order was already cancelled by the customer.');
         } else {
 
-            SalesHeader::find($request->orderid)->update([
-                'status' => 'CANCELLED',
-                'delivery_status' => 'CANCELLED'
-            ]);
-            return back()->with('success', 'Order has been rejected.');
+            if($request->status == 'APPROVE'){
 
+                $qry->update([
+                    'status' => 'APPROVED',
+                    'delivery_status' => 'Processing',
+                    'is_approve' => 1
+                ]);
+
+                $customer->send_order_approved_email();
+                return back()->with('success', 'Order has been approved.');
+
+            } else {
+
+                $qry->update([
+                    'status' => 'CANCELLED',
+                    'delivery_status' => 'CANCELLED'
+                ]);
+
+                $customer->send_order_rejected_email();
+                return back()->with('success', 'Order has been rejected.');
+
+            }
         }
+        
+    }
+
+    public function validate_payment(Request $request)
+    {
+        $payment  = SalesPayment::find($request->payment_id);
+        $sales    = SalesHeader::find($payment->sales_header_id);
+        $customer = Customer::find($sales->customer_id);
+
+        if($request->status == 'APPROVE'){
+
+            $payment->update(['is_verify' => 1]);
+            $sales->update([
+                'status' => 'PAID',
+                'payment_status' => 'PAID',
+                'delivery_status' => 'Processing',
+                'user_id' => Auth::id(),
+                'is_approve' => 1
+            ]);
+            $customer->send_payment_approved_email();
+            return back()->with('success',__('standard.sales.approve_success'));
+
+        } else {
+            $payment->update(['status' => 'UNPAID']);
+            $sales->update([
+                'status' => 'CANCELLED',
+                'delivery_status' => 'Cancelled',
+                'user_id' => Auth::id()
+            ]);
+
+            $customer->send_payment_rejected_email();
+            return back()->with('success',__('standard.sales.reject_success'));
+        }
+        
     }
 
     public function payment_add_store(Request $request)
@@ -159,7 +189,8 @@ class SalesController extends Controller
             'payment_date' => $request->payment_dt,
             'receipt_number' => '',
             'remarks' => $request->payment_remarks,
-            'created_by' => Auth::id()
+            'created_by' => Auth::id(),
+            'is_verify' => 1
         ]);
 
         if($payment){
@@ -169,17 +200,70 @@ class SalesController extends Controller
                 'status' => 'COMPLETED'
             ]);
 
-            DeliveryStatus::create([
-                'order_id' => $request->sales_header_id,
-                'user_id' => Auth::id(),
-                'status' => 'Delivered',
-                'remarks' => $request->payment_remarks
-            ]);
+
+            if(DeliveryStatus::where('order_id',$request->sales_header_id)->where('status','Delivered')->exists()){
+
+            } else {
+                DeliveryStatus::create([
+                    'order_id' => $request->sales_header_id,
+                    'user_id' => Auth::id(),
+                    'status' => 'Delivered',
+                    'remarks' => $request->payment_remarks
+                ]); 
+            }
         }
 
         return back()->with('success','Payment has been added.');
     }
     // END COD
+
+    public function delivery_status(Request $request)
+    {
+        $qry = SalesHeader::find($request->del_id);
+
+        if($qry->payment_method == 0){
+            $qry->update([
+                'status' => 'IN-PROGRESS',
+                'delivery_status' => $request->delivery_status
+            ]);
+        } else {
+            $qry->update([
+                'status' => ($request->delivery_status == 'Delivered') ? 'COMPLETED' : 'PAID',
+                'delivery_status' => $request->delivery_status
+            ]);
+        }
+        
+
+        $update_delivery_table = DeliveryStatus::create([
+            'order_id' => $request->del_id,
+            'user_id' => Auth::id(),
+            'status' => $request->delivery_status,
+            'remarks' => $request->del_remarks
+        ]);
+
+        $order = SalesHeader::findOrFail($request->del_id);
+
+        //$this->sms_update_order_status($order->customer_contact_number,$order);
+
+        return back()->with('success','Successfully updated delivery status!');
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // BEGIN CARD PAYMENT
     public function sales_card_payment()
@@ -212,34 +296,7 @@ class SalesController extends Controller
 
 
 
-
-
-
-
-
-
-
-
-    public function delivery_status(Request $request)
-    {
-        $update = SalesHeader::whereId($request->del_id)->update([
-            'delivery_status' => $request->delivery_status
-        ]);
-
-        $update_delivery_table = DeliveryStatus::create([
-            'order_id' => $request->del_id,
-            'user_id' => Auth::id(),
-            'status' => $request->delivery_status,
-            'remarks' => $request->del_remarks
-        ]);
-
-        $order = SalesHeader::findOrFail($request->del_id);
-
-        //$this->sms_update_order_status($order->customer_contact_number,$order);
-
-        return back()->with('success','Successfully updated delivery status!');
-
-    }
+    
 
 
 
@@ -253,12 +310,12 @@ class SalesController extends Controller
 
     
 
-    public function validate_payment(Request $request)
-    {
-        SalesPayment::find($request->payment_id)->update(['is_verify' => 1]);
+    // public function validate_payment(Request $request)
+    // {
+    //     SalesPayment::find($request->payment_id)->update(['is_verify' => 1]);
 
-        return back()->with('success',__('standard.sales.validate_success'));
-    }
+    //     return back()->with('success',__('standard.sales.validate_success'));
+    // }
 
     public function store(Request $request)
     {
@@ -332,23 +389,23 @@ class SalesController extends Controller
 
     }
 
-    public function sms_update_order_status($number,$order){
+    // public function sms_update_order_status($number,$order){
 
-        $message = "Your order #".$order->order_number." is now on ".strtoupper($order->delivery_status)." status -LydiasLechon";
-        $apicode = "TR-JUNDR725076_39D3A";
-        $url = 'https://www.itexmo.com/php_api/api.php';
-        $itexmo = array('1' => $number, '2' => $message, '3' => $apicode);
-        $param = array(
-            'http' => array(
-                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                'method'  => 'POST',
-                'content' => http_build_query($itexmo),
-            ),
-        );
-        $context  = stream_context_create($param);
-       // return;
-        return file_get_contents($url, false, $context);
-    }
+    //     $message = "Your order #".$order->order_number." is now on ".strtoupper($order->delivery_status)." status -LydiasLechon";
+    //     $apicode = "TR-JUNDR725076_39D3A";
+    //     $url = 'https://www.itexmo.com/php_api/api.php';
+    //     $itexmo = array('1' => $number, '2' => $message, '3' => $apicode);
+    //     $param = array(
+    //         'http' => array(
+    //             'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+    //             'method'  => 'POST',
+    //             'content' => http_build_query($itexmo),
+    //         ),
+    //     );
+    //     $context  = stream_context_create($param);
+    //    // return;
+    //     return file_get_contents($url, false, $context);
+    // }
 
     public function view_payment($id)
     {

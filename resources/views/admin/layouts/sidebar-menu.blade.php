@@ -157,16 +157,17 @@
                     <li @if (\Route::current()->getName() == 'sales-transaction.money-transfer') class="active" @endif>
                         <a href="{{ route('sales-transaction.money-transfer') }}">Money Transfer 
                             &nbsp;
-                            @if(\App\EcommerceModel\SalesPayment::unvalidated_payments() > 0)
-                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesPayment::unvalidated_payments(3)}}</span>
+                            @if(\App\EcommerceModel\SalesPayment::pending_money_transfer() > 0)
+                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesPayment::pending_money_transfer()}}</span>
                             @endif
                         </a>
                     </li>
                     <li @if (\Route::current()->getName() == 'sales-transaction.card-payment') class="active" @endif>
                         <a href="{{ route('sales-transaction.card-payment') }}">Credit/Debit
                             &nbsp;
-                            
-                                <span class="badge badge-danger">1</span>
+                            @if(\App\EcommerceModel\SalesHeader::pending_credit_payment() > 0)
+                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesHeader::pending_credit_payment()}}</span>
+                            @endif
                         </a>
                     </li>
                     <li @if (\Route::current()->getName() == 'sales-transaction.cash-on-delivery') class="active" @endif>

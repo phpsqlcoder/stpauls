@@ -25,7 +25,7 @@
                         <li class="breadcrumb-item active" aria-current="page"><a href="{{route('sales-transaction.index')}}">Sales Transaction</a></li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Sales Transaction : Money Transfer</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Sales Transaction : Credit/Debit</h4>
             </div>
         </div>
 
@@ -76,15 +76,15 @@
                                 @endphp
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
-                                    <td>{{ $sale->created_at }}</td>
-                                    <td>{{ $payment->payment_date }}</td>
+                                    <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
+                                    <td>@if($sale->payment_status == 'PAID') {{ $payment->payment_date }} @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
                                         @if($sale->status == 'CANCELLED')
                                             CANCELLED
                                         @else
-                                            {{ $sale->payment_status }}
+                                            {{ $sale->status }}
                                         @endif
                                     </td>
                                     <td><a href="{{route('admin.report.delivery_report',$sale->id)}}" target="_blank">{{ $sale->delivery_status }}</a></td>
@@ -93,9 +93,11 @@
                                         <nav class="nav table-options">
                                             <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Page"><i data-feather="eye"></i></a>
 
+                                            @if($sale->payment_status == 'PAID')
                                             <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i data-feather="settings"></i>
                                             </a>
+                                            @endif
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
 
@@ -145,7 +147,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="table-responsive">
-                        <form method="post" action="{{route('sales.approve-payment')}}">
+                        <form method="post" action="{{route('sales.validate-payment')}}">
                             @csrf
                             <table class="table table-bordered payment_details">
                                 <thead>
@@ -171,7 +173,7 @@
         </div>
     </div>
 
-    @include('admin.sales.modal')
+    @include('admin.sales.modals.common')
 @endsection
 
 @section('pagejs')

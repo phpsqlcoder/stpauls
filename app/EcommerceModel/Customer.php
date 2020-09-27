@@ -5,6 +5,13 @@ namespace App\EcommerceModel;
 use App\Notifications\Ecommerce\CustomerResetPasswordNotification;
 use App\Notifications\Ecommerce\CustomerApprovedAccountReactivationNotification;
 use App\Notifications\Ecommerce\CustomerDisapprovedAccountReactivationNotification;
+
+use App\Notifications\Ecommerce\CustomerAccountDeactivatedNotification;
+use App\Notifications\Ecommerce\OrderApprovedNotification;
+use App\Notifications\Ecommerce\OrderRejectedNotification;
+use App\Notifications\Ecommerce\PaymentApprovedNotification;
+use App\Notifications\Ecommerce\PaymentRejectedNotification;
+
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -53,6 +60,31 @@ class Customer extends Authenticatable
     public function send_disapproved_account_reactivation_email()
     {
         $this->notify(new CustomerDisapprovedAccountReactivationNotification());
+    }
+
+    public function send_account_deactivated_email()
+    {
+        $this->notify(new CustomerAccountDeactivatedNotification());
+    }
+
+    public function send_order_approved_email()
+    {
+        $this->notify(new OrderApprovedNotification());
+    }
+
+    public function send_order_rejected_email()
+    {
+        $this->notify(new OrderRejectedNotification());
+    }
+
+    public function send_payment_approved_email()
+    {
+        $this->notify(new PaymentApprovedNotification());
+    }
+
+    public function send_payment_rejected_email()
+    {
+        $this->notify(new PaymentRejectedNotification());
     }
 
     public static function reactivation_request()

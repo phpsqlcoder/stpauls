@@ -2,18 +2,7 @@
 
 session_start();
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-
-try {
-  	$pdo = new PDO("mysql:host=$servername;dbname=cms4_stpaul", $username, $password);
-  	// set the PDO error mode to exception
-  	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-} catch(PDOException $e) {
-  	echo "Connection failed: " . $e->getMessage();
-}
+include('config.php');
 
 
 $apiRespone = [];
@@ -66,7 +55,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
 
     //activate transaction
-    $payment = $pdo->prepare("INSERT INTO ecommerce_sales_payments (sales_header_id, payment_type, amount, status, payment_date, receipt_number, created_by, is_verify) VALUES (:header_id, :payment_type, :amount, :status, :payment_date, :receipt_number, :created_by, :isverify)");
+    $payment = $pdo->prepare("INSERT INTO ecommerce_sales_payments (sales_header_id, payment_type, amount, status, payment_date, receipt_number, created_by, created_at, is_verify) VALUES (:header_id, :payment_type, :amount, :status, :payment_date, :receipt_number, :created_by, :created_at, :isverify)");
     $payment->execute([
         'header_id' => $transaction['id'],
         'payment_type' => 'Card',
@@ -75,10 +64,11 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
         'payment_date' => date('Y-m-d'),
         'receipt_number' => $apiRespone['transaction_id'],
         'created_by' => $transaction['customer_id'],
+        'created_at' => date('Y-m-d H:i:s'),
         'isverify' => 1
     ]);
 
-    $sql = $pdo->prepare("UPDATE ecommerce_sales_headers SET payment_status='PAID', delivery_status='Processing', status='active' WHERE order_number=:order_number");
+    $sql = $pdo->prepare("UPDATE ecommerce_sales_headers SET payment_status='PAID', delivery_status='Processing', status='PAID', is_approve=1 WHERE order_number=:order_number");
     $sql->execute(array(':order_number' => $tn));
 
     //e-mail sending
@@ -108,7 +98,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                     Your transaction number is ' . $tn . '.
                     <br />
                     <br />
-                    Please find the details of your order below, or view it in your <a href="' . $livesitePath . 'my-account/my-orders/">account</a>.
+                    Please find the details of your order below, or view it in your <a href="' . $livesitePath . '/account/my-orders">account</a>.
                     <br />
                     <br />
                     <table width="100%">
@@ -181,7 +171,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                                 <td colspan="3" style="text-align:right;">₱ ' . number_format($total, 2) . '</td>
                             </tr>
                             <tr>
-                                <td colspan="3" style="text-align:right;"><strong>Discount (' . $transaction['discount_amount'] . ')</strong></td>
+                                <td colspan="3" style="text-align:right;"><strong>Loyalty Discount</strong></td>
                                 <td colspan="3" style="text-align:right;">₱ - ' . number_format($transaction['discount_amount'], 2) . '</td>
                             </tr>
         ';
@@ -190,6 +180,10 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                             <tr>
                                 <td colspan="3" style="text-align:right;"><strong>Shipping Rate</strong></td>
                                 <td colspan="3" style="text-align:right;">₱ ' . number_format($transaction['delivery_fee_amount'], 2) . '</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:right;"><strong>Service Fee</strong></td>
+                                <td colspan="3" style="text-align:right;">₱ ' . number_format($transaction['service_fee'], 2) . '</td>
                             </tr>
                             <tr>
                                 <td colspan="3" style="text-align:right;"><strong>Grand Total</strong></td>
@@ -250,8 +244,8 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
     $headers .= "From: " . $siteName . " <no-reply@" . $_SERVER['HTTP_HOST'] . ">\r\n";
 
     mail($apiRespone['req_bill_to_email'],$subject,$msg,$headers);
-    mail($apiRespone['req_bill_to_email'],$subject1,$msg,$headers);
-    mail($apiRespone['req_bill_to_email'],"Order for Pickup. Transaction #:".$apiRespone['req_transaction_uuid'],$msg,$headers);
+    //mail($apiRespone['req_bill_to_email'],$subject1,$msg,$headers);
+    //mail($apiRespone['req_bill_to_email'],"Order for Pickup. Transaction #:".$apiRespone['req_transaction_uuid'],$msg,$headers);
 
     //delete unsuccessfull transactions
     // $sql = $pdo->prepare("SELECT transaction_number FROM tbl_transactions WHERE active=0 AND member_id=:member_id");

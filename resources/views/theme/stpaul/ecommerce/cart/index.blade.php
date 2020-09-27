@@ -179,11 +179,11 @@
 </main>
 
 <div style="display: none;">
-        <form id="remove_order_form" method="post" action="{{route('cart.remove_product')}}">
-            @csrf
-            <input type="text" name="order_id" id="order_id" value="">
-        </form>
-    </div>
+    <form id="remove_order_form" method="post" action="{{route('cart.remove_product')}}">
+        @csrf
+        <input type="text" name="order_id" id="order_id" value="">
+    </form>
+</div>
 @endsection
 
 @section('pagejs')

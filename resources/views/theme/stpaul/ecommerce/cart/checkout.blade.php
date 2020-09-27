@@ -334,9 +334,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @php $totalAmount = 0; $subTotal = 0; @endphp
+                                            @php $totalAmount = 0; $subTotal = 0; $totalProduct = 0; @endphp
                                             @foreach($products as $product)
                                             @php
+                                                $totalProduct += 1;
                                                 $totalAmount = $product->price*$product->qty;
                                                 $subTotal   += $totalAmount;
                                             @endphp
@@ -354,7 +355,7 @@
                                                     </div>
                                                 </td>
                                                 <td class="text-right">₱ {{ number_format($product->price,2) }}
-                                                    <input type="hidden" name="product_price[]" id="product_price_{{$product->product_id}}" value="{{ number_format($product->price,2) }}">
+                                                    <input type="hidden" name="product_price[]" id="product_price_{{$product->product_id}}" value="{{ $product->price }}">
                                                 </td>
                                                 <td class="text-right">
                                                     <input type="hidden" class="input_product_total_amount" id="input_product_total_amount_{{$product->product_id}}" value="{{$totalAmount}}">
@@ -363,6 +364,7 @@
                                                 <td><a href="" onclick="deleteProduct('{{$product->id}}');">x</a></td>
                                             </tr>
                                             @endforeach
+                                            <input type="hidden" id="total_product" value="{{$totalProduct}}">
                                         </tbody>
                                     </table>
                                 </div>
@@ -437,7 +439,10 @@
                                             <label for="paylist{{$list->id}}">{{ $list->name }}</label>
                                             <div class="sub2">
                                                 <div>
-                                                    <label for="D10">Account # : {{ $list->account_no }}</label>
+                                                    <label>Account # : {{ $list->account_no }}</label><br>
+                                                    @if($list->type == 'remittance')
+                                                    <label>Recipient : {{ $list->recipient }}</label>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
@@ -857,22 +862,7 @@
             if(option == 1){
                 $('#input_servicefee').val(0);
                 $('#span_servicefee').html('0.00');
-
-                if($('#province').val() == 0){
-                    $('#input_deliveryfee').val(0);
-                    $('#span_deliveryfee').html('0.00');
-                } else {
-                    var city = $('#city').val();
-                    var rate = city.split('|');
-
-                    if(parseFloat(subTotal) >= parseFloat(codMinPurchase)){
-                        $('#input_deliveryfee').val(deliveryRate);
-                        $('#span_deliveryfee').html(FormatAmount(deliveryRate,2));
-                    } else {
-                        $('#input_deliveryfee').val(rate[1]);
-                        $('#span_deliveryfee').html(FormatAmount(rate[1],2));
-                    }
-                }
+                locationDeliveryRate();
             }
 
             if(option == 2){
@@ -883,36 +873,45 @@
                 $('#span_deliveryfee').html('0.00');
             }
 
-            var sddMinPurchase = $('#sdd_min_purchase').val();
+            // var sddMinPurchase = $('#sdd_min_purchase').val();
             var servicefee = $('#service_fee').val();
 
             if(option == 4){
-                $('#input_deliveryfee').val(0);
-                $('#span_deliveryfee').html('0.00');
-
-                if(parseFloat(subTotal) >= parseFloat(sddMinPurchase)){
-                    $('#input_servicefee').val(0);
-                    $('#span_servicefee').html('0.00');
-                } else {
-                    $('#input_servicefee').val(servicefee);
-                    $('#span_servicefee').html(FormatAmount(servicefee,2));
-                }
+                locationDeliveryRate();
+                $('#input_servicefee').val(servicefee);
+                $('#span_servicefee').html(FormatAmount(servicefee,2));
             }
 
+            // if(option == 4){
+            //     $('#input_deliveryfee').val(0);
+            //     $('#span_deliveryfee').html('0.00');
+
+            //     if(parseFloat(subTotal) >= parseFloat(sddMinPurchase)){
+            //         $('#input_servicefee').val(0);
+            //         $('#span_servicefee').html('0.00');
+            //     } else {
+            //         $('#input_servicefee').val(servicefee);
+            //         $('#span_servicefee').html(FormatAmount(servicefee,2));
+            //     }
+            // }
+
             if(option == 3){
+                locationDeliveryRate();
                 $('#input_servicefee').val(0);
                 $('#span_servicefee').html('0.00');
+            }
+        }
 
-                if($('#province').val() == 0){
-                    $('#input_deliveryfee').val(0);
-                     $('#span_deliveryfee').html('0.00');
-                } else {
-                    var city = $('#city').val();
-                    var rate = city.split('|');
+        function locationDeliveryRate(){
+            if($('#province').val() == 0){
+                $('#input_deliveryfee').val(0);
+                 $('#span_deliveryfee').html('0.00');
+            } else {
+                var city = $('#city').val();
+                var rate = city.split('|');
 
-                    $('#input_deliveryfee').val(rate[1]);
-                     $('#span_deliveryfee').html(FormatAmount(rate[1],2));
-                }
+                $('#input_deliveryfee').val(rate[1]);
+                 $('#span_deliveryfee').html(FormatAmount(rate[1],2));
             }
         }
 
@@ -965,21 +964,21 @@
                 }
             }
 
-            if(option == 4){
-                var sddMinPurchase = $('#sdd_min_purchase').val();
-                var servicefee = $('#service_fee').val();
+            // if(option == 4){
+            //     var sddMinPurchase = $('#sdd_min_purchase').val();
+            //     var servicefee = $('#service_fee').val();
 
-                $('#input_deliveryfee').val(0);
-                $('#span_deliveryfee').html('0.00');
+            //     $('#input_deliveryfee').val(0);
+            //     $('#span_deliveryfee').html('0.00');
 
-                if(parseFloat(subtotal) >= parseFloat(sddMinPurchase)){
-                    $('#input_servicefee').val(0);
-                    $('#span_servicefee').html('0.00');
-                } else {
-                    $('#input_servicefee').val(servicefee);
-                    $('#span_servicefee').html(FormatAmount(servicefee,2));
-                }
-            }
+            //     if(parseFloat(subtotal) >= parseFloat(sddMinPurchase)){
+            //         $('#input_servicefee').val(0);
+            //         $('#span_servicefee').html('0.00');
+            //     } else {
+            //         $('#input_servicefee').val(servicefee);
+            //         $('#span_servicefee').html(FormatAmount(servicefee,2));
+            //     }
+            // }
 
             totalDue();
         }
@@ -1043,38 +1042,47 @@
 
         function deleteProduct(cartid)
         {
-            swal({
-                title: 'Are you sure?',
-                text: "This will remove the item from your cart.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, remove it!'            
-            },
-            function(isConfirm) {
-                if (isConfirm) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('checkout.remove-product') }}",
-                        data: { 
-                                cartid : cartid,
+            var totalproduct = $('#total_product').val();
+            if(totalproduct == 1){
+                swal({
+                    title: '',
+                    text: "You are not allowed to remove all the product(s).",         
+                })
+            } else {
+                swal({
+                    title: 'Are you sure?',
+                    text: "This will remove the item from your cart.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, remove it!'            
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            type: "GET",
+                            url: "{{ route('checkout.remove-product') }}",
+                            data: { 
+                                    cartid : cartid,
+                                },
+                            success: function( response ) {
+                                swal("Success!", "Product has been removed.", "success");
+                                $('#cart_'+cartid).remove();
+                                $('#total_product').val(parseFloat(totalproduct)-1);
+                                subTotal();
+                                
                             },
-                        success: function( response ) {
-                            swal("Success!", "Product has been removed.", "success");
-                            $('#cart_'+cartid).remove();
-                            subTotal();
-                            
-                        },
-                        error: function( response ){
-                            swal("Error!", "Failed to remove the product.", "danger"); 
-                        }
-                    });  
-                } 
-                else {                    
-                    swal.close();                   
-                }
-            });
+                            error: function( response ){
+                                swal("Error!", "Failed to remove the product.", "danger"); 
+                            }
+                        });  
+                    } 
+                    else {                    
+                        swal.close();                   
+                    }
+                });
+            } 
         }
     </script>
 @endsection

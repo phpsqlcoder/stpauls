@@ -101,4 +101,11 @@ class SalesHeader extends Model
 
         return $qry;
     }
+
+    public static function pending_credit_payment()
+    {
+        $qry = SalesHeader::where('payment_method',1)->where('status','<>','COMPLETED')->where('status','<>','CANCELLED')->count();
+
+        return $qry;
+    }
 }
