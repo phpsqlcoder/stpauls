@@ -98,7 +98,7 @@
                                                     <p>City/Municipality *</p>
                                                     <select required class="form-control form-input" name="city" id="city">
                                                         @if(\App\Deliverablecities::check_area($customer->details->city) <> 1)
-                                                            @if(\App\Deliverablecities::deliverable_province($customer->details->province) < 1)
+                                                            @if(\App\Deliverablecities::deliverable_province($customer->details->province) > 1)
                                                                 @foreach($cities as $city)
                                                                     @if($city->province == $customer->details->province)
                                                                         <option value="{{$city->city}}|{{$city->rate}}">{{ $city->city_name }}</option>
