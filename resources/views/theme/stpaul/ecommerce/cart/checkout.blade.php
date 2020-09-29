@@ -681,7 +681,11 @@
                         $(this).removeClass('checkout-next-btn');
                     } else { 
                         if (!$("input[name='shipOption']:checked").val()) {
-                           alert('Please select a shipping method!');
+                            swal({
+                                title: '',
+                                text: "Please select a shipping method!",         
+                            });
+
                            $(this).removeClass('checkout-next-btn');
                         }
                         else {
@@ -693,7 +697,12 @@
                         $(this).removeClass('checkout-next-btn');
                     } else {
                         if (!$("input[name='shipOption']:checked").val()) {
-                           alert('Please select a shipping method!');
+                           
+                           swal({
+                                title: '',
+                                text: "Please select a shipping method!",         
+                            });
+
                            $(this).removeClass('checkout-next-btn');
                         }
                         else {
@@ -1016,7 +1025,12 @@
             var option = $('input[name="payment_method"]:checked').val();
 
             if (!$("input[name='payment_method']:checked").val()) {
-               alert('Please select a payment method!');
+
+                swal({
+                    title: '',
+                    text: "Please select a payment method!",         
+                });
+
                $(this).removeClass('checkout-next-btn');
             }
             else {
@@ -1024,7 +1038,12 @@
                     $("#checkout-form").submit();
                 } else {
                     if (!$("input[name='payment_option']:checked").val()) {
-                       alert('Please select a payment option!');
+                       
+                       swal({
+                            title: '',
+                            text: "Please select a payment method!",         
+                        });
+                       
                        $(this).removeClass('checkout-next-btn');
                     } else {
                       $(this).addClass('checkout-next-btn');  
