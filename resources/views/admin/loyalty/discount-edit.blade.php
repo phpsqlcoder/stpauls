@@ -46,11 +46,22 @@
                     @hasError(['inputName' => 'discount'])
                     @endhasError
                 </div>
+
+                <div class="form-group">
+                    <label class="d-block">Visibility</label>
+                    <div class="custom-control custom-switch @error('visibility') is-invalid @enderror">
+                        <input type="checkbox" class="custom-control-input" name="status" {{ ($discount->status == 'PUBLISHED' ? "checked":"") }} id="customSwitch1">
+                        <label class="custom-control-label" id="label_visibility" for="customSwitch1">{{ucwords(strtolower($discount->status))}}</label>
+                    </div>
+                    @error('visibility')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             <div class="col-lg-12 mg-t-20 mg-b-30">
                 <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Update Discount</button>
-                <a href="{{ route('promos.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
+                <a href="{{ route('discounts.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
             </div>
         </div>
     </form>

@@ -59,7 +59,7 @@
 
             <div class="col-lg-12 mg-t-20 mg-b-30">
                 <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Discount</button>
-                <a href="{{ route('promos.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
+                <a href="{{ route('discounts.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
             </div>
         </div>
     </form>

@@ -193,6 +193,7 @@
                                                     <h3>Cash on Delivery</h3>
                                                     <div class="alert alert-info" role="alert">
                                                         <h4 class="alert-heading">Reminder!</h4>
+                                                        <p>{{ $cod->reminder }}</p>
                                                     </div>
                                                     <div class="form-row form-style fs-sm">
                                                         <div class="col-lg-6 mb-sm-2">
@@ -216,6 +217,7 @@
                                                     <h3>Store Pick-up</h3>
                                                     <div class="alert alert-info" role="alert">
                                                         <h4 class="alert-heading">Reminder!</h4>
+                                                        <p>{{ $stp->reminder }}</p>
                                                     </div>
                                                     <div class="form-row form-style fs-sm">
                                                         <div class="col">
@@ -251,6 +253,7 @@
                                                 <div class="tab__content">
                                                     <div class="alert alert-info" role="alert">
                                                         <h4 class="alert-heading">Reminder!</h4>
+                                                        <p>{{ $sdd->reminder }}</p>
                                                     </div>
                                                 </div>
                                                 @endif
@@ -258,7 +261,10 @@
                                                 <input type="radio" id="tab4" name="shipOption" value="3" class="tab">
                                                 <label for="tab4">Door-to-door (D2D) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                 <div class="tab__content">
-                                                    <h3>Door-to-door</h3>
+                                                    <div class="alert alert-info" role="alert">
+                                                        <h4 class="alert-heading">Reminder!</h4>
+                                                        <p>{{ $dtd->reminder }}</p>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -1043,7 +1049,7 @@
                             title: '',
                             text: "Please select a payment method!",         
                         });
-                       
+
                        $(this).removeClass('checkout-next-btn');
                     } else {
                       $(this).addClass('checkout-next-btn');  
