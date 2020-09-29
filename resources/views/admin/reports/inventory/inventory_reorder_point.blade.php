@@ -61,6 +61,7 @@
 <script>
     $(document).ready(function() {
         $('#example').DataTable( {
+            autoWidth: false,
             dom: 'Bfrtip',
             pageLength: 20,
             buttons: [
