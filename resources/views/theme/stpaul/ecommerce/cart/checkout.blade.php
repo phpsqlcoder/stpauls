@@ -261,10 +261,7 @@
                                                 <input type="radio" id="tab4" name="shipOption" value="3" class="tab">
                                                 <label for="tab4">Door-to-door (D2D) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                 <div class="tab__content">
-                                                    <div class="alert alert-info" role="alert">
-                                                        <h4 class="alert-heading">Reminder!</h4>
-                                                        <p>{{ $dtd->reminder }}</p>
-                                                    </div>
+                                                    <h3>Door-to-door</h3>
                                                 </div>
                                             </div>
 
