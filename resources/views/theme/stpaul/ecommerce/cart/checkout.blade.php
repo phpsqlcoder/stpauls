@@ -85,7 +85,7 @@
                                                     @foreach($provinces as $province)
                                                     <option @if($customer->details->province == $province->province) selected @endif value="{{$province->province}}">{{ $province->province_detail->province }}</option>
                                                     @endforeach
-                                                    <option value="0">Others</option>
+                                                    <option style="display: none;" value="0">Others</option>
                                                 </select>
                                                 <p id="p_province" class="text-danger" style="display: none;"><small>The province field is required.</small></p>
                                                 @if(\App\Deliverablecities::deliverable_province($customer->details->province) < 1)
@@ -273,7 +273,7 @@
                                                 <li class="d-flex justify-content-between">
                                                     <span>City Rate</span>
                                                     <span>
-                                                        <input type="text" id="city_rate" value="{{ $customer->delivery_rate->rate }}">
+                                                        <input type="text" id="city_rate" value="{{ $customer->details->delivery_rate->rate }}">
                                                     </span>
                                                 </li>
                                                 @endif
