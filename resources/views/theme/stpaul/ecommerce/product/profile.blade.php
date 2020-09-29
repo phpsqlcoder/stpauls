@@ -172,7 +172,7 @@
                                                     <div class="quantity-button quantity-up">+</div>
                                                     <div class="quantity-button quantity-down">-</div>
                                                 </div>
-                                                <span class="product-pcs">pcs</span>
+                                                <span class="product-pcs">{{ $product->uom }}</span>
                                             </div>
                                             <div class="product-sku">
                                                 <i class="fa fa-check high-stock"></i> {{ $product->inventory }} available stock

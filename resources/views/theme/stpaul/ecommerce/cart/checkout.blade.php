@@ -257,10 +257,10 @@
                                                 <li class="d-flex justify-content-between">
                                                     <span>Is Serviceable</span>
                                                     <span>
-                                                        <input type="text" id="is_serviceable" value="{{App\Deliverablecities::check_area($customer->city)}}">
+                                                        <input type="text" id="is_serviceable" value="{{App\Deliverablecities::check_area($customer->details->city)}}">
                                                     </span>
                                                 </li>
-                                                @if(\App\Deliverablecities::check_area($customer->city) == 1)
+                                                @if(\App\Deliverablecities::check_area($customer->details->city) == 1)
                                                 <li class="d-flex justify-content-between">
                                                     <span>City Rate</span>
                                                     <span>
