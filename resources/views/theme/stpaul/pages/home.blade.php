@@ -227,7 +227,7 @@
                             <div class="product-card">
                                 <a href="{{ route('product.front.show',$product->details->slug)}}">
                                     <img src="{{ asset('storage/products/'.$product->details->photoPrimary) }}" alt="" />
-                                    <h3 class="product-price">Php {{ $product->details->pricewithcurrency }}</h3>
+                                    <h3 class="product-price">Php {{ $product->details->DiscountedPrice }}</h3>
                                 </a>
                                 <p class="product-title">{{ $product->details->name }}</p>
                                 <form>

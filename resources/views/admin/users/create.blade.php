@@ -36,25 +36,25 @@
                     @method('POST')
                     <div class="form-group">
                         <label class="d-block">First Name *</label>
-                        <input type="text" name="fname" id="fname" value="{{ old('fname')}}" class="form-control @error('fname') is-invalid @enderror" required>
+                        <input type="text" name="fname" id="fname" value="{{ old('fname')}}" class="form-control @error('fname') is-invalid @enderror" maxlength="150">
                         @hasError(['inputName' => 'fname'])
                         @endhasError
                     </div>
                     <div class="form-group">
                         <label class="d-block">Last Name *</label>
-                        <input type="text" name="lname" id="lname" value="{{ old('lname')}}" class="form-control @error('lname') is-invalid @enderror" required>
+                        <input type="text" name="lname" id="lname" value="{{ old('lname')}}" class="form-control @error('lname') is-invalid @enderror" maxlength="150">
                         @hasError(['inputName' => 'lname'])
                         @endhasError
                     </div>
                     <div class="form-group">
                         <label class="d-block">Email *</label>
-                        <input type="email" name="email" id="email" value="{{ old('email')}}" class="form-control @error('email') is-invalid @enderror" required>
+                        <input type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="email" id="email" value="{{ old('email')}}" class="form-control @error('email') is-invalid @enderror">
                         @hasError(['inputName' => 'email'])
                         @endhasError
                     </div>
                     <div class="form-group">
                         <label class="d-block">Role *</label>
-                        <select name="role" class="selectpicker mg-b-5 @error('role') is-invalid @enderror" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select role" data-width="100%" required>
+                        <select name="role" class="selectpicker mg-b-5 @error('role') is-invalid @enderror" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select role" data-width="100%">
                             @foreach($roles as $role)
                                 <option value="{{ $role->id }}" {{ (old("role") == $role->id ? "selected":"") }}>{{ $role->name }}</option>
                             @endforeach

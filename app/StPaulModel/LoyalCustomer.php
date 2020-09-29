@@ -15,7 +15,7 @@ class LoyalCustomer extends Model
 
     public function details()
     {
-    	return $this->belongsTo('\App\EcommerceModel\Customer','customer_id');
+    	return $this->belongsTo('\App\EcommerceModel\Customer','customer_id','customer_id');
     }
 
     public function discount_details()

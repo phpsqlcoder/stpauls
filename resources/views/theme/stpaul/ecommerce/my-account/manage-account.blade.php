@@ -24,6 +24,7 @@
                         </div>
                     </nav>
                     <div class="tab-content" id="nav-tabContent">
+                        {{-- Pesonal Info --}}
                         <div class="tab-pane fade show login-forms @if(session()->has('tabname')) @else active @endif" id="tab-1" role="tabpanel" aria-labelledby="nav-home-tab">
                             <br>
                             <h4>Personal Information</h4>
@@ -60,6 +61,7 @@
                             </div>
                         </div>
 
+                        {{-- Contact Info --}}
                         <div class="tab-pane fade login-forms @if(session()->has('tabname') && session('tabname') == 'contact-information') show active @endif" id="tab-2" role="tabpanel" aria-labelledby="nav-profile-tab"><br>
                             <h4>Contact Information</h4>
                             <hr>
@@ -70,25 +72,24 @@
                                 @endif
                                 <form method="post" class="row" action="{{ route('my-account.update-contact-info') }}">
                                     @csrf
-                                   
                                     <div class="col-lg-6">
                                         <label>Mobile Number *</label>
                                         <div class="form-group">
-                                            <input type="text" class="form-control @error('mobile') is-invalid @enderror" id="mobile" name="mobile" value="{{ old('mobile', $customer->mobile) }}" maxlength="13">
+                                            <input type="text" class="form-control @error('mobile') is-invalid @enderror" id="mobile" name="mobile" value="{{ old('mobile', $customer->details->mobile) }}" maxlength="13">
                                             @hasError(['inputName' => 'mobile'])
                                             @endhasError
                                         </div>
-                                      
                                     </div>
+
                                     <div class="col-lg-6">
                                         <label>Telephone Number </label>
                                         <div class="form-group">
-                                            <input type="text" class="form-control @error('telno') is-invalid @enderror" id="telno" name="telno" value="{{ old('telno', $customer->telno) }}">
+                                            <input type="text" class="form-control @error('telno') is-invalid @enderror" id="telno" name="telno" value="{{ old('telno', $customer->details->telno) }}">
                                             @hasError(['inputName' => 'telno'])
                                             @endhasError
                                         </div>
-                                        <div class="gap-20"></div>
-                                    </div>                                            
+                                    </div>  
+                                    
                                     <div class="col-lg-12">
                                         <button type="submit" class="btn btn-md btn-success">Save</button>
                                     </div>
@@ -111,7 +112,7 @@
                                         <div class="gap-10"></div>
                                         <div class="form-group form-wrap">
                                             <label>Address Line 1 *</label>
-                                            <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" placeholder="Unit No./Building/House No./Street" value="{{ old('address', $customer->address) }}"/>
+                                            <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" placeholder="Unit No./Building/House No./Street" value="{{ old('address', $customer->details->address) }}"/>
                                             @hasError(['inputName' => 'address'])
                                             @endhasError
                                         </div>
@@ -119,7 +120,7 @@
                                    
                                         <div class="form-group form-wrap">
                                             <label>Address Line 2 *</label>
-                                            <input type="text" class="form-control @error('barangay') is-invalid @enderror" id="barangay" name="barangay" placeholder="Subd/Brgy" value="{{ old('barangay', $customer->barangay) }}"/>      
+                                            <input type="text" class="form-control @error('barangay') is-invalid @enderror" id="barangay" name="barangay" placeholder="Subd/Brgy" value="{{ old('barangay', $customer->details->barangay) }}"/>      
                                             @hasError(['inputName' => 'barangay'])
                                             @endhasError
                                         </div>    
@@ -128,20 +129,20 @@
                                             <label>Province *</label>
                                             <select name="province" id="province" class="form-control @error('province') is-invalid @enderror">
                                                 @foreach($provinces as $province)
-                                                <option @if($customer->province == $province->id) selected @endif value="{{$province->id}}">{{$province->province}}</option>
+                                                <option @if($customer->details->province == $province->id) selected @endif value="{{$province->id}}">{{$province->province}}</option>
                                                 @endforeach
                                             </select>
                                             @hasError(['inputName' => 'province'])
                                             @endhasError
                                         </div> 
                                         @php
-                                            $cities = \App\Cities::where('province',$customer->province)->orderBy('city','asc')->get();
+                                            $cities = \App\Cities::where('province',$customer->details->province)->orderBy('city','asc')->get();
                                         @endphp
                                         <div class="form-group form-wrap">
                                             <label>City *</label>
                                             <select name="city" id="city" class="form-control @error('city') is-invalid @enderror">
                                                 @foreach($cities as $city)
-                                                <option @if($customer->city == $city->id) selected @endif value="{{$city->id}}">{{$city->city}}</option>
+                                                <option @if($customer->details->city == $city->id) selected @endif value="{{$city->id}}">{{$city->city}}</option>
                                                 @endforeach
                                             </select>    
                                             @hasError(['inputName' => 'city'])
@@ -150,7 +151,7 @@
                                                                      
                                          <div class="form-group form-wrap">
                                             <label>Zip Code *</label>
-                                            <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" name="zipcode" value="{{ old('zipcode', $customer->zipcode) }}"/>
+                                            <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" name="zipcode" value="{{ old('zipcode', $customer->details->zipcode) }}"/>
                                             @hasError(['inputName' => 'zipcode'])
                                             @endhasError
                                         </div>

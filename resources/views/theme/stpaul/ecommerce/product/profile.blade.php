@@ -270,7 +270,7 @@
                                         
                                         <div class="gap-20"></div>
 
-                                        <ul class="pagination">
+                                        <!-- <ul class="pagination">
                                             <li class="page-item">
                                                 <a class="page-link" href="#" title="Back"><i class="lnr lnr-chevron-left"></i></a>
                                             </li>
@@ -289,7 +289,7 @@
                                             <li class="page-item">
                                                 <a class="page-link" href="#" title="Next"><i class="lnr lnr-chevron-right"></i></a>
                                             </li>
-                                        </ul>
+                                        </ul> -->
                                     </div>
                                     <!-- END REVIEW WRAP -->
                                 @else

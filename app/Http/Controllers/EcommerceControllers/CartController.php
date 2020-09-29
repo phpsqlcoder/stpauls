@@ -275,7 +275,7 @@ class CartController extends Controller
             'delivery_courier' => '',
             'delivery_type' => $delivery_type->name,
             'delivery_fee_amount' => $request->deliveryfee,
-            'delivery_status' => ($request->shipOption == 1) ? 'Waiting for Approval' : 'Waiting for Payment',
+            'delivery_status' => ($request->shipOption == 1 && $request->shipOption == 2) ? 'Waiting for Approval' : 'Waiting for Payment',
             'gross_amount' => $request->totalDue,
             'tax_amount' => 0,
             'net_amount' => $request->totalDue,
@@ -330,11 +330,11 @@ class CartController extends Controller
         $this->check_loyalty($request->totalDue);
 
         if($request->payment_method == 1){
-            $address_line1 = $request->address;
-            $address_line2 = $request->barangay;
-            $city          = $data_city->city;
-            $province      = $data_province->province;
-            $zipcode       = $request->zipcode;
+            $address_line1 = ($request->province == 0) ? '' : $request->address;
+            $address_line2 = ($request->province == 0) ? '' : $request->barangay;
+            $city          = ($request->province == 0) ? '' : $data_city->city;
+            $province      = ($request->province == 0) ? '' : $data_province->province;
+            $zipcode       = ($request->province == 0) ? '' : $request->zipcode;
             $order         = $request;
             $uniqID        = $salesHeader->order_number;
             return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));

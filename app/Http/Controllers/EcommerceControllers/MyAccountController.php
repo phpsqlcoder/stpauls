@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Page;
 
 use App\EcommerceModel\Customer;
+use App\User;
 use App\Provinces;
 
 use Auth;
@@ -19,7 +20,7 @@ class MyAccountController extends Controller
 
     public function manage_account(Request $request)
     {
-        $customer  = Customer::find(Auth::id());
+        $customer  = User::find(Auth::id());
         $provinces = Provinces::orderBy('province','asc')->get();
 
         $selectedTab = 0;
@@ -49,7 +50,8 @@ class MyAccountController extends Controller
             ]  
         );
 
-        Customer::find(Auth::id())->update($personalInfo);
+        Customer::where('customer_id',Auth::id())->update($personalInfo);
+        User::find(Auth::id())->update($personalInfo);
 
         return back()->with('success-personal', 'Personal information has been updated.');
     }
@@ -70,11 +72,11 @@ class MyAccountController extends Controller
             ])->withErrors($validateData)->withInput();
         }
 
-        Customer::find(Auth::id())->update($contactInfo);
+        Customer::where('customer_id',Auth::id())->update($contactInfo);
 
         return back()->with([
             'tabname' => 'contact-information',
-            'success-contact' =>  'Personal information has been updated.'
+            'success-contact' =>  'Contact information has been updated.'
         ]);
     }
 
@@ -104,7 +106,7 @@ class MyAccountController extends Controller
             ])->withErrors($validateData)->withInput();
         }
 
-        Customer::find(Auth::id())->update($addressInfo);
+        Customer::where('customer_id',Auth::id())->update($addressInfo);
 
         return back()->with([
             'tabname' => 'my-address',

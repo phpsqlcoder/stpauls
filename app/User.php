@@ -7,11 +7,23 @@ use App\Notifications\UserResetPasswordNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+use App\Notifications\Ecommerce\CustomerResetPasswordNotification;
+use App\Notifications\Ecommerce\CustomerAccountDeactivatedNotification;
+use App\Notifications\Ecommerce\CustomerApprovedAccountReactivationNotification;
+
+
+use App\Notifications\Ecommerce\PaymentApprovedNotification;
+use App\Notifications\Ecommerce\PaymentRejectedNotification;
+use App\Notifications\Ecommerce\OrderApprovedNotification;
+use App\Notifications\Ecommerce\OrderRejectedNotification;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Role;
 
-class User extends Authenticatable implements MustVerifyEmail
+
+class User extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
@@ -42,6 +54,11 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function details()
+    {
+        return $this->belongsTo('\App\EcommerceModel\Customer','id','customer_id');
+    }
 
     public function getFullNameAttribute()
     {
@@ -112,6 +129,67 @@ class User extends Authenticatable implements MustVerifyEmail
         return $data->name;
     }
 
+
+
+
+
+
+
+
+
+
+    public function customer_send_approved_account_reactivation_email()
+    {
+        $token = app('auth.password.broker')->createToken($this);
+
+        $this->notify(new CustomerApprovedAccountReactivationNotification($token));
+    }
+
+    public function customer_send_reset_password_email()
+    {
+        $token = app('auth.password.broker')->createToken($this);
+
+        $this->notify(new CustomerResetPasswordNotification($token));
+    }
+
+    public function customer_send_account_deactivated_email()
+    {
+        $this->notify(new CustomerAccountDeactivatedNotification());
+    }
+
+    public function customer_send_payment_approved_email($payment)
+    {
+        $this->notify(new PaymentApprovedNotification($payment));
+    }
+
+    public function customer_send_payment_rejected_email()
+    {
+        $this->notify(new PaymentRejectedNotification());
+    }
+
+    public function customer_send_order_approved_email()
+    {
+        $this->notify(new OrderApprovedNotification());
+    }
+
+    public function customer_send_order_rejected_email()
+    {
+        $this->notify(new OrderRejectedNotification());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function send_reset_password_email()
     {
         $token = app('auth.password.broker')->createToken($this);
@@ -119,10 +197,12 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify(new UserResetPasswordNotification($token));
     }
 
+
+
     public function send_reset_temporary_password_email()
     {
         $token = app('auth.password.broker')->createToken($this);
-        logger($token);
+        //logger($token);
         $this->notify(new NewUserResetPasswordNotification($token));
     }
 

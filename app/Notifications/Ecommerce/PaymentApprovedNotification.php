@@ -21,9 +21,9 @@ class PaymentApprovedNotification extends Notification
      * @param $token
      * @param $customer
      */
-    public function __construct()
+    public function __construct($payment)
     {
-    	//
+    	$this->payment = $payment;
     }
 
     /**
@@ -47,7 +47,7 @@ class PaymentApprovedNotification extends Notification
     {
         $customer = $notifiable;
 
-        return (new PaymentApprovedMail(Setting::info(), $customer, $this->token))->to($customer->email);
+        return (new PaymentApprovedMail(Setting::info(), $customer, $this->payment, $this->token))->to($customer->email);
     }
 
     /**

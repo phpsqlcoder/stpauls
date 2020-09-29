@@ -4,8 +4,7 @@ namespace App\Http\Controllers\EcommerceControllers;
 
 use App\Helpers\Webfocus\Setting;
 use App\Mail\UpdatePasswordMail;
-use App\Page;
-use App\User;
+
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
@@ -19,6 +18,8 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 use App\EcommerceModel\Customer;
+use App\Page;
+use App\User;
 
 class EcommerceFrontController extends Controller
 {
@@ -165,12 +166,12 @@ class EcommerceFrontController extends Controller
             'email' => 'required|email',
         ])->validate();
 
-        $qry = Customer::where('email', $request->email);
+        $qry = User::where('email', $request->email);
         $exist = $qry->exists();
 
         if($exist){
-            $customer = $qry->first();
-            $customer->send_reset_password_email();
+            $user = $qry->first();
+            $user->customer_send_reset_password_email();
 
             if (Mail::failures()) {
                 return back()->withInput($request->only('email'))->withErrors(['email' => trans('passwords.user')]);
@@ -185,10 +186,10 @@ class EcommerceFrontController extends Controller
 
     use ResetsPasswords;
 
-    public function broker()
-    {
-        return Password::broker('customers');
-    }
+    // public function broker()
+    // {
+    //     return Password::broker('customers');
+    // }
 
     public function showResetForm(Request $request, $token = null)
     {
@@ -251,11 +252,12 @@ class EcommerceFrontController extends Controller
             ['email' => ['required', 'email'] ]
         );
 
-        $qry_customer = Customer::where('email', $request->email);
-        $data = $qry_customer->first();
+        $qry = User::where('email', $request->email);
 
-        if($data){
-            $qry_customer->update(['reactivate_request' => 1]);
+        if($qry->count() > 0){
+            $customer = $qry->first();
+
+            Customer::where('customer_id',$customer->id)->update(['reactivate_request' => 1]);
 
             return back()->with('success','Account reactivation request has been sent to administrator.');
         } else {

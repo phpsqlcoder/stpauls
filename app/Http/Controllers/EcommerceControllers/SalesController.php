@@ -7,14 +7,16 @@ use App\EcommerceModel\SalesDetail;
 use App\Permission;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\EcommerceModel\DeliveryStatus;
-use App\EcommerceModel\SalesHeader;
-use App\EcommerceModel\SalesPayment;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ListingHelper;
-use App\Page;
 use Auth;
+
+use App\EcommerceModel\DeliveryStatus;
+use App\EcommerceModel\SalesPayment;
+use App\EcommerceModel\SalesHeader;
 use App\EcommerceModel\Customer;
+use App\User;
+use App\Page;
 
 class SalesController extends Controller
 {
@@ -37,7 +39,6 @@ class SalesController extends Controller
                 'apply_to_deleted_data' => true
             ],
         ];
-
 
         $listing = new ListingHelper('desc',10,'order_number',$customConditions);
 
@@ -114,7 +115,7 @@ class SalesController extends Controller
     public function approve_order(Request $request)
     {   
         $qry = SalesHeader::find($request->orderid);
-        $customer = Customer::find($qry->customer_id);
+        $user = User::find($qry->customer_id);
 
         if($qry->status == 'CANCELLED'){
             return back()->with('error', 'Order was already cancelled by the customer.');
@@ -128,7 +129,7 @@ class SalesController extends Controller
                     'is_approve' => 1
                 ]);
 
-                $customer->send_order_approved_email();
+                $user->customer_send_order_approved_email();
                 return back()->with('success', 'Order has been approved.');
 
             } else {
@@ -138,7 +139,7 @@ class SalesController extends Controller
                     'delivery_status' => 'CANCELLED'
                 ]);
 
-                $customer->send_order_rejected_email();
+                $user->customer_send_order_rejected_email();
                 return back()->with('success', 'Order has been rejected.');
 
             }
@@ -150,7 +151,7 @@ class SalesController extends Controller
     {
         $payment  = SalesPayment::find($request->payment_id);
         $sales    = SalesHeader::find($payment->sales_header_id);
-        $customer = Customer::find($sales->customer_id);
+        $user     = User::find($sales->customer_id);
 
         if($request->status == 'APPROVE'){
 
@@ -162,7 +163,7 @@ class SalesController extends Controller
                 'user_id' => Auth::id(),
                 'is_approve' => 1
             ]);
-            $customer->send_payment_approved_email();
+            $user->customer_send_payment_approved_email($payment);
             return back()->with('success',__('standard.sales.approve_success'));
 
         } else {
@@ -173,7 +174,7 @@ class SalesController extends Controller
                 'user_id' => Auth::id()
             ]);
 
-            $customer->send_payment_rejected_email();
+            $user->customer_send_payment_rejected_email();
             return back()->with('success',__('standard.sales.reject_success'));
         }
         

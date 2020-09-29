@@ -77,8 +77,8 @@ class ProductFrontController extends Controller
         $pageLimit = 40;
         $maxPrice   = 1000;
 
-        $products = Product::where('category_id',$category->id)->paginate(10);
-        $categories = ProductCategory::where('parent_id',0) ->where('status','PUBLISHED') ->where('id','<>',$category->id) ->orderBy('name','asc')->get();
+        $products = Product::where('category_id',$category->id)->where('status','PUBLISHED')->paginate(10);
+        $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED') ->where('id','<>',$category->id) ->orderBy('name','asc')->get();
 
         if($request->has('search')){
 
@@ -112,7 +112,7 @@ class ProductFrontController extends Controller
         }
         else{
 
-            $qry = Product::where('category_id',$category->id);
+            $qry = Product::where('category_id',$category->id)->where('status','PUBLISHED');
             $products = $qry->paginate($pageLimit);
             $total_product = $qry->count();
         

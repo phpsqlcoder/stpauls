@@ -50,12 +50,10 @@ class Product extends Model
         
     }
 
-    //added by Ryan 08/07/2020
     public function additional_info()
     {
         return $this->belongsTo('\App\EcommerceModel\ProductAdditionalInfo','id','product_id');
     }
-    //
 
     public static function colors($value){
 

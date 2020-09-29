@@ -38,11 +38,25 @@ class UserController extends Controller
 
     public function index($param = null)
     {
-        $listing = new ListingHelper();
+        $customConditions = [
+            [
+                'field' => 'is_active',
+                'operator' => '=',
+                'value' => 1,
+                'apply_to_deleted_data' => false
+            ],
+            [
+                'field' => 'role_id',
+                'operator' => '=',
+                'value' => 2,
+                'apply_to_deleted_data' => true
+            ]
+        ];
+
+        $listing = new ListingHelper('desc', 10, 'updated_at', $customConditions);
 
         $users = $listing->simple_search(User::class, $this->searchFields);
-      
-        //dd($users);
+
         // Simple search init data
         $filter = $listing->get_filter($this->searchFields);
 
@@ -53,15 +67,13 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::where('id','<>','2')->get();
+        $roles = Role::orderBy('name','asc')->get();
         return view('admin.users.create',compact('roles'));
     }
 
     public function store(UserRequest $request)
     {
-//        if(User::where('name',$request->fname.' '.$request->lname)->exists()){
-//            return back()->with('duplicate', __('standard.users.duplicate_email'));
-//        } else {
+
         $user = User::create([
             'firstname'      => $request->fname,
             'lastname'       => $request->lname,
@@ -71,7 +83,7 @@ class UserController extends Controller
             'role_id'        => $request->role,
             'is_active'      => 1,
             'user_id'        => Auth::id(),
-            'remember_token' => str_random(10)
+            'remember_token' => str_random(60)
         ]);
 
         $user->send_reset_temporary_password_email();
@@ -106,7 +118,7 @@ class UserController extends Controller
             'user_id'  => Auth::id(),
         ]);
 
-        return redirect()->route('users.edit', $user->id)->with('success', __('standard.users.update_success'));
+        return redirect(route('users.index'))->with('success', __('standard.users.update_success'));
     }
 
     public function deactivate(Request $request)

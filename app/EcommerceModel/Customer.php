@@ -15,9 +15,9 @@ use App\Notifications\Ecommerce\PaymentRejectedNotification;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Authenticatable
+class Customer extends Model
 {
     use SoftDeletes;
     use Notifiable;
@@ -25,7 +25,7 @@ class Customer extends Authenticatable
     protected $guard = 'customer';
 
     protected $table = 'customers';
-    protected $fillable = ['email','password','firstname','lastname','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','provider_id','is_subscriber','user_id','remember_token','reactivate_request'];
+    protected $fillable = ['customer_id','firstname','lastname','email','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','provider_id','is_subscriber','user_id','reactivate_request'];
 
 
     public function delivery_rate()
@@ -43,29 +43,29 @@ class Customer extends Authenticatable
         return $this->belongsTo('\App\Provinces','province');
     }
 
-    public function send_reset_password_email()
-    {
-        $token = app('auth.password.broker')->createToken($this);
+    // public function send_reset_password_email()
+    // {
+    //     $token = app('auth.password.broker')->createToken($this);
 
-        $this->notify(new CustomerResetPasswordNotification($token));
-    }
+    //     $this->notify(new CustomerResetPasswordNotification($token));
+    // }
 
-    public function send_approved_account_reactivation_email()
-    {
-        $token = app('auth.password.broker')->createToken($this);
+    // public function send_approved_account_reactivation_email()
+    // {
+    //     $token = app('auth.password.broker')->createToken($this);
 
-        $this->notify(new CustomerApprovedAccountReactivationNotification($token));
-    }
+    //     $this->notify(new CustomerApprovedAccountReactivationNotification($token));
+    // }
 
     public function send_disapproved_account_reactivation_email()
     {
         $this->notify(new CustomerDisapprovedAccountReactivationNotification());
     }
 
-    public function send_account_deactivated_email()
-    {
-        $this->notify(new CustomerAccountDeactivatedNotification());
-    }
+    // public function send_account_deactivated_email()
+    // {
+    //     $this->notify(new CustomerAccountDeactivatedNotification());
+    // }
 
     public function send_order_approved_email()
     {
@@ -77,15 +77,15 @@ class Customer extends Authenticatable
         $this->notify(new OrderRejectedNotification());
     }
 
-    public function send_payment_approved_email()
-    {
-        $this->notify(new PaymentApprovedNotification());
-    }
+    // public function send_payment_approved_email()
+    // {
+    //     $this->notify(new PaymentApprovedNotification());
+    // }
 
-    public function send_payment_rejected_email()
-    {
-        $this->notify(new PaymentRejectedNotification());
-    }
+    // public function send_payment_rejected_email()
+    // {
+    //     $this->notify(new PaymentRejectedNotification());
+    // }
 
     public static function reactivation_request()
     {
@@ -176,12 +176,12 @@ class Customer extends Authenticatable
         return $this->is_email_subscriber == 1;
     }
 
-    public static function customer_username($id)
-    {
-        $qry = Customer::find($id);
+    // public static function customer_username($id)
+    // {
+    //     $qry = Customer::find($id);
 
-        return $qry->firstname.' '.$qry->lastname;
-    }
+    //     return $qry->firstname.' '.$qry->lastname;
+    // }
 
     public function getAddress1Attribute() {
 

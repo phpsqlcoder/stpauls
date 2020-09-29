@@ -2,24 +2,23 @@
 
 namespace App\Http\Controllers\EcommerceControllers;
 
-use App\EcommerceModel\Cart;
-use App\EcommerceModel\Member;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+
 use App\Helpers\Webfocus\Setting;
 use Illuminate\Validation\Rule;
-use Session;
+
 use App\Page;
-use App\EcommerceModel\Product;
-
-
+use Session;
+use App\EcommerceModel\Customer;
 use App\User;
 
-use App\EcommerceModel\Customer;
+use App\EcommerceModel\Product;
+use App\EcommerceModel\Cart;
 
 use App\Deliverablecities;
 use App\Provinces;
@@ -62,7 +61,7 @@ class CustomerFrontController extends Controller
         Validator::make($request->all(),[
             'firstname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
             'lastname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
-            'email' => 'required|email|max:191|unique:customers,email',
+            'email' => 'required|email|max:191|unique:users,email',
             'password' => 'required|max:150|min:8',
             'password_confirmation' => 'required|same:password',
             'address' => 'required',
@@ -72,20 +71,27 @@ class CustomerFrontController extends Controller
             'mobileno' => 'required',
             'zipcode' => 'required',
         ])->validate();
+
         
-        $exist = Customer::where('email',$request->email)->exists();
+        // Login Credetials
+        $customer = User::create([
+            'email' => $request->email,
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'email_verified_at' => now(),
+            'password' => \Hash::make($request->password),
+            'role_id' => 3, // customer
+            'is_active' => 1,
+            'user_id' => 0,
+            'remember_token' => str_random(60)
+        ]);
 
-        if($exist){
-
-            return back()->with('error','Registration Successful!');
-
-        } else {
-
-            $customer = Customer::create([
-                'email' => $request->email,
-                'password' => \Hash::make($request->password),
+        if($customer){
+            Customer::create([
+                'customer_id' => $customer->id,
                 'firstname' => $request->firstname,
                 'lastname' => $request->lastname,
+                'email' => $request->email,
                 'telno' => $request->telno,
                 'mobile' => $request->mobileno,
                 'address' => $request->address,
@@ -97,32 +103,11 @@ class CustomerFrontController extends Controller
                 'provider' => '',
                 'fbId' => '',
                 'googleId' => '',
-                'remember_token' => str_random(10),
-            ]);   
-
-            return redirect(route('customer-front.login'))->with('success','Registration Successful!');
-
-        } 
-    }
-
-    public function get_random_code($length = 6)
-    {
-        $token = "";
-        $codeAlphabet= "abcdefghijklmnopqrstuvwxyz";
-        $codeAlphabet.= "0123456789";
-        $max = strlen($codeAlphabet); // edited
-
-        $member = \App\EcommerceModel\Member::where('code', $token)->first();
-
-        while($token == "" || $member) {
-            $token = "";
-            for ($i = 0; $i < $length; $i++) {
-                $token .= $codeAlphabet[random_int(0, $max-1)];
-            }
-            $member = \App\EcommerceModel\Member::where('code', $token)->first();
+            ]);
         }
+            
+        return redirect(route('customer-front.login'))->with('success','Registration Successful!');
 
-        return $token;
     }
 
 
@@ -142,22 +127,18 @@ class CustomerFrontController extends Controller
             'password' => $request->password
         ];
 
-        if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
-            unset($userCredentials['username']);
-            $userCredentials['email'] = $request->email;
-        }
+        // if (filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
+        //     unset($userCredentials['username']);
+        //     $userCredentials['email'] = $request->email;
+        // }
 
         $cart = session('cart', []);
         
-        if (Auth::guard('customer')->attempt($userCredentials)) {
+        if (Auth::attempt($userCredentials)) {
 
-            $customer = Customer::where('email',$request->email)->first();
-
-            if($customer->is_active == 0){
+            if(Auth()->user()->is_active == 0){
                 return back()->with('warning','account inactive');
             }
-
-            Auth::loginUsingId($customer->id);
 
             foreach ($cart as $order) {
                 $product = Product::find($order['product_id']);

@@ -73,7 +73,7 @@
                                             <div class="gap-10"></div>
                                             <div class="form-group form-wrap">
                                                 <p>Mobile Number *</p>
-                                                <input type="text" class="form-control form-input" name="mobile" id="input_mobile" value="{{ $customer->mobile }}" maxlength="13">
+                                                <input type="text" class="form-control form-input" name="mobile" id="input_mobile" value="{{ $customer->details->mobile }}" maxlength="13">
                                                 <p id="p_mobile" class="text-danger" style="display: none;"><small>The mobile field is required.</small></p>
                                             </div>
 
@@ -83,12 +83,12 @@
                                                 <select name="province" id="province" class="form-control form-input">
                                                     <option value="" selected disabled>-- Select Province --</option>
                                                     @foreach($provinces as $province)
-                                                    <option @if($customer->province == $province->province) selected @endif value="{{$province->province}}">{{ $province->province_detail->province }}</option>
+                                                    <option @if($customer->details->province == $province->province) selected @endif value="{{$province->province}}">{{ $province->province_detail->province }}</option>
                                                     @endforeach
                                                     <option value="0">Others</option>
                                                 </select>
                                                 <p id="p_province" class="text-danger" style="display: none;"><small>The province field is required.</small></p>
-                                                @if(\App\Deliverablecities::deliverable_province($customer->province) < 1)
+                                                @if(\App\Deliverablecities::deliverable_province($customer->details->province) < 1)
                                                     <small id="alert_province" class="form-text text-danger"><b>{{ $customer->provinces->province }}</b> is not serviceable. Please select another province.</small>
                                                 @endif
                                             </div>
@@ -97,17 +97,17 @@
                                                 <div class="form-group form-wrap">
                                                     <p>City/Municipality *</p>
                                                     <select required class="form-control form-input" name="city" id="city">
-                                                        @if(\App\Deliverablecities::check_area($customer->city) <> 1)
+                                                        @if(\App\Deliverablecities::check_area($customer->details->city) <> 1)
                                                             <option value="0" selected>-- Select City --</option>
                                                         @else
                                                             @foreach($cities as $city)
-                                                            <option @if($customer->city == $city->city) selected @endif value="{{$city->city}}|{{$city->rate}}">{{ $city->city_name }}</option>
+                                                            <option @if($customer->details->city == $city->city) selected @endif value="{{$city->city}}|{{$city->rate}}">{{ $city->city_name }}</option>
                                                             @endforeach
                                                         @endif
                                                     </select>
                                                     <span></span>
                                                     <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
-                                                    @if(\App\Deliverablecities::check_area($customer->city) <> 1)
+                                                    @if(\App\Deliverablecities::check_area($customer->details->city) <> 1)
                                                         <small id="alert_city" class="form-text text-danger"><b>{{ $customer->cities->city }}</b> is not serviceable. Please select another city.</small>
                                                     @endif
                                                 </div>
@@ -115,21 +115,21 @@
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>Address Line 1 *</p>
-                                                    <input required type="text" class="form-control form-input" name="address" id="input_address" value="{{ $customer->address }}">
+                                                    <input required type="text" class="form-control form-input" name="address" id="input_address" value="{{ $customer->details->address }}">
                                                     <p id="p_address" class="text-danger" style="display: none;"><small>The address line 1 field is required.</small></p>
                                                 </div>
 
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>Address Line 2 *</p>
-                                                    <input required type="text" class="form-control form-input" name="barangay" id="input_barangay" value="{{ $customer->barangay }}">
+                                                    <input required type="text" class="form-control form-input" name="barangay" id="input_barangay" value="{{ $customer->details->barangay }}">
                                                     <p id="p_barangay" class="text-danger" style="display: none;"><small>The address line 2 field is required.</small></p>
                                                 </div>
 
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>Zip Code *</p>
-                                                    <input required type="text" class="form-control form-input" name="zipcode" id="input_zipcode" value="{{ $customer->zipcode }}">
+                                                    <input required type="text" class="form-control form-input" name="zipcode" id="input_zipcode" value="{{ $customer->details->zipcode }}">
                                                     <p id="p_zipcode" class="text-danger" style="display: none;"><small>The zip code field is required.</small></p>
                                                 </div>
                                             </div>
@@ -177,6 +177,7 @@
                                             <input type="hidden" id="array_days1" value="{{ rtrim($cod_allowed_days,',') }}">
                                             
                                             <div class="tab-wrap">
+                                                @if($amount >= $cod->minimum_purchase)
                                                 <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
                                                 <label for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                 <div class="tab__content">
@@ -198,6 +199,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                @endif
                                             
                                                 <input type="radio" id="tab2" name="shipOption" value="2" class="tab">
                                                 <label for="tab2">Store Pick-up <span class="fa fa-check-circle fa-icon ml-2"></span></label>
@@ -233,7 +235,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            
+                                                
+                                                @if($amount >= $sdd->minimum_purchase)
                                                 <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
                                                 <label for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                 <div class="tab__content">
@@ -241,6 +244,7 @@
                                                         <h4 class="alert-heading">Reminder!</h4>
                                                     </div>
                                                 </div>
+                                                @endif
                                             
                                                 <input type="radio" id="tab4" name="shipOption" value="3" class="tab">
                                                 <label for="tab4">Door-to-door (D2D) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
@@ -862,7 +866,15 @@
             if(option == 1){
                 $('#input_servicefee').val(0);
                 $('#span_servicefee').html('0.00');
-                locationDeliveryRate();
+                //locationDeliveryRate();
+
+                if($('#province').val() == 0){
+                    $('#input_deliveryfee').val(0);
+                    $('#span_deliveryfee').html('0.00');
+                } else {
+                    $('#input_deliveryfee').val(deliveryRate);
+                    $('#span_deliveryfee').html(FormatAmount(deliveryRate,2));
+                }
             }
 
             if(option == 2){
@@ -876,24 +888,19 @@
             // var sddMinPurchase = $('#sdd_min_purchase').val();
             var servicefee = $('#service_fee').val();
 
+            // if(option == 4){
+            //     locationDeliveryRate();
+            //     $('#input_servicefee').val(servicefee);
+            //     $('#span_servicefee').html(FormatAmount(servicefee,2));
+            // }
+
             if(option == 4){
-                locationDeliveryRate();
+                $('#input_deliveryfee').val(0);
+                $('#span_deliveryfee').html('0.00');
+                
                 $('#input_servicefee').val(servicefee);
                 $('#span_servicefee').html(FormatAmount(servicefee,2));
             }
-
-            // if(option == 4){
-            //     $('#input_deliveryfee').val(0);
-            //     $('#span_deliveryfee').html('0.00');
-
-            //     if(parseFloat(subTotal) >= parseFloat(sddMinPurchase)){
-            //         $('#input_servicefee').val(0);
-            //         $('#span_servicefee').html('0.00');
-            //     } else {
-            //         $('#input_servicefee').val(servicefee);
-            //         $('#span_servicefee').html(FormatAmount(servicefee,2));
-            //     }
-            // }
 
             if(option == 3){
                 locationDeliveryRate();

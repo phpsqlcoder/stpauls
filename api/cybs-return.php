@@ -48,7 +48,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
     //member information
     $profile = '';
-    $sqlMem = $pdo->prepare("SELECT * FROM customers WHERE id=:id");
+    $sqlMem = $pdo->prepare("SELECT * FROM customers WHERE customer_id=:id");
     $sqlMem->execute(array(':id' => $transaction['customer_id']));
 
     $profile = $sqlMem->fetch();
@@ -68,7 +68,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
         'isverify' => 1
     ]);
 
-    $sql = $pdo->prepare("UPDATE ecommerce_sales_headers SET payment_status='PAID', delivery_status='Processing', status='PAID', is_approve=1 WHERE order_number=:order_number");
+    $sql = $pdo->prepare("UPDATE ecommerce_sales_headers SET payment_status='PAID', delivery_status='Scheduled for Processing', status='PAID', is_approve=1 WHERE order_number=:order_number");
     $sql->execute(array(':order_number' => $tn));
 
     //e-mail sending

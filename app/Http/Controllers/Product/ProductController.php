@@ -175,13 +175,15 @@ class ProductController extends Controller
 
     public function tags($id,$tags)
     {
-        foreach(explode(',',$tags) as $tag)
-        {
-            ProductTag::create([
-                'product_id' => $id,
-                'tag' => $tag,
-                'created_by' => Auth::id()
-            ]);
+        if($tags <> ''){
+            foreach(explode(',',$tags) as $tag)
+            {
+                ProductTag::create([
+                    'product_id' => $id,
+                    'tag' => $tag,
+                    'created_by' => Auth::id()
+                ]);
+            }
         }
     }
 

@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Validator;
 
 
 use App\EcommerceModel\Customer;
+use App\User;
 
 
 class CustomerController extends Controller
@@ -47,12 +48,18 @@ class CustomerController extends Controller
                 'operator' => '=',
                 'value' => 1,
                 'apply_to_deleted_data' => false
+            ],
+            [
+                'field' => 'role_id',
+                'operator' => '=',
+                'value' => 3,
+                'apply_to_deleted_data' => true
             ]
         ];
 
         $listing = new ListingHelper('desc', 10, 'updated_at', $customConditions);
 
-        $customers = $listing->simple_search(Customer::class, $this->searchFields);
+        $customers = $listing->simple_search(User::class, $this->searchFields);
 
         // Simple search init data
         $filter = $listing->get_filter($this->searchFields);
@@ -88,18 +95,22 @@ class CustomerController extends Controller
     public function reactivate(Request $request)
     {
         $customer = Customer::find($request->customer_id);
+        $user     = User::find($customer->customer_id);
 
-        $qry = $customer->update([
+        $customer->update([
             'is_active' => $request->status,
             'reactivate_request' => 0,
             'user_id'   => Auth::id(),
         ]);
 
+        $user->update(['is_active' => 1]);
+
+
         $status = ($request->status == 1) ? 'approved' : 'disapproved';
         if($request->status == 1){
-            $customer->send_approved_account_reactivation_email();
+            $user->customer_send_approved_account_reactivation_email();
         } else {
-            $customer->send_disapproved_account_reactivation_email();
+            $user->send_disapproved_account_reactivation_email();
         }
         
         // if (Mail::failures()) {
@@ -111,7 +122,7 @@ class CustomerController extends Controller
 
     public function activate(Request $request)
     {
-        Customer::find($request->customer_id)->update([
+        User::find($request->customer_id)->update([
             'is_active' => 1,
             'user_id'   => Auth::id(),
         ]);
@@ -121,13 +132,13 @@ class CustomerController extends Controller
 
     public function deactivate(Request $request)
     {
-        $customer = Customer::find($request->customer_id);
-    	$customer->update([
+        $user = User::find($request->customer_id);
+    	$user->update([
             'is_active' => 0,
             'user_id'   => Auth::id(),
         ]);
 
-        $customer->send_account_deactivated_email();
+        $user->customer_send_account_deactivated_email();
 
         return back()->with('success', __('standard.customers.status_success', ['status' => 'deactivated']));
     }

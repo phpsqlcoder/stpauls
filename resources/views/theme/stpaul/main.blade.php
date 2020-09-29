@@ -82,6 +82,34 @@
     <script src="{{ asset('theme/stpaul/plugins/bootstrap/js/popper.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/rd-navbar/dist/js/jquery.rd-navbar.js') }}"></script>
+    <script src="{{ asset('theme/stpaul/plugins/flexmenu/modernizr.custom.js') }}"></script>
+    <script src="{{ asset('theme/stpaul/plugins/flexmenu/flexmenu.min.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('header nav .rd-navbar-nav-wrap .rd-navbar-nav').flexMenu({
+                linkTitle: "",
+                linkText: "More"
+            });
+            if ($(window).width() <= 991) {
+                $('header nav .rd-navbar-nav-wrap .rd-navbar-nav').flexMenu({
+                    undo: "true"
+                });
+            }
+        });
+        $(window).resize(function () {
+            if ($(window).width() <= 991) {
+                $('header nav .rd-navbar-nav-wrap .rd-navbar-nav').flexMenu({
+                    undo: "true"
+                });
+            } else {
+                $('header nav .rd-navbar-nav-wrap .rd-navbar-nav').flexMenu({
+                    linkTitle: "",
+                    linkText: "More"
+                });
+            }
+        });
+    </script>
+
     @yield('pagejs')
 
     @yield('customjs')

@@ -101,7 +101,7 @@
                                 @forelse($customers as $customer)
                                     <tr>
                                         <th>
-                                            {{ $customer->details->fullName }}
+                                            {{ $customer->details->fullname }}
                                         </th>
                                         <td>{{ $customer->total_purchase }}</td>
                                         <td>

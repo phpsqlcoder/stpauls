@@ -55,6 +55,17 @@
             Please be informed that your order has been approved.
         </p>
 
+        <br/>
+
+        <p>
+            Please prepare cash with the exact amount for payment.
+        </p>
+        
+        <br/>
+
+        <p>
+            If you are unable to receive the order, please authorize someone who can receive and pay the order on your behalf.
+        </p>
 
         <br />
 

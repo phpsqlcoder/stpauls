@@ -111,12 +111,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse($users->where('role_id','<>','6') as $user)
-                                @if (!$filter->showDeleted)
-                                    @if (!$user->is_active)
-                                        @continue
-                                    @endif
-                                @endif
+                            @forelse($users as $user)
                                 <tr>
                                     <th>
                                         <strong @if($user->is_active == 0) style="text-decoration:line-through;" @endif> {{$user->fullname}}</strong>
@@ -194,15 +189,41 @@
     <script src="{{ asset('lib/bselect/dist/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('lib/bselect/dist/js/i18n/defaults-en_US.js') }}"></script>
     <script src="{{ asset('lib/ion-rangeslider/js/ion.rangeSlider.min.js') }}"></script>
-    <script src="{{ asset('scripts/user/scripts.js') }}"></script>
+    <!-- <script src="{{ asset('scripts/user/scripts.js') }}"></script> -->
 
     <script>
         let listingUrl = "{{ route('users.index') }}";
-        let advanceListingUrl = "";
         let searchType = "{{ $searchType }}";
     </script>
     <script src="{{ asset('js/listing.js') }}"></script>
+
+    <script>
+        $(".js-range-slider").ionRangeSlider({
+            grid: true,
+            from: selected,
+            values: perPage
+        });
+    </script>
 @endsection
 
 @section('customjs')
+    <script>
+        // $(document).on('click','.delete_user', function(){
+        //     $('#modalUserDelete').show();
+
+        //     $('#user_id').val($(this).data('user_id'));
+        // });
+
+        $(document).on('click','.deactivate_user', function(){
+            $('#modalUserDeactivate').show();
+
+            $('#deactivate_user_id').val($(this).data('user_id'));
+        });
+
+        $(document).on('click','.activate_user', function(){
+            $('#modalUserAactivate').show();
+
+            $('#activate_user_id').val($(this).data('user_id'));
+        });
+    </script>
 @endsection

@@ -14,7 +14,7 @@ use App\Page;
 use Auth;
 use App\Deliverablecities;
 
-use App\EcommerceModel\Customer;
+use App\User;
 use App\EcommerceModel\CheckoutOption;
 use App\EcommerceModel\Branch;
 use App\Provinces;
@@ -32,9 +32,15 @@ class CheckoutController extends Controller
         $page = new Page();
         $page->name = 'Checkout';
         
-        $customer  = Customer::find(Auth::id());
+        $customer  = User::find(Auth::id());
         $user      = Auth::user();
-        $products  = Cart::where('user_id',Auth::id())->get();   
+
+        $products      = Cart::where('user_id',Auth::id())->get();   
+
+        $amount = 0;
+        foreach($products as $product){
+            $amount += $product->price*$product->qty;
+        }
 
         $locations = Deliverablecities::where('status','PUBLISHED')->orderBy('city_name')->get();
         $provinces = Deliverablecities::where('status','PUBLISHED')->distinct()->get(['province']);
@@ -72,7 +78,7 @@ class CheckoutController extends Controller
             return redirect()->route('product.front.list');
         }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','user','locations','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','settings','payment_method'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','user','locations','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','settings','payment_method'));
     }
 
     public function remove_product(Request $request)

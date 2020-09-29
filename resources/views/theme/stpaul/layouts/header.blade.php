@@ -96,7 +96,7 @@
                                     <li><a href="{{ route('my-account.change-password') }}">Change Password</a></li>
                                     <li>
                                         <a class="acc-menu active-user dropdown-toggle" href="" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">{{ \App\EcommerceModel\Customer::customer_username(auth()->user()->id) }}</a>
+                                        aria-expanded="false">{{ auth()->user()->fullname }}</a>
                                         <div class="acc-dropdown-menu dropdown-menu dropdown-menu-right " aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="{{ route('my-account.manage-account') }}"><span class="lnr lnr-user mr-2"></span>Account Information</a>
                                             <a class="dropdown-item" href="{{route('account-my-orders') }}"><span class="lnr lnr-user mr-2"></span>My Orders</a>

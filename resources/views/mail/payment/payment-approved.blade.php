@@ -52,7 +52,7 @@
         <br />
 
         <p>
-            Please be informed that your payment has been approved.
+            Please be informed that your payment for order # : <strong>{{ $payment->sales_header->order_number }}</strong> has been approved.
         </p>
 
 

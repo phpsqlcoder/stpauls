@@ -39,7 +39,7 @@ class UserRequest extends FormRequest
         return [
             'fname' => 'required|max:150',
             'lname' => 'required|max:150',
-            'email' => 'unique:users,email|max:191',
+            'email' => 'required|unique:users,email|max:191',
             'role' => 'required|exists:role,id'
         ];
     }

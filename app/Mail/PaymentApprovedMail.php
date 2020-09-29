@@ -13,6 +13,7 @@ class PaymentApprovedMail extends Mailable
 
     public $setting;
     public $customer;
+    public $payment;
     public $token;
 
     /**
@@ -22,10 +23,11 @@ class PaymentApprovedMail extends Mailable
      * @param $customer
      * @param $token
      */
-    public function __construct($setting, $customer, $token)
+    public function __construct($setting, $customer, $payment, $token)
     {
         $this->setting = $setting;
         $this->customer = $customer;
+        $this->payment = $payment;
         $this->token = $token;
     }
 
