@@ -104,6 +104,7 @@ class DiscountController extends Controller
         Discount::find($id)->update([
             'name' => $request->name,
             'discount' => $request->discount,
+            'status' => ($request->has('status') ? 'PUBLISHED' : 'PRIVATE'),
             'user_id' => Auth::id()
         ]);
 
