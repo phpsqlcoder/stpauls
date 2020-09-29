@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Helpers\ListingHelper;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ProductRequest;
 
 use App\Permission;
@@ -220,8 +221,20 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductRequest $request, $id)
+    public function update(Request $request, $id)
     {
+        Validator::make($request->all(), [
+            'code' => 'required|max:150',
+            'name' => 'required|max:150',
+            'category_id' => 'required',
+            'uom' => 'required',
+            'meta_title' => 'max:60',
+            'meta_keyword' => 'max:150',
+            'meta_description' => 'max:250',
+            'price' => 'required',
+            'size' => 'max:30'
+        ])->validate();
+
         $product = Product::findOrFail($id);
 
         if($product->name == $request->name){
