@@ -140,7 +140,7 @@
                             </a>
                         </div>
                         <div class="col-4">
-                            <a class="item" href="{{ route('my-account.manage-account') }}">
+                            <a class="item" href="@if(Auth::check()) {{ route('my-account.manage-account') }} @else {{ route('customer-front.login') }} @endif">
                                 <span class="lnr lnr-user"></span>
                                 <span class="text">Account</span>
                             </a>
