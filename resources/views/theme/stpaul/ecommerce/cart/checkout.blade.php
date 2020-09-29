@@ -89,7 +89,7 @@
                                                 </select>
                                                 <p id="p_province" class="text-danger" style="display: none;"><small>The province field is required.</small></p>
                                                 @if(\App\Deliverablecities::deliverable_province($customer->details->province) < 1)
-                                                    <small id="alert_province" class="form-text text-danger"><b>{{ $customer->provinces->province }}</b> is not serviceable. Please select another province.</small>
+                                                    <small id="alert_province" class="form-text text-danger"><b>{{ $customer->details->provinces->province }}</b> is not serviceable. Please select another province.</small>
                                                 @endif
                                             </div>
                                             <div id="divaddress">
@@ -108,7 +108,7 @@
                                                     <span></span>
                                                     <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
                                                     @if(\App\Deliverablecities::check_area($customer->details->city) <> 1)
-                                                        <small id="alert_city" class="form-text text-danger"><b>{{ $customer->details->city }}</b> is not serviceable. Please select another city.</small>
+                                                        <small id="alert_city" class="form-text text-danger"><b>{{ $customer->details->cities->city }}</b> is not serviceable. Please select another city.</small>
                                                     @endif
                                                 </div>
 
