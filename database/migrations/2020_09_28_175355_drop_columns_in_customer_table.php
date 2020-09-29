@@ -15,7 +15,6 @@ class DropColumnsInCustomerTable extends Migration
     {
         Schema::table('customers', function (Blueprint $table) {
             $table->dropColumn('password');
-            $table->dropColumn('email_verified_at');
             $table->dropColumn('remember_token');
 
         });
