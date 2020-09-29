@@ -126,21 +126,21 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-4">
-                            <a class="item" href="index.htm">
+                            <a class="item" href="{{ route('home') }}">
                                 <span class="lnr lnr-home"></span>
                                 <span class="text">Home</span>
                             </a>
                         </div>
                         <div class="col-4">
-                            <a class="item" href="cart.htm">
+                            <a class="item" href="{{ route('cart.front.show')}}">
                                 <span class="lnr lnr-cart">
-                <span class="counter">3</span>
+                                    <span class="counter">{!! Setting::EcommerceCartTotalItems() !!}</p></span>
                                 </span>
                                 <span class="text">Cart</span>
                             </a>
                         </div>
                         <div class="col-4">
-                            <a class="item" href="login.htm">
+                            <a class="item" href="{{ route('my-account.manage-account') }}">
                                 <span class="lnr lnr-user"></span>
                                 <span class="text">Account</span>
                             </a>
