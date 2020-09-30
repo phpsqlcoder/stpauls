@@ -21,6 +21,7 @@
 	                    		@csrf
                                 <input type="hidden" name="sort" id="sort" value="@if(request()->has('sort')) {{$request->sort}}  @endif">
                                 <input type="hidden" name="limit" id="limit" value="@if(request()->has('limit')) {{$request->limit}} @else 16 @endif">
+                                <input type="hidden" name="searchtxt" value="{{ $searchtxt }}">
                                 <input type="hidden" name="search" value="on">  
 
 	                    		<div class="listing-filter-wrap">

@@ -73,7 +73,6 @@
 
                             @forelse($sales as $sale)
                                 @php
-                                    $branch = \App\EcommerceModel\Branch::find($sale->branch);
                                     $qry = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id);
                                     $count = $qry->count();
                                     $payment = $qry->first();
@@ -105,7 +104,7 @@
                                     </td>
                                     <td><a href="{{route('admin.report.delivery_report',$sale->id)}}" target="_blank">{{ $sale->delivery_status }}</a></td>
                                     <td>{{ $sale->delivery_type }}</td>
-                                    <td>@if($sale->branch == 0) @else {{ $branch->name }} @endif</td>
+                                    <td>{{ $sale->branch }}</td>
                                     <td>
                                         <nav class="nav table-options">
                                             <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Page"><i data-feather="eye"></i></a>

@@ -695,6 +695,14 @@
     <script src="{{ asset('lib/cleave.js/cleave.min.js')}}"></script>
     <script src="{{ asset('lib/cleave.js/addons/cleave-phone.us.js') }}"></script>
     <script src="{{ asset('lib/parsleyjs/parsley.min.js') }}"></script>
+
+    {{--    Image validation    --}}
+    <script>
+        let errorMessages;
+        let QR_WIDTH = "{{ env('QR_WIDTH') }}";
+        let QR_HEIGHT =  "{{ env('QR_HEIGHT') }}";
+    </script>
+    {{--    Image validation    --}}
 @endsection
 
 @section('customjs')
@@ -711,6 +719,98 @@
                 $('#div1').hide();
             }
         });
+
+        var _cURL = window.URL || window.webkitURL;
+        $('#qrfile_create').change(function () {
+            var file = $(this)[0].files[0];
+            var ext  = $(this).val().split('.').pop().toLowerCase();
+
+            img = new Image();
+            var imgwidth = 0;
+            var imgheight = 0;
+            var file_size = (file.size / 1048576).toFixed(3);
+
+            qr_validation(ext,file_size,file.name,'create')
+
+            img.src = _cURL.createObjectURL(file);
+            img.onload = function() {
+                imgwidth = this.width;
+                imgheight = this.height;
+
+                if (imgwidth != QR_WIDTH || imgheight != QR_HEIGHT) {
+                    qr_dimension(1,file.name,'create');
+                } else {
+                    qr_dimension(0,file.name,'create');
+                }
+
+            }
+        });
+
+        var _eURL = window.URL || window.webkitURL;
+        $('#qrfile_update').change(function () {
+            var file = $(this)[0].files[0];
+            var ext  = $(this).val().split('.').pop().toLowerCase();
+
+            img = new Image();
+            var imgwidth = 0;
+            var imgheight = 0;
+            var file_size = (file.size / 1048576).toFixed(3);
+
+            qr_validation(ext,file_size,file.name,'update')
+
+            img.src = _eURL.createObjectURL(file);
+            img.onload = function() {
+                imgwidth = this.width;
+                imgheight = this.height;
+
+                if (imgwidth != QR_WIDTH || imgheight != QR_HEIGHT) {
+                    qr_dimension(1,file.name,'update');
+                } else {
+                    qr_dimension(0,file.name,'update');
+                }
+
+            }
+        });
+
+        function qr_dimension(result,filename,action){
+            if(result == 1){
+                $('#qrfile_'+action).val('');
+                $('#span_file_dimension_'+action).css('display','block');
+                $('#span_file_size_'+action).css('display','none');
+                $('#span_file_type_'+action).css('display','none');
+
+                $('#span_file_dimension_'+action).html(filename + ' has invalid dimensions.');
+            } else {
+                $('#span_file_dimension_'+action).css('display','none');
+            }
+
+        }
+
+        function qr_validation(ext,size,filename,action){
+            if ($.inArray(ext, ['jpeg', 'jpg', 'png']) == -1) {
+                $('#qrfile_'+action).val('');
+                $('#span_file_type_'+action).css('display','block');
+                $('#span_file_dimension_'+action).css('display','none');
+                $('#span_file_size_'+action).css('display','none');
+
+                $('#span_file_type_'+action).html(filename+ ' has invalid extension');         
+            } else {
+                $('#span_file_type_'+action).css('display','none');
+            }
+
+            if (size > 1) {
+                $('#qrfile_'+action).val('');
+                $('#span_file_size_'+action).css('display','block');
+                $('#span_file_dimension_'+action).css('display','none');
+                $('#span_file_type_'+action).css('display','none');
+
+                $('#span_file_size_'+action).html(filename+ ' exceeded the maximum file size');        
+            } else {
+                $('#span_file_size_'+action).css('display','none');
+            }
+        }
+
+
         (function ($) {
             $(function () {
 

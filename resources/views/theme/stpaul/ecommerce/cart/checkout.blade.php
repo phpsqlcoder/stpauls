@@ -225,7 +225,7 @@
                                                             <select class="form-control form-input" name="branch" id="selbranch">
                                                                 <option selected value="0">-- Select Branch --</option>
                                                                 @foreach($branches as $branch)
-                                                                <option value="{{$branch->id}}">{{ $branch->name }}</option>
+                                                                <option value="{{$branch->name}}">{{ $branch->name }}</option>
                                                                 @endforeach
                                                             </select>
                                                             <p id="stp_branch" class="text-danger" style="display: none;"><small>The branch field is required.</small></p>

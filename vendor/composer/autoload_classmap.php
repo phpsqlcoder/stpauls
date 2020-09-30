@@ -37,7 +37,6 @@ return array(
     'App\\Helpers\\PanelHelper' => $baseDir . '/app/Helpers/PanelHelper.php',
     'App\\Helpers\\PaynamicsHelper' => $baseDir . '/app/Helpers/PaynamicsHelper.php',
     'App\\Helpers\\Webfocus\\Setting' => $baseDir . '/app/Helpers/Webfocus/Setting.php',
-    'App\\Http\\Controllers\\Auth\\CustomerLoginController' => $baseDir . '/app/Http/Controllers/Auth/CustomerLoginController.php',
     'App\\Http\\Controllers\\Auth\\FacebookController' => $baseDir . '/app/Http/Controllers/Auth/FacebookController.php',
     'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
     'App\\Http\\Controllers\\Auth\\LoginController' => $baseDir . '/app/Http/Controllers/Auth/LoginController.php',

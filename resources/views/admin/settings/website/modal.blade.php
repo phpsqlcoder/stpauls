@@ -192,7 +192,11 @@
                     <input required type="text" name="account_no" class="form-control" maxlength="50">
 
                     <label class="d-block">Upload QR</label>
-                    <input type="file" name="qrcode" class="form-control">
+                    <input type="file" id="qrfile_create" name="qrcode" class="form-control" accept="image/*">
+                    <br>
+                    <span id="span_file_type_create" style="display: none;" class="text-danger"></span>
+                    <span id="span_file_size_create" style="display: none;" class="text-danger"></span>
+                    <span id="span_file_dimension_create" style="display: none;" class="text-danger"></span>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-sm btn-primary">Submit</button>
@@ -227,7 +231,12 @@
                     <input required type="text" name="account_no" id="remittance_account_no" class="form-control" maxlength="50">
 
                     <label class="d-block">Upload QR</label>
-                    <input type="file" name="qrcode" id="qrcode" class="form-control">
+                    <input type="file" name="qrcode" id="qrfile_update" class="form-control">
+                    <br>
+                    <span id="span_file_type_update" style="display: none;" class="text-danger"></span>
+                    <span id="span_file_size_update" style="display: none;" class="text-danger"></span>
+                    <span id="span_file_dimension_update" style="display: none;" class="text-danger"></span>
+
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>

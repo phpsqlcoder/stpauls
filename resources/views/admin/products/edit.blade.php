@@ -167,7 +167,7 @@
                         <input type="file" id="upload_image" class="image_path" accept="image/*" multiple>
                         <button type="button" class="btn btn-secondary btn-sm upload" id="selectImages">Select images</button>
                         <p class="tx-10">
-                            Required image dimension: {{ env('PRODUCT_WIDTH') }}px by {{ env('PRODUCT_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png <br /> Maximum images: 6
+                            Required image dimension: {{ env('PRODUCT_WIDTH') }}px by {{ env('PRODUCT_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png <br /> Maximum images: 5
                         </p>
                         <div class="prodimg-thumb" id="bannersDiv" @if($product->photos->count() == 0) style="display: none;" @endif>
                             <ul id="banners">
@@ -413,13 +413,13 @@
                 let uploadedImagesLength = $('.productImage').length;
                 let totalImages = uploadedImagesLength + files.length;
 
-                if (totalImages > 6) {
-                    $('#bannerErrorMessage').html("You can upload up to 6 images only.");
+                if (totalImages > 5) {
+                    $('#bannerErrorMessage').html("You can upload up to 5 images only.");
                     $('#prompt-banner-error').modal('show');
                     return false;
                 }
 
-                if (totalImages == 6) {
+                if (totalImages == 5) {
                     $('#addMoreBanner').hide();
                 }
 

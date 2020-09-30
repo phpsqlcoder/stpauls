@@ -113,12 +113,10 @@
 
                                 <ul class="thumbnails">
                                     @foreach($product->photos as $photo)
-                                    @if($photo->is_primary == 0)
                                     <li>
                                         <img onclick="changePhoto('{{$photo->id}}')" src="{{ asset('storage/products/'.$photo->path) }}" alt="" />
                                         <input type="hidden" id="photo_path{{$photo->id}}" value="{{ asset('storage/products/'.$photo->path) }}">
                                     </li>
-                                    @endif
                                     @endforeach
                                 </ul>
                             </div>

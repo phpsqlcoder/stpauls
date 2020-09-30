@@ -286,7 +286,7 @@ class CartController extends Controller
             'user_id' => 0,
             'payment_method' => (!isset($request->payment_method)) ? 0 : $request->payment_method,
             'payment_option' => (!isset($request->payment_method)) ? 0 : $request->payment_option,
-            'branch' => ($request->shipOption == 2)  ? $request->branch : 0,
+            'branch' => ($request->shipOption == 2)  ? $request->branch : NULL,
             'pickup_date' => ($request->shipOption <= 2) ? $pickupdate : NULL,
             'pickup_time' => ($request->shipOption <= 2) ? $pickuptime : NULL,
             'service_fee' => $request->servicefee,

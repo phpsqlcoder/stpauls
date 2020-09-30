@@ -50,7 +50,7 @@
                 <div class="form-group">
                     <label class="d-block">Visibility</label>
                     <div class="custom-control custom-switch @error('visibility') is-invalid @enderror">
-                        <input type="checkbox" class="custom-control-input" name="status" {{ ($discount->status == 'PUBLISHED' ? "checked":"") }} id="customSwitch1">
+                        <input type="checkbox" class="custom-control-input" name="status" {{ ($discount->status == 'ACTIVE' ? "checked":"") }} id="customSwitch1">
                         <label class="custom-control-label" id="label_visibility" for="customSwitch1">{{ucwords(strtolower($discount->status))}}</label>
                     </div>
                     @error('visibility')
@@ -73,10 +73,10 @@
         /** form validations **/
         $("#customSwitch1").change(function() {
             if(this.checked) {
-                $('#label_visibility').html('Published');
+                $('#label_visibility').html('Active');
             }
             else{
-                $('#label_visibility').html('Private');
+                $('#label_visibility').html('Inactive');
             }
         });
 

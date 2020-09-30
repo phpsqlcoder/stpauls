@@ -20,79 +20,81 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        <table id="salesTransaction" class="table table-md table-hover" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Order #</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Order Status</th>
-                                    <th scope="col">Delivery Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($sales as $sale)
-                                <tr>
-                                    <td>{{ $sale->order_number }}</td>
-                                    <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
-                                    <td>{{ number_format($sale->gross_amount,2) }}</td>
-                                    <td class="text-uppercase">
-                                        @if($sale->status == 'CANCELLED')
-                                            CANCELLED
-                                        @else
-                                            @if($sale->status == 'COMPLETED')
-                                                COMPLETED
+                        <div class="table-responsive">
+                            <table id="salesTransaction" class="table table-md table-hover" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Order #</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Amount</th>
+                                        <th scope="col">Order Status</th>
+                                        <th scope="col">Delivery Status</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($sales as $sale)
+                                    <tr>
+                                        <td>{{ $sale->order_number }}</td>
+                                        <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
+                                        <td>{{ number_format($sale->gross_amount,2) }}</td>
+                                        <td class="text-uppercase">
+                                            @if($sale->status == 'CANCELLED')
+                                                CANCELLED
                                             @else
-                                                @if($sale->payment_status == 'UNPAID')
-                                                    {{ $sale->status }}
+                                                @if($sale->status == 'COMPLETED')
+                                                    COMPLETED
                                                 @else
-                                                    {{ $sale->payment_status }}
+                                                    @if($sale->payment_status == 'UNPAID')
+                                                        {{ $sale->status }}
+                                                    @else
+                                                        {{ $sale->payment_status }}
+                                                    @endif
                                                 @endif
                                             @endif
-                                        @endif
-                                    </td>
-                                    <td class="text-uppercase">{{ $sale->delivery_status }}</td>
-                                    <td align="right">
-                                        @if($sale->status != 'CANCELLED')
+                                        </td>
+                                        <td class="text-uppercase">{{ $sale->delivery_status }}</td>
+                                        <td align="right">
+                                            @if($sale->status != 'CANCELLED')
 
-                                            <!-- Cash On Delivery -->
-                                            @if($sale->payment_method == 0)
-                                                @if($sale->is_approve == 0)
-                                                <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
-                                                    <span class="lnr lnr-cross mr-2"></span>
-                                                </a>
-                                                @endif
-                                            @endif
-
-                                            @php
-                                                $payment_status = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->count();
-                                            @endphp
-                                            <!-- Money Transfer -->
-                                            @if($sale->payment_method > 1)
-                                                @if($payment_status == 0)
-                                                    <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
-                                                        <span class="lnr lnr-inbox mr-2"></span>
-                                                    </a>
+                                                <!-- Cash On Delivery -->
+                                                @if($sale->payment_method == 0)
+                                                    @if($sale->is_approve == 0)
                                                     <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
                                                         <span class="lnr lnr-cross mr-2"></span>
-                                                    </a> 
+                                                    </a>
+                                                    @endif
                                                 @endif
+
+                                                @php
+                                                    $payment_status = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->count();
+                                                @endphp
+                                                <!-- Money Transfer -->
+                                                @if($sale->payment_method > 1)
+                                                    @if($payment_status == 0)
+                                                        <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
+                                                            <span class="lnr lnr-inbox mr-2"></span>
+                                                        </a>
+                                                        <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
+                                                            <span class="lnr lnr-cross mr-2"></span>
+                                                        </a> 
+                                                    @endif
+                                                @endif
+
                                             @endif
 
-                                        @endif
+                                            <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
+                                            <a href="#" title="View items" onclick="view_items('{{$sale->id}}','{{$sale->order_number}}','{{date('Y-m-d',strtotime($sale->created_at))}}','{{$sale->payment_status}}','{{$sale->delivery_type}}','{{$sale->branch}}')">
+                                                <span class="lnr lnr-eye"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @empty
 
-                                        <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
-                                        <a href="#" title="View items" onclick="view_items('{{$sale->id}}','{{$sale->order_number}}','{{date('Y-m-d',strtotime($sale->created_at))}}','{{$sale->payment_status}}','{{$sale->delivery_type}}')">
-                                            <span class="lnr lnr-eye"></span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                @empty
-
-                                @endforelse
-                            </tbody>
-                        </table>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     {{ $sales->appends($_POST)->links() }}
                 </div>
@@ -194,6 +196,7 @@
                     <p>Date: <span id="order_date"></span></p>
                     <p>Payment Status: <span id="payment_status"></span></p>
                     <p>Delivery Type: <span id="delivery_type"></span></p>
+                    <p id="branch" style="display: none;">Branch: <span id="span_branch"></span></p>
                 </div>
                 <div class="gap-20"></div>
                 <div class="table-modal-wrap">
@@ -242,12 +245,19 @@
             });
         }
 
-        function view_items(orderid,orderNo,date,paymentStatus,deliveryType){
+        function view_items(orderid,orderNo,date,paymentStatus,deliveryType,branch){
             $.ajax({
                 type: "GET",
                 url: "{{ route('display-items') }}",
                 data: { orderid : orderid },
                 success: function( response ) {
+                    if(branch != ''){
+                        $('#span_branch').html(branch);
+                        $('#branch').css('display','block');
+                    } else {
+                        $('#branch').css('display','none');
+                    }
+
                     $('#tr_items').html(response);
                     $('#viewModalLabel').html(orderNo);
                     $('#order_date').html(date);

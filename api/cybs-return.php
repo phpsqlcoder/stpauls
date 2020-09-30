@@ -82,7 +82,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
         <p>&nbsp;</p>
         <table style="width:580px;margin:auto;background:#fff;border:1px solid #dddddd;padding:1em;-webkit-border-radius:5px;border-radius:5px;font-size:12px;">
             <tr>
-                <td><a href="'. $livesitePath .'"><img src="' . $livesitePath . 'logos/' . $settings['company_logo'] . '" /></a></td>
+                <td><a href="'. $livesitePath .'"><img src="' . $livesitePath . '/logos/' . $settings['company_logo'] . '" /></a></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>

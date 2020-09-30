@@ -52,11 +52,20 @@
         <br />
 
         <p>
-            Please be informed that your payment for order # : <strong>{{ $payment->sales_header->order_number }}</strong> has been approved.
+            Please be informed that your payment for Order # : <strong>{{ $payment->sales_header->order_number }}</strong> has been approved.
         </p>
 
+        @if($payment->sales_header->branch != '')
+        <p>
+            You may pick up your order at {{ $payment->sales_header->branch }} branch.
+        </p>
+        @endif
 
-        <br />
+        <p>
+            To check the status of your order, you may click on <strong>My Orders</strong> in your account.
+        </p>
+
+        <br/>
 
         <p>For any inquiry or comments, please contact us at {{ $setting->email }}.</p>
 

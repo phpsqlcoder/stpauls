@@ -508,7 +508,6 @@ class ComposerStaticInit68580dd66ca868f9e4453579cea1fb47
         'App\\Helpers\\PanelHelper' => __DIR__ . '/../..' . '/app/Helpers/PanelHelper.php',
         'App\\Helpers\\PaynamicsHelper' => __DIR__ . '/../..' . '/app/Helpers/PaynamicsHelper.php',
         'App\\Helpers\\Webfocus\\Setting' => __DIR__ . '/../..' . '/app/Helpers/Webfocus/Setting.php',
-        'App\\Http\\Controllers\\Auth\\CustomerLoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/CustomerLoginController.php',
         'App\\Http\\Controllers\\Auth\\FacebookController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/FacebookController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
         'App\\Http\\Controllers\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/LoginController.php',

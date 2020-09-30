@@ -9,7 +9,7 @@
                     <div id="signup-wrapper">
                         <div class="row align-items-center">
                             <div class="col-lg-8 col-md-12">
-                                <h2 class="lgin-title">Create your St Pauls Account</h2>
+                                <h2 class="lgin-title">Create your STPAULS Account</h2>
                             </div>
                             <div class="col-lg-4 col-md-12">
                                 <p class="text-lg-right text-md-left text-sm-left" id="log-mem">Already member? <span class="text-nowrap"><a href="{{ route('customer-front.login') }}">Login</a> here.</span></p>

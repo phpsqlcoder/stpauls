@@ -50,7 +50,7 @@
                     <label class="d-block">Visibility</label>
                     <div class="custom-control custom-switch @error('status') is-invalid @enderror">
                         <input type="checkbox" class="custom-control-input" name="status" {{ (old("status") ? "checked":"") }} id="customSwitch1">
-                        <label class="custom-control-label" id="label_visibility" for="customSwitch1">Private</label>
+                        <label class="custom-control-label" id="label_visibility" for="customSwitch1">Inactive</label>
                         @hasError(['inputName' => 'status'])
                         @endhasError
                     </div>
@@ -71,10 +71,10 @@
         /** form validations **/
         $("#customSwitch1").change(function() {
             if(this.checked) {
-                $('#label_visibility').html('Published');
+                $('#label_visibility').html('Active');
             }
             else{
-                $('#label_visibility').html('Private');
+                $('#label_visibility').html('Inactive');
             }
         });
 

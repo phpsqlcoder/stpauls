@@ -61,7 +61,7 @@ class DiscountController extends Controller
         Discount::create([
             'name' => $request->name,
             'discount' => $request->discount,
-            'status' => ($request->has('status') ? 'PUBLISHED' : 'PRIVATE'),
+            'status' => ($request->has('status') ? 'ACTIVE' : 'INACTIVE'),
             'user_id' => Auth::id()
         ]);
 
@@ -104,7 +104,7 @@ class DiscountController extends Controller
         Discount::find($id)->update([
             'name' => $request->name,
             'discount' => $request->discount,
-            'status' => ($request->has('status') ? 'PUBLISHED' : 'PRIVATE'),
+            'status' => ($request->has('status') ? 'ACTIVE' : 'INACTIVE'),
             'user_id' => Auth::id()
         ]);
 

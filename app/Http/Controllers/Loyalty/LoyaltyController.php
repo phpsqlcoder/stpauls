@@ -34,7 +34,7 @@ class LoyaltyController extends Controller
         $listing = new ListingHelper('desc', 10, 'updated_at', $customConditions);
 
         $customers = $listing->simple_search(LoyalCustomer::class, $this->searchFields);
-        $discounts = Discount::where('status','PUBLISHED')->orderBy('name')->get(); 
+        $discounts = Discount::where('status','ACTIVE')->orderBy('name')->get(); 
 
         // Simple search init data
         $filter = $listing->get_filter($this->searchFields);

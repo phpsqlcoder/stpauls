@@ -84,10 +84,10 @@ Manage Customer
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/page/publish') == 1)
-                                            <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('PUBLISHED')">{{__('common.publish')}}</a>
+                                            <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('ACTIVE')">Active</a>
                                         @endif
                                         @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/page/private') == 1)
-                                            <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('PRIVATE')">{{__('common.private')}}</a>
+                                            <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('INACTIVE')">Inactive</a>
                                         @endif
                                         @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/page/delete') == 1)
                                             <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_discounts()">{{__('common.delete')}}</a>
@@ -165,9 +165,9 @@ Manage Customer
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     @if($discount->status == 'PUBLISHED')
-                                                        <a class="dropdown-item" href="{{route('discount.change-status',[$discount->id,'PRIVATE'])}}" > Private</a>
+                                                        <a class="dropdown-item" href="{{route('discount.change-status',[$discount->id,'INACTIVE'])}}" > Inactive</a>
                                                     @else
-                                                        <a class="dropdown-item" href="{{route('discount.change-status',[$discount->id,'PUBLISHED'])}}"> Publish</a>
+                                                        <a class="dropdown-item" href="{{route('discount.change-status',[$discount->id,'ACTIVE'])}}"> Active</a>
                                                     @endif
                                                 </div>
                                             </nav>
