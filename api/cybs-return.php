@@ -39,7 +39,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
     $transaction = $sqlTra->fetch();
 
-    if($transaction['branch' == '']){
+    if($transaction['branch'] == ''){
         $branch = '';
     } else {
         $branch = ': '.$transaction['branch'];
@@ -202,7 +202,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
     ';
 
     $msg .= '
-                    <strong>Your shipping details are as follows:</strong><br />
+                    <strong>Your shipping details are as follows:</strong><br /><br />
                     <table width="100%">
                         <tr>
                             <td>
@@ -223,7 +223,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                         <tr>
                             <td>
                                 <strong>PAYMENT METHOD</strong><br />
-                                BPI
+                                Credit Card Payment
                             </td>
                         </tr>
                     </table>
