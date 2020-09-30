@@ -117,8 +117,8 @@ Manage Customer
             <!-- Start Pages -->
             <div class="col-md-12">
                 <div class="table-list mg-b-10">
-                    <div class="table-responsive-lg text-nowrap">
-                        <table class="table mg-b-0 table-light table-hover" style="width:100%;">
+                    <div class="table-responsive-lg">
+                        <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                                 <tr>
                                     <th style="width: 5%;">
@@ -127,10 +127,10 @@ Manage Customer
                                             <label class="custom-control-label" for="checkbox_all"></label>
                                         </div>
                                     </th>
-                                    <th style="width: 20%;overflow: hidden;">Name</th>
+                                    <th style="width: 25%;overflow: hidden;">Name</th>
                                     <th style="width: 10%">Discount</th>
                                     <th style="width: 10%;">Status</th>
-                                    <th style="width: 15%;">Last Date Modified</th>
+                                    <th style="width: 10%;">Last Date Modified</th>
                                     <th style="width: 10%;">Options</th>
                                 </tr>
                             </thead>

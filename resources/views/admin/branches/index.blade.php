@@ -113,7 +113,7 @@
             <div class="col-md-12">
                 <div class="table-list mg-b-10">
                     <div class="table-responsive-lg">
-                        <table class="table mg-b-0 table-light table-hover">
+                        <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                             <tr>
                                 <th style="width: 5%;">
