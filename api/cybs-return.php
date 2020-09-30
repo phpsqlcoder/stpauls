@@ -37,13 +37,13 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
     $sqlTra = $pdo->prepare("SELECT * FROM ecommerce_sales_headers WHERE order_number=:order_number");
     $sqlTra->execute(array(':order_number' => $tn));
 
+    $transaction = $sqlTra->fetch();
+
     if($transaction['branch' == '']){
         $branch = '';
     } else {
         $branch = ': '.$transaction['branch'];
     }
-
-    $transaction = $sqlTra->fetch();
 
     $settings = '';
     $sqlSetting = $pdo->prepare("SELECT * FROM settings WHERE id=:id");
