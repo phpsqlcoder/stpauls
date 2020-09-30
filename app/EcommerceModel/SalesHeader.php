@@ -51,6 +51,14 @@ class SalesHeader extends Model
        
     // }
 
+    public function payment()
+    {
+        return $this->belongsTo('\App\EcommerceModel\SalesPayment','id', 'sales_header_id')->withDefault([
+            'payment_type' => '',
+            'id' => '0',
+        ]);
+    }
+
     public function items(){
     	return $this->hasMany('App\EcommerceModel\SalesDetail','sales_header_id');
     }
@@ -96,7 +104,7 @@ class SalesHeader extends Model
 
     public function salesheader_payments()
     {
-        return $this->hasMany('\App\EcommerceModel\SalesPayment','id','sales_header_id');
+        return $this->belongsTo('\App\EcommerceModel\SalesPayment','id','sales_header_id');
     }
 
 

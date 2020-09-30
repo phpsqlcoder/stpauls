@@ -197,6 +197,10 @@
                     <span id="span_file_type_create" style="display: none;" class="text-danger"></span>
                     <span id="span_file_size_create" style="display: none;" class="text-danger"></span>
                     <span id="span_file_dimension_create" style="display: none;" class="text-danger"></span>
+
+                    <small>Required image dimension: {{ env('QR_WIDTH')}}px by {{ env('QR_HEIGHT')}}px</small><br>
+                    <small>Maximum file size: 1MB</small><br>
+                    <small>File extension: JPEG, JPG, PNG</small>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-sm btn-primary">Submit</button>
@@ -236,6 +240,10 @@
                     <span id="span_file_type_update" style="display: none;" class="text-danger"></span>
                     <span id="span_file_size_update" style="display: none;" class="text-danger"></span>
                     <span id="span_file_dimension_update" style="display: none;" class="text-danger"></span>
+
+                    <small>Required image dimension: {{ env('QR_WIDTH')}}px by {{ env('QR_HEIGHT')}}px</small><br>
+                    <small>Maximum file size: 1MB</small><br>
+                    <small>File extension: JPEG, JPG, PNG</small>
 
                 </div>
                 <div class="modal-footer">

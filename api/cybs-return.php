@@ -28,7 +28,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
         //do the loop and return
         foreach($sql as $sql => $rs)
-            return !empty($rs->thumb) ? '<img src="' . livesitePath . '/products/' . $rs['path'] . '" style="max-width:100%;" />' : '';
+            return !empty($rs->thumb) ? '<img src="' .$livesitePath . '/products/' . $rs['path'] . '" style="max-width:100%;" />' : '';
 
     }
 
@@ -36,6 +36,12 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
     //transaction details
     $sqlTra = $pdo->prepare("SELECT * FROM ecommerce_sales_headers WHERE order_number=:order_number");
     $sqlTra->execute(array(':order_number' => $tn));
+
+    if($transaction['branch' == '']){
+        $branch = '';
+    } else {
+        $branch = ': '.$transaction['branch'];
+    }
 
     $transaction = $sqlTra->fetch();
 
@@ -82,7 +88,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
         <p>&nbsp;</p>
         <table style="width:580px;margin:auto;background:#fff;border:1px solid #dddddd;padding:1em;-webkit-border-radius:5px;border-radius:5px;font-size:12px;">
             <tr>
-                <td><a href="'. $livesitePath .'"><img src="' . $livesitePath . '/logos/' . $settings['company_logo'] . '" /></a></td>
+                <td><a href="'. $livesitePath .'"><img src="' . $livesitePath . '/storage/logos/' . $settings['company_logo'] . '" /></a></td>
             </tr>
             <tr>
                 <td>&nbsp;</td>
@@ -206,7 +212,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                             </td>
                             <td>
                                 <strong>DELIVERY INFORMATION</strong><br />
-                                ' . $transaction['delivery_type'] . '<br />
+                                ' . $transaction['delivery_type'] .$branch.'<br />
                                 ' . $transaction['customer_delivery_adress'] . '
                             </td>
                         </tr>

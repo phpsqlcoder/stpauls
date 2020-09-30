@@ -457,7 +457,9 @@
                                                 <div>
                                                     <label>Account # : {{ $list->account_no }}</label><br>
                                                     @if($list->type == 'remittance')
-                                                    <label>Recipient : {{ $list->recipient }}</label>
+                                                    <label>Recipient : {{ $list->recipient }}</label><br>
+                                                    <label>QR Code : </label><br>
+                                                    <img style="margin-left: 85px;" src="{{ asset('storage/qrcodes/'.$list->id.'/'.$list->qrcode) }}">
                                                     @endif
                                                 </div>
                                             </div>
