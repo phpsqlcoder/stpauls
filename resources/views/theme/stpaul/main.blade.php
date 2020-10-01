@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/font-awesome/css/font-awesome.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/linearicon/linearicon.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/responsive-tabs/css/responsive-tabs.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/slick/slick.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/slick/slick-theme.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/css/tagsinput.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/rd-navbar/rd-navbar.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/aos/dist/aos.min.css') }}" />
@@ -77,13 +79,16 @@
     </script>
 
     <script src="{{ asset('theme/stpaul/js/jquery-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/js/script.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/materialize/js/materialize.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/bootstrap/js/popper.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/rd-navbar/dist/js/jquery.rd-navbar.js') }}"></script>
+    <script src="{{ asset('theme/stpaul/plugins/slick/slick.js') }}"></script>
+    <script src="{{ asset('theme/stpaul/plugins/slick/slick.extension.js') }}"></script>
+    <script src="{{ asset('theme/stpaul/plugins/aos/dist/aos.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/flexmenu/modernizr.custom.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/flexmenu/flexmenu.min.js') }}"></script>
+    <script src="{{ asset('theme/stpaul/js/script.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('header nav .rd-navbar-nav-wrap .rd-navbar-nav').flexMenu({

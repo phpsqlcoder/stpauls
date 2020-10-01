@@ -39,7 +39,7 @@
         anchorNavSpeed: 400,
         anchorNavOffset: 0,
         anchorNavEasing: 'swing',
-        autoHeight: true,
+        autoHeight: false,
         responsive: {
           0: {
             layout: "rd-navbar-fixed",
