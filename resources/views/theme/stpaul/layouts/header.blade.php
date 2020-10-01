@@ -50,8 +50,7 @@
                                 <input type="hidden" name="_method" value="POST">
                                 <input type="hidden" name="search" value="on">
                                 <div class="form-wrap">
-                                    <input required class="form-input" id="rd-navbar-n-search-form-input" type="text" name="searchtxt" autocomplete="off">
-                                    <label class="form-label rd-input-label" for="rd-navbar-n-search-form-input">Search a product</label>
+                                    <input required class="form-input" id="rd-navbar-n-search-form-input" type="text" name="searchtxt" autocomplete="off" placeholder="Search a product">
                                     <div class="rd-n-search-results-live" id="rd-n-search-results-live"></div>
                                 </div>
                                 <button class="rd-n-search__submit" type="submit"></button>

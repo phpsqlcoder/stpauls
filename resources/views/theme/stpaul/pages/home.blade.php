@@ -1,9 +1,6 @@
 @extends('theme.'.env('FRONTEND_TEMPLATE').'.main')
 
 @section('pagecss')
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/owl.carousel/owl.theme.default.min.css') }}" />
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 @endsection
 
@@ -29,9 +26,9 @@
                             <a class="nav-link" id="pills-devotional-tab" data-toggle="pill" href="#pills-devotional" role="tab" aria-controls="pills-contact" aria-selected="false">Devotional</a>
                         </li>
                     </ul>
-                    <div class="owl-product-nav">
-                        <a href="" class="owl-product-prev"><span class="lnr lnr-arrow-left"></span></a>
-                        <a href="" class="owl-product-next"><span class="lnr lnr-arrow-right"></span></a>
+                    <div class="product-nav">
+                        <a href="" class="product-prev"><span class="lnr lnr-arrow-left"></span></a>
+                        <a href="" class="product-next"><span class="lnr lnr-arrow-right"></span></a>
                     </div>
                 </div>
                 <!-- END Our Products Navigation Tabs -->
@@ -44,7 +41,7 @@
 
                     <!-- Our Products Books Tab Content -->
                     <div class="tab-pane fade show active" id="pills-book" role="tabpanel" aria-labelledby="pills-book-tab">
-                        <div id="owl-product-1" class="owl-carousel owl-theme">
+                        <div id="book" class="slick-slider">
                             @php
                                 $books = \App\EcommerceModel\Product::where('category_id',1)->where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
                             @endphp
@@ -75,7 +72,7 @@
 
                     <!-- Our Products Bibles Tab Content -->
                     <div class="tab-pane fade" id="pills-bible" role="tabpanel" aria-labelledby="pills-bible-tab">
-                        <div id="owl-product-2" class="owl-carousel owl-theme">
+                        <div id="bible" class="slick-slider">
                             @php
                                 $bibles = \App\EcommerceModel\Product::where('category_id',2)->where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
                             @endphp
@@ -106,7 +103,7 @@
 
                     <!-- Our Products Devotional Tab Content -->
                     <div class="tab-pane fade" id="pills-devotional" role="tabpanel" aria-labelledby="pills-devotional-tab">
-                        <div id="owl-product-3" class="owl-carousel owl-theme">
+                        <div id="devotional" class="slick-slider">
                             @php
                                 $devotionals = \App\EcommerceModel\Product::where('category_id',4)->where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
                             @endphp
@@ -144,7 +141,7 @@
                 <div class="gap-70"></div>
 
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 mb-xs-4">
                         <img class="bordered-img" src="{{ asset('theme/stpaul/images/misc/ads1.jpg') }}" alt="" />
                     </div>
                     <div class="col-lg-6">
@@ -156,9 +153,9 @@
 
                 <!-- Home Recommended Titles Section -->
                 <div class="category-nav-2">
-                    <div class="owl-product-nav">
-                        <a href="" class="owl-reco-title-prev"><span class="lnr lnr-arrow-left"></span></a>
-                        <a href="" class="owl-reco-title-next"><span class="lnr lnr-arrow-right"></span></a>
+                    <div class="product-nav">
+                        <a href="" class="reco-title-prev"><span class="lnr lnr-arrow-left"></span></a>
+                        <a href="" class="reco-title-next"><span class="lnr lnr-arrow-right"></span></a>
                     </div>
                 </div>
                 <h2 class="category-title"><span>Recommended Titles</span></h2>
@@ -166,7 +163,7 @@
                 <div class="gap-40"></div>
 
                 <!-- Recommended Titles Content -->
-                <div id="owl-product-4" class="owl-carousel owl-theme">
+                <div id="reco-title" class="slick-slider">
                     @php
                         $recommended_titles = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->where('is_featured',1)->orderBy('name','asc')->get(); 
                     @endphp
@@ -174,7 +171,7 @@
                     @foreach($recommended_titles->chunk(2) as $title)
                         <div class="product-link">
                             @foreach($title as $b)
-                                <div class="product-card">
+                                <div class="product-card mb-4">
                                     <a href="{{ route('product.front.show',$b['slug'])}}">
                                         <img src="{{ asset('storage/products/'.$b->photoPrimary) }}" alt="" />
                                         <h3 class="product-price">Php {{ number_format($b['price'],2) }}</h3>
@@ -211,9 +208,9 @@
                 @if($count > 0)
                 <!-- Home Item on Sale Section -->
                 <div class="category-nav-2">
-                    <div class="owl-product-nav">
-                        <a href="" class="owl-item-sale-prev"><span class="lnr lnr-arrow-left"></span></a>
-                        <a href="" class="owl-item-sale-next"><span class="lnr lnr-arrow-right"></span></a>
+                    <div class="product-nav">
+                        <a href="" class="item-sale-prev"><span class="lnr lnr-arrow-left"></span></a>
+                        <a href="" class="item-sale-next"><span class="lnr lnr-arrow-right"></span></a>
                     </div>
                 </div>
                 <h2 class="category-title"><span>Items on Sale</span></h2>
@@ -221,7 +218,7 @@
                 <div class="gap-40"></div>
 
                 <!-- Item on Sale Content -->
-                <div id="owl-product-5" class="owl-carousel owl-theme">
+                <div id="item-sale" class="slick-slider">
                     @foreach($onsale_products as $product)
                         <div class="product-link">
                             <div class="product-card">
@@ -264,8 +261,6 @@
 @endsection
 
 @section('pagejs')
-    <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.extension.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.js') }}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 @endsection
