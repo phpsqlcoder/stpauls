@@ -286,6 +286,16 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/admin/product-category-multiple-delete','Product\ProductCategoryController@multiple_delete')->name('product.category.multiple.delete');
         //
 
+        //Shipping Fees
+            Route::resource('/admin/shippingfee', 'ShippingFee\ShippingfeeController');
+            Route::get('/admin/shippingfee-manage/{id}', 'ShippingFee\ShippingfeeController@manage')->name('shippingfee.manage');
+            Route::post('/admin/shippingfee-location/store', 'ShippingFee\ShippingfeeController@location_store')->name('shippingfee_location.store');
+            Route::post('/admin/shippingfee-weight/store', 'ShippingFee\ShippingfeeController@weight_store')->name('shippingfee_weight.store');
+            Route::post('/admin/shippingfee-weight/update', 'ShippingFee\ShippingfeeController@weight_update')->name('shippingfee_weight.update');
+            Route::post('/admin/shippingfee-weight/delete_all', 'ShippingFee\ShippingfeeController@weight_delete_all')->name('shippingfee_weight.delete_all');
+            Route::post('/admin/shippingfee-weight/upload_csv', 'ShippingFee\ShippingfeeController@weight_upload_csv')->name('shippingfee_weight.upload_csv');
+        //
+
 
 
 
