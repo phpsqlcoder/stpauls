@@ -141,7 +141,7 @@
                 <div class="gap-70"></div>
 
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 mb-xs-4">
                         <img class="bordered-img" src="{{ asset('theme/stpaul/images/misc/ads1.jpg') }}" alt="" />
                     </div>
                     <div class="col-lg-6">
