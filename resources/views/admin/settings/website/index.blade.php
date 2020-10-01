@@ -426,17 +426,28 @@
                                     <form method="post" action="{{ route('ecom-setting-cash-on-delivery-update') }}">
                                         @csrf
                                         <div class="form-group">
-                                            <div id="title" class="parsley-input">
-                                                <label>Delivery Rate</label>
-                                                <input type="hidden" name="id" value="{{$cod->id}}">
-                                                <input type="number" name="delivery_rate" id="delivery_rate" class="form-control" data-parsley-class-handler="#delivery_rate" value="{{ $cod->delivery_rate }}" required>
+                                            <div class="form-check form-check-inline">
+                                              <input class="form-check-input" type="checkbox" {{ ($cod->within_metro_manila == 1 ? "checked":"") }} name="within_metro_manila" id="withinMetroManila">
+                                              <label class="form-check-label" for="withinMetroManila">Metro Manila</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                              <input class="form-check-input" type="checkbox" {{ ($cod->outside_metro_manila == 1 ? "checked":"") }} name="outside_metro_manila" id="outsideMetroManila">
+                                              <label class="form-check-label" for="outsideMetroManila">Outside Metro Manila</label>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <div id="title" class="parsley-input">
-                                                <label>Minimum Purchase</label>
-                                                <input type="number" name="min_purchase" id="cod_min_purchase" class="form-control" data-parsley-class-handler="#cod_min_purchase" value="{{ $cod->minimum_purchase }}" required>
+                                                <label>Service Fee</label>
+                                                <input type="hidden" name="id" value="{{$cod->id}}">
+                                                <input type="number" name="service_fee" id="service_fee" class="form-control" data-parsley-class-handler="#service_fee" value="{{ $cod->service_fee }}" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div id="title" class="parsley-input">
+                                                <label>Maximum Purchase</label>
+                                                <input type="number" name="max_purchase" id="cod_max_purchase" class="form-control" data-parsley-class-handler="#cod_max_purchase" value="{{ $cod->maximum_purchase }}" required>
                                             </div>
                                         </div>
 
@@ -472,19 +483,6 @@
                                                 <label for="cod-sat">S</label>
                                                 <input type="checkbox" value="Sun" name="cod_days[]" id="cod-sun" class="weekday" @if(in_array('Sun',$cod_days)) checked @endif/>
                                                 <label for="cod-sun">S</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="form-row">
-                                                <div class="col">
-                                                    <label>Time From*</label>
-                                                    <input type="time" name="time_from" value="{{ $cod->allowed_time_from }}" class="form-control">
-                                                </div>
-                                                <div class="col">
-                                                    <label>Time To*</label>
-                                                    <input type="time" name="time_to" value="{{ $cod->allowed_time_to }}" class="form-control">
-                                                </div>
                                             </div>
                                         </div>
 
@@ -586,8 +584,8 @@
 
                                         <div class="form-group">
                                             <div id="title" class="parsley-input">
-                                                <label>Minimum Purchase</label>
-                                                <input type="number" name="min_purchase" id="sdd_min_purchase" class="form-control" data-parsley-class-handler="#title" value="{{ $sdd->minimum_purchase }}" required>
+                                                <label>Maximum Purchase</label>
+                                                <input type="number" name="max_purchase" id="sdd_max_pruchase" class="form-control" data-parsley-class-handler="#sdd_max_pruchase" value="{{ $sdd->maximum_purchase }}" required>
                                             </div>
                                         </div>
 

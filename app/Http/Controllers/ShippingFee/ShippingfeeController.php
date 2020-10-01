@@ -59,18 +59,51 @@ class ShippingfeeController extends Controller
 
     public function manage($id)
     {
-        $sp = Shippingfee::findOrFail($id);
+        $sp      = Shippingfee::findOrFail($id);
+        $weights = $sp->weights()->paginate(10);
 
-        return view('admin.shippingfee.manage',compact('sp'));
+        return view('admin.shippingfee.manage',compact('sp','weights'));
     }
 
-    public function location_store(Request $request){
-        foreach($request->selected_countries as $location){
-            $store = ShippingfeeLocations::create([
-                'shippingfee_id' => $request->shippingfee_id,
-                'name' => $location,
-                'user_id' => Auth::id()
-            ]);
+    public function location_store(Request $request)
+    {   
+        $data = $request->all();
+        $fee = Shippingfee::find($request->shippingfee_id)->update(['name' => $request->name]);
+
+        if($fee){
+
+            $arr_locations = [];
+            $saved_locations = ShippingfeeLocations::where('shippingfee_id',$request->shippingfee_id)->get();
+
+            foreach($saved_locations as $l){
+                array_push($arr_locations,$l->name);
+            }
+
+            // save new locations
+            $selected_location = $data['selected_countries'];
+            foreach($selected_location as $key => $location){
+                if(!in_array($location,$arr_locations)){
+
+                    ShippingfeeLocations::create([
+                        'shippingfee_id' => $request->shippingfee_id,
+                        'name' => $location,
+                        'user_id' => Auth::id()
+                    ]);
+                }
+            }
+
+            // delete existing promotional product that is not selected
+            $arr_selectedlocations = [];
+            foreach($selected_location as $key => $slocation){
+                array_push($arr_selectedlocations,$slocation);
+            }
+
+            foreach($saved_locations as $location){
+                if(!in_array($location->name,$arr_selectedlocations)){
+                    ShippingfeeLocations::where('name',$location->name)->delete();
+                }
+            }
+
         }
 
         return back()->with('success','Successfully added new locations for this zone');
@@ -99,11 +132,23 @@ class ShippingfeeController extends Controller
         return back()->with('success','Successfully updated rate');
     }
 
-    public function weight_delete_all(Request $request)
+    public function weight_single_delete(Request $request)
     {
-        $delete = ShippingfeeWeight::where('shippingfee_id',$request->shipping_id_delete)->delete();
+        ShippingfeeWeight::find($request->rates)->delete();
 
-        return back()->with('success','Successfully deleted all rates');
+        return back()->with('success','Selected rate has been deleted.');
+    }
+
+    public function weight_multiple_delete(Request $request)
+    {
+        $string = rtrim($request->rates, '|');
+        $rates = explode("|",$string);
+
+        foreach($rates as $rate){
+            ShippingfeeWeight::find($rate)->delete();
+        }
+
+        return back()->with('success','Selected rates has been deleted.');
     }
 
     public function weight_upload_csv(Request $request)

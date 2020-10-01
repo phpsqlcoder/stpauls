@@ -425,12 +425,12 @@ class WebController extends Controller
         }
 
         $qry = CheckoutOption::find($request->id)->update([
-            'delivery_rate' => $request->delivery_rate,
-            'minimum_purchase' => $request->min_purchase,
+            'service_fee' => $request->service_fee,
+            'maximum_purchase' => $request->max_purchase,
             'allowed_days' => rtrim($allowed_days,'|'),
-            'allowed_time_from' => date('H:i',strtotime($request->time_from)),
-            'allowed_time_to' =>date('H:i',strtotime($request->time_to)),
             'reminder' => $request->reminder,
+            'within_metro_manila' => (isset($request->within_metro_manila) ? 1 : 0),
+            'outside_metro_manila' => (isset($request->outside_metro_manila) ? 1 : 0),
             'user_id' => Auth::id()
         ]);
 
@@ -476,7 +476,7 @@ class WebController extends Controller
 
         $qry = CheckoutOption::find($request->id)->update([
             'service_fee' => $request->service_fee,
-            'minimum_purchase' => $request->min_purchase,
+            'maximum_purchase' => $request->max_purchase,
             'allowed_days' => rtrim($allowed_days,'|'),
             'allowed_time_from' => date('H:i',strtotime($request->time_from)),
             'allowed_time_to' =>date('H:i',strtotime($request->time_to)),

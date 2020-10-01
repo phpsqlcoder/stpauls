@@ -11,7 +11,7 @@
                     <li class="breadcrumb-item active" aria-current="page">Edit Delivery Rate</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Update Delivery Rate</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Edit Delivery Rate</h4>
         </div>
     </div>
 
@@ -52,7 +52,7 @@
                         </div>
                     </div> 
 
-                    <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Changes</button>
+                    <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Update Delivery Rate</button>
                     <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('locations.index') }}">Cancel</a>
             </form>
             </div>

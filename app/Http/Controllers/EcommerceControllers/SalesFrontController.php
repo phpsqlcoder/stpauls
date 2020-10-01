@@ -41,9 +41,9 @@ class SalesFrontController extends Controller
     {
         $payment = SalesPayment::create([
             'sales_header_id' => $request->header_id,
-            'receipt_number' => $request->refno,
+            'receipt_number' => '',
             'payment_type' => $request->payment_type,
-            'payment_date' => $request->payment_date,
+            'payment_date' => today(),
             'amount' => $request->amount,
             'is_verify' => 0,
             'status' => 'PAID',

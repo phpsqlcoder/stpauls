@@ -107,7 +107,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Payment Form</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Submit Payment</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -120,21 +120,27 @@
                         <label for="Amount" class="col-form-label">Payment Type *</label>
                         <input readonly type="text" name="payment_type" id="payment_type" class="form-control">
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="Amount" class="col-form-label">Payment Date *</label>
                         <input required type="date" name="payment_date" class="form-control">
                     </div>
                     <div class="form-group">
                         <label for="Amount" class="col-form-label">Reference # *</label>
                         <input required type="text" name="refno" class="form-control">
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="Amount" class="col-form-label">Amount *</label>
-                        <input required type="number" step="0.1" name="amount" id="balance" class="form-control">
+                        <input readonly type="text" name="amount" id="balance" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="Amount" class="col-form-label">Attachment *</label>
-                        <input required type="file" name="attachment" class="form-control">
+                        <label for="attachment" class="col-form-label">Attachment *</label>
+                        <input required type="file" name="attachment" id="attachment" class="form-control">
+                        <br>
+                        <span id="file_type" style="display: none;" class="text-danger"></span>
+                        <span id="file_size" style="display: none;" class="text-danger"></span>
+
+                        <small>Maximum file size: 1MB</small><br>
+                        <small>File extension: JPEG, JPG, PNG</small>
                     </div>                              
                 </div>
                 <div class="modal-footer">
@@ -232,6 +238,38 @@
 
 @section('customjs')
     <script>
+        var _URL = window.URL || window.webkitURL;
+        $('#attachment').change(function () {
+            var file = $(this)[0].files[0];
+            var ext  = $(this).val().split('.').pop().toLowerCase();
+
+            img = new Image();
+            var imgwidth = 0;
+            var imgheight = 0;
+            var file_size = (file.size / 1048576).toFixed(3);
+
+            if ($.inArray(ext, ['jpeg', 'jpg', 'png']) == -1) {
+                $('#attachment').val('');
+                $('#file_type').css('display','block');
+                $('#file_size').css('display','none');
+
+                $('#file_type').html(file.name+ ' has invalid extension');         
+            } else {
+                $('#file_type').css('display','none');
+            }
+
+            if (file_size > 1) {
+                $('#attachment').val('');
+                $('#file_size').css('display','block');
+                $('#file_type').css('display','none');
+
+                $('#file_size').html(file.name+ ' exceeded the maximum file size');        
+            } else {
+                $('#file_size').css('display','none');
+            }
+
+        });
+
         function view_delivery_details(orderid,orderNo){
             $.ajax({
                 type: "GET",

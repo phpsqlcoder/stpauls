@@ -21,24 +21,20 @@
                     <li class="breadcrumb-item active" aria-current="page">Manage Zone</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Manage {{$sp->name}}</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Manage Rate</h4>
         </div>
     </div>
 
-{{--    @if($message = Session::get('duplicate'))--}}
-{{--        <div class="alert alert-warning d-flex align-items-center mg-t-15" role="alert">--}}
-{{--            <p class="mg-b-0"><i data-feather="alert-circle" class="mg-r-10"></i>{{ $message }}--}}
-{{--        </div>--}}
-{{--    @endif--}}
-
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4 mg-t-45">
             <form action="{{ route('shippingfee_location.store') }}" method="post">
                 @csrf
                 @method('POST')
                 <input type="hidden" name="shippingfee_id" value="{{$sp->id}}">
-                <div class="mg-b-20">
-                  
+                <div class="form-group">
+                    <input type="text" class="form-control" name="name" value="{{$sp->name}}">
+                </div>
+                <div class="form-group">
                     <select id='custom-headers' multiple='multiple' name="selected_countries[]">
                         @foreach(Setting::countries() as $country)                            
                             <option value="{{$country}}" @if($sp->locations->contains('name',$country)) selected="selected" @endif>{{$country}}</option>
@@ -46,56 +42,87 @@
 
                     </select>
                 </div>                
-                <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save</button>
+                <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Update Rate</button>
                 <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('shippingfee.index') }}">Cancel</a>
-                   
-            </form>
-            
+            </form> 
         </div>
-        <div class="col-md-6">
-            <div class="table-list mg-b-10">
-                <div class="table-responsive-lg">
-                    <table width="100%">
-                        <tr>
-                            <td align="right"><a class="btn btn-xs btn-info" href="#" onclick="$('#modal-new-weight').modal('show');">Add New</a>
-                           <a class="btn btn-xs btn-success" href="#" onclick="$('#modal-upload-csv-weight').modal('show');">Upload CSV</a>
-                            <a class="btn btn-xs btn-danger" href="#" onclick="$('#modal-delete_all-weight').modal('show')">Delete All</a></td>
-                        </tr>
-                    </table>
-                    <table class="table mg-b-0 table-light table-hover">
-                        <thead>
-                        <tr>
-                            <th>Weight</th>
-                            <th>Rate</th>
-                            <th>Actions</th>                            
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @forelse($sp->weights as $weight)
-                            <tr> 
-                                <td>{{ $weight->weight }}</td>
-                                <td>{{ number_format($weight->rate,2) }}</td>                                
-                                <td style="text-align:center">                                    
-                                    <nav class="nav table-options">
-                                        <a class="nav-link" href="#" title="Edit Rate" onclick="edit_weight({{$weight->id}},{{$weight->weight}},{{$weight->rate}})"><i data-feather="edit"></i></a>
-                                    </nav>
-                                   
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="3" style="text-align: center;"> <p class="text-danger">No record found.</p></td>
-                            </tr>
-                        @endforelse
+        <div class="col-md-8">
+            <table width="100%" class="table table-borderless">
+                <tr>
+                    <td align="right"><a class="btn btn-xs btn-primary" href="#" onclick="$('#modal-new-weight').modal('show');">Add New</a>
+                   <a class="btn btn-xs btn-success" href="#" onclick="$('#modal-upload-csv-weight').modal('show');">Upload CSV</a>
+                    <a class="btn btn-xs btn-danger" href="#" onclick="delete_rates();">Delete Selected</a></td>
+                </tr>
+            </table>
 
-                        </tbody>
-                    </table>
+            <table class="table mg-b-0 table-light table-hover">
+                <thead>
+                <tr>
+                    <th width="5%">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="checkbox_all">
+                            <label class="custom-control-label" for="checkbox_all"></label>
+                        </div>
+                    </th>
+                    <th scope="col" width="40%">Weight (Kg)</th>
+                    <th scope="col" width="40%">Rate</th>
+                    <th scope="col" width="15%">Actions</th>                            
+                </tr>
+                </thead>
+                <tbody>
+                @forelse($weights as $weight)
+                    <tr id="row{{$weight->id}}"> 
+                        <th>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input cb" id="cb{{ $weight->id }}">
+                                <label class="custom-control-label" for="cb{{ $weight->id }}"></label>
+                            </div>
+                        </th>
+                        <td>{{ $weight->weight }}</td>
+                        <td>{{ number_format($weight->rate,2) }}</td>                                
+                        <td style="text-align:center">                                    
+                            <nav class="nav table-options">
+                                <a class="nav-link" href="#" title="Edit Rate" onclick="edit_weight('{{$weight->id}}','{{$weight->weight}}','{{$weight->rate}}')"><i data-feather="edit"></i></a>
+                                <a class="nav-link" href="#" title="Delete Rate" onclick="single_delete_weight('{{$weight->id}}')"><i data-feather="trash"></i></a>
+                            </nav>
+                           
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" style="text-align: center;"> <p class="text-danger">No rates found.</p></td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+            <div>
+                @if ($weights->firstItem() == null)
+                    <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
+                @else
+                    <p class="tx-gray-400 tx-12 d-inline">Showing {{$weights->firstItem()}} to {{$weights->lastItem()}} of {{$weights->total()}} weights</p>
+                @endif
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="text-md-right float-md-right">
+                <div>
+                    {!! $weights->links() !!}
                 </div>
             </div>
         </div>
     </div>
-
 </div>
+
+<form action="" id="posting_form" method="post" style="display: none;">
+    @csrf
+    <input type="text" id="rates" name="rates">
+</form>
+
 <div class="modal effect-scale" id="modal-new-weight" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -110,7 +137,7 @@
                 <input type="hidden" name="shippingfee_id" value="{{$sp->id}}">  
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="d-block">Weight *</label>
+                        <label class="d-block">Weight (Kg) *</label>
                         <input type="number" name="weight" id="weight" class="form-control" step="0.01">
                        
                     </div>
@@ -121,13 +148,14 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-info">Save</button>                    
+                    <button type="submit" class="btn btn-sm btn-primary">Save Rate</button>                    
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 <div class="modal effect-scale" id="modal-edit-weight" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -142,7 +170,7 @@
                 <input type="hidden" name="weight_id" id="weight_id_edit" value="0" min="0">  
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="d-block">Weight *</label>
+                        <label class="d-block">Weight (Kg) *</label>
                         <input type="number" name="weight" id="weight_edit" class="form-control" step="0.01">                       
                     </div>
                     <div class="form-group">
@@ -151,36 +179,55 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-info">Save</button>                    
+                    <button type="submit" class="btn btn-sm btn-primary">Update Rate</button>                    
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<div class="modal effect-scale" id="modal-delete_all-weight" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+<div class="modal effect-scale" id="modal-single-delete-weight" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Delete All Rates</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">Confirmation</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-            <p>Are you sure you want to delete all records for {{$sp->name}}?</p>
-            <form action="{{route('shippingfee_weight.delete_all')}}" method="post">
-                @csrf      
-                <input type="hidden" name="shipping_id_delete" value="{{$sp->id}}">  
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete All</button>                    
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </form>
+            <p>Are you sure you want to delete this rate ?</p>  
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" id="btnSingleDelete">Yes, Delete</button>                    
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+            </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal effect-scale" id="modal-multiple-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete all rates for {{$sp->name}}?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" id="btnDeleteMultiple">Yes, Delete</button> 
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal effect-scale" id="modal-upload-csv-weight" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -205,31 +252,38 @@
         </div>
     </div>
 </div>
+
+<div class="modal effect-scale" id="prompt-no-selected" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{{__('common.no_selected_title')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{{__('common.no_selected')}}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('pagejs')
 
     <script src="{{ asset('js/multiselect/js/jquery.multi-select.js') }}"></script>
     <script src="{{ asset('js/multiselect/quicksearch-master/jquery.quicksearch.js') }}"></script>
-@endsection
 
-@section('customjs')
     <script>
-        function edit_weight(id,weight,rate){
-            $('#weight_id_edit').val(id);
-            $('#weight_edit').val(weight);
-            $('#rate_edit').val(rate);
-            $('#modal-edit-weight').modal('show');
-        }
+        /*** Handles the Select All Checkbox ***/
+        $("#checkbox_all").click(function(){
+            $('.cb').not(this).prop('checked', this.checked);
+        });
 
-        function delete_add(){
-            $('#weight_id_edit').val(id);
-            $('#weight_edit').val(weight);
-            $('#rate_edit').val(rate);
-            $('#modal-edit-weight').modal('show');
-        }
-    </script>
-    <script>
         $('#custom-headers').multiSelect({
             selectableHeader: "<input type='text' class='search-input form-control' autocomplete='off' style='margin-bottom:5px;' placeholder='Search here..'>",
             selectionHeader: "<input type='text' class='search-input form-control' autocomplete='off' style='margin-bottom:5px;' placeholder='Search here..'>",
@@ -265,5 +319,59 @@
                 this.qs2.cache();
             }
         });
+    </script>
+@endsection
+
+@section('customjs')
+    <script>
+        function post_form(url,rates){
+            $('#posting_form').attr('action',url);
+            $('#rates').val(rates);
+            $('#posting_form').submit();
+        }
+
+        function single_delete_weight(id){
+            $('#modal-single-delete-weight').modal('show');
+
+            $('#btnSingleDelete').on('click', function() {
+                post_form("{{route('shippingfee-weight.single-delete')}}",id);
+            });
+        }
+
+        function delete_rates(){
+            var counter = 0;
+            var selected_rates = '';
+            $(".cb:checked").each(function(){
+                counter++;
+                fid = $(this).attr('id');
+                selected_rates += fid.substring(2, fid.length)+'|';
+            });
+
+            if(parseInt(counter) < 1){
+                $('#prompt-no-selected').modal('show');
+                return false;
+            }
+            else{
+                $('#modal-multiple-delete').modal('show');
+                $('#btnDeleteMultiple').on('click', function() {
+                    post_form("{{route('shippingfee-weight.multiple-delete')}}",selected_rates);
+                });
+            }
+        }
+
+        function edit_weight(id,weight,rate){
+            $('#weight_id_edit').val(id);
+            $('#weight_edit').val(weight);
+            $('#rate_edit').val(rate);
+            $('#modal-edit-weight').modal('show');
+        }
+
+        function delete_add(){
+            $('#weight_id_edit').val(id);
+            $('#weight_edit').val(weight);
+            $('#rate_edit').val(rate);
+            $('#modal-edit-weight').modal('show');
+        }
+
     </script>
 @endsection

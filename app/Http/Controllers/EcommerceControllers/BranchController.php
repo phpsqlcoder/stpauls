@@ -29,7 +29,7 @@ class BranchController extends Controller
             ]
         ];
 
-        $listing = new ListingHelper('desc', 10, 'updated_at', $customConditions);
+        $listing = new ListingHelper('asc', 10, 'name', $customConditions);
 
         $branches = $listing->simple_search(Branch::class, $this->searchFields);
         $filter = $listing->get_filter($this->searchFields);

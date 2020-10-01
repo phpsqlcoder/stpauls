@@ -13,6 +13,9 @@
         Route::get('oauth/{driver}', 'Auth\SocialiteController@redirectToProvider')->name('social.oauth');
         Route::get('oauth/{driver}/callback', 'Auth\SocialiteController@handleProviderCallback')->name('social.callback');
 
+        Route::get('/socialite-set-password', 'EcommerceControllers\CustomerFrontController@show_socialite_set_passwor_form')->name('customer.socialite-set-password');
+        Route::post('/save-socialite-password', 'EcommerceControllers\CustomerFrontController@save_socialite_password')->name('customer.social_save_password');
+
 
         Route::get('/ajax/deliverable-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_deliverable_cities')->name('ajax.deliverable-cities');
 
@@ -292,15 +295,23 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/admin/shippingfee-location/store', 'ShippingFee\ShippingfeeController@location_store')->name('shippingfee_location.store');
             Route::post('/admin/shippingfee-weight/store', 'ShippingFee\ShippingfeeController@weight_store')->name('shippingfee_weight.store');
             Route::post('/admin/shippingfee-weight/update', 'ShippingFee\ShippingfeeController@weight_update')->name('shippingfee_weight.update');
+            Route::post('/shippingfee-weight-single-delete', 'ShippingFee\ShippingfeeController@weight_single_delete')->name('shippingfee-weight.single-delete');
+            Route::post('/shippingfee-weight-multiple-delete', 'ShippingFee\ShippingfeeController@weight_multiple_delete')->name('shippingfee-weight.multiple-delete');
             Route::post('/admin/shippingfee-weight/delete_all', 'ShippingFee\ShippingfeeController@weight_delete_all')->name('shippingfee_weight.delete_all');
             Route::post('/admin/shippingfee-weight/upload_csv', 'ShippingFee\ShippingfeeController@weight_upload_csv')->name('shippingfee_weight.upload_csv');
         //
 
 
-
-
-
             
+
+
+
+
+
+
+
+
+
 
 
     ####### CMS Standards #######

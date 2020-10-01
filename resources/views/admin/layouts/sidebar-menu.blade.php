@@ -1,4 +1,4 @@
-<ul class="nav nav-aside">
+ <ul class="nav nav-aside">
     <li class="nav-item">
         <a href="{{route('home')}}" target="_blank" class="nav-link">
             <i data-feather="external-link"></i>
@@ -215,16 +215,22 @@
         @if (auth()->user()->has_access_to_module('delivery_flat_rate'))
             <li class="nav-item with-sub @if (request()->routeIs('locations*')) active show @endif">
                 <a href="" class="nav-link"><i data-feather="box"></i> <span>Delivery Flat Rates</span></a>
-                <ul style="display:none;">
+                <ul>
                     <li @if (\Route::current()->getName() == 'locations.index' || \Route::current()->getName() == 'locations.edit') class="active" @endif><a href="{{ route('locations.index') }}">Manage Flat Rates</a></li>
                     @if (auth()->user()->has_access_to_route('locations.create'))
-                        <li @if (\Route::current()->getName() == 'locations.create') class="active" @endif><a href="{{ route('locations.create') }}">Create New Flat Rate</a></li>
+                        <li @if (\Route::current()->getName() == 'locations.create') class="active" @endif><a href="{{ route('locations.create') }}">Create New Rate</a></li>
                     @endif
                 </ul>
+            </li>
+        @endif
+
+        @if (auth()->user()->has_access_to_module('shippingfee'))
+            <li class="nav-item with-sub @if (request()->routeIs('shippingfee*')) active show @endif">
+                <a href="" class="nav-link"><i data-feather="box"></i> <span>Shipping Rates</span></a>
                 <ul>
-                    <li @if (\Route::current()->getName() == 'shippingfee.index' || \Route::current()->getName() == 'shippingfee.edit') class="active" @endif><a href="{{ route('shippingfee.index') }}">Manage Rates</a></li>
+                    <li @if (\Route::current()->getName() == 'shippingfee.index' || \Route::current()->getName() == 'shippingfee.edit') class="active" @endif><a href="{{ route('shippingfee.index') }}">Manage Int'l Rates</a></li>
                     @if (auth()->user()->has_access_to_route('shippingfee.create'))
-                        <li @if (\Route::current()->getName() == 'shippingfee.create') class="active" @endif><a href="{{ route('shippingfee.create') }}">Create New Rate</a></li>
+                        <li @if (\Route::current()->getName() == 'shippingfee.create') class="active" @endif><a href="{{ route('shippingfee.create') }}">Create New Int'l Rate</a></li>
                     @endif
                 </ul>
             </li>

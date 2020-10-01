@@ -37,7 +37,7 @@ class CustomerController extends Controller
         Permission::module_init($this, 'customer');
     }
 
-    private $searchFields = ['firstname','lastname'];
+    private $searchFields = ['firstname','lastname','updated_at'];
 
 
     public function index($param = null)

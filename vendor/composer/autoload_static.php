@@ -578,6 +578,7 @@ class ComposerStaticInit68580dd66ca868f9e4453579cea1fb47
         'App\\Http\\Requests\\UserRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UserRequest.php',
         'App\\InventoryReceiverDetail' => __DIR__ . '/../..' . '/app/inventoryReceiverDetail.php',
         'App\\InventoryReceiverHeader' => __DIR__ . '/../..' . '/app/inventoryReceiverHeader.php',
+        'App\\LocalShippingRate' => __DIR__ . '/../..' . '/app/LocalShippingRate.php',
         'App\\Logs' => __DIR__ . '/../..' . '/app/Logs.php',
         'App\\Mail\\AddNewUserMail' => __DIR__ . '/../..' . '/app/Mail/AddNewUserMail.php',
         'App\\Mail\\ContributorAddPageMail' => __DIR__ . '/../..' . '/app/Mail/ContributorAddPageMail.php',

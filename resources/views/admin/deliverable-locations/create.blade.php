@@ -58,7 +58,7 @@
                             <label class="custom-control-label" id="label_visibility2" for="customSwitch2">No</label>
                         </div>
                     </div>                
-                    <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Submit</button>
+                    <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Flat Rate</button>
                     <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('locations.index') }}">Cancel</a>
             </form>
             </div>

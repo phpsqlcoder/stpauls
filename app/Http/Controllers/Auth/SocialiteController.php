@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\EcommerceModel\Customer;
 use Exception;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+
+use App\EcommerceModel\Customer;
+use App\EcommerceModel\Product;
+use App\EcommerceModel\Cart;
+use App\Page;
+use App\User;
 
 class SocialiteController extends Controller
 {
@@ -88,14 +93,34 @@ class SocialiteController extends Controller
               $last_name = $providerCostomer->getName();
         }
 
-        return redirect(route('customer-front.sign-up',[ 
-            'provider' => $driver, 
-            'fname' => $first_name, 
-            'lname' => $last_name, 
+        $user = User::create([
+            'firstname' => $first_name,
+            'lastname' => $last_name,
             'email' => $providerCostomer->getEmail(),
-            'provide_id' => $providerCostomer->getId(),
-            'token' => $providerCostomer->token
-        ]));
+            'email_verified_at' => now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // temporary password : password
+            'role_id' => 3,
+            'is_active' => 1,
+            'remember_token' => str_random(60),
+        ]);
+
+        if($user){
+            $customer = Customer::create([
+                'customer_id' => $user->id,
+                'firstname' => $first_name,
+                'lastname' => $last_name,
+                'email' => $providerCostomer->getEmail(),
+                'is_active' => 1,
+                'provider' => $driver,
+                'provider_id' => $providerCostomer->getId(),
+                'reactivate_request' => 0
+            ]);
+
+            return redirect(route('customer.socialite-set-password',[ 
+                'email' => $providerCostomer->getEmail(),
+            ]));
+        }
+
     }
 
     private function isProviderAllowed($driver)

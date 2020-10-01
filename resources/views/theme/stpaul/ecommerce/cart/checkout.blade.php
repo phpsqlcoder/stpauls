@@ -14,7 +14,7 @@
 
 @section('content')
 <main>
-    <form method="post" action="{{ route('cart.temp_sales') }}" id="checkout-form">
+    <form autocomplete="off" method="post" action="{{ route('cart.temp_sales') }}" id="checkout-form">
     @csrf
         <section id="checkout-wrapper">
             <div class="container">
@@ -81,44 +81,31 @@
                                             <div class="form-group form-wrap">
                                                 <p>Province *</p>
                                                 <select name="province" id="province" class="form-control form-input">
-                                                    <option value="" selected disabled>-- Select Province --</option>
+                                                    <option value="">-- Select Province --</option>
                                                     @foreach($provinces as $province)
-                                                    <option @if($customer->details->province == $province->province) selected @endif value="{{$province->province}}">{{ $province->province_detail->province }}</option>
+                                                    <option @if($customer->details->province == $province->id) selected @endif value="{{$province->id}}">{{ $province->province }}</option>
                                                     @endforeach
                                                     <option style="display: none;" value="0">Others</option>
                                                 </select>
                                                 <p id="p_province" class="text-danger" style="display: none;"><small>The province field is required.</small></p>
-                                                @if(\App\Deliverablecities::deliverable_province($customer->details->province) < 1)
-                                                    <small id="alert_province" class="form-text text-danger"><b>{{ $customer->details->provinces->province }}</b> is not serviceable. Please select another province.</small>
-                                                @endif
                                             </div>
                                             <div id="divaddress">
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>City/Municipality *</p>
                                                     <select required class="form-control form-input" name="city" id="city">
-                                                        @if(\App\Deliverablecities::check_area($customer->details->city) <> 1)
-                                                            @if(\App\Deliverablecities::deliverable_province($customer->details->province) > 1)
-                                                                @foreach($cities as $city)
-                                                                    @if($city->province == $customer->details->province)
-                                                                        <option value="{{$city->city}}|{{$city->rate}}">{{ $city->city_name }}</option>
-                                                                    @endif
-                                                                @endforeach
-                                                            @else
-                                                                <option value="0" selected>-- Select City --</option>
+                                                    <option value="">-- Select City --</option>
+                                                    @if($customer->details->province != '')
+                                                        @foreach($cities as $city)
+                                                            @if($customer->details->province == $city->province)
+                                                            <option @if($customer->details->city == $city->id) selected @endif value="{{ $city->id }}">{{ $city->city }}</option>
                                                             @endif
-                                                            
-                                                        @else
-                                                            @foreach($cities as $city)
-                                                            <option @if($customer->details->city == $city->city) selected @endif value="{{$city->city}}|{{$city->rate}}">{{ $city->city_name }}</option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                    <span></span>
-                                                    <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
-                                                    @if(\App\Deliverablecities::check_area($customer->details->city) <> 1)
-                                                        <small id="alert_city" class="form-text text-danger"><b>{{ $customer->details->cities->city }}</b> is not serviceable. Please select another city.</small>
+                                                        @endforeach
+                                                    @else
+                                                    <option value="">-- Select City --</option>
                                                     @endif
+                                                    </select>
+                                                    <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
                                                 </div>
 
                                                 <div class="gap-10"></div>
@@ -186,27 +173,14 @@
                                             <input type="hidden" id="array_days1" value="{{ rtrim($cod_allowed_days,',') }}">
                                             
                                             <div class="tab-wrap">
-                                                @if($amount >= $cod->minimum_purchase)
+                                                @if($amount <= $cod->maximum_purchase)
                                                 <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
-                                                <label for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                 <div class="tab__content">
                                                     <h3>Cash on Delivery</h3>
                                                     <div class="alert alert-info" role="alert">
                                                         <h4 class="alert-heading">Reminder!</h4>
                                                         <p>{{ $cod->reminder }}</p>
-                                                    </div>
-                                                    <div class="form-row form-style fs-sm">
-                                                        <div class="col-lg-6 mb-sm-2">
-                                                            <label>Date *</label>
-                                                            <input type="date" name="pickup_date_1" onchange="pickupDate(1)" id="pickup_date1" class="form-control form-input"
-                                                                min="{{date('Y-m-d',strtotime(today()))}}">
-                                                            <p id="cod_date" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <label>Time *</label>
-                                                            <input type="time" name="pickup_time_1" onchange="pickupTime(1)" id="pickup_time1" class="form-control form-input">
-                                                            <p id="cod_time" class="text-danger" style="display: none;"><small>The time field is required.</small></p>
-                                                        </div>
                                                     </div>
                                                 </div>
                                                 @endif
@@ -265,7 +239,21 @@
                                                 </div>
                                             </div>
 
-                                            <ul class="list-unstyled lh-7 pd-r-10" style="display: none;">
+                                            <ul class="list-unstyled lh-7 pd-r-10">
+                                                <li class="d-flex justify-content-between">
+                                                    <span>COD Within Metro Manila</span>
+                                                    <span>
+                                                        <input type="text" id="within_metro_manila" value="{{$cod->within_metro_manila}}">
+                                                    </span>
+                                                </li>
+                                                <li class="d-flex justify-content-between">
+                                                    <span>COD Outside Metro Manila</span>
+                                                    <span>
+                                                        <input type="text" id="outside_metro_manila" value="{{$cod->outside_metro_manila}}">
+                                                    </span>
+                                                </li>
+
+
                                                 <li class="d-flex justify-content-between">
                                                     <span>Is Serviceable</span>
                                                     <span>
@@ -445,7 +433,7 @@
                             <div class="checkout-content">
                                 <h3>Payment Method</h3>
                                 @foreach($payment_method as $method)
-                                <div>
+                                <div id="payment_method_{{$method->id}}">
                                     <input type="radio" name="payment_method" value="{{ $method->id }}" id="method{{$method->id}}"/>
                                     <label for="method{{$method->id}}">{{ $method->name }}</label>
                                     <div class="sub1">
@@ -458,8 +446,10 @@
                                                     <label>Account # : {{ $list->account_no }}</label><br>
                                                     @if($list->type == 'remittance')
                                                     <label>Recipient : {{ $list->recipient }}</label><br>
+                                                    @if($list->qrcode != '')
                                                     <label>QR Code : </label><br>
                                                     <img style="margin-left: 85px;" src="{{ asset('storage/qrcodes/'.$list->id.'/'.$list->qrcode) }}">
+                                                    @endif
                                                     @endif
                                                 </div>
                                             </div>
@@ -549,28 +539,20 @@
 
         $(document).ready(function() {
             $('select[name="province"]').on('change', function() {
-
-                $('#alert_province').hide();
-                $('#alert_city').hide();
-
                 var provinceID = $(this).val();
+                if(provinceID) {
 
-                if(provinceID == 0){
-                    $('#divaddress').hide();
+                    if(provinceID == 49 && $('#within_metro_manila').val() == 1){
+                        $('#cod_label').css('display','block');
+                    } else {
+                        if($('#outside_metro_manila').val() == 1){
+                            $('#cod_label').css('display','block');
+                        } else {
+                            $('#cod_label').css('display','none');
+                        }
+                    }
 
-                    $('#p_city').hide();
-                    $('select[name="city"]').empty();
-                    $('select[name="city"]').append('<option value="0" selected>-- Select City --</option>');
-                    $('#city').prop('disabled', true);
-                    $('#div_other').show();
-                } else {
-                    $('#divaddress').show();
-
-                    $('#serviceable').val(1);
-                    $('#city').prop('disabled', false);
-                    $('#div_other').hide();
-
-                    var url = "{{ route('ajax.deliverable-cities', ':provinceID') }}";
+                    var url = "{{ route('ajax.get-cities', ':provinceID') }}";
                     url = url.replace(':provinceID',provinceID);
 
                     $.ajax({
@@ -579,12 +561,15 @@
                         dataType: "json",
                         success:function(data) {
                             $('select[name="city"]').empty();
-                            $('select[name="city"]').append('<option value="0" selected>-- Select City --</option>');
+                            $('select[name="city"]').append('<option selected disabled value="">-- Select City --</option>');
                             $.each(data, function(key, value) {
-                                $('select[name="city"]').append("<option value='"+value.city+"|"+value.rate+"'>"+value.city_name+"</option>");
+                                $('select[name="city"]').append('<option value="'+value.id+'">'+value.city+'</option>');
                             });
+                            $('select[name="city"]').append('<option value="0">Others</option>');
                         }
                     });
+                } else {
+                    $('select[name="city"]').empty();
                 }
             });
         });
@@ -670,16 +655,18 @@
         $('#billingNxtBtn').click(function(){
             /* BEGIN BILLING VALIDATION */
                 var regex = '/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/';
-                var name  = $('#input_fname').val()+' '+$('#input_lname').val(), 
-                    fname = $('#input_fname').val(),
-                    lname = $('#input_lname').val(),
-                    email  = $('#input_email').val(), 
-                    mobile = $('#input_mobile').val(), 
-                    address = $('#input_address').val(), 
+                var name     = $('#input_fname').val()+' '+$('#input_lname').val(), 
+                    fname    = $('#input_fname').val(),
+                    lname    = $('#input_lname').val(),
+                    email    = $('#input_email').val(), 
+                    mobile   = $('#input_mobile').val(), 
+                    address  = $('#input_address').val(), 
                     barangay = $('#input_barangay').val(),
-                    city = $('#city').val(),
-                    zipcode = $('#input_zipcode').val(),
-                    others = $('#other_address').val();
+                    city     = $('#city').val(),
+                    zipcode  = $('#input_zipcode').val(),
+                    others   = $('#other_address').val(),
+                    province = $('#province').val(),
+                    city     = $('#city').val();
 
                 if($('#province').val() == 0){
                     if(others.length === 0 || fname.length === 0 || lname.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0){ 
@@ -698,7 +685,7 @@
                         }
                     }
                 } else {
-                    if(fname.length === 0 || lname.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0 || address.length === 0 || barangay.length === 0 || city == 0 || zipcode.length === 0){
+                    if(fname.length === 0 || lname.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0 || province === "" || city === "" || address.length === 0 || barangay.length === 0 || zipcode.length === 0){
                         $(this).removeClass('checkout-next-btn');
                     } else {
                         if (!$("input[name='shipOption']:checked").val()) {
@@ -728,6 +715,30 @@
                     $('#p_lname').hide(); 
                 }
 
+                if(province === ""){
+                    $('#p_province').show(); 
+                } else { 
+                    $('#p_province').hide(); 
+                }
+
+                if(city === ""){
+                    $('#p_city').show(); 
+                } else { 
+                    $('#p_city').hide(); 
+                }
+
+                if(barangay.length === 0){ 
+                    $('#p_barangay').show(); 
+                } else { 
+                    $('#p_barangay').hide(); 
+                }
+
+                if(address.length === 0){ 
+                    $('#p_address').show(); 
+                } else { 
+                    $('#p_address').hide(); 
+                }
+
                 if(zipcode.length === 0){
                     $('#p_zipcode').show(); 
                 } else { 
@@ -751,27 +762,24 @@
                     $('#p_mobile').hide(); 
                 }
 
-                if($('#province').val() == 0){
+                if(city == 0){
                     $('#p_other').show();
-                    if(others.length === 0){
-                        $('#p_other').show();
-                    } else {
-                        $('#p_other').hide();
-                    }
+                    $('#payment_method_1').css('display','none');
                 } else {
-                    $('#p_other').hide();
-                    if(barangay.length === 0){ 
-                        $('#p_barangay').show(); 
-                    } else { 
-                        $('#p_barangay').hide(); 
-                    }
-
-                    if(address.length === 0){ 
-                        $('#p_address').show(); 
-                    } else { 
-                        $('#p_address').hide(); 
-                    }
+                    $('#payment_method_1').css('display','block');
                 }
+
+                // if($('#province').val() == 0){
+                //     $('#p_other').show();
+                //     if(others.length === 0){
+                //         $('#p_other').show();
+                //     } else {
+                //         $('#p_other').hide();
+                //     }
+                // } else {
+                //     $('#p_other').hide();
+                    
+                // }
                 
                 // if(is_serviceable == 0){ 
                 //     $('#alert_province').show(); 

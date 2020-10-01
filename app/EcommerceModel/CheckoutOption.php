@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CheckoutOption extends Model
 {
     public $table = "ecommerce_checkout_options";
-    protected $fillable = ['delivery_rate','service_fee','minimum_purchase','allowed_days','allowed_time_from','allowed_time_to','reminder','is_active','user_id'];
+    protected $fillable = ['delivery_rate','service_fee','minimum_purchase','maximum_purchase','allowed_days','allowed_time_from','allowed_time_to','reminder','is_active','user_id','within_metro_manila','outside_metro_manila'];
 
     public static function check_availability($id)
     {

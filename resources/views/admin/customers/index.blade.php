@@ -43,7 +43,7 @@
                                                 <label class="custom-control-label" for="orderBy1">{{__('common.date_modified')}}</label>
                                             </div>
                                             <div class="custom-control custom-radio">
-                                                <input type="radio" id="orderBy2" name="orderBy" class="custom-control-input" value="name" @if ($filter->orderBy == 'name') checked @endif>
+                                                <input type="radio" id="orderBy2" name="orderBy" class="custom-control-input" value="firstname" @if ($filter->orderBy == 'firstname') checked @endif>
                                                 <label class="custom-control-label" for="orderBy2">{{__('common.name')}}</label>
                                             </div>
                                         </div>

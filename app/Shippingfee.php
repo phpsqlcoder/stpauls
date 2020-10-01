@@ -16,7 +16,7 @@ class Shippingfee extends Model
 
     public function weights()
     {
-        return $this->hasMany('\App\ShippingfeeWeight', 'shippingfee_id');
+        return $this->hasMany('\App\ShippingfeeWeight', 'shippingfee_id')->orderBy('weight','asc');
     }
 
     public function locations()

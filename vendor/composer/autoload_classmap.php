@@ -107,6 +107,7 @@ return array(
     'App\\Http\\Requests\\UserRequest' => $baseDir . '/app/Http/Requests/UserRequest.php',
     'App\\InventoryReceiverDetail' => $baseDir . '/app/inventoryReceiverDetail.php',
     'App\\InventoryReceiverHeader' => $baseDir . '/app/inventoryReceiverHeader.php',
+    'App\\LocalShippingRate' => $baseDir . '/app/LocalShippingRate.php',
     'App\\Logs' => $baseDir . '/app/Logs.php',
     'App\\Mail\\AddNewUserMail' => $baseDir . '/app/Mail/AddNewUserMail.php',
     'App\\Mail\\ContributorAddPageMail' => $baseDir . '/app/Mail/ContributorAddPageMail.php',

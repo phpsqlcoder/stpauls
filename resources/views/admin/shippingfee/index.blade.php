@@ -15,10 +15,10 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-style1 mg-b-5">
                         <li class="breadcrumb-item" aria-current="page">CMS</li>
-                        <li class="breadcrumb-item active" aria-current="page">Zones</li>
+                        <li class="breadcrumb-item active" aria-current="page">Shipping Rates</li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Manage Zones</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Manage Int'l Rates</h4>
             </div>
         </div>
 
@@ -86,7 +86,7 @@
                         </div>
                         <div class="mg-t-10">
                          
-                                <a class="btn btn-primary btn-sm" href="#" onclick="$('#new-zone-modal').modal('show');">Create New Zone</a>
+                                <a class="btn btn-primary btn-sm" href="#" onclick="$('#new-zone-modal').modal('show');">Create New Int'l Rate</a>
                            
                         </div>
                     </div>
@@ -103,21 +103,43 @@
                         <table class="table mg-b-0 table-light table-hover" style="width:100%;">
                             <thead>
                             <tr>
-                                <th scope="col" width="30%">Zone</th>
-                                <th scope="col">Total Locations</th>                                
-                                <th scope="col">Options</th>
+                                <th width="5%">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="checkbox_all">
+                                        <label class="custom-control-label" for="checkbox_all"></label>
+                                    </div>
+                                </th>
+                                <th scope="col" width="50%">Zone</th>
+                                <th scope="col" width="35%">Total Locations</th>                                
+                                <th width="10%">Options</th>
                             </tr>
                             </thead>
                             <tbody>
                             @forelse($shippingfees as $shippingfee)
-                                <tr>
+                                <tr id="row{{$shippingfee->id}}">
+                                    <th>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input cb" id="cb{{ $shippingfee->id }}">
+                                            <label class="custom-control-label" for="cb{{ $shippingfee->id }}"></label>
+                                        </div>
+                                    </th>
                                     <td>
                                         <strong> {{$shippingfee->name}}</strong>
                                     </td>
-                                    <td style="text-align: center"><span class="badge badge-primary">{{$shippingfee->locations->count()}}</span></td>
+                                    <td><span class="badge badge-primary">{{$shippingfee->locations->count()}}</span></td>
                                     <td style="text-align: center">
-                                        <nav class="nav table-options">                                            
-                                            <a class="nav-link" href="{{ route('shippingfee.manage', $shippingfee->id) }}" title="View shippingfee"><i data-feather="settings"></i></a>
+                                        <nav class="nav table-options">
+                                            <a class="nav-link" href="{{ route('shippingfee.manage', $shippingfee->id) }}" title="Manage Rate"><i data-feather="edit"></i></a>
+
+                                            <a class="nav-link" href="{{ route('shippingfee.manage', $shippingfee->id) }}" title="Delete Rate"><i data-feather="trash"></i></a>
+
+                                            <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i data-feather="settings"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <a class="dropdown-item" href="" > Private</a>
+                                                <a class="dropdown-item" href=""> Publish</a>
+                                            </div>
                                         </nav>
                                     </td>
                                 </tr>

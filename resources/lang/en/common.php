@@ -21,12 +21,15 @@ return [
     'delete' => 'Delete',
     'approve' => 'Approve',
 
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+
     'name' => 'Name',
     'title' => 'Title',
     'status' => 'Status',
 
     'no_selected_title' => 'Error',
-    'no_selected' => 'Please select at least one (1) page.',
+    'no_selected' => 'Please select at least one (1) item.',
     'no_product_selected' => 'Please select at least one (1) product.',
 
     'delete_confirmation_title' => 'Delete Item',

@@ -68,7 +68,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-sm btn-primary btn-uppercase">Save Changes</button>
+                    <button type="submit" class="btn btn-sm btn-primary btn-uppercase">Update Branch</button>
                     <a href="{{ route('branch.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
                 </form>
             </div>

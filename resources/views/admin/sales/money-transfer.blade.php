@@ -59,13 +59,12 @@
                             <thead>
                                 <th>Order #</th>
                                 <th>Order Date</th>
-                                <th>Payment Date</th>
+                                <th>Payment Type</th>
                                 <th>Customer Name</th>
                                 <th>Total Amount</th>
                                 <th>Order Status</th>
                                 <th>Delivery Status</th>
                                 <th>Delivery Type</th>
-                                <th>Branch</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -79,12 +78,8 @@
                                 @endphp
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
-                                    <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
-                                    <td>
-                                        @if($sale->payment_status == 'PAID') 
-                                        {{ $payment->payment_date }} 
-                                        @endif
-                                    </td>
+                                    <td>{{ date('Y-m-d',strtotime($sale->created_at)) }}</td>
+                                    <td>{{ $sale->payment->payment_type }}</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
@@ -104,7 +99,6 @@
                                     </td>
                                     <td><a href="{{route('admin.report.delivery_report',$sale->id)}}" target="_blank">{{ $sale->delivery_status }}</a></td>
                                     <td>{{ $sale->delivery_type }}</td>
-                                    <td>{{ $sale->branch }}</td>
                                     <td>
                                         <nav class="nav table-options">
                                             <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Page"><i data-feather="eye"></i></a>
@@ -174,7 +168,6 @@
                     <div class="table-responsive">
                         <table class="table table-bordered payment_details">
                             <thead>
-                                <th>Reference #</th>
                                 <th>Date</th>
                                 <th>Type</th>
                                 <th>Attachment</th>

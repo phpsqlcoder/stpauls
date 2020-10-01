@@ -3,26 +3,30 @@
 namespace App\Http\Controllers\EcommerceControllers;
 
 
-use App\EcommerceModel\Cart;
-use App\EcommerceModel\SalesDetail;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-use App\EcommerceModel\SalesHeader;
-use App\Page;
-use Auth;
-use App\Deliverablecities;
+use Illuminate\Http\Request;
 
-use App\User;
+
 use App\EcommerceModel\CheckoutOption;
-use App\EcommerceModel\Branch;
-use App\Provinces;
-
-use App\StPaulModel\LoyalCustomer;
-use App\StPaulModel\Discount;
-use App\Setting;
 use App\EcommerceModel\PaymentList;
+use App\EcommerceModel\SalesHeader;
+use App\EcommerceModel\SalesDetail;
+use App\StPaulModel\LoyalCustomer;
+use App\EcommerceModel\Branch;
+use App\StPaulModel\Discount;
+use App\EcommerceModel\Cart;
+use App\Deliverablecities;
+use App\Provinces;
+use App\Cities;
+use App\Setting;
+use App\User;
+use App\Page;
+
+use Auth;
+
+
 
 class CheckoutController extends Controller
 {
@@ -33,20 +37,18 @@ class CheckoutController extends Controller
         $page->name = 'Checkout';
         
         $customer  = User::find(Auth::id());
-        $user      = Auth::user();
 
-        $products      = Cart::where('user_id',Auth::id())->get();   
+        $provinces = Provinces::orderBy('province','asc')->get();
+        $cities    = Cities::orderBy('city','asc')->get();
+        $branches  = Branch::where('is_active',1)->get();
 
+
+        $products  = Cart::where('user_id',Auth::id())->get();   
         $amount = 0;
         foreach($products as $product){
             $amount += $product->price*$product->qty;
         }
 
-        $locations = Deliverablecities::where('status','PUBLISHED')->orderBy('city_name')->get();
-        $provinces = Deliverablecities::where('status','PUBLISHED')->distinct()->get(['province']);
-        $cities    = Deliverablecities::where('status','PUBLISHED')->orderBy('city_name','asc')->get();
-        $branches  = Branch::where('is_active',1)->get();
-        
 
         $cod = CheckoutOption::find(1); // cash on delivery details
         $stp = CheckoutOption::find(2); // store pick up details
@@ -78,7 +80,9 @@ class CheckoutController extends Controller
             return redirect()->route('product.front.list');
         }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','user','locations','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','settings','payment_method'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','settings','payment_method'));
+
+        // return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','user','locations','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','settings','payment_method'));
     }
 
     public function remove_product(Request $request)
