@@ -324,7 +324,7 @@
                     <!-- Ecommerce Tab -->
                     <div class="tab-pane fade @if(session()->has('tabname') && session('tabname') == 'ecommerce') show active @endif" id="ecommerce" role="tabpanel" aria-labelledby="ecommerce-tab">
                         <div class="col-lg-12 mg-t-15">
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <h4>Payment Options</h4>
                                 <div class="form-group">
                                     <div class="parsley-input">                                            
@@ -357,10 +357,8 @@
                                                         <td>{{ $bank->account_no }}</td>
                                                         <td>{{ $bank->branch }}</td>
                                                         <td class="text-right">
-                                                            @if($bank->is_active == 0)
-                                                                <a href="javascript:void(0)" onclick="edit_bank('{{$bank->id}}','{{$bank->name}}','{{$bank->account_no}}','{{$bank->branch}}')"><i class="fa fa-edit"></i></a>
-                                                                <a href="javascript:void(0)" onclick="delete_bank('{{$bank->id}}')"><i class="fa fa-trash"></i></a>
-                                                            @endif
+                                                            <a href="javascript:void(0)" onclick="edit_bank('{{$bank->id}}','{{$bank->name}}','{{$bank->account_no}}','{{$bank->branch}}')"><i class="fa fa-edit"></i></a>
+                                                            <a href="javascript:void(0)" onclick="delete_bank('{{$bank->id}}')"><i class="fa fa-trash"></i></a>
                                                         </td>
                                                     </tr>
                                                     @endforeach
@@ -400,11 +398,10 @@
                                                         <td>{{ $remittance->recipient }}</td>
                                                         <td><a href="{{ asset('storage/qrcodes/'.$remittance->id.'/'.$remittance->qrcode) }}" target="_blank">{{ $remittance->qrcode }}</a></td>
                                                         <td class="text-right">
-                                                            @if($remittance->is_active == 0)
-                                                                <a href="javascript:void(0)" onclick="edit_remittance('{{$remittance->id}}','{{$remittance->name}}','{{$remittance->qrcode}}','{{$remittance->account_no}}','{{$remittance->recipient}}')"><i class="fa fa-edit"></i></a>
-                                                                <a href="javascript:void(0)" onclick="delete_remittance('{{$remittance->id}}')"><i class="fa fa-trash"></i></a>
-                                                            @endif
+                                                            <a href="javascript:void(0)" onclick="edit_remittance('{{$remittance->id}}','{{$remittance->name}}','{{$remittance->qrcode}}','{{$remittance->account_no}}','{{$remittance->recipient}}')"><i class="fa fa-edit"></i></a>
+                                                            <a href="javascript:void(0)" onclick="delete_remittance('{{$remittance->id}}')"><i class="fa fa-trash"></i></a>
                                                         </td>
+                                                    </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -415,7 +412,9 @@
                                         <button type="button" onclick="add_remittance()" class="btn btn-xs btn-secondary">Add Remittance</button>
                                     </div>
                                 </form>
+                            </div>
 
+                            <div class="col-md-6">
                                 <h4>Checkout Options</h4>
                                 <div class="form-group">
                                     <div class="parsley-input">

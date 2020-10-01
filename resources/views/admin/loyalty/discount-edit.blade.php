@@ -42,13 +42,13 @@
 
                 <div class="form-group">
                     <label>Discount (%)*</label>
-                    <input required name="discount" id="discount" value="{{ old('discount',$discount->discount) }}" type="number" class="form-control @error('discount') is-invalid @enderror" min="1">
+                    <input required name="discount" id="discount" value="{{ old('discount',$discount->discount) }}" type="number" class="form-control @error('discount') is-invalid @enderror" min="1" max="100">
                     @hasError(['inputName' => 'discount'])
                     @endhasError
                 </div>
 
                 <div class="form-group">
-                    <label class="d-block">Visibility</label>
+                    <label class="d-block">Status</label>
                     <div class="custom-control custom-switch @error('visibility') is-invalid @enderror">
                         <input type="checkbox" class="custom-control-input" name="status" {{ ($discount->status == 'ACTIVE' ? "checked":"") }} id="customSwitch1">
                         <label class="custom-control-label" id="label_visibility" for="customSwitch1">{{ucwords(strtolower($discount->status))}}</label>
