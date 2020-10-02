@@ -43,14 +43,12 @@
 
                     <div class="form-group">
                         <label class="d-block">Province*</label>
-                        <select class="form-control @error('province') is-invalid @enderror" name="province" id="province" required>
+                        <select class="form-control" name="province" id="province" required>
                             <option value="">-- Select Province --</option>
                             @foreach($provinces as $province)
                                 <option value="{{$province->id}}">{{$province->province}}</option>
                             @endforeach
                         </select>
-                        @hasError(['inputName' => 'province'])
-                        @endhasError
                     </div>
 
                     <div class="form-group">

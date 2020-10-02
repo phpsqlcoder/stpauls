@@ -53,7 +53,18 @@
                     <select id='custom-headers' multiple='multiple' name="selected_locations[]">
                         @if($sp->is_international == 0)
                             @foreach($cities as $city)
-                                <option @if($sp->locations->contains('name',$city->city)) selected="selected" @endif value="{{ $city->city }}">{{ $city->city }}</option>
+                                @php
+                                    $unselected_location = \App\ShippingfeeLocations::where('shippingfee_id',$sp->id)->where('name',$city->city)->count();
+                                    $selected_location = \App\ShippingfeeLocations::where('name',$city->city)->count();
+                                @endphp
+
+                                @if($unselected_location == 0 && $selected_location == 0)
+                                    <option value="{{ $city->city }}">{{ $city->city }}</option>
+                                @endif
+
+                                @if($unselected_location == 1 && $selected_location == 1)
+                                    <option selected value="{{ $city->city }}">{{ $city->city }}</option>
+                                @endif
                             @endforeach
                         @else
                             @foreach(Setting::countries() as $country)                            
