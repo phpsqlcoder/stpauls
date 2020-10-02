@@ -1,0 +1,10 @@
+Web
+
+http://cms4.webfocusprod.wsiph2.com/stpaul/public/login
+
+Admin
+
+http://cms4.webfocusprod.wsiph2.com/stpaul/public/stpaul/login
+
+wsiprod.demo@gmail.com
+password

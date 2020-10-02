@@ -424,6 +424,7 @@ p {
   transition: -webkit-transform .3s ease-in-out;
   transition: transform .3s ease-in-out;
   transition: transform .3s ease-in-out, -webkit-transform .3s ease-in-out;
+  color: #b82e24;
 }
 
 .add-cart-alt1-btn {
@@ -1157,6 +1158,12 @@ p {
   margin: 0 !important;
   font-size: .75em !important;
   color: #555555;
+  text-overflow: ellipsis;
+  min-height: 70px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .product-card:hover {
@@ -3553,6 +3560,23 @@ p {
   color: #b81600;
 }
 
+.out-of-stock {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 1em;
+  font-weight: 600;
+  background: transparent;
+  text-transform: uppercase;
+  color: #b82e24;
+  margin-top: 10px;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  padding: 20px;
+}
+
+.out-of-stock:hover {
+  color: #b82e24;
+}
+
 @font-face {
   font-family: "FontAwesome";
   src: url("../plugins/font-awesome/fonts/fontawesome-webfont.eot?v=4.6.3");
@@ -4005,7 +4029,7 @@ p {
     margin-left: 0px;
   }
   .mb-xs-4 {
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 0.5rem !important;
   }
 }
 
@@ -4053,6 +4077,9 @@ p {
   }
   .product-wrap .product-detail .product-btn .product-wishlist svg {
     width: 40px;
+  }
+  .add-cart-btn {
+    font-size: .85rem !important;
   }
 }
 /*# sourceMappingURL=style.css.map */
