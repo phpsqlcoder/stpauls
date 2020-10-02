@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ShippingFee;
 
+use Illuminate\Support\Facades\Validator;
 use App\Helpers\ListingHelper;
 use App\Helpers\ModelHelper;
 use App\Shippingfee;
@@ -10,10 +11,12 @@ use App\ShippingfeeWeight;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
+use App\Cities;
 
 class ShippingfeeController extends Controller
 {
     private $searchFields = ['name'];
+    private $localSearchFields = [ 'name' ];
     public function index()
     {
         $listing = new ListingHelper();
@@ -36,7 +39,7 @@ class ShippingfeeController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.shippingfee.create');
     }
 
     /**
@@ -47,22 +50,30 @@ class ShippingfeeController extends Controller
      */
     public function store(Request $request)
     {
-        $save = Shippingfee::create([
-            'name' => $request->zone,
-            'user_id' => Auth::id(),
-            'is_international' => (isset($request->is_international)) ? 1 : 0,
-            'is_outside_manila' => (isset($request->is_outside_manila)) ? 1 : 0
+        Validator::make($request->all(), [
+            'name' => 'required|max:150|unique:shippingfees,name',
+            'rate' => 'required',
+            'type' => 'required'
+        ])->validate();
+
+        Shippingfee::create([
+            'name' => $request->name,
+            'rate' => $request->rate,
+            'is_international' => $request->type,
+            'is_outside_manila' => (isset($request->area) ? 0 : 1),
+            'user_id' => Auth::id()
         ]);
         
-        return back()->with('success','Successfully added new zone');
+        return redirect(route('shippingfee.index'))->with('success','Shipping rate has been added.');
     }
 
     public function manage($id)
     {
         $sp      = Shippingfee::findOrFail($id);
         $weights = $sp->weights()->paginate(10);
+        $cities  = Cities::orderBy('city','asc')->get();
 
-        return view('admin.shippingfee.manage',compact('sp','weights'));
+        return view('admin.shippingfee.manage',compact('sp','weights','cities'));
     }
 
     public function location_store(Request $request)
@@ -177,7 +188,6 @@ class ShippingfeeController extends Controller
             fclose($handle);
         }
         
-
         return back()->with('success','Successfully uploaded new rates');
     }
 
@@ -220,5 +230,24 @@ class ShippingfeeController extends Controller
     public function destroy(Shippingfee $shippingfee)
     {
         //
+    }
+
+    public function single_delete(Request $request)
+    {
+        Shippingfee::findOrFail($request->rates)->delete();
+
+        return back()->with('success', 'Shipping fee has been deleted.');
+    }
+
+    public function multiple_delete(Request $request)
+    {
+        $string = rtrim($request->rates, '|');
+        $rates = explode("|",$string);
+
+        foreach($rates as $rate){
+            Shippingfee::findOrFail($rate)->delete();
+        }
+
+        return back()->with('success', 'Selected shipping fee has been deleted');
     }
 }

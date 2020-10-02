@@ -18,7 +18,7 @@
                         <li class="breadcrumb-item active" aria-current="page">Shipping Rates</li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Manage Int'l Rates</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Manage Shipping Rates</h4>
             </div>
         </div>
 
@@ -74,7 +74,19 @@
                                     </form>
                                 </div>
                             </div>
+                            <div class="list-search d-inline">
+                                <div class="dropdown d-inline mg-r-10">
+                                    <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_rates()">{{__('common.delete')}}</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        
 
                         <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
                             <form class="form-inline" id="searchForm">
@@ -84,10 +96,8 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="mg-t-10">
-                         
-                                <a class="btn btn-primary btn-sm" href="#" onclick="$('#new-zone-modal').modal('show');">Create New Int'l Rate</a>
-                           
+                        <div class="mg-t-7">
+                            <a class="btn btn-primary btn-sm" href="{{ route('shippingfee.create') }}">Create Shipping Rate</a>
                         </div>
                     </div>
                 </div>
@@ -109,8 +119,10 @@
                                         <label class="custom-control-label" for="checkbox_all"></label>
                                     </div>
                                 </th>
-                                <th scope="col" width="50%">Zone</th>
-                                <th scope="col" width="35%">Total Locations</th>                                
+                                <th scope="col" width="40%">Zone</th>
+                                <th scope="col" width="15">Type</th>
+                                <th scope="col" width="20">Area</th>
+                                <th scope="col" width="10%">Total Locations</th>                                
                                 <th width="10%">Options</th>
                             </tr>
                             </thead>
@@ -126,20 +138,26 @@
                                     <td>
                                         <strong> {{$shippingfee->name}}</strong>
                                     </td>
+                                    <td>
+                                        @if($shippingfee->is_international == 1)
+                                            International
+                                        @else
+                                            Local
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($shippingfee->is_outside_manila == 0)
+                                            Metro Manila
+                                        @else
+                                            Outside Metro Manila
+                                        @endif
+                                    </td>
                                     <td><span class="badge badge-primary">{{$shippingfee->locations->count()}}</span></td>
-                                    <td style="text-align: center">
+                                    <td>
                                         <nav class="nav table-options">
-                                            <a class="nav-link" href="{{ route('shippingfee.manage', $shippingfee->id) }}" title="Manage Rate"><i data-feather="edit"></i></a>
+                                            <a class="nav-link" href="{{ route('shippingfee.manage', $shippingfee->id) }}" title="Manage Rate"><i data-feather="settings"></i></a>
 
-                                            <a class="nav-link" href="{{ route('shippingfee.manage', $shippingfee->id) }}" title="Delete Rate"><i data-feather="trash"></i></a>
-
-                                            <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i data-feather="settings"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="" > Private</a>
-                                                <a class="dropdown-item" href=""> Publish</a>
-                                            </div>
+                                            <a class="nav-link" href="javascript:void(0)" onclick="delete_one_rate('{{$shippingfee->id}}');" title="Delete Rate"><i data-feather="trash"></i></a>
                                         </nav>
                                     </td>
                                 </tr>
@@ -176,41 +194,67 @@
 
         </div>
     </div>
-    <div class="modal effect-scale" id="new-zone-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+    <form action="" id="posting_form"  method="post" style="display: none;">
+        @csrf
+        <input type="text" id="rates" name="rates">
+    </form>
+
+    <div class="modal effect-scale" id="prompt-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Create New Zone</h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Confirmation</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{route('shippingfee.store')}}" method="post">
-                    @csrf                    
-                    <div class="modal-body">
-                        <p>Enter zone name</p>
-                        <table width="80%">
-                            <tr>
-                                <td><input type="text" class="form-control" name="zone"></td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" name="is_international"> Zone is International</td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" name="is_outside_manila"> Zone is Outside Manila</td>
-                            </tr>
-                        </table>
-                        
-                    <input name="location_after_submit" id="location_after_submit" type="hidden" value="shippingfee.store">
-                                                
-                        
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-sm btn-info">Save</button>
-                        <a href="#" onclick="$('#location_after_submit').val('shippingfee.manage')" class="btn btn-sm btn-success">Save & Manage</a>
-                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </form>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this rate?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" id="btnDelete">Yes, Delete</button> 
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal effect-scale" id="prompt-multiple-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{{__('common.delete_mutiple_confirmation_title')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{__('common.delete_mutiple_confirmation')}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" id="btnDeleteMultiple">Yes, Delete</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal effect-scale" id="prompt-no-selected" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{{__('common.no_selected_title')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>{{__('common.no_selected')}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -239,11 +283,41 @@
 
 @section('customjs')
     <script>
-        // $(document).on('click','.delete_shippingfee', function(){
-        //     $('#modalshippingfeeDelete').show();
 
-        //     $('#shippingfee_id').val($(this).data('shippingfee_id'));
-        // });
+        function post_form(url,rates){
+            $('#posting_form').attr('action',url);
+            $('#rates').val(rates);
+            $('#posting_form').submit();
+        }
+
+        function delete_one_rate(id){
+            $('#prompt-delete').modal('show');
+            $('#btnDelete').on('click', function() {
+                post_form("{{route('shippingfee.single.delete')}}",id);
+            });
+        }
+
+        function delete_rates(){
+            var counter = 0;
+            var selected_rates = '';
+            $(".cb:checked").each(function(){
+                counter++;
+                fid = $(this).attr('id');
+                selected_rates += fid.substring(2, fid.length)+'|';
+            });
+
+            if(parseInt(counter) < 1){
+                $('#prompt-no-selected').modal('show');
+                return false;
+            }
+            else{
+                $('#prompt-multiple-delete').modal('show');
+                $('#btnDeleteMultiple').on('click', function() {
+                    post_form("{{route('shippingfee.multiple.delete')}}",selected_rates);
+                });
+            }
+        }
+
 
         $(document).on('click','.deactivate_shippingfee', function(){
             $('#modalshippingfeeDeactivate').show();

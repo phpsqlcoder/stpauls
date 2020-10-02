@@ -36,10 +36,21 @@
                 </div>
                 <div class="form-group">
                     <select id='custom-headers' multiple='multiple' name="selected_countries[]">
-                        @foreach(Setting::countries() as $country)                            
-                            <option value="{{$country}}" @if($sp->locations->contains('name',$country)) selected="selected" @endif>{{$country}}</option>
-                        @endforeach
-
+                        @if($sp->is_international == 0)
+                            @foreach($cities as $city)
+                                @if($sp->is_outside_manila == 0)
+                                    @if($city->province == 49)
+                                        <option @if($sp->locations->contains('name',$city->city)) selected="selected" @endif value="{{ $city->city }}">{{ $city->city }}</option>
+                                    @endif
+                                @else
+                                    <option @if($sp->locations->contains('name',$city->city)) selected="selected" @endif value="{{ $city->city }}">{{ $city->city }}</option>
+                                @endif
+                            @endforeach
+                        @else
+                            @foreach(Setting::countries() as $country)                            
+                                <option value="{{$country}}" @if($sp->locations->contains('name',$country)) selected="selected" @endif>{{$country}}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>                
                 <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Update Rate</button>

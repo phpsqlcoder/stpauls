@@ -291,6 +291,10 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
         //Shipping Fees
             Route::resource('/admin/shippingfee', 'ShippingFee\ShippingfeeController');
+
+            Route::post('/shippingfee-single-delete', 'ShippingFee\ShippingfeeController@single_delete')->name('shippingfee.single.delete');
+            Route::post('/shippingfee-multiple-delete','ShippingFee\ShippingfeeController@multiple_delete')->name('shippingfee.multiple.delete');
+
             Route::get('/admin/shippingfee-manage/{id}', 'ShippingFee\ShippingfeeController@manage')->name('shippingfee.manage');
             Route::post('/admin/shippingfee-location/store', 'ShippingFee\ShippingfeeController@location_store')->name('shippingfee_location.store');
             Route::post('/admin/shippingfee-weight/store', 'ShippingFee\ShippingfeeController@weight_store')->name('shippingfee_weight.store');
