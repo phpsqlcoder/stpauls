@@ -251,7 +251,7 @@ class CartController extends Controller
 
         $delivery_type = CheckoutOption::find($request->shipOption);
 
-        if($request->province == 0){
+        if($request->city == 0){
             $address = $request->other_address;
         } else {
             $data_city = Cities::find($request->city);
@@ -260,8 +260,8 @@ class CartController extends Controller
             $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province.', '.$request->zipcode;
         }
 
-        $pickupdate = $request->input('pickup_date_'.$request->shipOption);
-        $pickuptime = $request->input('pickup_time_'.$request->shipOption);
+        $pickupdate = $request->input('pickup_date_2');
+        $pickuptime = $request->input('pickup_time_2');
 
         $salesHeader = SalesHeader::create([
             'order_number' => $requestId,
@@ -275,7 +275,7 @@ class CartController extends Controller
             'delivery_courier' => '',
             'delivery_type' => $delivery_type->name,
             'delivery_fee_amount' => $request->deliveryfee,
-            'delivery_status' => ($request->shipOption == 1 && $request->shipOption == 2) ? 'Waiting for Approval' : 'Waiting for Payment',
+            'delivery_status' => ($request->shipOption == 1 || $request->shipOption == 2) ? 'Waiting for Approval' : 'Waiting for Payment',
             'gross_amount' => $request->totalDue,
             'tax_amount' => 0,
             'net_amount' => $request->totalDue,
@@ -290,7 +290,8 @@ class CartController extends Controller
             'pickup_date' => ($request->shipOption <= 2) ? $pickupdate : NULL,
             'pickup_time' => ($request->shipOption <= 2) ? $pickuptime : NULL,
             'service_fee' => $request->servicefee,
-            'is_approve' => 0
+            'is_approve' => 0,
+            'is_other' => ($request->city == 0) ? 1 : 0
         ]);
 
         $data = $request->all();

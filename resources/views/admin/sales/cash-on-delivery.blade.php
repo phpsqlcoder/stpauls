@@ -79,7 +79,7 @@
                                 @endphp
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
-                                    <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
+                                    <td>{{ date('Y-m-d',strtotime($sale->created_at)) }}</td>
                                     <td>{{ date('Y-m-d h:i A',strtotime($date_needed)) }}</td>
                                     <td>@if($sale->payment_status == 'PAID') {{$payment->payment_date}} @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
@@ -95,29 +95,23 @@
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
                                         <nav class="nav table-options">
-                                            @if($sale->status != 'CANCELLED')
-                                            <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Transaction"><i data-feather="eye"></i></a>
-                                            @endif
                                             
+                                            <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Transaction"><i data-feather="eye"></i></a>
+
                                             @if($sale->status != 'CANCELLED')
+                                                @if($sale->is_approve == 1)
                                                 <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <i data-feather="settings"></i>
                                                 </a>
+                                                @endif
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    @if($sale->is_approve == 0)
-
-                                                    <a class="dropdown-item" href="javascript:;" onclick="order_response('{{$sale->id}}','{{$sale->order_number}}','APPROVE');">Approve Order</a>
-
-                                                    <a class="dropdown-item" href="javascript:;" onclick="order_response('{{$sale->id}}','{{$sale->order_number}}','REJECT');">Reject Order</a>
-                                                    @endif
-
                                                     @if($sale->delivery_status != 'Waiting for Approval')
                                                         @if($sale->payment_status == 'UNPAID')
                                                         <a class="dropdown-item" href="javascript:;" onclick="addPayment('{{$sale->id}}','{{$sale->net_amount}}');">Add Payment</a>
                                                         @endif
-                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
 
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history({{$sale->id}})" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
                                                     @endif
                                                     
                                                 </div>
@@ -229,8 +223,15 @@
 @section('customjs')
     <script>
 
-        function order_response(id,order,status){
+        function order_response(id,order,status,isother){
             if(status == 'APPROVE'){
+                if(isother == 1){
+                    $('#divshippingfee').css('display','block');
+                    $('#shippingfee').prop('required',true);
+                } else {
+                    $('#divshippingfee').css('display','none');
+                    $('#shippingfee').prop('required',false);
+                }
                 $('#id_approve').val(id);
                 $('#span_approve_order').html(order);
                 $('#prompt-approve-order').modal('show');

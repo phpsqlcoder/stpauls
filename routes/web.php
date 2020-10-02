@@ -58,6 +58,10 @@
 
         // Checkout
             Route::get('/checkout', 'EcommerceControllers\CheckoutController@checkout')->name('cart.front.checkout');
+
+            Route::get('/ajax-city-rates/{id}','EcommerceControllers\CheckoutController@ajax_city_rates')->name('ajax.get-city-rates');
+
+
             Route::get('/checkout/remove-product','EcommerceControllers\CheckoutController@remove_product')->name('checkout.remove-product');
             Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
         //

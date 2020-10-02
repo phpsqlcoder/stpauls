@@ -89,25 +89,25 @@
                                                 </select>
                                                 <p id="p_province" class="text-danger" style="display: none;"><small>The province field is required.</small></p>
                                             </div>
-                                            <div id="divaddress">
-                                                <div class="gap-10"></div>
-                                                <div class="form-group form-wrap">
-                                                    <p>City/Municipality *</p>
-                                                    <select required class="form-control form-input" name="city" id="city">
-                                                    <option value="">-- Select City --</option>
-                                                    @if($customer->details->province != '')
-                                                        @foreach($cities as $city)
-                                                            @if($customer->details->province == $city->province)
-                                                            <option @if($customer->details->city == $city->id) selected @endif value="{{ $city->id }}">{{ $city->city }}</option>
-                                                            @endif
-                                                        @endforeach
-                                                    @else
-                                                    <option value="">-- Select City --</option>
-                                                    @endif
-                                                    </select>
-                                                    <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
-                                                </div>
+                                            <div class="gap-10"></div>
+                                            <div class="form-group form-wrap">
+                                                <p>City/Municipality *</p>
+                                                <select required class="form-control form-input" name="city" id="city">
+                                                <option value="">-- Select City --</option>
+                                                @if($customer->details->province != '')
+                                                    @foreach($cities as $city)
+                                                        @if($customer->details->province == $city->province)
+                                                        <option @if($customer->details->city == $city->id) selected @endif value="{{ $city->id }}">{{ $city->city }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                <option value="">-- Select City --</option>
+                                                @endif
+                                                </select>
+                                                <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
+                                            </div>
 
+                                            <div id="divaddress" style="display: block;">
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>Address Line 1 *</p>
@@ -221,7 +221,7 @@
                                                     </div>
                                                 </div>
                                                 
-                                                @if($amount >= $sdd->minimum_purchase)
+                                                @if($amount <= $sdd->maximum_purchase)
                                                 <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
                                                 <label for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                 <div class="tab__content">
@@ -239,7 +239,21 @@
                                                 </div>
                                             </div>
 
-                                            <ul class="list-unstyled lh-7 pd-r-10">
+                                            <ul class="list-unstyled lh-7 pd-r-10" style="display: none;">
+                                                <li class="d-flex justify-content-between">
+                                                    <span>Total Puchase Amount</span>
+                                                    <span>
+                                                        <input type="text" id="total_purchased_amount" value="{{$amount}}">
+                                                    </span>
+                                                </li>
+
+                                                <li class="d-flex justify-content-between">
+                                                    <span>Total Weight (Kg)</span>
+                                                    <span>
+                                                        <input type="text" id="total_weight" value="{{number_format($weight,2,'.','')}}">
+                                                    </span>
+                                                </li>
+
                                                 <li class="d-flex justify-content-between">
                                                     <span>COD Within Metro Manila</span>
                                                     <span>
@@ -253,50 +267,44 @@
                                                     </span>
                                                 </li>
 
-
-                                                <li class="d-flex justify-content-between">
-                                                    <span>Is Serviceable</span>
-                                                    <span>
-                                                        <input type="text" id="is_serviceable" value="{{App\Deliverablecities::check_area($customer->details->city)}}">
-                                                    </span>
-                                                </li>
-                                                @if(\App\Deliverablecities::check_area($customer->details->city) == 1)
-                                                <li class="d-flex justify-content-between">
-                                                    <span>City Rate</span>
-                                                    <span>
-                                                        <input type="text" id="city_rate" value="{{ $customer->details->delivery_rate->rate }}">
-                                                    </span>
-                                                </li>
-                                                @endif
-
-                                                <li class="d-flex justify-content-between">
-                                                    <span>COD Min Order Allowed</span>
-                                                    <span>
-                                                        <input type="text" id="min_order_allowed" value="{{$settings->min_order_is_allowed}}">
-                                                    </span>
-                                                </li>
                                                 <li class="d-flex justify-content-between">
                                                     <span>COD Minimum Purchase</span>
                                                     <span>
                                                         <input type="text" id="cod_min_purchase" value="{{ $cod->minimum_purchase }}">
                                                     </span>
                                                 </li>
+
                                                 <li class="d-flex justify-content-between">
-                                                    <span>COD Delivery Rate</span>
+                                                    <span>COD Maximum Purchase</span>
                                                     <span>
-                                                        <input type="text" id="delivery_rate" value="{{ $cod->delivery_rate }}">
+                                                        <input type="text" id="cod_max_purchase" value="{{ $cod->maximum_purchase }}">
+                                                    </span>
+                                                </li>
+
+                                                <li class="d-flex justify-content-between">
+                                                    <span>COD Service Fee</span>
+                                                    <span>
+                                                        <input type="text" id="cod_service_fee" value="{{ $cod->service_fee }}">
+                                                    </span>
+                                                </li>
+
+                                                <li class="d-flex justify-content-between">
+                                                    <span>COD Location Fee</span>
+                                                    <span>
+                                                        <input type="text" id="cod_location_fee" >
+                                                    </span>
+                                                </li>
+
+                                                <li class="d-flex justify-content-between">
+                                                    <span>COD Weight Fee</span>
+                                                    <span>
+                                                        <input type="text" id="cod_weight_fee">
                                                     </span>
                                                 </li>
                                                 <li class="d-flex justify-content-between">
-                                                    <span>SDD Service Fee</span>
+                                                    <span>SDD Maximum Purchase</span>
                                                     <span>
-                                                        <input type="text" id="service_fee" value="{{ $sdd->service_fee }}">
-                                                    </span>
-                                                </li>
-                                                <li class="d-flex justify-content-between">
-                                                    <span>SDD Minimum Purchase</span>
-                                                    <span>
-                                                        <input type="text" id="sdd_min_purchase" value="{{ $sdd->minimum_purchase }}">
+                                                        <input type="text" id="sdd_max_purchase" value="{{ $sdd->maximum_purchase }}">
                                                     </span>
                                                 </li>
                                             </ul>
@@ -330,7 +338,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="w-25">Type</th>
-                                                <th class="w-30 d-none d-sm-table-cell">Description</th>
+                                                <th class="w-15">Weight (Kg)</th>
                                                 <th class="w-15 text-center">Qty</th>
                                                 <th class="w-15 text-right">Unit Price</th>
                                                 <th class="w-15 text-right">Amount</th>
@@ -347,7 +355,7 @@
                                             @endphp
                                             <tr id="cart_{{$product->id}}">
                                                 <td class="tx-nowrap text-danger">{{ $product->product->name }}</td>
-                                                <td class="d-none d-sm-table-cell tx-color-03">{{ str_limit(strip_tags($product->product->description), 80, $end ='...') }}</td>
+                                                <td>{{ number_format($product->product->weight,2) }}</td>
                                                 <td class="text-center">
                                                     <div class="quantity">
                                                         <input type="hidden" name="productid[]" value="{{ $product->product_id }}">
@@ -384,6 +392,13 @@
                                         <div class="gap-30"></div>
                                         <ul class="list-unstyled lh-7 pd-r-10">
                                             <li class="d-flex justify-content-between">
+                                                <span>Total Weight (Kg)</span>
+                                                <span>
+                                                    <input type="hidden" id="input_total_weight" value="{{$weight}}" name="total_weight">
+                                                    <span id="sub-total">{{ number_format($weight,2) }}</span>
+                                                </span>
+                                            </li>
+                                            <li class="d-flex justify-content-between">
                                                 <span>Sub-Total</span>
                                                 <span>
                                                     <input type="hidden" id="input_sub_total" value="{{$subTotal}}" name="subtotal">
@@ -391,10 +406,10 @@
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
-                                                <span>Delivery Fee</span>
+                                                <span>Shipping Fee</span>
                                                 <span>
-                                                    <input type="hidden" id="input_deliveryfee" name="deliveryfee">
-                                                    ₱ <span id="span_deliveryfee">0.00</span>
+                                                    <input type="hidden" id="input_shippingfee" name="deliveryfee">
+                                                    ₱ <span id="span_shippingfee">0.00</span>
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
@@ -405,10 +420,10 @@
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
-                                                <span>Loyalty Discount</span>
+                                                <span>Loyalty Discount (%)</span>
                                                 <span>
                                                     <input type="hidden" id="input_loyalty_discount" name="loyaltydiscount" value="{{$loyalty_discount}}">
-                                                    ₱ <span id="servicefee">{{ number_format($loyalty_discount,2) }}</span>
+                                                    <span id="servicefee">{{ number_format($loyalty_discount,0) }}</span>
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
@@ -554,14 +569,13 @@
 
                     var url = "{{ route('ajax.get-cities', ':provinceID') }}";
                     url = url.replace(':provinceID',provinceID);
-
                     $.ajax({
                         url: url,
                         type: "GET",
                         dataType: "json",
                         success:function(data) {
                             $('select[name="city"]').empty();
-                            $('select[name="city"]').append('<option selected disabled value="">-- Select City --</option>');
+                            $('select[name="city"]').append('<option value="">-- Select City --</option>');
                             $.each(data, function(key, value) {
                                 $('select[name="city"]').append('<option value="'+value.id+'">'+value.city+'</option>');
                             });
@@ -570,6 +584,38 @@
                     });
                 } else {
                     $('select[name="city"]').empty();
+                }
+            });
+
+            $('select[name="city"]').on('change', function() {
+                var cityID = $(this).val()+'|'+$('#total_weight').val();
+                var c = cityID.split('|');
+
+                if(c[0] != 0) {
+
+                    $('#divaddress').css('display','block');
+                    $('#div_other').css('display','none');
+
+                    var url = "{{ route('ajax.get-city-rates', ':cityID') }}";
+                    url = url.replace(':cityID',cityID);
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        dataType: "json",
+                        success:function(data) {
+                            // if(data.locationfee == 0 || data.weightfee == 0){
+
+                            // }
+                            $('#cod_location_fee').val(data.locationfee);
+                            $('#cod_weight_fee').val(data.weightfee);
+                        }
+                    });
+                } else {
+                    $('#divaddress').css('display','none');
+                    $('#div_other').css('display','block');
+
+                    $('#cod_location_fee').val(0);
+                    $('#cod_weight_fee').val(0);
                 }
             });
         });
@@ -656,24 +702,24 @@
             /* BEGIN BILLING VALIDATION */
                 var regex = '/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/';
                 var name     = $('#input_fname').val()+' '+$('#input_lname').val(), 
-                    fname    = $('#input_fname').val(),
-                    lname    = $('#input_lname').val(),
-                    email    = $('#input_email').val(), 
-                    mobile   = $('#input_mobile').val(), 
-                    address  = $('#input_address').val(), 
-                    barangay = $('#input_barangay').val(),
-                    city     = $('#city').val(),
-                    zipcode  = $('#input_zipcode').val(),
-                    others   = $('#other_address').val(),
-                    province = $('#province').val(),
-                    city     = $('#city').val();
+                fname    = $('#input_fname').val(),
+                lname    = $('#input_lname').val(),
+                email    = $('#input_email').val(), 
+                mobile   = $('#input_mobile').val(), 
+                address  = $('#input_address').val(), 
+                barangay = $('#input_barangay').val(),
+                zipcode  = $('#input_zipcode').val(),
+                others   = $('#other_address').val(),
+                province = $('#province').val(),
+                city     = $('#city').val();
 
-                if($('#province').val() == 0){
-                    if(others.length === 0 || fname.length === 0 || lname.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0){ 
+                if(city == 0){
+                    if(fname.length === 0 || lname.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0 || province === "" || others.length === 0){
                         $(this).removeClass('checkout-next-btn');
-                    } else { 
+                    } else {
                         if (!$("input[name='shipOption']:checked").val()) {
-                            swal({
+                           
+                           swal({
                                 title: '',
                                 text: "Please select a shipping method!",         
                             });
@@ -702,6 +748,7 @@
                         }
                     }
                 }
+                
 
                 if(fname.length === 0){
                     $('#p_fname').show(); 
@@ -769,7 +816,7 @@
                     $('#payment_method_1').css('display','block');
                 }
 
-                // if($('#province').val() == 0){
+                // if(city == 0){
                 //     $('#p_other').show();
                 //     if(others.length === 0){
                 //         $('#p_other').show();
@@ -795,26 +842,6 @@
                 var option = $('input[name="shipOption"]:checked').val();
 
                 if(option == 1){
-                    var cod_date = $('#pickup_date1').val(), cod_time = $('#pickup_time1').val();
-
-                    if(cod_date.length === 0){ 
-                        $('#cod_date').show(); 
-                    } else { 
-                        $('#cod_date').hide(); 
-                    }
-
-                    if(cod_time.length === 0){ 
-                        $('#cod_time').show(); 
-                    } else { 
-                        $('#cod_time').hide(); 
-                    }
-
-                    if(cod_date.length === 0 || cod_time === 0){
-                        $(this).removeClass('checkout-next-btn');
-                    } else {
-                        $(this).addClass('checkout-next-btn'); 
-                    }
-
                     $('#btnReviewOrder').removeClass('checkout-next-btn');
                     $('#spanReviewOrder').html('Place Order');
                 } else {
@@ -888,69 +915,54 @@
         });
 
         function shippingFee(option){
-            var isServiceable = $('#is_serviceable').val();
 
-            var subTotal = $('#input_sub_total').val();
-            var codMinPurchase = $('#cod_min_purchase').val();
+            //var subTotal = $('#input_sub_total').val();
+            var purchasedAmount  = $('#total_purchased_amount').val();
+            var codMaxPurchase   = $('#cod_max_purchase').val();
+            var sddMaxPurchase   = $('#sdd_max_purchase').val();
+            var codServiceFee    = $('#cod_service_fee').val();
             var deliveryRate = $('#delivery_rate').val();
 
-            if(option == 1){
+            var locationfee = $('#cod_location_fee').val();
+            var weightfee   = $('#cod_weight_fee').val();
+
+            if(option == 1 || option == 4){
+
+                if(option == 1){
+                    var maxPurchase = codMaxPurchase;
+                    $('#input_servicefee').val(codServiceFee);
+                    $('#span_servicefee').html(FormatAmount(codServiceFee,2));
+                } else {
+                    var maxPurchase = sddMaxPurchase;
+                    $('#input_servicefee').val(0);
+                    $('#span_servicefee').html('0.00');
+                }
+
+                if(parseFloat(purchasedAmount) <= parseFloat(maxPurchase)){
+                    $('#input_shippingfee').val(locationfee);
+                    $('#span_shippingfee').html(FormatAmount(locationfee,2));
+                } else {
+                    $('#input_shippingfee').val(weightfee);
+                    $('#span_shippingfee').html(FormatAmount(weightfee,2));
+                }
+            }
+
+            if(option == 3) {
                 $('#input_servicefee').val(0);
                 $('#span_servicefee').html('0.00');
-                //locationDeliveryRate();
 
-                if($('#province').val() == 0){
-                    $('#input_deliveryfee').val(0);
-                    $('#span_deliveryfee').html('0.00');
-                } else {
-                    $('#input_deliveryfee').val(deliveryRate);
-                    $('#span_deliveryfee').html(FormatAmount(deliveryRate,2));
-                }
+                $('#input_shippingfee').val(locationfee);
+                $('#span_shippingfee').html(FormatAmount(locationfee,2));
             }
 
             if(option == 2){
                 $('#input_servicefee').val(0);
                 $('#span_servicefee').html('0.00');
 
-                $('#input_deliveryfee').val(0);
-                $('#span_deliveryfee').html('0.00');
+                $('#input_shippingfee').val(0);
+                $('#span_shippingfee').html('0.00');
             }
 
-            // var sddMinPurchase = $('#sdd_min_purchase').val();
-            var servicefee = $('#service_fee').val();
-
-            // if(option == 4){
-            //     locationDeliveryRate();
-            //     $('#input_servicefee').val(servicefee);
-            //     $('#span_servicefee').html(FormatAmount(servicefee,2));
-            // }
-
-            if(option == 4){
-                $('#input_deliveryfee').val(0);
-                $('#span_deliveryfee').html('0.00');
-                
-                $('#input_servicefee').val(servicefee);
-                $('#span_servicefee').html(FormatAmount(servicefee,2));
-            }
-
-            if(option == 3){
-                locationDeliveryRate();
-                $('#input_servicefee').val(0);
-                $('#span_servicefee').html('0.00');
-            }
-        }
-
-        function locationDeliveryRate(){
-            if($('#province').val() == 0){
-                $('#input_deliveryfee').val(0);
-                 $('#span_deliveryfee').html('0.00');
-            } else {
-                var city = $('#city').val();
-                var rate = city.split('|');
-
-                $('#input_deliveryfee').val(rate[1]);
-                 $('#span_deliveryfee').html(FormatAmount(rate[1],2));
-            }
         }
 
         function updateAmount(id){
@@ -977,60 +989,24 @@
             $('#sub-total').html(FormatAmount(totalAmount,2));
             $('#input_sub_total').val(totalAmount.toFixed(2));
 
-            update_fee(totalAmount);
-        }
-
-        function update_fee(subtotal){
-            var option = $('input[name="shipOption"]:checked').val();
-
-            if(option == 1){
-                var codMinPurchase = $('#cod_min_purchase').val();
-                var deliveryRate = $('#delivery_rate').val();
-
-                $('#input_servicefee').val(0);
-                $('#span_servicefee').html('0.00');
-
-                var city = $('#city').val();
-                var rate = city.split('|');
-
-                if(parseFloat(subtotal) >= parseFloat(codMinPurchase)){
-                    $('#input_deliveryfee').val(deliveryRate);
-                    $('#span_deliveryfee').html(FormatAmount(deliveryRate,2));
-                } else {
-                    $('#input_deliveryfee').val(rate[1]);
-                    $('#span_deliveryfee').html(FormatAmount(rate[1],2));
-                }
-            }
-
-            // if(option == 4){
-            //     var sddMinPurchase = $('#sdd_min_purchase').val();
-            //     var servicefee = $('#service_fee').val();
-
-            //     $('#input_deliveryfee').val(0);
-            //     $('#span_deliveryfee').html('0.00');
-
-            //     if(parseFloat(subtotal) >= parseFloat(sddMinPurchase)){
-            //         $('#input_servicefee').val(0);
-            //         $('#span_servicefee').html('0.00');
-            //     } else {
-            //         $('#input_servicefee').val(servicefee);
-            //         $('#span_servicefee').html(FormatAmount(servicefee,2));
-            //     }
-            // }
-
             totalDue();
         }
 
         function totalDue(){
             var subtotal    = $('#input_sub_total').val();
-            var deliveryfee = $('#input_deliveryfee').val();
+            var deliveryfee = $('#input_shippingfee').val();
             var servicefee  = $('#input_servicefee').val();
             var discount    = $('#input_loyalty_discount').val();
 
-            var total = (parseFloat(subtotal)+parseFloat(deliveryfee)+parseFloat(servicefee)) - parseFloat(discount);
+            var total = (parseFloat(subtotal)+parseFloat(deliveryfee)+parseFloat(servicefee));
+            
+            var disc = (discount / 100).toFixed(2); //its convert 10 into 0.10
+            var mult = total * disc; // gives the value for subtract from main value
+            var grandTotal = total - mult;
 
-            $('#input_total_due').val(total);
-            $('#totalDue').html(FormatAmount(total,2));
+
+            $('#input_total_due').val(grandTotal);
+            $('#totalDue').html(FormatAmount(grandTotal,2));
         }
 
 

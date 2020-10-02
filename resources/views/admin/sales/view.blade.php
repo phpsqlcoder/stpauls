@@ -29,10 +29,9 @@
     <div class="row row-sm">
         <div class="col-sm-6 col-lg-8">
             <p class="mg-b-3">&nbsp;</p>
-            <p class="mg-b-3">&nbsp;</p>
             <p class="mg-b-3">http:://stpauls.ph/</p>
+            <p class="mg-b-3">&nbsp;</p>
         </div>
-        <!-- col -->
         <div class="col-sm-6 col-lg-4">
             <ul class="list-unstyled lh-7">
                 <li class="d-flex justify-content-between">
@@ -42,14 +41,24 @@
                 <li class="d-flex justify-content-between">
                     <span>Transaction Number</span>
                     <span>{{$sales->order_number}}</span>
-                </li>                            
+                </li>               
                 <li class="d-flex justify-content-between">
                     <span>Payment Method</span>
-                    <span>{{$sales->payment->payment_type }}</span>
+                    <span>@if($sales->payment_method == 0) Cash @else {{$sales->payment->payment_type }} @endif</span>
                 </li>
+                <li class="d-flex justify-content-between">
+                    <span>Delivery Status</span>
+                    <span>{{ $sales->delivery_status }}</span>
+                </li>  
+                <li class="d-flex justify-content-between">
+                    <span>Payment Status</span>
+                    <span>{{ $sales->payment_status }}</span>
+                </li>  
             </ul>
         </div>
-        <!-- col -->
+        <div class="col-lg-12">
+            Remarks : {{ $sales->remarks }}
+        </div>
 
         <div class="table-responsive mg-t-20">
             <table class="table table-bordered">
@@ -67,7 +76,17 @@
                             {{ $sales->customer_contact_number }}
                         </td>
                         <td colspan="3">
-                            {{ $sales->customer_delivery_adress }}
+                            @if($sales->branch != '')
+                                Branch : {{ $sales->branch }}<br>
+                            @endif
+
+                            @if($sales->is_other == 1)
+                                Other Address : {{ $sales->customer_delivery_adress }}<br>
+                            @else
+                                {{ $sales->customer_delivery_adress }}<br>
+                            @endif
+
+                            Instruction : {{ $sales->other_instruction }}
                         </td>
                     </tr>
                 </tbody>
@@ -116,7 +135,7 @@
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right"><strong>Loyalty Discount</strong></td>
-                        <td class="text-right">{{ number_format($sales->discount,2) }}</td>
+                        <td class="text-right">{{ number_format($sales->discount_amount,0) }}</td>
                     </tr>
                     <tr>
                         <td colspan="3" class="text-right"><strong>Grand Total</strong></td>
@@ -124,44 +143,88 @@
                     </tr>
                 </tbody>
             </table>
+            @if($sales->is_approve == 0 && $sales->status != 'CANCELLED')
+            <button type="button" class="btn btn-sm btn-danger float-right mg-l-5" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','REJECT');">Reject</button>
+            <button type="button" class="btn btn-sm btn-primary float-right" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','APPROVE');">Approve</button>
+            @endif
         </div>
     </div>
 </div>
 
-<div class="modal effect-scale" id="prompt-cancel-product" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal effect-scale" id="prompt-approve-order" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">{{__('Cancel Product')}}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="editForm" method="POST" action="">
-                @csrf
-                @method('PUT')
-                <div class="modal-body">
-                    <input type="hidden" class="form-control" name="id" id="id">
-                    <input type="hidden" class="form-control" name="status" id="editStatus">
+        <form action="{{ route('cod-approve-order') }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Approve Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">  
+                    <input type="hidden" name="orderid" id="id_approve">
+                    <input type="hidden" name="status" value="APPROVE">
+                    <p>Are you sure you want to approve this order #: <strong><span id="span_approve_order"></span></strong>?</p>
+
+                    @if($sales->is_other == 1)
+                    <label>Shipping Fee*</label>
+                    <input type="number" name="shippingfee" class="form-control" min="1">
+                    <br>
+                    @endif
+
+                    <label>Remarks*</label>
+                    <textarea name="remarks" requried class="form-control" rows="5" placeholder="Please enter a remarks"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-sm btn-primary">Update</button>
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnDelete">Yes, Approve</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
 
-<form action="" id="posting_form" style="display:none;" method="post">
-    @csrf
-    <input type="text" id="pages" name="pages">
-    <input type="text" id="status" name="status">
-</form>
+<div class="modal effect-scale" id="prompt-reject-order" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form action="{{ route('cod-approve-order') }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Reject Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">  
+                    <input type="hidden" name="orderid" id="id_reject">
+                    <input type="hidden" name="status" value="REJECT">
+                    <p>Are you sure you want to reject this order #: <strong><span id="span_reject_order"></span></strong>?</p>
+                    <textarea name="remarks" requried class="form-control" rows="5" placeholder="Please enter a remarks"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-danger" id="btnDelete">Yes, Reject</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 @endsection
 
 @section('pagejs')
-
+    <script>
+        function order_response(id,order,status){
+            if(status == 'APPROVE'){
+                $('#id_approve').val(id);
+                $('#span_approve_order').html(order);
+                $('#prompt-approve-order').modal('show');
+            } else {
+                $('#id_reject').val(id);
+                $('#span_reject_order').html(order);
+                $('#prompt-reject-order').modal('show');
+            }
+        }
+    </script>
 @endsection
-

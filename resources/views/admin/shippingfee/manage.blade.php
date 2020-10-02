@@ -58,6 +58,10 @@
                                     $selected_location = \App\ShippingfeeLocations::where('name',$city->city)->count();
                                 @endphp
 
+                                @if($unselected_location == 0 && $selected_location == 1)
+                                    <option disabled value="{{ $city->city }}">{{ $city->city }}</option>
+                                @endif
+
                                 @if($unselected_location == 0 && $selected_location == 0)
                                     <option value="{{ $city->city }}">{{ $city->city }}</option>
                                 @endif

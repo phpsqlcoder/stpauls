@@ -124,9 +124,13 @@ class SalesController extends Controller
             if($request->status == 'APPROVE'){
 
                 $qry->update([
+                    'delivery_fee_amount' => ($qry->is_other == 1) ? $request->shippingfee : $qry->delivery_fee_amount,
+                    'net_amount' => ($qry->is_other == 1) ? $qry->net_amount+$request->shippingfee : $qry->net_amount,
+                    'gross_amount' => ($qry->is_other == 1) ? $qry->gross_amount+$request->shippingfee : $qry->gross_amount,
                     'status' => 'APPROVED',
                     'delivery_status' => 'Processing',
-                    'is_approve' => 1
+                    'is_approve' => 1,
+                    'remarks' => $request->remarks
                 ]);
 
                 $user->customer_send_order_approved_email();
@@ -136,7 +140,8 @@ class SalesController extends Controller
 
                 $qry->update([
                     'status' => 'CANCELLED',
-                    'delivery_status' => 'CANCELLED'
+                    'delivery_status' => 'CANCELLED',
+                    'remarks' => $request->remarks
                 ]);
 
                 $user->customer_send_order_rejected_email();

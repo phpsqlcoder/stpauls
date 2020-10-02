@@ -26,7 +26,9 @@ use App\Page;
 
 use Auth;
 
-
+use App\ShippingfeeLocations;
+use App\ShippingfeeWeight;
+use App\Shippingfee;
 
 class CheckoutController extends Controller
 {
@@ -45,8 +47,10 @@ class CheckoutController extends Controller
 
         $products  = Cart::where('user_id',Auth::id())->get();   
         $amount = 0;
+        $weight = 0;
         foreach($products as $product){
             $amount += $product->price*$product->qty;
+            $weight += $product->product->weight;
         }
 
 
@@ -58,11 +62,12 @@ class CheckoutController extends Controller
 
         ## Loyalty ##
         $qry_loyalty = LoyalCustomer::where('customer_id',Auth::id());
-        $data_loyalty = $qry_loyalty->first();
 
-        $settings = Setting::find(1);
+        
 
         if($qry_loyalty->exists()){
+            $data_loyalty = $qry_loyalty->first();
+
             if($data_loyalty->status == 'APPROVED'){
 
                 $discount = Discount::find($data_loyalty->discount_id);
@@ -74,15 +79,41 @@ class CheckoutController extends Controller
             $loyalty_discount = 0;
         }
         ## Loyalty ##
-        
-        
+    
         if ($products->count() == 0) {
             return redirect()->route('product.front.list');
         }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','settings','payment_method'));
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','weight','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','payment_method'));
 
         // return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','user','locations','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','settings','payment_method'));
+    }
+
+    public function ajax_city_rates($id)
+    {
+        $request = explode('|', $id);
+
+        $city = Cities::find($request[0]);
+
+        $qry = ShippingfeeLocations::where('name',$city->city);
+        if($qry->count() > 0){
+            $data = $qry->first();
+
+            $shippingfee = Shippingfee::find($data->shippingfee_id);
+            $weight_rate = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$request[1])->latest()->first();
+
+            $locationfee = $shippingfee->rate;
+            $weightfee = $weight_rate->rate;
+        } else {
+            $locationfee = 0;
+            $weightfee = 0;
+        }
+
+        return response()->json([
+            'locationfee' => $locationfee,
+            'weightfee' => $weightfee
+        ]);
     }
 
     public function remove_product(Request $request)

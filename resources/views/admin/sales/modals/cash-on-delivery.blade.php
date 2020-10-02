@@ -13,6 +13,15 @@
                     <input type="hidden" name="orderid" id="id_approve">
                     <input type="hidden" name="status" value="APPROVE">
                     <p>Are you sure you want to approve this order #: <strong><span id="span_approve_order"></span></strong>?</p>
+
+                    <div id="divshippingfee" style="display: none;">
+                        <label>Shipping Fee*</label>
+                        <input type="number" name="shippingfee" id="shippingfee" class="form-control" min="1">
+                    </div>
+                    
+                    <br>
+                    <label>Remarks*</label>
+                    <textarea name="remarks" requried class="form-control" rows="5" placeholder="Please enter a remarks"></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-sm btn-primary" id="btnDelete">Yes, Approve</button>
@@ -38,6 +47,7 @@
                     <input type="hidden" name="orderid" id="id_reject">
                     <input type="hidden" name="status" value="REJECT">
                     <p>Are you sure you want to reject this order #: <strong><span id="span_reject_order"></span></strong>?</p>
+                    <textarea name="remarks" requried class="form-control" rows="5" placeholder="Please enter a remarks"></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-sm btn-danger" id="btnDelete">Yes, Reject</button>
