@@ -724,7 +724,7 @@
 
 }).call(this);
 
-$(document).ready(function() {
+$(function() {
   $(".rd-navbar").RDNavbar({
     stickUpClone: false,
     stickUpOffset: 170
