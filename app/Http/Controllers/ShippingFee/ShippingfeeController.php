@@ -55,6 +55,7 @@ class ShippingfeeController extends Controller
     {
         Validator::make($request->all(), [
             'name' => 'required|max:150|unique:shippingfees,name',
+            'province' => 'unique:shippingfees,province',
             'rate' => 'required',
             'type' => 'required'
         ])->validate();
