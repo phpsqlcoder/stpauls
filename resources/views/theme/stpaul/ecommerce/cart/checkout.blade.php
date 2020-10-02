@@ -100,6 +100,7 @@
                                                         <option @if($customer->details->city == $city->id) selected @endif value="{{ $city->id }}">{{ $city->city }}</option>
                                                         @endif
                                                     @endforeach
+                                                    <option value="0">Others</option>
                                                 @else
                                                 <option value="">-- Select City --</option>
                                                 @endif
@@ -291,14 +292,14 @@
                                                 <li class="d-flex justify-content-between">
                                                     <span>COD Location Fee</span>
                                                     <span>
-                                                        <input type="text" id="cod_location_fee" >
+                                                        <input type="text" id="cod_location_fee" value="{{\App\ShippingfeeLocations::locationrate($customer->details->cities->city) }}">
                                                     </span>
                                                 </li>
 
                                                 <li class="d-flex justify-content-between">
                                                     <span>COD Weight Fee</span>
                                                     <span>
-                                                        <input type="text" id="cod_weight_fee">
+                                                        <input type="text" id="cod_weight_fee" value="{{\App\ShippingfeeLocations::weightrate($customer->details->cities->city,$weight) }}">
                                                     </span>
                                                 </li>
                                                 <li class="d-flex justify-content-between">
