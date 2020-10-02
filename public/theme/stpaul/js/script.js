@@ -24,7 +24,6 @@ $(function () {
         var href = link.attr("href");
         var target = link.attr("target");
 
-        console.log(href.indexOf("storage/products/"));
         if (target && target.indexOf("_blank") >= 0) {
             window.open(href, "_blank");
             return;
@@ -39,9 +38,6 @@ $(function () {
         }
         if (href.indexOf("tel:") == 0) {
             window.location = href;
-            return;
-        }
-        if (href.indexOf("images/") == 0) {
             return;
         }
         if (href.indexOf("storage/products/") > 0) {
