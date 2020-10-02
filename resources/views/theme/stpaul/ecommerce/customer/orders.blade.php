@@ -1,6 +1,8 @@
 @extends('theme.'.env('FRONTEND_TEMPLATE').'.main')
 
 @section('pagecss')
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/datatables/datatables.min.css') }}" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 @endsection
 
@@ -20,81 +22,80 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        <div class="table-responsive">
-                            <table id="salesTransaction" class="table table-md table-hover" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Order #</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Amount</th>
-                                        <th scope="col">Order Status</th>
-                                        <th scope="col">Delivery Status</th>
-                                        <th scope="col">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($sales as $sale)
-                                    <tr>
-                                        <td>{{ $sale->order_number }}</td>
-                                        <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
-                                        <td>{{ number_format($sale->gross_amount,2) }}</td>
-                                        <td class="text-uppercase">
-                                            @if($sale->status == 'CANCELLED')
-                                                CANCELLED
+                        <table id="salesTransaction" class="table table-md table-hover" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Order #</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Order Status</th>
+                                    <th scope="col">Delivery Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($sales as $sale)
+                                <tr>
+                                    <td>{{ $sale->order_number }}</td>
+                                    <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
+                                    <td>{{ number_format($sale->gross_amount,2) }}</td>
+                                    <td class="text-uppercase">
+                                        @if($sale->status == 'CANCELLED')
+                                            CANCELLED
+                                        @else
+                                            @if($sale->status == 'COMPLETED')
+                                                COMPLETED
                                             @else
-                                                @if($sale->status == 'COMPLETED')
-                                                    COMPLETED
+                                                @if($sale->payment_status == 'UNPAID')
+                                                    {{ $sale->status }}
                                                 @else
-                                                    @if($sale->payment_status == 'UNPAID')
-                                                        {{ $sale->status }}
-                                                    @else
-                                                        {{ $sale->payment_status }}
-                                                    @endif
+                                                    {{ $sale->payment_status }}
                                                 @endif
                                             @endif
-                                        </td>
-                                        <td class="text-uppercase">{{ $sale->delivery_status }}</td>
-                                        <td align="right">
-                                            @if($sale->status != 'CANCELLED')
+                                        @endif
+                                    </td>
+                                    <td class="text-uppercase">{{ $sale->delivery_status }}</td>
+                                    <td align="right">
+                                        @if($sale->status != 'CANCELLED')
 
-                                                <!-- Cash On Delivery -->
-                                                @if($sale->payment_method == 0)
-                                                    @if($sale->is_approve == 0)
+                                            <!-- Cash On Delivery -->
+                                            @if($sale->payment_method == 0)
+                                                @if($sale->is_approve == 0)
+                                                <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
+                                                    <span class="lnr lnr-cross mr-2"></span>
+                                                </a>
+                                                @endif
+                                            @endif
+
+                                            @php
+                                                $payment_status = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->count();
+                                            @endphp
+                                            <!-- Money Transfer -->
+                                            @if($sale->payment_method > 1)
+                                                @if($payment_status == 0)
+                                                    <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
+                                                        <span class="lnr lnr-inbox mr-2"></span>
+                                                    </a>
                                                     <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
                                                         <span class="lnr lnr-cross mr-2"></span>
-                                                    </a>
-                                                    @endif
+                                                    </a> 
                                                 @endif
-
-                                                @php
-                                                    $payment_status = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->count();
-                                                @endphp
-                                                <!-- Money Transfer -->
-                                                @if($sale->payment_method > 1)
-                                                    @if($payment_status == 0)
-                                                        <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
-                                                            <span class="lnr lnr-inbox mr-2"></span>
-                                                        </a>
-                                                        <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
-                                                            <span class="lnr lnr-cross mr-2"></span>
-                                                        </a> 
-                                                    @endif
-                                                @endif
-
                                             @endif
 
-                                            <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
-                                            <a href="#" title="View items" onclick="view_items('{{$sale->id}}','{{$sale->order_number}}','{{date('Y-m-d',strtotime($sale->created_at))}}','{{$sale->payment_status}}','{{$sale->delivery_type}}','{{$sale->branch}}')">
-                                                <span class="lnr lnr-eye"></span>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @empty
+                                        @endif
 
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                                        <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
+                                        <a href="#" title="View items" onclick="view_items('{{$sale->id}}','{{$sale->order_number}}','{{date('Y-m-d',strtotime($sale->created_at))}}','{{$sale->payment_status}}','{{$sale->delivery_type}}','{{$sale->branch}}')">
+                                            <span class="lnr lnr-eye"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                @empty
+
+                                @endforelse
+                            </tbody>
+                        </table>
+                        
                     </div>
                     {{ $sales->appends($_POST)->links() }}
                 </div>
@@ -233,10 +234,30 @@
 @endsection
 
 @section('pagejs')
+    <script src="{{ asset('theme/stpaul/plugins/datatables/datatables.min.js') }}"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 @endsection
 
 @section('customjs')
+    <script>
+        $(function () {
+            $('#salesTransaction').DataTable({
+                "responsive": true,
+                "columnDefs": [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: -1 }
+                ],
+                "order": [[0, 'desc']],
+                "language": {
+                    "paginate": {
+                        "previous": "&lsaquo;",
+                        "next": "&rsaquo;"
+                    }
+                }
+            });
+        });
+    </script>
     <script>
         var _URL = window.URL || window.webkitURL;
         $('#attachment').change(function () {

@@ -1724,6 +1724,7 @@ p {
 #home-partner img {
   width: 400px;
   margin: 20px 0;
+  width: 100%;
 }
 
 #home-payment {
@@ -2298,6 +2299,10 @@ p {
     stroke-width: 5;
     fill: #f8332a;
   }
+}
+
+.product-additional img {
+  width: 100%;
 }
 
 .product-additional .nav {
