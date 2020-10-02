@@ -32,19 +32,28 @@
                 @method('POST')
                 <input type="hidden" name="shippingfee_id" value="{{$sp->id}}">
                 <div class="form-group">
+                    <label>Name*</label>
                     <input type="text" class="form-control" name="name" value="{{$sp->name}}">
                 </div>
+
+                @if($sp->is_international == 0)
                 <div class="form-group">
-                    <select id='custom-headers' multiple='multiple' name="selected_countries[]">
+                    <label>Rate*</label>
+                    <input required type="text" class="form-control" name="rate" value="{{$sp->rate}}">
+                </div>
+                @endif
+
+                @php 
+                    if($sp->province > 0){
+                        $cities = \App\Cities::where('province',$sp->province)->orderBy('city','asc')->get();
+                    }
+                @endphp
+                <div class="form-group">
+                    <label>@if($sp->is_international == 0) Cities* @else Countries* @endif</label>
+                    <select id='custom-headers' multiple='multiple' name="selected_locations[]">
                         @if($sp->is_international == 0)
                             @foreach($cities as $city)
-                                @if($sp->is_outside_manila == 0)
-                                    @if($city->province == 49)
-                                        <option @if($sp->locations->contains('name',$city->city)) selected="selected" @endif value="{{ $city->city }}">{{ $city->city }}</option>
-                                    @endif
-                                @else
-                                    <option @if($sp->locations->contains('name',$city->city)) selected="selected" @endif value="{{ $city->city }}">{{ $city->city }}</option>
-                                @endif
+                                <option @if($sp->locations->contains('name',$city->city)) selected="selected" @endif value="{{ $city->city }}">{{ $city->city }}</option>
                             @endforeach
                         @else
                             @foreach(Setting::countries() as $country)                            

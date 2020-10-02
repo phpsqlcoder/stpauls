@@ -25,6 +25,16 @@
                     @csrf
                     @method('POST')
                     <div class="form-group">
+                        <label class="d-block">Shipping type*</label>
+                        <select required class="selectpicker mg-b-5 @error('type') is-invalid @enderror" name="type" id="type" data-style="btn btn-outline-light btn-md btn-block tx-left" title="-- Select Type --" data-width="100%">
+                            <option value="0">Local</option>
+                            <option value="1">International</option>
+                        </select>
+                        @hasError(['inputName' => 'type'])
+                        @endhasError
+                    </div>
+
+                    <div class="form-group">
                         <label class="d-block">Name*</label>
                         <input required type="text" name="name" id="name" value="{{ old('name')}}" class="form-control @error('name') is-invalid @enderror" maxlength="150">
                         @hasError(['inputName' => 'name'])
@@ -32,10 +42,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="d-block">Type*</label>
-                        <select required class="selectpicker mg-b-5 @error('type') is-invalid @enderror" name="type" id="type" data-style="btn btn-outline-light btn-md btn-block tx-left" title="-- Select Type --" data-width="100%">
-                            <option value="0">Local</option>
-                            <option value="1">International</option>
+                        <label class="d-block">Province*</label>
+                        <select class="form-control" name="province" id="province" required>
+                            <option value="">-- Select Province --</option>
+                            @foreach($provinces as $province)
+                                <option value="{{$province->id}}">{{$province->province}}</option>
+                            @endforeach
                         </select>
                         @hasError(['inputName' => 'type'])
                         @endhasError
@@ -46,16 +58,6 @@
                         <input required type="number" name="rate" id="rate" value="{{ old('rate','0.00')}}" step="0.01" class="form-control @error('rate') is-invalid @enderror" min="1">
                         @hasError(['inputName' => 'rate'])
                         @endhasError
-                    </div>
-
-                    <div class="form-group">
-                        <label class="d-block">Type</label>
-                        <div class="custom-control custom-switch @error('visibility') is-invalid @enderror">
-                            <input type="checkbox" class="custom-control-input" name="area" {{ (old("area") ? "checked":"") }} id="customSwitch1">
-                            <label class="custom-control-label" id="label_visibility" for="customSwitch1">
-                                {{ old('visibility') ? (old('visibility') == 'on') ? 'Within Metro Manila' : 'Outside Metro Manila' : 'Outside Metro Manila' }}
-                            </label>
-                        </div>
                     </div>
 
                     <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Rate</button>
@@ -82,19 +84,10 @@
 
             if(type == 1){
                 $("#rate").prop("readonly", true);
-                $("#customSwitch1").prop("disabled", true);
+                $("#province").prop("disabled", true);
             } else {
                 $("#rate").prop("readonly", false);
-                $("#customSwitch1").prop("disabled", false);
-            }
-        });
-
-        $("#customSwitch1").change(function() {
-            if(this.checked) {
-                $('#label_visibility').html('Within Metro Manila');
-            }
-            else{
-                $('#label_visibility').html('Outside Metro Manila');
+                $("#province").prop("disabled", false);
             }
         });
     </script>

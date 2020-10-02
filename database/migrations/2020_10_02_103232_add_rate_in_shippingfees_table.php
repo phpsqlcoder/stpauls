@@ -15,6 +15,7 @@ class AddRateInShippingfeesTable extends Migration
     {
         Schema::table('shippingfees', function (Blueprint $table) {
             $table->decimal('rate',16,2);
+            $table->integer('province')->nullable();
         });
     }
 

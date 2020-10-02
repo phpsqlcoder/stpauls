@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Shippingfee extends Model
 {
     protected $table = 'shippingfees';
-    protected $fillable = ['name', 'is_international', 'is_outside_manila', 'user_id', 'rate'];
+    protected $fillable = ['name', 'is_international', 'is_outside_manila', 'user_id', 'rate','province'];
 
     public function user()
     {

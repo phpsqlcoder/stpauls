@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
 use App\Cities;
+use App\Provinces;
 
 class ShippingfeeController extends Controller
 {
@@ -39,7 +40,9 @@ class ShippingfeeController extends Controller
      */
     public function create()
     {
-        return view('admin.shippingfee.create');
+        $provinces = Provinces::orderBy('province','asc')->get();
+
+        return view('admin.shippingfee.create',compact('provinces'));
     }
 
     /**
@@ -58,9 +61,10 @@ class ShippingfeeController extends Controller
 
         Shippingfee::create([
             'name' => $request->name,
-            'rate' => $request->rate,
             'is_international' => $request->type,
-            'is_outside_manila' => (isset($request->area) ? 0 : 1),
+            'province' => ($request->type == 1) ? 0 : $request->province,
+            'rate' => $request->rate,
+            'is_outside_manila' => ($request->province == 49) ? 0 : 1,
             'user_id' => Auth::id()
         ]);
         
@@ -71,9 +75,8 @@ class ShippingfeeController extends Controller
     {
         $sp      = Shippingfee::findOrFail($id);
         $weights = $sp->weights()->paginate(10);
-        $cities  = Cities::orderBy('city','asc')->get();
 
-        return view('admin.shippingfee.manage',compact('sp','weights','cities'));
+        return view('admin.shippingfee.manage',compact('sp','weights'));
     }
 
     public function location_store(Request $request)
@@ -91,7 +94,7 @@ class ShippingfeeController extends Controller
             }
 
             // save new locations
-            $selected_location = $data['selected_countries'];
+            $selected_location = $data['selected_locations'];
             foreach($selected_location as $key => $location){
                 if(!in_array($location,$arr_locations)){
 

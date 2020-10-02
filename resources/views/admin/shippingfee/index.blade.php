@@ -119,7 +119,7 @@
                                         <label class="custom-control-label" for="checkbox_all"></label>
                                     </div>
                                 </th>
-                                <th scope="col" width="40%">Zone</th>
+                                <th scope="col" width="40%">Name</th>
                                 <th scope="col" width="15">Type</th>
                                 <th scope="col" width="20">Area</th>
                                 <th scope="col" width="10%">Total Locations</th>                                
