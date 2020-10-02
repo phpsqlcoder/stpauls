@@ -88,7 +88,6 @@
     <script src="{{ asset('theme/stpaul/plugins/aos/dist/aos.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/flexmenu/modernizr.custom.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/flexmenu/flexmenu.min.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/js/script.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('header nav .rd-navbar-nav-wrap .rd-navbar-nav').flexMenu({
@@ -114,6 +113,7 @@
             }
         });
     </script>
+    <script src="{{ asset('theme/stpaul/js/script.js') }}"></script>
 
     @yield('pagejs')
 

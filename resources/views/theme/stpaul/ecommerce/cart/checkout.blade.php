@@ -172,7 +172,7 @@
                                             <input type="hidden" id="time_to1" value="{{ $cod->allowed_time_to }}">
                                             <input type="hidden" id="array_days1" value="{{ rtrim($cod_allowed_days,',') }}">
                                             
-                                            <div class="tab-wrap">
+                                            <div class="tab-wrap vertical">
                                                 @if($amount <= $cod->maximum_purchase)
                                                 <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
                                                 <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
@@ -357,13 +357,9 @@
                                                 <td class="tx-nowrap text-danger">{{ $product->product->name }}</td>
                                                 <td>{{ number_format($product->product->weight,2) }}</td>
                                                 <td class="text-center">
+                                                    <input type="hidden" name="productid[]" value="{{ $product->product_id }}">
                                                     <div class="quantity">
-                                                        <input type="hidden" name="productid[]" value="{{ $product->product_id }}">
                                                         <input type="number" name="qty[]" min="1" max="25" step="1" value="{{ $product->qty }}" data-inc="1" id="product_qty_{{$product->product_id}}" onchange="updateAmount('{{$product->product_id}}')">
-                                                        <div class="quantity-nav">
-                                                            <div class="quantity-button quantity-up">+</div>
-                                                            <div class="quantity-button quantity-down">-</div>
-                                                        </div>
                                                     </div>
                                                 </td>
                                                 <td class="text-right">₱ {{ number_format($product->price,2) }}

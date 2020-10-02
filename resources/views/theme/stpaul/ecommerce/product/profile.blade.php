@@ -2,16 +2,16 @@
 
 @section('pagecss')
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/ion.rangeslider/css/ion.rangeSlider.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/vanilla-zoom/vanilla-zoom.css') }}" />
+    {{-- <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/vanilla-zoom/vanilla-zoom.css') }}" /> --}}
     <link rel="stylesheet" href="{{ asset('theme/stpaul/css/better-rating.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/css/animate.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/slick/slick.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/slick/slick-theme.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/xZoom/src/xzoom.css') }}" />
 
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/example.css') }}" />
+    {{-- <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/example.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/pygments.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/easyzoom.css') }}" />
-
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/owl.carousel/owl.theme.default.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/easyzoom.css') }}" /> --}}
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
     <style>
@@ -105,12 +105,16 @@
                     <div class="product-wrap">
                         <div class="row">
                             <div class="col-lg-5">
-                                <div class="easyzoom easyzoom--adjacent easyzoom--with-thumbnails">
+                                {{-- <div class="easyzoom easyzoom--adjacent easyzoom--with-thumbnails">
                                     <a id="photo_source" href="{{ asset('storage/products/'.$product->photoPrimary) }}">
                                         <img id="display_product" src="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="" width="100%" height="100%" />
                                     </a>
+                                </div> --}}
+                                <div class="xzoom-container">
+                                    <img class="xzoom" id="xzoom-default" src="{{ asset('storage/products/'.$product->photoPrimary) }}"
+                                        xoriginal="{{ asset('storage/products/'.$product->photoPrimary) }}" />
                                 </div>
-
+{{-- 
                                 <ul class="thumbnails">
                                     @foreach($product->photos as $photo)
                                     <li>
@@ -118,7 +122,15 @@
                                         <input type="hidden" id="photo_path{{$photo->id}}" value="{{ asset('storage/products/'.$photo->path) }}">
                                     </li>
                                     @endforeach
-                                </ul>
+                                </ul> --}}
+                                <div id="product-gallery-slider" class="slick-slider">
+                                    <a href="{{ asset('storage/products/'.$product->photoPrimary) }}" class="xzoom-link"><img class="xzoom-gallery"
+                                            src="{{ asset('storage/products/'.$product->photoPrimary) }}" xpreview="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="{{$product->id}}"></a>
+                                    @foreach($product->photos as $photo)
+                                    <a href="{{ asset('storage/products/'.$photo->path) }}" class="xzoom-link"><img class="xzoom-gallery"
+                                            src="{{ asset('storage/products/'.$photo->path) }}" alt="{{$product->id}}"></a>
+                                    @endforeach
+                                </div>
                             </div>
                             <div class="col-lg-7">
                                 <form id="addToCart" data-source="addToCart" method="post" action="{{ route('product-buy-now') }}">
@@ -462,6 +474,9 @@
 
 
 @section('customjs')
+    <script src="{{ asset('theme/stpaul/plugins/xZoom/src/xzoom.js') }}"></script>
+    <script src="{{ asset('theme/stpaul/plugins/xZoom/src/hammer.js/jquery.hammer.min.js') }}"></script>
+
     <script>
         function changePhoto(id){
             var url = $('#photo_path'+id).val();

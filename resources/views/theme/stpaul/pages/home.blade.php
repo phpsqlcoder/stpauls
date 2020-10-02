@@ -59,7 +59,7 @@
                                             <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                         </button>
                                     @else
-                                        <button type="button" class="btn add-cart-btn addToCartButton">
+                                        <button type="button" class="btn out-of-stock">
                                             Out of Stock
                                         </button>
                                     @endif
@@ -90,7 +90,7 @@
                                             <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                         </button>
                                     @else
-                                        <button type="button" class="btn add-cart-btn addToCartButton">
+                                        <button type="button" class="btn out-of-stock">
                                             Out of Stock
                                         </button>
                                     @endif
@@ -122,7 +122,7 @@
                                                 <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                             </button>
                                         @else
-                                            <button type="button" class="btn add-cart-btn addToCartButton">
+                                            <button type="button" class="btn out-of-stock">
                                                 Out of Stock
                                             </button>
                                         @endif
@@ -183,7 +183,7 @@
                                                 <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                             </button>
                                         @else
-                                            <button type="button" class="btn add-cart-btn addToCartButton">
+                                            <button type="button" class="btn out-of-stock">
                                                 Out of Stock
                                             </button>
                                         @endif
@@ -233,7 +233,7 @@
                                             <img src="{{ asset('theme/stpaul/images/misc/cart.png') }}" alt=""> Add to cart
                                         </button>
                                     @else
-                                        <button type="button" class="btn add-cart-btn addToCartButton">
+                                        <button type="button" class="btn out-of-stock">
                                             Out of Stock
                                         </button>
                                     @endif

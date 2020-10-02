@@ -16,13 +16,14 @@
 
 // @description FadeOut to Next Page
 
-$(document).ready(function () {
+$(function () {
     $(document).on("click", "a", function (e) {
         e.preventDefault();
 
         var link = $(this);
         var href = link.attr("href");
         var target = link.attr("target");
+
         if (target && target.indexOf("_blank") >= 0) {
             window.open(href, "_blank");
             return;
@@ -37,6 +38,9 @@ $(document).ready(function () {
         }
         if (href.indexOf("tel:") == 0) {
             window.location = href;
+            return;
+        }
+        if (href.indexOf("storage/products/") > 0) {
             return;
         }
         if (!href || href[0] === "#") {
