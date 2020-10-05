@@ -88,8 +88,9 @@
     <script src="{{ asset('theme/stpaul/plugins/aos/dist/aos.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/flexmenu/modernizr.custom.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/flexmenu/flexmenu.min.js') }}"></script>
+    <script src="{{ asset('theme/stpaul/js/script.js') }}"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(function () {
             $('header nav .rd-navbar-nav-wrap .rd-navbar-nav').flexMenu({
                 linkTitle: "",
                 linkText: "More"
@@ -100,7 +101,7 @@
                 });
             }
         });
-        $(window).resize(function () {
+        $(window).on("resize", function () {
             if ($(window).width() <= 991) {
                 $('header nav .rd-navbar-nav-wrap .rd-navbar-nav').flexMenu({
                     undo: "true"
@@ -113,7 +114,6 @@
             }
         });
     </script>
-    <script src="{{ asset('theme/stpaul/js/script.js') }}"></script>
 
     @yield('pagejs')
 
