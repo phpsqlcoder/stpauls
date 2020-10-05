@@ -418,57 +418,6 @@
             from: 0,
             to: $('#product_price').val()
         });
-
-        // Instantiate EasyZoom instances
-        var $easyzoom = $('.easyzoom').easyZoom();
-        
-        $(document).ready(function(){
-            /** Custom Input number increment js **/
-            jQuery(".quantity").each(function() {
-                var spinner = jQuery(this),
-                    input = spinner.find('input[type="number"]'),
-                    btnUp = spinner.find(".quantity-up"),
-                    btnDown = spinner.find(".quantity-down"),
-                    min = input.attr("min"),
-                    max = input.attr("max"),
-                    valOfAmout = input.val(),
-                    newVal = 0;
-
-                btnUp.on("click", function() {
-                    var varholder = input.val();
-                    var oldValue = parseFloat(input.val());
-
-                    if (varholder === "") {
-                        var newVal = 1;
-                    } else {
-                        if (oldValue >= max) {
-                            var newVal = oldValue;
-                        } else {
-                            var newVal = oldValue + 1;
-                        }
-                    }
-                    spinner.find("input").val(newVal);
-                    spinner.find("input").trigger("change");
-                });
-
-                btnDown.on("click", function() {
-                    var varholder = input.val();
-                    var oldValue = parseFloat(input.val());
-
-                    if (varholder === "") {
-                        var newVal = 1;
-                    } else {
-                        if (oldValue <= min) {
-                            var newVal = oldValue;
-                        } else {
-                            var newVal = oldValue - 1;
-                        }
-                    }
-                    spinner.find("input").val(newVal);
-                    spinner.find("input").trigger("change");
-                });
-            });
-        });
     </script>
 @endsection
 
