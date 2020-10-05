@@ -9,9 +9,6 @@
         <!-- Home Main Body Area -->
         <section id="home-body">
             <div class="container">
-                {!! $page->contents !!}
-                <div class="gap-70"></div>
-
 
                 <!-- Our Products Navigation Tabs -->
                 <div class="category-nav-1">
@@ -224,7 +221,9 @@
                             <div class="product-card">
                                 <a href="{{ route('product.front.show',$product->details->slug)}}">
                                     <img src="{{ asset('storage/products/'.$product->details->photoPrimary) }}" alt="" />
-                                    <h3 class="product-price">Php {{ $product->details->DiscountedPrice }}</h3>
+                                    <h3 class="product-price">Php {{ $product->details->DiscountedPrice }}&nbsp;<small style="font-size: 15px;">{{ $product->discount }}% Off</small><br></h3>
+
+                                    <small style="text-decoration:line-through;">{{ number_format($product->details->price,2) }}</small>
                                 </a>
                                 <p class="product-title">{{ $product->details->name }}</p>
                                 <form>

@@ -328,7 +328,23 @@ class CartController extends Controller
         }
 
         Cart::where('user_id', Auth::id())->delete();
-        $this->check_loyalty($request->totalDue);
+
+        
+        $discountPurchaseAmount = 10000;
+        if($request->totalDue >= $discountPurchaseAmount){
+
+            $qry = SalesHeader::where('customer_id',Auth::id())->where('net_amount','>=',$discountPurchaseAmount)->count();
+
+            if($qry == 2){
+               LoyalCustomer::create([
+                    'customer_name' => auth()->user()->fullname,
+                    'customer_id' => Auth::id(),
+                    'total_purchase' => 1,
+                    'status' => 'PENDING',
+                    
+                ]); 
+            }
+        }
 
         if($request->payment_method == 1){
             $address_line1 = ($request->province == 0) ? '' : $request->address;
@@ -338,6 +354,7 @@ class CartController extends Controller
             $zipcode       = ($request->province == 0) ? '' : $request->zipcode;
             $order         = $request;
             $uniqID        = $salesHeader->order_number;
+            
             return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
         } else {
             return redirect(route('account-my-orders'))->with('success',' Order has been placed.');
@@ -346,139 +363,23 @@ class CartController extends Controller
     }
 
 
-    public function check_loyalty($amount)
+    public function check_loyalty($purchasedAmount)
     {
-        $discountBracket = 10000;
+        $discountPurchaseAmount = 10000;
 
-        if($amount >= $discountBracket){
-            $qry = LoyalCustomer::where('customer_id',Auth::id());
+        if($purchasedAmount >= $discountPurchaseAmount){
 
-            if($qry->exists()) {
-                $customer = $qry->first();
+            $qry = SalesHeader::where('customer_id',Auth::id())->where('net_amount','>=',$discountPurchaseAmount)->count();
 
-                $qry->update(['total_purchase' => ($customer->total_purchase+1) ]);
-            } else {
-                LoyalCustomer::create([
+            if($qry == 2){
+               LoyalCustomer::create([
+                    'customer_name' => auth()->user()->fullname,
                     'customer_id' => Auth::id(),
                     'total_purchase' => 1,
-                    'status' => 'PENDING'
-                ]);
-            }
-        }
-    }
-
-    public function receive_data_from_payment_gateway(Request $request)
-    {
-        $paymentResponse = (isset($_POST['paymentresponse'])) ? $_POST['paymentresponse'] : null;
-
-        if (empty($paymentResponse)) {
-            return false;
-        }
-        
-        $body = str_replace(" ", "+", $paymentResponse);
-
-        try {
-            $Decodebody = base64_decode($body);
-            $ServiceResponseWPF = simplexml_load_string($Decodebody, 'SimpleXMLElement'); // new \SimpleXMLElement($Decodebody);
-            $application = $ServiceResponseWPF->application;
-            $responseStatus = $ServiceResponseWPF->responseStatus;
-
-            $log = [
-                'result_return' => $paymentResponse,
-                'request_id' => $application->request_id,
-                'response_id' => $application->response_id,
-                'response_code' => $responseStatus->response_code,
-                'response_message' => $responseStatus->response_message,
-                'response_advise' => $responseStatus->response_advise,
-                'timestamp' => $application->timestamp,
-                'ptype' => $application->ptype,
-                'rebill_id' => $application->rebill_id,
-                'token_id' => (isset($application->token_id)) ? $application->token_id : '',
-                'token_info' => (isset($application->token_info)) ? $application->token_info : '',
-                'processor_response_id' => $responseStatus->processor_response_id,
-                'processor_response_authcode' => $responseStatus->processor_response_authcode,
-                'signature'  => $application->signature,
-            ];
-            $merchant = Setting::paynamics_merchant();
-            $cert = $merchant['key']; //merchantkey
-
-            $forSign = $application->merchantid . $application->request_id . $application->response_id . $responseStatus->response_code . $responseStatus->response_message . $responseStatus->
-                response_advise . $application->timestamp . $application->rebill_id . $cert;
-
-            $_sign = hash("sha512", $forSign);
-           
-            if ($_sign == $ServiceResponseWPF->application->signature) {
-
-                $sales = SalesHeader::where('order_number', $application->request_id)->first();
-
-                if (empty($sales)) {
-                    $log['response_title'] = 'Sales Header not found';
-                    PaynamicsLog::create($log);
-
-                    return false;
-                }
-
-                if ($responseStatus->response_code == "GR001" || $responseStatus->response_code == "GR002") {
-                    //SUCCESS TRANSACTION
-
-                    $log['response_title'] = 'Success';
-                    PaynamicsLog::create($log);
-
-                    $sales->update([
-                        'payment_status' => 'PAID',
-                        'delivery_status' => 'Scheduled for Processing'
-                    ]);
-                    $update_payment = SalesPayment::create([
-                        'sales_header_id' => $sales->id,
-                        'amount' => $sales->net_amount,
-                        'payment_type' => 'Paynamics-'.$application->ptype,
-                        'status' => 'PAID',
-                        'payment_date' => date('Y-m-d',strtotime($application->timestamp)),
-                        'receipt_number' => $application->response_id,
-                        'created_by' => Auth::id() ?? '1',
-                        'response_body'=> $body,
-                        'response_id' => $application->response_id,
-                        'response_code' => $responseStatus->response_code
-                    ]);
+                    'status' => 'PENDING',
                     
-                } else if ($responseStatus->response_code == "GR053") {
-                    $log['response_title'] = 'Cancelled';
-                    PaynamicsLog::create($log);
-
-                    $sales->update([
-                        'payment_status' => 'CANCELLED'                        
-                    ]);
-                } else {
-
-                    $log['response_title'] = 'Failed';
-                    PaynamicsLog::create($log);
-
-                    $sales->update([
-                        'payment_status' => 'FAILED'
-                    ]);
-                }
-            } else {
-                $log['response_title'] = 'Invalid Signature';
-                PaynamicsLog::create($log);
+                ]); 
             }
-        } catch(Exception $ex) {
-            PaynamicsLog::create([
-                'result_return' => $ex->getMessage(),
-                'response_title' => 'Try catch Error'
-            ]);
         }
     }
-
-    public function generate_payment(Request $request){
-        $salesHeader = SalesHeader::where('order_number',$request->order)->first();        
-        $sign = $this->generateSignature('2amqVf04H9','PH00125',$request->order,str_replace(".", "", number_format($request->amount,2,'.','')),'PHP');
-        $payment = $this->ipay($salesHeader,$request->amount,$sign);
-        return response()->json([
-                'success' => true,
-                'order_number' => $request->order,
-                'customer_contact_number' => Auth::user()->contact_mobile, 
-                'amount' => number_format($request->amount,2,'.',''),
-                'signature' => $sign
-            ]);
-    }  
 }

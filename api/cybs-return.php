@@ -178,7 +178,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                             </tr>
                             <tr>
                                 <td colspan="3" style="text-align:right;"><strong>Loyalty Discount</strong></td>
-                                <td colspan="3" style="text-align:right;">₱ - ' . number_format($transaction['discount_amount'], 2) . '</td>
+                                <td colspan="3" style="text-align:right;">' . number_format($transaction['discount_amount'], 2) . '%</td>
                             </tr>
         ';
 

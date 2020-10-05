@@ -42,8 +42,8 @@
                                                 <label class="custom-control-label" for="orderBy1">{{__('common.date_modified')}}</label>
                                             </div>
                                             <div class="custom-control custom-radio">
-                                                <input type="radio" id="orderBy2" name="orderBy" class="custom-control-input" value="total_purchase" @if ($filter->orderBy == 'total_purchase') checked @endif>
-                                                <label class="custom-control-label" for="orderBy2">Total Purchase</label>
+                                                <input type="radio" id="orderBy2" name="orderBy" class="custom-control-input" value="customer_name" @if ($filter->orderBy == 'customer_name') checked @endif>
+                                                <label class="custom-control-label" for="orderBy2">Name</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -72,7 +72,7 @@
                         <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
                             <form class="form-inline" id="searchForm">
                                 <div class="search-form mg-r-10">
-                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Name" value="{{ $filter->search }}">
+                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Lastname" value="{{ $filter->search }}">
                                     <button class="btn filter" type="button" id="btnSearch"><i data-feather="search"></i></button>
                                 </div>
                             </form>
@@ -89,11 +89,12 @@
                         <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                                 <tr>
-                                    <th scope="col" width="30%">Name</th>
+                                    <th scope="col" width="20%">Name</th>
                                     <th scope="col">Total Purchase</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Discount Name</th>
-                                    <th scope="col">Discounted Amount</th>
+                                    <th scope="col">Discount (%)</th>
+                                    <th scope="col" width="10%">Last Date Modified</th>
                                     <th scope="col">Options</th>
                                 </tr>
                             </thead>
@@ -103,7 +104,7 @@
                                         <th>
                                             {{ $customer->details->fullname }}
                                         </th>
-                                        <td>{{ $customer->total_purchase }}</td>
+                                        <td>{{ \App\StPaulModel\LoyalCustomer::total_purchase($customer->customer_id) }}</td>
                                         <td>
                                             @if($customer->status == 'PENDING')
                                                 <span class="badge badge-info">PENDING</span>
@@ -123,6 +124,7 @@
                                             {{ number_format($customer->discount_details->discount,2) }}
                                             @endif
                                         </td>
+                                        <td>{{ Setting::date_for_listing($customer->updated_at) }}</td>
                                         <td>
                                             <nav class="nav table-options justify-content-begin">
                                                 @if($customer->status == 'APPROVED')
@@ -154,7 +156,7 @@
                                                                 <th scope="col" width="30%">Order#</th>
                                                                 <th scope="col">Amount</th>
                                                                 <th scope="col">Payment Status</th>
-                                                                <th scope="col">Status</th>
+                                                                <th scope="col">Order Status</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -179,7 +181,7 @@
                                 </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" style="text-align: center;"> <p class="text-danger">No customers found.</p></td>
+                                        <td colspan="6" style="text-align: center;"> <p class="text-danger">No customers found.</p></td>
                                     </tr>
                                 @endforelse
                             </tbody>

@@ -8,7 +8,7 @@ class LoyalCustomer extends Model
 {
     public $table = 'loyal_customers';
     protected $fillable = [
-    	'customer_id', 'discount_id', 'user_id', 'total_purchase', 'status'
+    	'customer_id', 'discount_id', 'user_id', 'status', 'customer_name'
     ];
 
     public $timestamp = true;
@@ -21,5 +21,12 @@ class LoyalCustomer extends Model
     public function discount_details()
     {
     	return $this->belongsTo('\App\StPaulModel\Discount','discount_id');
+    }
+
+    public static function total_purchase($customerId)
+    {
+        $count = \App\EcommerceModel\SalesHeader::where('customer_id',$customerId)->where('status','<>','CANCELLED')->count();
+
+        return $count;
     }
 }

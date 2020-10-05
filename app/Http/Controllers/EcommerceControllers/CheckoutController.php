@@ -101,7 +101,7 @@ class CheckoutController extends Controller
             $data = $qry->first();
 
             $shippingfee = Shippingfee::find($data->shippingfee_id);
-            $weight_rate = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$request[1])->latest()->first();
+            $weight_rate = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$request[1])->latest('id')->first();
 
             $locationfee = $shippingfee->rate;
             $weightfee = $weight_rate->rate;

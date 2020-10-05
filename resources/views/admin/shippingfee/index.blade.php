@@ -63,7 +63,7 @@
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox">
                                                 <input type="checkbox" id="showInactive" name="showDeleted" class="custom-control-input" @if ($filter->showDeleted) checked @endif>
-                                                <label class="custom-control-label" for="showInactive">Show Inactive shippingfee</label>
+                                                <label class="custom-control-label" for="showInactive">Show Deleted Items</label>
                                             </div>
                                         </div>
                                         <div class="form-group mg-b-40">
@@ -131,12 +131,12 @@
                                 <tr id="row{{$shippingfee->id}}">
                                     <th>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input cb" id="cb{{ $shippingfee->id }}">
+                                            <input @if($shippingfee->trashed()) disabled @endif type="checkbox" class="custom-control-input @if($shippingfee->trashed()) @else cb @endif" id="cb{{ $shippingfee->id }}">
                                             <label class="custom-control-label" for="cb{{ $shippingfee->id }}"></label>
                                         </div>
                                     </th>
                                     <td>
-                                        <strong> {{$shippingfee->name}}</strong>
+                                        <strong @if($shippingfee->trashed()) style="text-decoration:line-through;" @endif>{{$shippingfee->name}}</strong>
                                     </td>
                                     <td>
                                         @if($shippingfee->is_international == 1)
@@ -155,15 +155,20 @@
                                     <td><span class="badge badge-primary">{{$shippingfee->locations->count()}}</span></td>
                                     <td>
                                         <nav class="nav table-options">
-                                            <a class="nav-link" href="{{ route('shippingfee.manage', $shippingfee->id) }}" title="Manage Rate"><i data-feather="settings"></i></a>
+                                            @if($shippingfee->trashed())
+                                                <a class="nav-link" href="{{route('shippingfee.restore',$shippingfee->id)}}" title="Restore this rate"><i data-feather="rotate-ccw"></i></a>
+                                            @else
+
+                                            <a class="nav-link" href="{{ route('shippingfee.manage', $shippingfee->id) }}" title="Manage Rate"><i data-feather="edit"></i></a>
 
                                             <a class="nav-link" href="javascript:void(0)" onclick="delete_one_rate('{{$shippingfee->id}}');" title="Delete Rate"><i data-feather="trash"></i></a>
+                                            @endif
                                         </nav>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" style="text-align: center;"> <p class="text-danger">No record found.</p></td>
+                                    <td colspan="5" style="text-align: center;"> <p class="text-danger">No rates found.</p></td>
                                 </tr>
                             @endforelse
                             </tbody>
@@ -179,7 +184,7 @@
                     @if ($shippingfees->firstItem() == null)
                         <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
                     @else
-                        <p class="tx-gray-400 tx-12 d-inline">Showing {{$shippingfees->firstItem()}} to {{$shippingfees->lastItem()}} of {{$shippingfees->total()}} shippingfees</p>
+                        <p class="tx-gray-400 tx-12 d-inline">Showing {{$shippingfees->firstItem()}} to {{$shippingfees->lastItem()}} of {{$shippingfees->total()}} items</p>
                     @endif
                 </div>
             </div>

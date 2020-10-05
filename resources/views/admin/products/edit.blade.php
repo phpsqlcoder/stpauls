@@ -95,7 +95,7 @@
                         @endhasError
                     </div>
                     <div class="form-group">
-                        <label class="d-block">Weight</label>
+                        <label class="d-block">Weight (grams)</label>
                         <input type="text" class="form-control" name="weight" value="{{ old('weight', $product->weight) }}" >
                     </div>
                     <div class="form-group">

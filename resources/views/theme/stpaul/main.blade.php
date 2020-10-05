@@ -37,7 +37,7 @@
         <!-- Page Head -->
         @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.header')
         <!-- END Page Head -->
-        @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.banner')
+        {{--@include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.banner')--}}
         <!-- Page Content -->
         @yield('content')
         <!-- END Page Content -->

@@ -13,7 +13,7 @@ use App\StPaulModel\Discount;
 
 class LoyaltyController extends Controller
 {
-    private $searchFields = ['customer_id','total_purchase'];
+    private $searchFields = ['customer_id','customer_name'];
 
     /**
      * Display a listing of the resource.
@@ -22,16 +22,7 @@ class LoyaltyController extends Controller
      */
     public function index($param = null)
     {
-        $customConditions = [
-            [
-                'field' => 'total_purchase',
-                'operator' => '>',
-                'value' => 1,
-                'apply_to_deleted_data' => false
-            ]
-        ];
-
-        $listing = new ListingHelper('desc', 10, 'updated_at', $customConditions);
+        $listing = new ListingHelper('desc', 10, 'updated_at');
 
         $customers = $listing->simple_search(LoyalCustomer::class, $this->searchFields);
         $discounts = Discount::where('status','ACTIVE')->orderBy('name')->get(); 

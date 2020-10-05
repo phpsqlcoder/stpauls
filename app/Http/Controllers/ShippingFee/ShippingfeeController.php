@@ -253,4 +253,11 @@ class ShippingfeeController extends Controller
 
         return back()->with('success', 'Selected shipping fee has been deleted');
     }
+
+    public function restore($rate){
+        Shippingfee::withTrashed()->find($rate)->update(['user_id' => Auth::id() ]);
+        Shippingfee::whereId($rate)->restore();
+
+        return back()->with('success', __('Shipping fee has been restored'));
+    }
 }

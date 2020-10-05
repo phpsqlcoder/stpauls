@@ -164,7 +164,7 @@ Manage Customer
                                                     <i data-feather="settings"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    @if($discount->status == 'PUBLISHED')
+                                                    @if($discount->status == 'ACTIVE')
                                                         <a class="dropdown-item" href="{{route('discount.change-status',[$discount->id,'INACTIVE'])}}" > Inactive</a>
                                                     @else
                                                         <a class="dropdown-item" href="{{route('discount.change-status',[$discount->id,'ACTIVE'])}}"> Active</a>

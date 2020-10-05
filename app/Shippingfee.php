@@ -2,10 +2,13 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Shippingfee extends Model
 {
+    use SoftDeletes;
+    
     protected $table = 'shippingfees';
     protected $fillable = ['name', 'is_international', 'is_outside_manila', 'user_id', 'rate','province'];
 

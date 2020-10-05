@@ -251,7 +251,7 @@
                                                 <li class="d-flex justify-content-between">
                                                     <span>Total Weight (Kg)</span>
                                                     <span>
-                                                        <input type="text" id="total_weight" value="{{number_format($weight,2,'.','')}}">
+                                                        <input type="text" id="total_weight" value="{{number_format(($weight/1000),2,'.','')}}">
                                                     </span>
                                                 </li>
 
@@ -339,7 +339,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="w-25">Type</th>
-                                                <th class="w-15">Weight (Kg)</th>
+                                                <th class="w-15">Weight (g)</th>
                                                 <th class="w-15 text-center">Qty</th>
                                                 <th class="w-15 text-right">Unit Price</th>
                                                 <th class="w-15 text-right">Amount</th>
@@ -391,8 +391,8 @@
                                             <li class="d-flex justify-content-between">
                                                 <span>Total Weight (Kg)</span>
                                                 <span>
-                                                    <input type="hidden" id="input_total_weight" value="{{$weight}}" name="total_weight">
-                                                    <span id="sub-total">{{ number_format($weight,2) }}</span>
+                                                    <input type="hidden" id="input_total_weight" value="{{($weight/1000)}}" name="total_weight">
+                                                    <span id="sub-total">{{ number_format(($weight/1000),2) }}</span>
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
@@ -902,8 +902,13 @@
                 $('#input_servicefee').val(0);
                 $('#span_servicefee').html('0.00');
 
-                $('#input_shippingfee').val(locationfee);
-                $('#span_shippingfee').html(FormatAmount(locationfee,2));
+                if($('#province').val() != 49){
+                    $('#input_shippingfee').val(weightfee);
+                    $('#span_shippingfee').html(FormatAmount(weightfee,2));
+                } else {
+                    $('#input_shippingfee').val(locationfee);
+                    $('#span_shippingfee').html(FormatAmount(locationfee,2));
+                }
             }
 
             if(option == 2){

@@ -49,7 +49,7 @@
     //
         
         Route::get('/privacy-policy/', 'FrontController@privacy_policy')->name('privacy-policy');
-        Route::post('/payment-notification', 'EcommerceControllers\CartController@receive_data_from_payment_gateway')->name('cart.payment-notification');
+        //Route::post('/payment-notification', 'EcommerceControllers\CartController@receive_data_from_payment_gateway')->name('cart.payment-notification');
     ########## ECOMMERCE ROUTES #############
 
 
@@ -296,6 +296,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         //Shipping Fees
             Route::resource('/admin/shippingfee', 'ShippingFee\ShippingfeeController');
 
+            Route::get('/admin/shippingfee-restore/{id}', 'ShippingFee\ShippingfeeController@restore')->name('shippingfee.restore');
             Route::post('/shippingfee-single-delete', 'ShippingFee\ShippingfeeController@single_delete')->name('shippingfee.single.delete');
             Route::post('/shippingfee-multiple-delete','ShippingFee\ShippingfeeController@multiple_delete')->name('shippingfee.multiple.delete');
 

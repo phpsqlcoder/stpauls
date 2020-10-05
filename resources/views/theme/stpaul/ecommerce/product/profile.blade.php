@@ -105,30 +105,15 @@
                     <div class="product-wrap">
                         <div class="row">
                             <div class="col-lg-5">
-                                {{-- <div class="easyzoom easyzoom--adjacent easyzoom--with-thumbnails">
-                                    <a id="photo_source" href="{{ asset('storage/products/'.$product->photoPrimary) }}">
-                                        <img id="display_product" src="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="" width="100%" height="100%" />
-                                    </a>
-                                </div> --}}
                                 <div class="xzoom-container">
                                     <img class="xzoom" id="xzoom-default" src="{{ asset('storage/products/'.$product->photoPrimary) }}"
                                         xoriginal="{{ asset('storage/products/'.$product->photoPrimary) }}" />
                                 </div>
-{{-- 
-                                <ul class="thumbnails">
-                                    @foreach($product->photos as $photo)
-                                    <li>
-                                        <img onclick="changePhoto('{{$photo->id}}')" src="{{ asset('storage/products/'.$photo->path) }}" alt="" />
-                                        <input type="hidden" id="photo_path{{$photo->id}}" value="{{ asset('storage/products/'.$photo->path) }}">
-                                    </li>
-                                    @endforeach
-                                </ul> --}}
                                 <div id="product-gallery-slider" class="slick-slider">
-                                    <a href="{{ asset('storage/products/'.$product->photoPrimary) }}" class="xzoom-link"><img class="xzoom-gallery"
-                                            src="{{ asset('storage/products/'.$product->photoPrimary) }}" xpreview="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="{{$product->id}}"></a>
                                     @foreach($product->photos as $photo)
-                                    <a href="{{ asset('storage/products/'.$photo->path) }}" class="xzoom-link"><img class="xzoom-gallery"
-                                            src="{{ asset('storage/products/'.$photo->path) }}" alt="{{$product->id}}"></a>
+                                    <a href="{{ asset('storage/products/'.$photo->path) }}" class="xzoom-link">
+                                        <img class="xzoom-gallery" src="{{ asset('storage/products/'.$photo->path) }}" alt="{{$product->id}}">
+                                        </a>
                                     @endforeach
                                 </div>
                             </div>
