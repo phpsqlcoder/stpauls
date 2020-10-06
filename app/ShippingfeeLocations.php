@@ -24,9 +24,9 @@ class ShippingfeeLocations extends Model
 
     public static function locationrate($name){
         $qry = ShippingfeeLocations::where('name',$name);
-        $data = $qry->first();
-
-        if($qry > 0){
+        
+        if($qry->count() > 0){
+            $data = $qry->first();
             $shippingfee = Shippingfee::find($data->shippingfee_id);
 
             return $shippingfee->rate;
@@ -38,9 +38,9 @@ class ShippingfeeLocations extends Model
 
     public static function weightrate($name,$weight){
         $qry = ShippingfeeLocations::where('name',$name);
-        $data = $qry->first();
-
-        if($qry > 0){
+        
+        if($qry->count() > 0){
+            $data = $qry->first();
             $shippingfee = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$weight)->latest('id')->first();
             return $shippingfee->rate;
         } else {
