@@ -65,7 +65,6 @@
                                 <th>Customer Name</th>
                                 <th>Total Amount</th>
                                 <th>Order Status</th>
-                                <th>Delivery Status</th>
                                 <th>Delivery Type</th>
                                 <th width="8%">Action</th>
                             </tr>
@@ -84,14 +83,7 @@
                                     <td>@if($sale->payment_status == 'PAID') {{$payment->payment_date}} @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
-                                    <td>
-                                        @if($sale->status == 'CANCELLED')
-                                            CANCELLED
-                                        @else
-                                            {{ $sale->status }}
-                                        @endif
-                                    </td>
-                                    <td><a href="{{route('admin.report.delivery_report',$sale->id)}}" target="_blank">{{ $sale->delivery_status }}</a></td>
+                                    <td>{{ $sale->delivery_status }}</td>
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
                                         <nav class="nav table-options">
@@ -121,7 +113,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <th colspan="9" style="text-align: center;"> <p class="text-danger">No payments found.</p></th>
+                                    <th colspan="9" style="text-align: center;"> <p class="text-danger">No Transactions Found.</p></th>
                                 </tr>
                             @endforelse
                             </tbody>

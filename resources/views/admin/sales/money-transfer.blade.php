@@ -63,7 +63,6 @@
                                 <th>Customer Name</th>
                                 <th>Total Amount</th>
                                 <th>Order Status</th>
-                                <th>Delivery Status</th>
                                 <th>Delivery Type</th>
                                 <th>Action</th>
                             </tr>
@@ -82,22 +81,8 @@
                                     <td>{{ $sale->payment->payment_type }}</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
-                                    <td>
-                                        @if($sale->status == 'CANCELLED')
-                                            CANCELLED
-                                        @else
-                                            @if($sale->payment_status == 'UNPAID') 
-                                                @if($count > 0)
-                                                    <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>PENDING [{{$count}}]</strong></a>
-                                                @else
-                                                    PENDING
-                                                @endif
-                                            @else
-                                                {{ $sale->status }}
-                                            @endif
-                                        @endif
-                                    </td>
-                                    <td><a href="{{route('admin.report.delivery_report',$sale->id)}}" target="_blank">{{ $sale->delivery_status }}</a></td>
+                                    <td><a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
+
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
                                         <nav class="nav table-options">
@@ -118,7 +103,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <th colspan="9" style="text-align: center;"> <p class="text-danger">No Sales Transaction found.</p></th>
+                                    <th colspan="8" style="text-align: center;"> <p class="text-danger">No Sales Transaction found.</p></th>
                                 </tr>
                             @endforelse
                             </tbody>

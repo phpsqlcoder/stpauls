@@ -143,9 +143,11 @@
                     </tr>
                 </tbody>
             </table>
-            @if($sales->is_approve == 0 && $sales->status != 'CANCELLED')
-            <button type="button" class="btn btn-sm btn-danger float-right mg-l-5" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','REJECT');">Reject</button>
-            <button type="button" class="btn btn-sm btn-primary float-right" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','APPROVE');">Approve</button>
+            @if($sales->status != 'CANCELLED')
+                @if($sales->is_approve == 0 && $sales->delivery_type == 'Cash on Delivery')
+                    <button type="button" class="btn btn-sm btn-danger float-right mg-l-5" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','REJECT');">Reject</button>
+                    <button type="button" class="btn btn-sm btn-primary float-right" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','APPROVE');">Approve</button>
+                @endif
             @endif
         </div>
     </div>
