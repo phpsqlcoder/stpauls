@@ -59,13 +59,6 @@
                                                 <label class="custom-control-label" for="sortByDesc">{{__('common.descending')}}</label>
                                             </div>
                                         </div>
-
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" id="showInactive" name="showDeleted" class="custom-control-input" @if ($filter->showDeleted) checked @endif>
-                                                <label class="custom-control-label" for="showInactive">Show Deleted Items</label>
-                                            </div>
-                                        </div>
                                         <div class="form-group mg-b-40">
                                             <label class="d-block">{{__('common.item_displayed')}}</label>
                                             <input id="displaySize" type="text" class="js-range-slider" name="perPage" value="{{ $filter->perPage }}"/>
@@ -155,14 +148,9 @@
                                     <td><span class="badge badge-primary">{{$shippingfee->locations->count()}}</span></td>
                                     <td>
                                         <nav class="nav table-options">
-                                            @if($shippingfee->trashed())
-                                                <a class="nav-link" href="{{route('shippingfee.restore',$shippingfee->id)}}" title="Restore this rate"><i data-feather="rotate-ccw"></i></a>
-                                            @else
-
                                             <a class="nav-link" href="{{ route('shippingfee.manage', $shippingfee->id) }}" title="Manage Rate"><i data-feather="edit"></i></a>
 
                                             <a class="nav-link" href="javascript:void(0)" onclick="delete_one_rate('{{$shippingfee->id}}');" title="Delete Rate"><i data-feather="trash"></i></a>
-                                            @endif
                                         </nav>
                                     </td>
                                 </tr>

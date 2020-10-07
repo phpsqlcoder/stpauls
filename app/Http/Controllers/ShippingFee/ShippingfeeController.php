@@ -242,7 +242,9 @@ class ShippingfeeController extends Controller
 
     public function single_delete(Request $request)
     {
-        Shippingfee::findOrFail($request->rates)->delete();
+        Shippingfee::findOrFail($request->rates)->forceDelete();
+        ShippingfeeLocations::where('shippingfee_id',$request->rates)->delete();
+        ShippingfeeWeight::where('shippingfee_id',$request->rates)->delete();
 
         return back()->with('success', 'Shipping fee has been deleted.');
     }

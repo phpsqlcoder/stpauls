@@ -303,7 +303,6 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         //Shipping Fees
             Route::resource('/admin/shippingfee', 'ShippingFee\ShippingfeeController');
 
-            Route::get('/admin/shippingfee-restore/{id}', 'ShippingFee\ShippingfeeController@restore')->name('shippingfee.restore');
             Route::post('/shippingfee-single-delete', 'ShippingFee\ShippingfeeController@single_delete')->name('shippingfee.single.delete');
             Route::post('/shippingfee-multiple-delete','ShippingFee\ShippingfeeController@multiple_delete')->name('shippingfee.multiple.delete');
 
