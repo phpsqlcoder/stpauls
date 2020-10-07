@@ -281,7 +281,7 @@ class CartController extends Controller
             'net_amount' => $request->totalDue,
             'discount_amount' => $request->loyaltydiscount,
             'payment_status' => 'UNPAID',
-            'status' => 'PENDING',
+            'status' => 'active',
             'other_instruction' => $request->other_instruction,
             'user_id' => 0,
             'payment_method' => (!isset($request->payment_method)) ? 0 : $request->payment_method,
