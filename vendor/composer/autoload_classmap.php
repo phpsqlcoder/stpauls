@@ -14,6 +14,7 @@ return array(
     'App\\Banner' => $baseDir . '/app/Banner.php',
     'App\\Cities' => $baseDir . '/app/Cities.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
+    'App\\Countries' => $baseDir . '/app/Countries.php',
     'App\\Deliverablecities' => $baseDir . '/app/Deliverablecities.php',
     'App\\EcommerceModel\\Branch' => $baseDir . '/app/EcommerceModel/Branch.php',
     'App\\EcommerceModel\\Cart' => $baseDir . '/app/EcommerceModel/Cart.php',

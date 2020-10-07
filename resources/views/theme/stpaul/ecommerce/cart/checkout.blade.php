@@ -79,36 +79,55 @@
 
                                             <div class="gap-10"></div>
                                             <div class="form-group form-wrap">
-                                                <p>Province *</p>
-                                                <select name="province" id="province" class="form-control form-input">
-                                                    <option value="">-- Select Province --</option>
-                                                    @foreach($provinces as $province)
-                                                    <option @if($customer->details->province == $province->id) selected @endif value="{{$province->id}}">{{ $province->province }}</option>
+                                                <p>Country *</p>
+                                                <select name="country" id="country" class="form-control form-input">
+                                                    <option value="">-- Select Country --</option>
+                                                    @foreach(Setting::countries() as $country)
+                                                    <option @if($customer->details->country == $country->id) selected @endif value="{{$country->id}}">{{ $country->name }}</option>
                                                     @endforeach
-                                                    <option style="display: none;" value="0">Others</option>
                                                 </select>
-                                                <p id="p_province" class="text-danger" style="display: none;"><small>The province field is required.</small></p>
-                                            </div>
-                                            <div class="gap-10"></div>
-                                            <div class="form-group form-wrap">
-                                                <p>City/Municipality *</p>
-                                                <select required class="form-control form-input" name="city" id="city">
-                                                <option value="">-- Select City --</option>
-                                                @if($customer->details->province != '')
-                                                    @foreach($cities as $city)
-                                                        @if($customer->details->province == $city->province)
-                                                        <option @if($customer->details->city == $city->id) selected @endif value="{{ $city->id }}">{{ $city->city }}</option>
-                                                        @endif
-                                                    @endforeach
-                                                    <option value="0">Others</option>
-                                                @else
-                                                <option value="">-- Select City --</option>
-                                                @endif
-                                                </select>
-                                                <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
+                                                <p id="p_country" class="text-danger" style="display: none;"><small>The country field is required.</small></p>
                                             </div>
 
-                                            <div id="divaddress" style="display: block;">
+                                            <div id="divIntlAddress" style="display: @if($customer->details->country <> 259 && $customer->details->country != "") block; @else none; @endif">
+                                                <div class="gap-10"></div>
+                                                <div class="form-group form-wrap">
+                                                    <p>Address *</p>
+                                                    <textarea name="other_address" class="form-control form-input" rows="3" id="other_address"></textarea>
+                                                    <p id="p_otheradd" class="text-danger" style="display: none;"><small>The address field is required.</small></p>
+                                                </div>
+                                            </div>
+
+                                            <div id="divLocalAddress" style="display: @if($customer->details->country == 259) block; @else none; @endif">
+                                                <div class="gap-10"></div>
+                                                <div class="form-group form-wrap">
+                                                    <p>Province *</p>
+                                                    <select name="province" id="province" class="form-control form-input">
+                                                        <option value="">-- Select Province --</option>
+                                                        @foreach(Setting::provinces() as $province)
+                                                        <option @if($customer->details->province == $province->id) selected @endif value="{{$province->id}}">{{ $province->province }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <p id="p_province" class="text-danger" style="display: none;"><small>The province field is required.</small></p>
+                                                </div>
+                                                <div class="gap-10"></div>
+                                                <div class="form-group form-wrap">
+                                                    <p>City/Municipality *</p>
+                                                    <select required class="form-control form-input" name="city" id="city">
+                                                    <option value="">-- Select City --</option>
+                                                    @if($customer->details->province != '')
+                                                        @foreach(Setting::cities() as $city)
+                                                            @if($customer->details->province == $city->province)
+                                                            <option @if($customer->details->city == $city->id) selected @endif value="{{ $city->id }}">{{ $city->city }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    @else
+                                                    <option value="">-- Select City --</option>
+                                                    @endif
+                                                    </select>
+                                                    <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
+                                                </div>
+
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>Address Line 1 *</p>
@@ -132,13 +151,6 @@
                                             </div>
 
                                             <div class="gap-10"></div>
-                                            <div class="form-group form-wrap" id="div_other" style="display: none;">
-                                                <p>Other Address</p>
-                                                <textarea name="other_address" class="form-control form-input" rows="3" id="other_address"></textarea>
-                                                <p id="p_other" class="text-danger" style="display: none;"><small>The other address field is required.</small></p>
-                                            </div>
-
-                                            <div class="gap-10"></div>
                                             <div class="form-group form-wrap">
                                                 <p>Other Instruction</p>
                                                 <textarea name="other_instruction" class="form-control form-input" rows="3" id="other_instruction"></textarea>
@@ -150,28 +162,17 @@
                                             <p class="mb-3">Select a shipping method:</p>
                                             @php
                                                 $stp_allowed_days = "";
-                                                $cod_allowed_days = "";
 
                                                 $stp_days = explode('|',$stp->allowed_days);
-                                                $cod_days = explode('|',$cod->allowed_days);
 
                                                 foreach($stp_days as $day){
                                                     $stp_allowed_days .= date('N',strtotime($day)).',';
                                                 }
-
-                                                foreach($cod_days as $day){
-                                                    $cod_allowed_days .= date('N',strtotime($day)).',';
-                                                }
                                             @endphp
                                             <!-- Store Pick Up -->
-                                            <input type="hidden" id="time_from2" value="{{ $stp->allowed_time_from }}">
-                                            <input type="hidden" id="time_to2" value="{{ $stp->allowed_time_to }}">
-                                            <input type="hidden" id="array_days2" value="{{ rtrim($stp_allowed_days,',') }}">
-
-                                            <!-- Cash on Delivery -->
-                                            <input type="hidden" id="time_from1" value="{{ $cod->allowed_time_from }}">
-                                            <input type="hidden" id="time_to1" value="{{ $cod->allowed_time_to }}">
-                                            <input type="hidden" id="array_days1" value="{{ rtrim($cod_allowed_days,',') }}">
+                                            <input type="hidden" id="time_from" value="{{ $stp->allowed_time_from }}">
+                                            <input type="hidden" id="time_to" value="{{ $stp->allowed_time_to }}">
+                                            <input type="hidden" id="array_days" value="{{ rtrim($stp_allowed_days,',') }}">
                                             
                                             <div class="tab-wrap vertical">
                                                 @if($amount <= $cod->maximum_purchase)
@@ -199,7 +200,7 @@
                                                             <label>Select Branch*</label>
                                                             <select class="form-control form-input" name="branch" id="selbranch">
                                                                 <option selected value="0">-- Select Branch --</option>
-                                                                @foreach($branches as $branch)
+                                                                @foreach(Setting::branches() as $branch)
                                                                 <option value="{{$branch->name}}">{{ $branch->name }}</option>
                                                                 @endforeach
                                                             </select>
@@ -210,13 +211,13 @@
                                                     <div class="form-row form-style fs-sm">
                                                         <div class="col-lg-6 mb-sm-2">
                                                             <label>Date *</label>
-                                                            <input type="date" name="pickup_date_2" onchange="pickupDate(2)" id="pickup_date2" class="form-control form-input"
+                                                            <input type="date" name="pickup_date" onchange="pickupDate()" id="pickup_date" class="form-control form-input"
                                                                 min="{{date('Y-m-d',strtotime(today()))}}">
                                                             <p id="stp_date" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
                                                         </div>
                                                         <div class="col-lg-6">
                                                             <label>Time *</label>
-                                                            <input type="time" name="pickup_time_2" onchange="pickupTime(2)" id="pickup_time2" class="form-control form-input">
+                                                            <input type="time" name="pickup_time" onchange="pickupTime()" id="pickup_time" class="form-control form-input">
                                                             <p id="stp_time" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
                                                         </div>
                                                     </div>
@@ -289,17 +290,17 @@
                                                     </span>
                                                 </li>
 
-                                                <li class="d-flex justify-content-between">
-                                                    <span>COD Location Fee</span>
+                                                <!-- <li class="d-flex justify-content-between">
+                                                    <span>Location Fee</span>
                                                     <span>
-                                                        <input type="text" id="cod_location_fee" value="{{\App\ShippingfeeLocations::locationrate($customer->details->cities->city) }}">
+                                                        <input type="text" id="location_fee" value="">
                                                     </span>
-                                                </li>
+                                                </li> -->
 
                                                 <li class="d-flex justify-content-between">
-                                                    <span>COD Weight Fee</span>
+                                                    <span>Shipping Fee</span>
                                                     <span>
-                                                        <input type="text" id="cod_weight_fee" value="{{\App\ShippingfeeLocations::weightrate($customer->details->cities->city,$weight) }}">
+                                                        <input type="text" id="shipping_fee" value="{{\App\ShippingfeeLocations::shipping_fee($customer->details->city,$customer->details->country,number_format(($weight/1000),2,'.','')) }}">
                                                     </span>
                                                 </li>
                                                 <li class="d-flex justify-content-between">
@@ -327,7 +328,7 @@
                                         <h3 class="customer-name"><span id="customer-name"></span></h3>
                                         <p class="customer-address">Delivery Type: <span id="delivery-type"></span></p>
                                         <p class="customer-address"><span id="customer-address"></span></p>
-                                        <p class="customer-phone" >Tel No: <span id="customer-phone"></span></p>
+                                        <p class="customer-phone" >Mobile No: <span id="customer-phone"></span></p>
                                         <p class="customer-email" id="customer-email">Email: <span id="customer-email"></span></p>
                                     </div>
                                 </div>
@@ -339,7 +340,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="w-25">Type</th>
-                                                <th class="w-15">Weight (g)</th>
+                                                <th class="w-15">Weight (kg)</th>
                                                 <th class="w-15 text-center">Qty</th>
                                                 <th class="w-15 text-right">Unit Price</th>
                                                 <th class="w-15 text-right">Amount</th>
@@ -356,12 +357,23 @@
                                             @endphp
                                             <tr id="cart_{{$product->id}}">
                                                 <td class="tx-nowrap text-danger">{{ $product->product->name }}</td>
-                                                <td>{{ number_format($product->product->weight,2) }}</td>
+                                                <td>
+                                                    {{ number_format(($product->product->weight/1000),2) }}
+                                                    <input type="hidden" id="product_weight_{{$product->product_id}}" value="{{$product->product->weight}}">
+                                                    <input type="hidden" class="input_product_total_weight" id="total_product_weight_{{$product->product_id}}" value="{{$product->product->weight*$product->qty}}">
+                                                </td>
                                                 <td class="text-center">
                                                     <input type="hidden" name="productid[]" value="{{ $product->product_id }}">
                                                     <div class="quantity">
-                                                        <input type="number" name="qty[]" min="1" max="25" step="1" value="{{ $product->qty }}" data-inc="1" id="product_qty_{{$product->product_id}}" onchange="updateAmount('{{$product->product_id}}')">
+                                                        <input type="number" name="qty[]" min="1" step="1" value="{{ $product->qty }}" data-inc="1" id="product_qty_{{$product->product_id}}" onchange="updateAmount('{{$product->product_id}}')">
+                                                        <div class="quantity-nav">
+                                                            <div class="quantity-button quantity-up" id="{{$product->product_id}}">+</div>
+                                                            <div class="quantity-button quantity-down" id="{{$product->product_id}}">-</div>
+                                                        </div>
                                                     </div>
+
+                                                    <input type="hidden" id="prevqty{{$product->product_id}}" value="{{ $product->qty }}">
+                                                    <input type="hidden" id="maxorder{{$product->product_id}}" value="{{ $product->product->Maxpurchase }}">
                                                 </td>
                                                 <td class="text-right">₱ {{ number_format($product->price,2) }}
                                                     <input type="hidden" name="product_price[]" id="product_price_{{$product->product_id}}" value="{{ $product->price }}">
@@ -389,10 +401,10 @@
                                         <div class="gap-30"></div>
                                         <ul class="list-unstyled lh-7 pd-r-10">
                                             <li class="d-flex justify-content-between">
-                                                <span>Total Weight (Kg)</span>
+                                                <span>Total Weight</span>
                                                 <span>
                                                     <input type="hidden" id="input_total_weight" value="{{($weight/1000)}}" name="total_weight">
-                                                    <span id="sub-total">{{ number_format(($weight/1000),2) }}</span>
+                                                    <span id="total-weight">{{ number_format(($weight/1000),2) }}kg </span>
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
@@ -491,19 +503,115 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
     <script> 
-        $(document).ready(function(){
-            //called when key is pressed in textbox
+        $('.quantity-up').click(function(){
+            var id = $(this).attr("id");
+            if(id){
+                var qty = $('#product_qty_'+id).val();
+                var maxorder = $('#maxorder'+id).val();
+
+
+                if(maxorder == 0){
+                    swal({
+                        title: '',
+                        text: "Sorry. Currently, there is no sufficient stocks for the item you wish to order.",         
+                    });
+
+                    $('#product_qty_'+id).val(qty-1);
+                } else {
+                    var stock = maxorder-1;
+                    $('#prevqty'+id).val(qty);
+                    $('#maxorder'+id).val(stock);
+                }  
+            }
+        });
+
+        $('.quantity-down').click(function(){
+            var id = $(this).attr("id");
+            if(id){
+                var qty = $('#product_qty_'+id).val();
+                var prevqty = $('#prevqty'+id).val();
+
+                var maxorder = $('#maxorder'+id).val();
+                var stock = parseFloat(maxorder)+1;
+
+
+                if(prevqty == 1){
+
+                } else {
+                    $('#prevqty'+id).val(prevqty-1);
+                    $('#maxorder'+id).val(stock);
+                }   
+            }
+        });
+
+        $(document).ready(function() {
             $("#input_mobile").keypress(function (e) {
-                //if the letter is not digit then display error and don't type anything
                 var charCode = (e.which) ? e.which : event.keyCode
                 if (charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57))
                     return false;
                 return true;
 
             });
-        });
 
-        $(document).ready(function() {
+            $('select[name="country"]').on('change', function() {
+                var country = $(this).val();
+                var weight  = $('#total_weight').val();
+                var city    = 0; 
+                
+                if(country != ""){
+
+                    if(country == 259){
+                        $('#divLocalAddress').css('display','block');
+                        $('#divIntlAddress').css('display','none');
+
+                        $('#shipping_fee').val(0);
+
+                    } else {
+                        $('#divLocalAddress').css('display','none');
+                        $('#divIntlAddress').css('display','block');
+
+                        $.ajax({
+                            type: "GET",
+                            url: "{{ route('ajax.get-city-rates') }}",
+                            data: {
+                                'city' : city,
+                                'country' : country,
+                                'weight' : weight
+                            },
+                            success: function(response) {
+                                $('#shipping_fee').val(response.rate);
+                            }
+                        });
+                    }
+   
+                } else {
+                    swal({
+                        title: '',
+                        text: "Please select a country.",         
+                    })
+                }
+            });
+
+            $('select[name="city"]').on('change', function() {
+                var city  = $(this).val();
+                var weight  = $('#total_weight').val();
+                var country = $('#country').val(); 
+
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('ajax.get-city-rates') }}",
+                    data: {
+                        'city' : city,
+                        'country' : country,
+                        'weight' : weight
+                    },
+                    success: function(response) {
+                        $('#shipping_fee').val(response.rate);
+                    }
+                });
+            });
+
+
             $('select[name="province"]').on('change', function() {
                 var provinceID = $(this).val();
                 if(provinceID) {
@@ -537,38 +645,6 @@
                     $('select[name="city"]').empty();
                 }
             });
-
-            $('select[name="city"]').on('change', function() {
-                var cityID = $(this).val()+'|'+$('#total_weight').val();
-                var c = cityID.split('|');
-
-                if(c[0] != 0) {
-
-                    $('#divaddress').css('display','block');
-                    $('#div_other').css('display','none');
-
-                    var url = "{{ route('ajax.get-city-rates', ':cityID') }}";
-                    url = url.replace(':cityID',cityID);
-                    $.ajax({
-                        url: url,
-                        type: "GET",
-                        dataType: "json",
-                        success:function(data) {
-                            // if(data.locationfee == 0 || data.weightfee == 0){
-
-                            // }
-                            $('#cod_location_fee').val(data.locationfee);
-                            $('#cod_weight_fee').val(data.weightfee);
-                        }
-                    });
-                } else {
-                    $('#divaddress').css('display','none');
-                    $('#div_other').css('display','block');
-
-                    $('#cod_location_fee').val(0);
-                    $('#cod_weight_fee').val(0);
-                }
-            });
         });
     </script>
 @endsection
@@ -584,11 +660,11 @@
             }
         }
 
-        function pickupDate(id){
+        function pickupDate(){
             var allowed_days = [];
 
-            var days = $('#array_days'+id).val();
-            var inputdate = $('#pickup_date'+id).val();
+            var days = $('#array_days').val();
+            var inputdate = $('#pickup_date').val();
             var day = new Date(inputdate).getUTCDay()+1;
             var x = days.split(',');
             
@@ -602,14 +678,10 @@
                 var d = day-1;
             }
 
-            console.log(allowed_days);
-            console.log(d);
-
-
             if(allowed_days.includes(""+d+"")){
   
             } else {
-                $('#pickup_date'+id).val('');
+                $('#pickup_date').val('');
 
                 swal({
                     title: '',
@@ -618,10 +690,10 @@
             }
         }
 
-        function pickupTime(id){
-            var inputtime = $('#pickup_time'+id).val()+":00";
-            var time_from = $('#time_from'+id).val()+":00";
-            var time_to   = $('#time_to'+id).val()+":00";
+        function pickupTime(){
+            var inputtime = $('#pickup_time').val()+":00";
+            var time_from = $('#time_from').val()+":00";
+            var time_to   = $('#time_to').val()+":00";
 
             var fr_time = time_from;
             var a = fr_time.split(':');
@@ -662,87 +734,31 @@
                 zipcode  = $('#input_zipcode').val(),
                 others   = $('#other_address').val(),
                 province = $('#province').val(),
-                city     = $('#city').val();
+                city     = $('#city').val(),
+                country  = $('#country').val(),
+                intl_add = $('#other_address').val();
 
-                if(city == 0){
-                    if(fname.length === 0 || lname.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0 || province === "" || others.length === 0){
-                        $(this).removeClass('checkout-next-btn');
-                    } else {
-                        if (!$("input[name='shipOption']:checked").val()) {
-                           
-                           swal({
-                                title: '',
-                                text: "Please select a shipping method!",         
-                            });
 
-                           $(this).removeClass('checkout-next-btn');
-                        }
-                        else {
-                            $(this).addClass('checkout-next-btn');
-                        }
-                    }
-                } else {
+                if(country == 259){
+                    // Philippines
                     if(fname.length === 0 || lname.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0 || province === "" || city === "" || address.length === 0 || barangay.length === 0 || zipcode.length === 0){
                         $(this).removeClass('checkout-next-btn');
                     } else {
-                        if (!$("input[name='shipOption']:checked").val()) {
-                           
-                           swal({
-                                title: '',
-                                text: "Please select a shipping method!",         
-                            });
+                        select_shipping_method();
+                    }
 
-                           $(this).removeClass('checkout-next-btn');
-                        }
-                        else {
-                            $(this).addClass('checkout-next-btn');
-                        }
+                } else {
+                    if(fname.length === 0 || lname.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0 || country === "" || intl_add.length === 0){
+                        $(this).removeClass('checkout-next-btn');
+                    } else {
+                        select_shipping_method();
                     }
                 }
                 
 
-                if(fname.length === 0){
-                    $('#p_fname').show(); 
-                } else { 
-                    $('#p_fname').hide(); 
-                }
-
-                if(lname.length === 0){
-                    $('#p_lname').show(); 
-                } else { 
-                    $('#p_lname').hide(); 
-                }
-
-                if(province === ""){
-                    $('#p_province').show(); 
-                } else { 
-                    $('#p_province').hide(); 
-                }
-
-                if(city === ""){
-                    $('#p_city').show(); 
-                } else { 
-                    $('#p_city').hide(); 
-                }
-
-                if(barangay.length === 0){ 
-                    $('#p_barangay').show(); 
-                } else { 
-                    $('#p_barangay').hide(); 
-                }
-
-                if(address.length === 0){ 
-                    $('#p_address').show(); 
-                } else { 
-                    $('#p_address').hide(); 
-                }
-
-                if(zipcode.length === 0){
-                    $('#p_zipcode').show(); 
-                } else { 
-                    $('#p_zipcode').hide(); 
-                }
-
+                if(fname.length === 0){ $('#p_fname').show(); } else { $('#p_fname').hide(); }
+                if(lname.length === 0){ $('#p_lname').show(); } else { $('#p_lname').hide(); }
+                if(mobile.length === 0){ $('#p_mobile').show(); } else { $('#p_mobile').hide(); }
                 if(email.length === 0){ 
                     $('#p_email').show(); 
                 } else { 
@@ -754,39 +770,18 @@
                     }
                 }
 
-                if(mobile.length === 0){ 
-                    $('#p_mobile').show(); 
-                } else { 
-                    $('#p_mobile').hide(); 
-                }
+                if(country === ""){ $('#p_country').show(); } else { $('#p_country').hide(); }
 
-                if(city == 0){
-                    $('#p_other').show();
-                    $('#payment_method_1').css('display','none');
+                if(country == 259){
+                    if(province === ""){ $('#p_province').show(); } else { $('#p_province').hide(); }
+                    if(city === ""){ $('#p_city').show(); } else { $('#p_city').hide(); }
+                    if(barangay.length === 0){ $('#p_barangay').show(); } else { $('#p_barangay').hide(); }
+                    if(address.length === 0){ $('#p_address').show(); } else { $('#p_address').hide(); }
+                    if(zipcode.length === 0){ $('#p_zipcode').show(); } else { $('#p_zipcode').hide(); }
                 } else {
-                    $('#payment_method_1').css('display','block');
+                    if(intl_add.length === 0){ $('#p_otheradd').show(); } else { $('#p_otheradd').hide(); }
                 }
-
-                // if(city == 0){
-                //     $('#p_other').show();
-                //     if(others.length === 0){
-                //         $('#p_other').show();
-                //     } else {
-                //         $('#p_other').hide();
-                //     }
-                // } else {
-                //     $('#p_other').hide();
-                    
-                // }
                 
-                // if(is_serviceable == 0){ 
-                //     $('#alert_province').show(); 
-                // }
-                // if(is_serviceable == 1 && city == 0){ 
-                //     $('#p_city').show(); 
-                // } else { 
-                //     $('#p_city').hide(); 
-                // }
             /* END BILLING VALIDATION */
 
             /* BEGIN SHIPPING VALIDATION */
@@ -801,7 +796,7 @@
                 }
 
                 if(option == 2){
-                    var stp_branch = $('#selbranch').val(), stp_date = $('#pickup_date2').val(), stp_time = $('#pickup_time2').val();
+                    var stp_branch = $('#selbranch').val(), stp_date = $('#pickup_date').val(), stp_time = $('#pickup_time').val();
 
                     if($('#selbranch').val() == 0){ 
                         $('#stp_branch').show(); 
@@ -809,13 +804,13 @@
                         $('#stp_branch').hide(); 
                     }
 
-                    if($('#pickup_date2').val() == ''){ 
+                    if($('#pickup_date').val() == ''){ 
                         $('#stp_date').show(); 
                     } else { 
                         $('#stp_date').hide(); 
                     }
 
-                    if($('#pickup_time2').val() == ''){ 
+                    if($('#pickup_time').val() == ''){ 
                         $('#stp_time').show(); 
                     } else { 
                         $('#stp_time').hide(); 
@@ -836,10 +831,10 @@
             /* END SHIPPING VALIDATION */
 
             /* BEGIN ORDER REVIEW INITIALIZE */
-                if($('#province').val() == 0){
-                    $('#customer-address').html($('#other_address').val());
+                if($('#country').val() == 259){
+                    $('#customer-address').html($('#input_address').val()+' '+$('#input_barangay').val()+', '+$("#province option:selected" ).text()+' '+$("#city option:selected" ).text()+', '+$('#input_zipcode').val()+' '+$("#country option:selected" ).text());
                 } else {
-                    $('#customer-address').html($('#input_address').val()+' '+$('#input_barangay').val()+', '+$("#province option:selected" ).text()+' '+$("#city option:selected" ).text()+', '+$('#input_zipcode').val());
+                    $('#customer-address').html($('#other_address').val()+', '+$("#country option:selected" ).text());
                 }
 
                 if(option == 1){
@@ -865,53 +860,54 @@
             /* END ORDER REVIEW INITIALIZE */
         });
 
+        function select_shipping_method(){
+            if(!$("input[name='shipOption']:checked").val()) {        
+                swal({
+                    title: '',
+                    text: "Please select a shipping method!",         
+                });
+
+                $('#billingNxtBtn').removeClass('checkout-next-btn');
+            } else {
+                $('#billingNxtBtn').addClass('checkout-next-btn');
+            }
+        }
+
         function shippingFee(option){
 
             //var subTotal = $('#input_sub_total').val();
-            var purchasedAmount  = $('#total_purchased_amount').val();
-            var codMaxPurchase   = $('#cod_max_purchase').val();
-            var sddMaxPurchase   = $('#sdd_max_purchase').val();
+            // var purchasedAmount  = $('#total_purchased_amount').val();
+            // var codMaxPurchase   = $('#cod_max_purchase').val();
+            // var sddMaxPurchase   = $('#sdd_max_purchase').val();
             var codServiceFee    = $('#cod_service_fee').val();
-            var deliveryRate = $('#delivery_rate').val();
+            // var deliveryRate = $('#delivery_rate').val();
 
-            var locationfee = $('#cod_location_fee').val();
-            var weightfee   = $('#cod_weight_fee').val();
+            // var locationfee = $('#location_fee').val();
+            var shippingfee   = $('#shipping_fee').val();
 
-            if(option == 1 || option == 4){
+            if(option == 1 || option == 3 || option == 4){
 
                 if(option == 1){
-                    var maxPurchase = codMaxPurchase;
+                    //var maxPurchase = codMaxPurchase;
                     $('#input_servicefee').val(codServiceFee);
                     $('#span_servicefee').html(FormatAmount(codServiceFee,2));
                 } else {
-                    var maxPurchase = sddMaxPurchase;
+                    //var maxPurchase = sddMaxPurchase;
                     $('#input_servicefee').val(0);
                     $('#span_servicefee').html('0.00');
                 }
 
-                if(parseFloat(purchasedAmount) <= parseFloat(maxPurchase)){
-                    $('#input_shippingfee').val(locationfee);
-                    $('#span_shippingfee').html(FormatAmount(locationfee,2));
-                } else {
-                    $('#input_shippingfee').val(weightfee);
-                    $('#span_shippingfee').html(FormatAmount(weightfee,2));
-                }
-            }
+                $('#input_shippingfee').val(shippingfee);
+                $('#span_shippingfee').html(FormatAmount(shippingfee,2));
 
-            if(option == 3) {
-                $('#input_servicefee').val(0);
-                $('#span_servicefee').html('0.00');
-
-                if($('#province').val() != 49){
-                    $('#input_shippingfee').val(weightfee);
-                    $('#span_shippingfee').html(FormatAmount(weightfee,2));
-                } else {
-                    $('#input_shippingfee').val(locationfee);
-                    $('#span_shippingfee').html(FormatAmount(locationfee,2));
-                }
-            }
-
-            if(option == 2){
+                // if(parseFloat(purchasedAmount) <= parseFloat(maxPurchase)){
+                //     $('#input_shippingfee').val(locationfee);
+                //     $('#span_shippingfee').html(FormatAmount(locationfee,2));
+                // } else {
+                //     $('#input_shippingfee').val(weightfee);
+                //     $('#span_shippingfee').html(FormatAmount(weightfee,2));
+                // }
+            } else {
                 $('#input_servicefee').val(0);
                 $('#span_servicefee').html('0.00');
 
@@ -919,42 +915,89 @@
                 $('#span_shippingfee').html('0.00');
             }
 
+            // if(option == 2){
+            //     $('#input_servicefee').val(0);
+            //     $('#span_servicefee').html('0.00');
+
+            //     $('#input_shippingfee').val(0);
+            //     $('#span_shippingfee').html('0.00');
+            // }
+
         }
 
         function updateAmount(id){
             var qty   = $('#product_qty_'+id).val();
             var price = $('#product_price_'+id).val();
+            var weight= $('#product_weight_'+id).val()
 
             var totalAmount = parseFloat(price)*parseFloat(qty);
+            var totalWeight = parseFloat(weight)*parseFloat(qty);
 
             $('#product_total_amount_'+id).html(FormatAmount(totalAmount,2));
             $('#input_product_total_amount_'+id).val(totalAmount.toFixed(2));
+
+            $('#total_product_weight_'+id).val(totalWeight);
 
             subTotal();
         }
 
         function subTotal(){
             var totalAmount = 0;
+            var totalWeight = 0;
 
             $(".input_product_total_amount").each(function() {
                 if(!isNaN(this.value) && this.value.length!=0) {
                     totalAmount += parseFloat(this.value);
                 }
             });
-            
+
+            $(".input_product_total_weight").each(function() {
+                if(!isNaN(this.value) && this.value.length!=0) {
+                    totalWeight += parseFloat(this.value);
+                }
+            });
+
+
+            $('#total-weight').html(FormatAmount((totalWeight/1000),2));
+            $('#input_total_weight').val((totalWeight/1000).toFixed(2));
+
             $('#sub-total').html(FormatAmount(totalAmount,2));
             $('#input_sub_total').val(totalAmount.toFixed(2));
 
-            totalDue();
+            total_weight();
+        }
+
+        function total_weight(){
+            var weight = $('#input_total_weight').val();
+            var country= $('#country').val();
+            var city   = $('#city').val(); 
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('ajax.get-city-rates') }}",
+                data: {
+                    'city' : city,
+                    'country' : country,
+                    'weight' : weight
+                },
+                success: function(response) {
+                    $('#input_shippingfee').val(response.rate);
+                    $('#span_shippingfee').html(FormatAmount(response.rate,2));
+
+                    totalDue();
+                }
+            });
+
+            
         }
 
         function totalDue(){
             var subtotal    = $('#input_sub_total').val();
-            var deliveryfee = $('#input_shippingfee').val();
+            var shippingfee = $('#input_shippingfee').val();
             var servicefee  = $('#input_servicefee').val();
             var discount    = $('#input_loyalty_discount').val();
 
-            var total = (parseFloat(subtotal)+parseFloat(deliveryfee)+parseFloat(servicefee));
+            var total = (parseFloat(subtotal)+parseFloat(shippingfee)+parseFloat(servicefee));
             
             var disc = (discount / 100).toFixed(2); //its convert 10 into 0.10
             var mult = total * disc; // gives the value for subtract from main value
@@ -1007,8 +1050,6 @@
 
             }
         });
-
-
 
 
         function FormatAmount(number, numberOfDigits) {

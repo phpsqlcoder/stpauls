@@ -21,9 +21,9 @@
             </nav>
             <h4 class="mg-b-0 tx-spacing--1"> Sales Transaction Summary</h4>
         </div>
-        <!-- <div>
+        <div>
             <button class="btn btn-outline-primary btn-sm tx-semibold" onclick="window.print();"><i data-feather="printer"></i> Print</button>
-        </div> -->
+        </div>
     </div>
 
     <div class="row row-sm">

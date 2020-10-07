@@ -71,12 +71,14 @@
                                             <div class="cart-quantity">
                                                 <label for="quantity">Quantity</label>
                                                 <div class="quantity">
-                                                    <input type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="{{ $order->product->inventory }}" step="1" data-inc="1" onchange="updateTotalAmount('{{$loop->iteration}}');" id="order{{$loop->iteration}}_qty">
+                                                    <input readonly type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="1000000" step="1" data-inc="1" onchange="updateTotalAmount('{{$loop->iteration}}');" id="order{{$loop->iteration}}_qty">
                                                     <div class="quantity-nav">
-                                                        <div class="quantity-button quantity-up">+</div>
-                                                        <div class="quantity-button quantity-down">-</div>
+                                                        <div class="quantity-button quantity-up" id="{{$loop->iteration}}">+</div>
+                                                        <div class="quantity-button quantity-down" id="{{$loop->iteration}}">-</div>
                                                     </div>
                                                 </div>
+                                                <input type="hidden" id="prevqty{{$loop->iteration}}" value="{{ $order->qty }}">
+                                                <input type="hidden" id="maxorder{{$loop->iteration}}" value="{{ $order->product->Maxpurchase }}">
                                             </div>
                                             <div class="cart-info">
                                                 <div class="row">
@@ -166,7 +168,7 @@
                             <div class="cart-btn">
                                 <div class="row">
                                     <div class="col-12">
-                                        <button @if($totalproducts > 0) @else disabled @endif type="submit" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
+                                        <button @if($totalproducts > 0) @else disabled @endif type="submit" id="btnCheckout" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
                                     </div>
                                 </div>
                             </div>
@@ -188,56 +190,6 @@
 
 @section('pagejs')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-
-    <script>
-        $(document).ready(function(){
-            /** Custom Input number increment js **/
-            jQuery(".quantity").each(function() {
-                var spinner = jQuery(this),
-                    input = spinner.find('input[type="number"]'),
-                    btnUp = spinner.find(".quantity-up"),
-                    btnDown = spinner.find(".quantity-down"),
-                    min = input.attr("min"),
-                    max = input.attr("max"),
-                    valOfAmout = input.val(),
-                    newVal = 0;
-
-                btnUp.on("click", function() {
-                    var varholder = input.val();
-                    var oldValue = parseFloat(input.val());
-
-                    if (varholder === "") {
-                        var newVal = 1;
-                    } else {
-                        if (oldValue >= max) {
-                            var newVal = oldValue;
-                        } else {
-                            var newVal = oldValue + 1;
-                        }
-                    }
-                    spinner.find("input").val(newVal);
-                    spinner.find("input").trigger("change");
-                });
-
-                btnDown.on("click", function() {
-                    var varholder = input.val();
-                    var oldValue = parseFloat(input.val());
-
-                    if (varholder === "") {
-                        var newVal = 1;
-                    } else {
-                        if (oldValue <= min) {
-                            var newVal = oldValue;
-                        } else {
-                            var newVal = oldValue - 1;
-                        }
-                    }
-                    spinner.find("input").val(newVal);
-                    spinner.find("input").trigger("change");
-                });
-            });
-        });
-    </script>
 @endsection
 
 @section('customjs')
@@ -251,7 +203,49 @@
             return num_parts.join(".");
         }
 
+        $('.quantity-up').click(function(){
+            var id = $(this).attr("id");
+            if(id){
+                var qty = $('#order'+id+'_qty').val();
+                var maxorder = $('#maxorder'+id).val();
+
+
+                if(maxorder == 0){
+                    swal({
+                        title: '',
+                        text: "Sorry. Currently, there is no sufficient stocks for the item you wish to order.",         
+                    });
+
+                    $('#order'+id+'_qty').val(qty-1);
+                } else {
+                    var stock = maxorder-1;
+                    $('#prevqty'+id).val(qty);
+                    $('#maxorder'+id).val(stock);
+                }  
+            }
+        });
+
+        $('.quantity-down').click(function(){
+            var id = $(this).attr("id");
+            if(id){
+                var qty = $('#order'+id+'_qty').val();
+                var prevqty = $('#prevqty'+id).val();
+
+                var maxorder = $('#maxorder'+id).val();
+                var stock = parseFloat(maxorder)+1;
+
+
+                if(prevqty == 1){
+
+                } else {
+                    $('#prevqty'+id).val(prevqty-1);
+                    $('#maxorder'+id).val(stock);
+                }   
+            }
+        });
+
         function updateTotalAmount(id){
+            
             var qty = $('#order'+id+'_qty').val();
             var weight = $('#input_order'+id+'_product_weight').val();
             var price = $('#input_order'+id+'_product_price').val();

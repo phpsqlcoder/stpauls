@@ -93,18 +93,23 @@ class SocialiteController extends Controller
               $last_name = $providerCostomer->getName();
         }
 
-        $user = User::create([
-            'firstname' => $first_name,
-            'lastname' => $last_name,
-            'email' => $providerCostomer->getEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // temporary password : password
-            'role_id' => 3,
-            'is_active' => 1,
-            'remember_token' => str_random(60),
-        ]);
+        if(User::where('email',$providerCostomer->getEmail())->exists()){
 
-        if($user){
+            return redirect(route('customer-front.sign-up'))->with('error','This email address is already existing in the system. You may use other email address or login to your account.');
+
+        } else {
+
+            $user = User::create([
+                'firstname' => $first_name,
+                'lastname' => $last_name,
+                'email' => $providerCostomer->getEmail(),
+                'email_verified_at' => now(),
+                'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // temporary password : password
+                'role_id' => 3,
+                'is_active' => 1,
+                'remember_token' => str_random(60),
+            ]);
+
             $customer = Customer::create([
                 'customer_id' => $user->id,
                 'firstname' => $first_name,

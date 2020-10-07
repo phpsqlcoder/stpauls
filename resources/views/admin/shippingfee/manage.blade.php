@@ -1,12 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('pagetitle')
-    Zone Management
-@endsection
-
 @section('pagecss')
-
-  
     <link href="{{ asset('js/multiselect/css/multi-select.css') }}" rel="stylesheet">
 @endsection
 
@@ -27,7 +21,7 @@
 
     <div class="row">
         <div class="col-md-4 mg-t-45">
-            <form action="{{ route('shippingfee_location.store') }}" method="post">
+            <form id="manageRateForm" action="{{ route('shippingfee_location.store') }}" method="post">
                 @csrf
                 @method('POST')
                 <input type="hidden" name="shippingfee_id" value="{{$sp->id}}">
@@ -38,7 +32,7 @@
 
                 @if($sp->is_international == 0)
                 <div class="form-group">
-                    <label>Rate*</label>
+                    <label>Flat Rate*</label>
                     <input required type="text" class="form-control" name="rate" value="{{$sp->rate}}">
                 </div>
                 @endif
@@ -72,12 +66,12 @@
                             @endforeach
                         @else
                             @foreach(Setting::countries() as $country)                            
-                                <option value="{{$country}}" @if($sp->locations->contains('name',$country)) selected="selected" @endif>{{$country}}</option>
+                                <option value="{{$country->name}}" @if($sp->locations->contains('name',$country->name)) selected="selected" @endif>{{$country->name}}</option>
                             @endforeach
                         @endif
                     </select>
                 </div>                
-                <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Update Rate</button>
+                <button class="btn btn-primary btn-sm btn-uppercase" type="button" id="btnUpdateRate">Update Rate</button>
                 <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('shippingfee.index') }}">Cancel</a>
             </form> 
         </div>
@@ -100,12 +94,14 @@
                         </div>
                     </th>
                     <th scope="col" width="40%">Weight (Kg)</th>
-                    <th scope="col" width="40%">Rate</th>
+                    <th scope="col" width="40%">Rate / Weight</th>
                     <th scope="col" width="15%">Actions</th>                            
                 </tr>
                 </thead>
                 <tbody>
+                @php $weight_counter = 0; @endphp
                 @forelse($weights as $weight)
+                    @php $weight_counter++; @endphp
                     <tr id="row{{$weight->id}}"> 
                         <th>
                             <div class="custom-control custom-checkbox">
@@ -130,6 +126,7 @@
                 @endforelse
                 </tbody>
             </table>
+            <input type="hidden" id="weight_counter" value="{{$weight_counter}}">
         </div>
     </div>
     <div class="row">
@@ -306,10 +303,28 @@
         </div>
     </div>
 </div>
+
+<div class="modal effect-scale" id="prompt-no-weight" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{{__('common.no_selected_title')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Please add or upload new rates per weight.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('pagejs')
-
     <script src="{{ asset('js/multiselect/js/jquery.multi-select.js') }}"></script>
     <script src="{{ asset('js/multiselect/quicksearch-master/jquery.quicksearch.js') }}"></script>
 
@@ -359,6 +374,16 @@
 
 @section('customjs')
     <script>
+        $('#btnUpdateRate').click(function(){
+            var count = $('#weight_counter').val();
+
+            if(count >= 1){
+                $('#manageRateForm').submit();
+            } else {
+                $('#prompt-no-weight').modal('show');
+            }
+        });
+
         function post_form(url,rates){
             $('#posting_form').attr('action',url);
             $('#rates').val(rates);

@@ -93,11 +93,12 @@ class Product extends Model
                 ->where('inventory_receiver_details.product_id','=',$this->id)
                 ->where('inventory_receiver_header.status','=','POSTED')
                 ->sum('inventory_receiver_details.inventory');
+
         if(empty($in))
             $in=0;
 
         $cart = \App\EcommerceModel\Cart::where('product_id',$this->id)->sum('qty');
-         if(empty($cart))
+        if(empty($cart))
             $cart=0;
 
         $out = \DB::table('ecommerce_sales_details')
@@ -106,6 +107,7 @@ class Product extends Model
                 ->where('ecommerce_sales_headers.payment_status','=','PAID')
                 ->where('ecommerce_sales_headers.status','=','active')
                 ->sum('qty');
+
         if(empty($out))
             $out=0;
         

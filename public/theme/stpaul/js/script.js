@@ -147,7 +147,7 @@ $("#top").on("click", function () {
 
 
 
-// Quantity
+//Quantity
 
 function customQuantity() {
     /** Custom Input number increment js **/

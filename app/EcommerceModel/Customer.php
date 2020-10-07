@@ -25,12 +25,17 @@ class Customer extends Model
     protected $guard = 'customer';
 
     protected $table = 'customers';
-    protected $fillable = ['customer_id','firstname','lastname','email','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','provider_id','is_subscriber','user_id','reactivate_request'];
+    protected $fillable = ['customer_id','firstname','lastname','email','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','provider_id','is_subscriber','user_id','reactivate_request','customer_id','country'];
 
 
     public function delivery_rate()
     {
         return $this->belongsTo('\App\Deliverablecities','city','city');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo('\App\Countries','country');
     }
 
     public function cities()

@@ -79,45 +79,46 @@
                                             </div>
                                             <div class="col-md-12"><hr><div class="gap-30"></div></div>
                                             <div class="col-md-12">
-                                                <p>Address 1 *</p>
-                                                <input required type="text" name="address" class="form-control form-input @error('address') is-invalid @enderror" placeholder="Unit No./Building/House No./Street" value="{{ old('address') }}">
-                                                @hasError(['inputName' => 'address'])
-                                                @endhasError
+                                                <p>Country</p>
+                                                <select name="country" id="country" class="form-control form-input">
+                                                    <option value="">-- Select Country --</option>
+                                                    @foreach(Setting::countries() as $country)
+                                                    <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                                    @endforeach
+                                                </select>
                                                 <div class="gap-10"></div>    
                                             </div>
-                                            <div class="col-md-12">
-                                                <p>Address 2 *</p>
-                                                <input required type="text" name="brgy" class="form-control form-input @error('brgy') is-invalid @enderror" placeholder="Name of Subdivision/Barangay" value="{{ old('brgy') }}">
-                                                @hasError(['inputName' => 'brgy'])
-                                                @endhasError
+
+                                            <div class="col-md-12" id="addressdiv" style="display: none;">
+                                                <p>Address 1</p>
+                                                <input type="text" name="address" id="address" class="form-control form-input" placeholder="Unit No./Building/House No./Street" value="{{ old('address') }}">
                                                 <div class="gap-10"></div>    
                                             </div>
-                                            <div class="col-md-12">
-                                                <p>Province *</p>
-                                                <select required name="province" id="province" class="form-control form-input  @error('province') is-invalid @enderror">
+                                            <div class="col-md-12" id="brgydiv" style="display: none;">
+                                                <p>Address 2</p>
+                                                <input type="text" name="brgy" id="brgy" class="form-control form-input" placeholder="Name of Subdivision/Barangay" value="{{ old('brgy') }}">
+                                                <div class="gap-10"></div>    
+                                            </div>
+                                            <div class="col-md-12" id="provincediv" style="display: none;">
+                                                <p>Province</p>
+                                                <select name="province" id="province" class="form-control form-input">
                                                     <option value="">-- Select Province --</option>
-                                                    @foreach($provinces as $province)
+                                                    @foreach(Setting::provinces() as $province)
                                                     <option value="{{ $province->id }}">{{ $province->province }}</option>
                                                     @endforeach
                                                 </select>
-                                                @hasError(['inputName' => 'province'])
-                                                @endhasError
                                                 <div class="gap-10"></div>    
                                             </div>
-                                            <div class="col-md-7">
-                                                <p>City *</p>
-                                                <select required name="city" id="city" class="form-control form-input  @error('city') is-invalid @enderror">
+                                            <div class="col-md-7" id="citydiv" style="display: none;">
+                                                <p>City</p>
+                                                <select name="city" id="city" class="form-control form-input">
                                                     <option selected disabled value="">-- Select City --</option>
                                                 </select>
-                                                @hasError(['inputName' => 'city'])
-                                                @endhasError
                                                 <div class="gap-10"></div>    
                                             </div>
-                                            <div class="col-md-5">
-                                                <p>Zip Code *</p>
-                                                <input required type="text" name="zipcode" id="zipcode" class="form-control form-input @error('zipcode') is-invalid @enderror" value="{{ old('zipcode') }}" min="1">
-                                                @hasError(['inputName' => 'zipcode'])
-                                                @endhasError
+                                            <div class="col-md-5" id="zipcodediv" style="display: none;">
+                                                <p>Zip Code</p>
+                                                <input type="text" name="zipcode" class="form-control form-input" value="{{ old('zipcode') }}" min="1">
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-md-12">
@@ -126,10 +127,8 @@
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-md-12">
-                                                <p>Mobile Number *</p>
-                                                <input required type="text" name="mobileno" id="mobileno" class="form-control form-input @error('mobileno') is-invalid @enderror" value="{{ old('mobileno') }}" min="1" maxlength="13">
-                                                @hasError(['inputName' => 'mobileno'])
-                                                @endhasError
+                                                <p>Mobile Number</p>
+                                                <input type="text" name="mobileno" id="mobileno" class="form-control form-input" value="{{ old('mobileno') }}" min="1" maxlength="13">
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-lg-6 col-md-7">
@@ -171,6 +170,16 @@
 @section('customjs')
     <script>
         $(document).ready(function() {
+            $('select[name="country"]').on('change', function() {
+                var country = $(this).val();
+
+                if(country == 259){
+                    $('#addressdiv,#brgydiv,#provincediv,#citydiv,#zipcodediv').css('display','block');
+                } else {
+                    $('#addressdiv,#brgydiv,#provincediv,#citydiv,#zipcodediv').css('display','none');
+                }
+            });
+
             $('select[name="province"]').on('change', function() {
                 var provinceID = $(this).val();
                 if(provinceID) {

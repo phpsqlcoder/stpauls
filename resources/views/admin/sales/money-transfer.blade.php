@@ -59,8 +59,8 @@
                             <thead>
                                 <th>Order #</th>
                                 <th>Order Date</th>
-                                <th>Payment Type</th>
                                 <th>Customer Name</th>
+                                <th>Payment Type</th>
                                 <th>Total Amount</th>
                                 <th>Order Status</th>
                                 <th>Delivery Type</th>
@@ -78,11 +78,20 @@
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
                                     <td>{{ date('Y-m-d',strtotime($sale->created_at)) }}</td>
-                                    <td>{{ $sale->payment->payment_type }}</td>
                                     <td>{{ $sale->customer_name }}</td>
+                                    <td>{{ $sale->payment->payment_type }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
-                                    <td><a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
-
+                                    <td>
+                                        @if($count > 0)
+                                            @if($payment->is_verify == 0)
+                                            <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
+                                            @else
+                                            {{ $sale->delivery_status }}
+                                            @endif
+                                        @else
+                                            {{ $sale->delivery_status }}
+                                        @endif
+                                    </td>
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
                                         <nav class="nav table-options">
@@ -179,18 +188,6 @@
 @section('pagejs')
     <script src="{{ asset('lib/bselect/dist/js/bootstrap-select.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-
-    <script>
-        //var dateToday = new Date();
-        $(function(){
-            'use strict'
-
-            $('#payment_dt').datepicker({
-                //minDate: dateToday,
-                dateFormat: 'yy-mm-dd',
-            });
-        });
-    </script>
 
     <script>
         let listingUrl = "{{ route('sales-transaction.money-transfer') }}";

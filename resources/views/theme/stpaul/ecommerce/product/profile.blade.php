@@ -162,7 +162,7 @@
                                             <p>Quantity</p>
                                             <input type="hidden" name="product_id" value="{{$product->id}}">
                                             <div class="quantity">
-                                                <input type="number" name="quantity" id="qty" min="1" max="{{ $product->inventory }}" step="1" value="1" data-inc="1">
+                                                <input type="number" name="quantity" id="qty" min="1" max="{{ $product->Maxpurchase }}" step="1" value="1" data-inc="1">
                                                 <div class="quantity-nav">
                                                     <div class="quantity-button quantity-up">+</div>
                                                     <div class="quantity-button quantity-down">-</div>
@@ -170,7 +170,8 @@
                                                 <span class="product-pcs">{{ $product->uom }}</span>
                                             </div>
                                             <div class="product-sku">
-                                                <i class="fa fa-check high-stock"></i> {{ $product->inventory }} available stock
+                                                <input type="hidden" id="input_avail_stock" value="{{ $product->inventory }}">
+                                                <i class="fa fa-check high-stock"></i> <span id="available_stock">{{ $product->inventory }}</span> available stock
                                             </div>
                                         </div>
                                         <div class="product-btn">
@@ -430,6 +431,10 @@
                 }
             });
 
+            var available_stock = $('#input_avail_stock').val();
+            var ordered_qty     = $('#qty').val(); 
+            var inventory = parseFloat(available_stock)-parseFloat(ordered_qty);
+
             $.ajax({
                 data: {
                     "product_id": productID,
@@ -440,6 +445,8 @@
                 type: "post",
                 url: "{{route('cart.add')}}",
                 success: function(returnData) {
+                    $('#input_avail_stock').val(inventory);
+                    $('#available_stock').html(inventory);
                     if (returnData['success']) {
                         $('.cart-counter').html(returnData['totalItems']);
                         

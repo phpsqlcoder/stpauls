@@ -29,7 +29,6 @@
                                     <th scope="col">Date</th>
                                     <th scope="col">Amount</th>
                                     <th scope="col">Order Status</th>
-                                    <th scope="col">Delivery Status</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -39,21 +38,6 @@
                                     <td>{{ $sale->order_number }}</td>
                                     <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
                                     <td>{{ number_format($sale->gross_amount,2) }}</td>
-                                    <td class="text-uppercase">
-                                        @if($sale->status == 'CANCELLED')
-                                            CANCELLED
-                                        @else
-                                            @if($sale->status == 'COMPLETED')
-                                                COMPLETED
-                                            @else
-                                                @if($sale->payment_status == 'UNPAID')
-                                                    {{ $sale->status }}
-                                                @else
-                                                    {{ $sale->payment_status }}
-                                                @endif
-                                            @endif
-                                        @endif
-                                    </td>
                                     <td class="text-uppercase">{{ $sale->delivery_status }}</td>
                                     <td align="right">
                                         @if($sale->status != 'CANCELLED')

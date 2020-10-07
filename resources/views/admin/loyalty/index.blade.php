@@ -72,7 +72,7 @@
                         <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
                             <form class="form-inline" id="searchForm">
                                 <div class="search-form mg-r-10">
-                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Lastname" value="{{ $filter->search }}">
+                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Name" value="{{ $filter->search }}">
                                     <button class="btn filter" type="button" id="btnSearch"><i data-feather="search"></i></button>
                                 </div>
                             </form>
@@ -227,7 +227,7 @@
                     @csrf
                     <input type="hidden" name="id" id="did">
                     <div class="modal-body">
-                        <p>You're about to disapproved this customer loyalty. Do you want to continue?</p>
+                        <p>You're about to disapprove this customer loyalty. Do you want to continue?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-sm btn-danger">Yes, Deactivate</button>
@@ -260,7 +260,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <p>You're about to approved this customer loyalty. Do you want to continue?</p>
+                        <p>You're about to approve this customer loyalty. Do you want to continue?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-sm btn-primary">Yes, Approved</button>

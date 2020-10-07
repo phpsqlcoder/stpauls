@@ -34,9 +34,7 @@ class CustomerFrontController extends Controller
         
         $fbdata = $request;
 
-        $provinces = Provinces::orderBy('province','asc')->get();
-
-        return view('theme.stpaul.ecommerce.customer.sign-up',compact('page','fbdata','provinces'));
+        return view('theme.stpaul.ecommerce.customer.sign-up',compact('page','fbdata'));
 
     }
 
@@ -135,12 +133,6 @@ class CustomerFrontController extends Controller
             'email' => 'required|email|max:191|unique:users,email',
             'password' => 'required|max:150|min:8',
             'password_confirmation' => 'required|same:password',
-            'address' => 'required',
-            'brgy' => 'required',
-            'province' => 'required',
-            'city' => 'required',
-            'mobileno' => 'required',
-            'zipcode' => 'required',
         ])->validate();
 
         
@@ -165,6 +157,7 @@ class CustomerFrontController extends Controller
                 'email' => $request->email,
                 'telno' => $request->telno,
                 'mobile' => $request->mobileno,
+                'country' => $request->country,
                 'address' => $request->address,
                 'barangay' => $request->brgy,
                 'city' => $request->city,

@@ -485,6 +485,7 @@ class ComposerStaticInit68580dd66ca868f9e4453579cea1fb47
         'App\\Banner' => __DIR__ . '/../..' . '/app/Banner.php',
         'App\\Cities' => __DIR__ . '/../..' . '/app/Cities.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
+        'App\\Countries' => __DIR__ . '/../..' . '/app/Countries.php',
         'App\\Deliverablecities' => __DIR__ . '/../..' . '/app/Deliverablecities.php',
         'App\\EcommerceModel\\Branch' => __DIR__ . '/../..' . '/app/EcommerceModel/Branch.php',
         'App\\EcommerceModel\\Cart' => __DIR__ . '/../..' . '/app/EcommerceModel/Cart.php',

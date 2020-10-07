@@ -59,7 +59,7 @@
         // Checkout
             Route::get('/checkout', 'EcommerceControllers\CheckoutController@checkout')->name('cart.front.checkout');
 
-            Route::get('/ajax-city-rates/{id}','EcommerceControllers\CheckoutController@ajax_city_rates')->name('ajax.get-city-rates');
+            Route::get('/ajax-city-rates','EcommerceControllers\CheckoutController@ajax_city_rates')->name('ajax.get-city-rates');
 
 
             Route::get('/checkout/remove-product','EcommerceControllers\CheckoutController@remove_product')->name('checkout.remove-product');
@@ -208,6 +208,13 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
             // Card Payment
             Route::get('/admin/sales/card-payment','EcommerceControllers\SalesController@sales_card_payment')->name('sales-transaction.card-payment');
+            
+
+
+
+
+
+            // to remove
             // Report
             Route::get('/admin/report/delivery_report/{id}', 'EcommerceControllers\ReportsController@delivery_report')->name('admin.report.delivery_report');
 

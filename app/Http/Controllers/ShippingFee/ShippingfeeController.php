@@ -82,7 +82,12 @@ class ShippingfeeController extends Controller
     public function location_store(Request $request)
     {   
         $data = $request->all();
-        $fee = Shippingfee::find($request->shippingfee_id)->update(['name' => $request->name]);
+        $fee = Shippingfee::find($request->shippingfee_id);
+
+        $fee->update([
+            'name' => $request->name,
+            'rate' => ($fee->is_international == 0) ? $request->rate : 0
+        ]);
 
         if($fee){
 

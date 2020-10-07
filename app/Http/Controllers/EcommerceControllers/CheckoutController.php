@@ -18,13 +18,16 @@ use App\EcommerceModel\Branch;
 use App\StPaulModel\Discount;
 use App\EcommerceModel\Cart;
 use App\Deliverablecities;
+
 use App\Provinces;
+use App\Countries;
 use App\Cities;
+
 use App\Setting;
 use App\User;
 use App\Page;
-
 use Auth;
+
 
 use App\ShippingfeeLocations;
 use App\ShippingfeeWeight;
@@ -40,17 +43,13 @@ class CheckoutController extends Controller
         
         $customer  = User::find(Auth::id());
 
-        $provinces = Provinces::orderBy('province','asc')->get();
-        $cities    = Cities::orderBy('city','asc')->get();
-        $branches  = Branch::where('is_active',1)->get();
-
 
         $products  = Cart::where('user_id',Auth::id())->get();   
         $amount = 0;
         $weight = 0;
         foreach($products as $product){
             $amount += $product->price*$product->qty;
-            $weight += $product->product->weight;
+            $weight += ($product->product->weight*$product->qty);
         }
 
 
@@ -85,35 +84,46 @@ class CheckoutController extends Controller
         }
 
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','weight','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','payment_method'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','weight','page','cod','stp','sdd','dtd','loyalty_discount','payment_method'));
 
         // return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','user','locations','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','settings','payment_method'));
     }
 
-    public function ajax_city_rates($id)
-    {
-        $request = explode('|', $id);
-
-        $city = Cities::find($request[0]);
-
-        $qry = ShippingfeeLocations::where('name',$city->city);
-        if($qry->count() > 0){
-            $data = $qry->first();
-
-            $shippingfee = Shippingfee::find($data->shippingfee_id);
-            $weight_rate = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$request[1])->latest('id')->first();
-
-            $locationfee = $shippingfee->rate;
-            $weightfee = $weight_rate->rate;
+    public function ajax_city_rates(Request $request)
+    {   
+        if($request->country == 259){
+            $city = Cities::find($request->city);
+            $location = $city->city;
+            
         } else {
-            $locationfee = 0;
-            $weightfee = 0;
+            $country  = Countries::find($request->country);
+            $location = $country->name; 
         }
 
-        return response()->json([
-            'locationfee' => $locationfee,
-            'weightfee' => $weightfee
-        ]);
+        $sp_location = ShippingfeeLocations::where('name',$location);
+        
+        if($sp_location->count() > 0){
+            $data = $sp_location->first();
+
+            $sp        = Shippingfee::find($data->shippingfee_id);
+            $sp_weight = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$request->weight)->latest('id')->first();
+
+            if($sp->is_outside_manila == 0){ // within manila
+                if($request->weight > 10){
+                    $rate = ($sp->rate+$sp_weight->rate);
+                } else {
+                    $rate = $sp->rate;
+                }
+            } else {
+                $rate = ($sp->rate+$sp_weight->rate);
+            }
+            
+            \Log::info($rate);
+        } else {
+            $rate = 0;
+        }
+
+        return response()->json(['rate' => $rate]);
     }
 
     public function remove_product(Request $request)

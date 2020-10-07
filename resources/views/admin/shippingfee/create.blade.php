@@ -41,21 +41,23 @@
                         @endhasError
                     </div>
 
-                    <div class="form-group">
-                        <label class="d-block">Province*</label>
-                        <select class="form-control" name="province" id="province" required>
-                            <option value="">-- Select Province --</option>
-                            @foreach($provinces as $province)
-                                <option value="{{$province->id}}">{{$province->province}}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <div id="local_input">
+                        <div class="form-group">
+                            <label class="d-block">Province*</label>
+                            <select class="form-control" name="province" id="province" required>
+                                <option value="">-- Select Province --</option>
+                                @foreach($provinces as $province)
+                                    <option value="{{$province->id}}">{{$province->province}}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <div class="form-group">
-                        <label class="d-block">Rate*</label>
-                        <input required type="number" name="rate" id="rate" value="{{ old('rate','0.00')}}" step="0.01" class="form-control @error('rate') is-invalid @enderror" min="1">
-                        @hasError(['inputName' => 'rate'])
-                        @endhasError
+                        <div class="form-group">
+                            <label class="d-block">Rate*</label>
+                            <input type="number" name="rate" id="rate" value="{{ old('rate','0.00')}}" step="0.01" class="form-control @error('rate') is-invalid @enderror" min="1" required>
+                            @hasError(['inputName' => 'rate'])
+                            @endhasError
+                        </div>
                     </div>
 
                     <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Rate</button>
@@ -80,12 +82,14 @@
         $('#type').change(function(){
             var type = $(this).val();
 
-            if(type == 1){
-                $("#rate").prop("readonly", true);
-                $("#province").prop("disabled", true);
+            if(type == 0){
+                $('#local_input').css('display','block');
+                $("#province").prop("required", true);
+                $("#rate").prop("required", true);
             } else {
-                $("#rate").prop("readonly", false);
-                $("#province").prop("disabled", false);
+                $('#local_input').css('display','none');
+                $("#province").prop("required", false);
+                $("#rate").prop("required", false);
             }
         });
     </script>
