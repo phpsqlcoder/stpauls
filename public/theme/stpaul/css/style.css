@@ -1807,6 +1807,7 @@ p {
 }
 
 .listing-filter-wrap {
+  padding-left: 15px;
   padding-right: 30px;
 }
 
@@ -1862,31 +1863,20 @@ p {
 
 .list-product .product-card,
 .product-related .product-card {
-  background: #f3f3f3;
-  padding: 30px 20px 100px;
+  background: #fff;
+  padding: 30px 30px 100px;
   text-align: center;
   width: 100%;
-  border: 1px solid #f9f9f9;
+  border: 1px solid #dfdfdf;
   -webkit-transition: all 0.5s ease-out;
   transition: all 0.5s ease-out;
   position: relative;
-  min-height: 539px;
 }
 
 .list-product .product-card img,
 .product-related .product-card img {
-  max-width: 80%;
   width: auto !important;
   height: auto !important;
-  margin: 15px auto;
-  -webkit-box-shadow: 0px 0px 15px 0px rgba(180, 180, 180, 0.75);
-          box-shadow: 0px 0px 15px 0px rgba(180, 180, 180, 0.75);
-}
-
-.list-product .product-card .prodImg,
-.product-related .product-card .prodImg {
-  min-height: 347px !important;
-  margin: 15px auto;
 }
 
 .list-product .product-card .product-price,
@@ -3841,6 +3831,9 @@ p {
   .error404 {
     font-size: 180px;
   }
+  .tbl-responsive {
+    width: 1000px !important;
+  }
 }
 
 @media (max-width: 768px) {
@@ -3995,6 +3988,34 @@ p {
   .mb-xs-4 {
     margin-bottom: 0.5rem !important;
   }
+  .product-card {
+    padding: 7px;
+  }
+  .product-card .product-price {
+    font-size: .85rem;
+    font-weight: 800;
+  }
+  .product-card .product-title {
+    font-size: .75rem !important;
+  }
+  .product-link {
+    padding: 0 5px;
+  }
+}
+
+@media (max-width: 575px) {
+  .col-xs-6 {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 50%;
+            flex: 0 0 50%;
+    max-width: 50%;
+  }
+  .pr-xs-1 {
+    padding-right: 0.25rem !important;
+  }
+  .pl-xs-1 {
+    padding-left: 0.25rem !important;
+  }
 }
 
 @media (max-width: 560px) {
@@ -4042,8 +4063,16 @@ p {
   .product-wrap .product-detail .product-btn .product-wishlist svg {
     width: 40px;
   }
+  .out-of-stock {
+    font-size: .75rem !important;
+    padding: 22px 7px;
+  }
   .add-cart-btn {
-    font-size: .85rem !important;
+    font-size: .75rem !important;
+    padding: 7px;
+  }
+  .add-cart-btn img {
+    width: 20px !important;
   }
 }
 /*# sourceMappingURL=style.css.map */

@@ -22,7 +22,7 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        <table id="salesTransaction" class="table table-md table-hover" style="width:100%">
+                        <table id="salesTransaction" class="table tbl-responsive table-md table-hover" style="width:100%">
                             <thead>
                                 <tr>
                                     <th scope="col">Order #</th>
@@ -227,7 +227,7 @@
     <script>
         $(function () {
             $('#salesTransaction').DataTable({
-                "responsive": true,
+                "responsive": false,
                 "columnDefs": [
                     { responsivePriority: 1, targets: 0 },
                     { responsivePriority: 2, targets: -1 }
@@ -239,7 +239,9 @@
                         "next": "&rsaquo;"
                     }
                 }
-            });
+            }).on( 'stateLoaded.dt', function (e, settings, data) {
+                    console.log($("#salesTransaction").parent());
+                } );
         });
     </script>
     <script>
