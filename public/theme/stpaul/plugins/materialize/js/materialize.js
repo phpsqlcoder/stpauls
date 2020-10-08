@@ -12367,6 +12367,3 @@ $jscomp.polyfill = function (e, r, p, m) {
 
   Range.init($('input[type=range]'));
 })(cash, M.anime);
-
-//# sourceMappingURL=materialize_concat.js.map
-//# sourceMappingURL=materialize.js.map

@@ -9,10 +9,13 @@
     <section id="default-wrapper">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
+                <div id="col1" class="col-lg-3">
                     @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.account-page-options')
                 </div>
-                <div class="col-lg-9">
+                <div id="col2" class="col-lg-9">
+                    <nav class="rd-navbar">
+                        <div class="rd-navbar-listing-toggle rd-navbar-static--hidden toggle-original" data-rd-navbar-toggle=".listing-filter-wrap"><span class="lnr lnr-list"></span> Options</div>
+                    </nav>
                     <div class="article-content">
                         <h3 class="subpage-heading">{{ $page->name }}</h3>
                         <div>
