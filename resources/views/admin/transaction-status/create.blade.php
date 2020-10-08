@@ -2,65 +2,105 @@
 
 @section('pagecss')
     <link href="{{ asset('lib/bselect/dist/css/bootstrap-select.css') }}" rel="stylesheet">
-    <link href="{{ asset('lib/prismjs/themes/prism-vs.css') }}" rel="stylesheet">
-    <link href="{{ asset('lib/datextime/daterangepicker.css') }}" rel="stylesheet">
-
-    <link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
-    <style>
-    	.table td {
-		    padding: 0 0px;
-		}
-    </style>
-
+    <link href="{{ asset('lib/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet">
+    <script src="{{ asset('lib/ckeditor/ckeditor.js') }}"></script>
 @endsection
 
 @section('content')
-<div class="container pd-x-0">
-    <div class="d-sm-flex justify-content-between mg-b-20 mg-lg-b-25 mg-xl-b-30">
-        <div>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb breadcrumb-style1 mg-b-10">
-                    <li class="breadcrumb-item" aria-current="page">CMS</li>
-                    <li class="breadcrumb-item" aria-current="page">Transaction Status</li>
-                    <li class="breadcrumb-item active" aria-current="page">Create a Transaction</li>
-                </ol>
-            </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Create a Transaction</h4>
+    <div class="container pd-x-0">
+        <div class="d-sm-flex align-items-center justify-content-between mg-b-20 mg-lg-b-25 mg-xl-b-30">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-style1 mg-b-10">
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('dashboard')}}">CMS</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"><a href="{{route('transaction-status.index')}}">Transaction Status</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create a Transaction Status</li>
+                    </ol>
+                </nav>
+                <h4 class="mg-b-0 tx-spacing--1">Create a Transaction Status</h4>
+            </div>
         </div>
-    </div>
-    <form autocomplete="off" action="{{ route('transaction-status.store') }}" method="post" id="promo_form">
-        @csrf
-        <div class="row row-sm">
-            <div class="col-lg-6">
-            	<div class="form-group">
-            		<label class="d-block">Name*</label>
-            		<input required type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" maxlength="150">
-            		@hasError(['inputName' => 'name'])
-                    @endhasError
-            	</div>
+        <form autocomplete="off" id="albumForm" method="POST" action="{{ route('transaction-status.store') }}" enctype="multipart/form-data">
+            <div class="row row-sm">
+                @method('POST')
+                @csrf
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="d-block">Name *</label>
+                        <input required name="name" id="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" maxlength="150">
+                        @hasError(['inputName' => 'name'])
+                        @endhasError
+                    </div>
 
-                <div class="form-group">
-                    <label class="d-block">Status</label>
-                    <div class="custom-control custom-switch @error('status') is-invalid @enderror">
-                        <input type="checkbox" class="custom-control-input" name="status" {{ (old("status") ? "checked":"") }} id="customSwitch1">
-                        <label class="custom-control-label" id="label_visibility" for="customSwitch1">Inactive</label>
-                        @hasError(['inputName' => 'status'])
+                    <div class="form-group">
+                        <label class="d-block">Email Subject *</label>
+                        <input required name="subject" id="subject" value="{{ old('subject') }}" type="text" class="form-control @error('subject') is-invalid @enderror" maxlength="150">
+                        @hasError(['inputName' => 'subject'])
                         @endhasError
                     </div>
                 </div>
-            </div>
+                
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="d-block" id="long_descriptionLabel">Content *</label>
+                        <span>To display order details, you need to add the following keywords.</span>
+                        <ul>
+                            <li>{shippingfee}   = Displays the shipping fee</li>
+                            <li>{customer_name} = Displays the customer name</li>
+                            <li>{order_number}  = Displays the order number</li>
+                            <li>{company_name}  = Displays the company name</li>
+                            <li>{paid_amount}   = Displays the amount paid of the customer</li>
+                            <li>{remarks}       = Displays the sales remarks</li>
+                        </ul>
+                        <textarea name="content" id="editor1" rows="10" cols="80">
+                             {{ old('content') }}
+                        </textarea>
+                    </div>
+                </div>
 
-            <div class="col-lg-12 mg-t-20 mg-b-30">
-                <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Transaction</button>
-                <a href="{{ route('transaction-status.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="d-block">Status</label>
+                        <div class="custom-control custom-switch @error('status') is-invalid @enderror">
+                            <input type="checkbox" class="custom-control-input" name="status" {{ (old("status") ? "checked":"") }} id="customSwitch1">
+                            <label class="custom-control-label" id="label_visibility" for="customSwitch1">Inactive</label>
+                            @hasError(['inputName' => 'status'])
+                            @endhasError
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12 mg-t-30">
+                    <button type="submit" class="btn btn-primary btn-sm btn-uppercase">Save Transaction Status</button>
+                    <a href="{{ route('transaction-status.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
+                </div>
+
             </div>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
 @endsection
 
 @section('pagejs')
+    <script src="{{ asset('lib/bselect/dist/js/bootstrap-select.js') }}"></script>
+    <script src="{{ asset('lib/bselect/dist/js/i18n/defaults-en_US.js') }}"></script>
+    <script src="{{ asset('lib/ion-rangeslider/js/ion.rangeSlider.min.js') }}"></script>
+
+    <script src="{{ asset('lib/jqueryui/jquery-ui.min.js') }}"></script>
+@endsection
+
+@section('customjs')
     <script>
+        var options = {
+            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+            filebrowserImageUpload: '/laravel-filemanager/upload?type=Images&_token=',
+            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token',
+            allowedContent: true,
+
+        };
+
+        CKEDITOR.replace('content', options);
+    
         /** form validations **/
         $("#customSwitch1").change(function() {
             if(this.checked) {

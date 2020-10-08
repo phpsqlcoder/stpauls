@@ -57,7 +57,7 @@
                                         <div class="info-wrap">
                                             <div class="cart-description">
                                                 <input type="hidden" name="cart_id[]" value="{{$order->id}}">
-                                                <h3 class="cart-product-title"><a href="product-profile.htm">{{ $order->product->name }}</a></h3>
+                                                <h3 class="cart-product-title"><a href="{{ route('product.front.show',$order->product->slug)}}">{{ $order->product->name }}</a></h3>
                                                 <ol class="breadcrumb">
                                                     @php 
                                                         $arr = \App\EcommerceModel\ProductCategory::product_category($order->product->category_id);

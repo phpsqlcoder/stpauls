@@ -39,7 +39,7 @@
                         <td>{{$r->code}}</td>
                         <td>{{$r->name}}</td>
                         <td>{{$r->category->name}}</td>
-                        <td>{{$r->price}}</td>
+                        <td>{{number_format($r->price,2)}}</td>
                         <td>{{$r->size}}</td>
                         <td>{{$r->weight}}</td>
                         <td>{{$r->uom}}</td>

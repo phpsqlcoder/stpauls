@@ -108,7 +108,7 @@ Manage Customer
                         </div>
                         <div class="mg-t-10">
                             @if (auth()->user()->has_access_to_route('product-categories.create'))
-                                <a class="btn btn-primary btn-sm mg-b-20" href="{{ route('transaction-status.create') }}">Create a Transaction Status</a>
+                                <a class="btn btn-primary btn-sm mg-b-20" href="{{ route('transaction-status.create') }}">Create a Template</a>
                             @endif
                         </div>
                     </div>
@@ -130,7 +130,9 @@ Manage Customer
                                             <label class="custom-control-label" for="checkbox_all"></label>
                                         </div>
                                     </th>
-                                    <th width="20%">Name</th>
+                                    <th width="15%">Name</th>
+                                    <th width="15%">Subject</th>
+                                    <th width="30%">Content</th>
                                     <th width="10%">Status</th>
                                     <th width="15%">Last Date Modified</th>
                                     <th width="10%">Options</th>
@@ -148,6 +150,8 @@ Manage Customer
                                 <td>
                                     <strong @if($transaction->trashed()) style="text-decoration:line-through;" @endif> {{ $transaction->name }}</strong>
                                 </td>
+                                <td>{{ $transaction->subject }}</td>
+                                <td>{{ str_limit(strip_tags($transaction->content), 80, $end ='...') }}</td>
                                 <td>{{ $transaction->status }}</td>
                                 <td>{{ Setting::date_for_listing($transaction->updated_at) }}</td>
                                 <td>
@@ -185,7 +189,7 @@ Manage Customer
                             </tr>
                             @empty
                             <tr>
-                                <th colspan="6" style="text-align: center;"> <p class="text-danger">No transaction status found.</p></th>
+                                <th colspan="7" style="text-align: center;"> <p class="text-danger">No transaction status found.</p></th>
                             </tr>
                             @endforelse
                             </tbody>

@@ -142,7 +142,7 @@
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right"><strong>Loyalty Discount</strong></td>
-                        <td class="text-right">{{ number_format($sales->discount_amount,0) }}</td>
+                        <td class="text-right">{{ number_format($sales->discount_amount,0) }}%</td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right"><strong>Grand Total</strong></td>

@@ -18,6 +18,8 @@ use App\EcommerceModel\Customer;
 use App\User;
 use App\Page;
 
+use App\StPaulModel\TransactionStatus;;
+
 class SalesController extends Controller
 {
     private $searchFields = ['order_number','response_code','updated_at'];
@@ -114,30 +116,31 @@ class SalesController extends Controller
 
     public function approve_order(Request $request)
     {   
-        $qry = SalesHeader::find($request->orderid);
-        $user = User::find($qry->customer_id);
+        $sales = SalesHeader::find($request->orderid);
+        $user = User::find($sales->customer_id);
 
-        if($qry->status == 'CANCELLED'){
+        if($sales->status == 'CANCELLED'){
             return back()->with('error', 'Order was already cancelled by the customer.');
         } else {
 
             if($request->status == 'APPROVE'){
 
-                $qry->update([
-                    'delivery_fee_amount' => ($qry->is_other == 1) ? $request->shippingfee : $qry->delivery_fee_amount,
-                    'net_amount' => ($qry->is_other == 1) ? $qry->net_amount+$request->shippingfee : $qry->net_amount,
-                    'gross_amount' => ($qry->is_other == 1) ? $qry->gross_amount+$request->shippingfee : $qry->gross_amount,
+                $sales->update([
+                    'delivery_fee_amount' => ($sales->is_other == 1) ? $request->shippingfee : $sales->delivery_fee_amount,
+                    'net_amount' => ($sales->is_other == 1) ? $sales->net_amount+$request->shippingfee : $sales->net_amount,
+                    'gross_amount' => ($sales->is_other == 1) ? $sales->gross_amount+$request->shippingfee : $sales->gross_amount,
                     'delivery_status' => 'Scheduled for Processing',
                     'is_approve' => 1,
                     'remarks' => $request->remarks
                 ]);
 
-                $user->customer_send_order_approved_email();
+                $this->send_email_notification($sales,'Order Approve');
+
                 return back()->with('success', 'Order has been approved.');
 
             } else {
 
-                $qry->update([
+                $sales->update([
                     'status' => 'CANCELLED',
                     'delivery_status' => 'CANCELLED',
                     'remarks' => $request->remarks
@@ -166,7 +169,9 @@ class SalesController extends Controller
                 'user_id' => Auth::id(),
                 'is_approve' => 1
             ]);
-            $user->customer_send_payment_approved_email($payment);
+
+            $this->send_email_notification($sales,'Approve Payment');
+
             return back()->with('success',__('standard.sales.approve_success'));
 
         } else {
@@ -300,7 +305,23 @@ class SalesController extends Controller
             'gross_amount' => ($sales->gross_amount+$request->shippingfee)
         ]);
 
+        $this->send_email_notification($sales,'Add Shipping Fee');
+
         return back()->with('success', 'Shipping fee has been added.');
+    }
+
+
+    public function send_email_notification($sales,$transactionstatus)
+    {
+        $qry = TransactionStatus::where('name',$transactionstatus);
+        $count = $qry->count();
+
+        if($qry->count() > 0){
+            $template = $qry->first();
+
+            $user = User::find($sales->customer_id);
+            $user->send_email_notification($sales,$template);
+        }
     }
 
 

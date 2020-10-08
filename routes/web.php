@@ -321,14 +321,12 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
         // Transaction Status
             Route::resource('/admin/transaction-status','Transaction\TransactionStatusController');
+
             Route::post('/admin/transaction-status-single-delete', 'Transaction\TransactionStatusController@single_delete')->name('transaction_status.single-delete');
             Route::get('/admin/transaction-status/restore/{id}', 'Transaction\TransactionStatusController@restore')->name('transaction_status.restore');
             Route::get('/admin/transaction-status/{id}/{status}', 'Transaction\TransactionStatusController@update_status')->name('transaction_status.change-status');
             Route::post('/admin/transaction-status-multiple-change-status','Transaction\TransactionStatusController@multiple_change_status')->name('transaction_status.multiple.change.status');
             Route::post('/admin/transaction-status-multiple-delete','Transaction\TransactionStatusController@multiple_delete')->name('transaction-status.multiple.delete');
-
-        // Email Templates
-            Route::resource('/admin/email-templates','Transaction\EmailTemplateController');
 
 
             

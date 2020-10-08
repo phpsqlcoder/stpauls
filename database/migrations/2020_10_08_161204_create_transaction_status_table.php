@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmailTemplatesTable extends Migration
+class CreateTransactionStatusTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateEmailTemplatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('email_templates', function (Blueprint $table) {
+        Schema::create('transaction_status', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name',150);
-            $table->integer('transactionstatus_id');
+            $table->text('subject');
             $table->text('content');
             $table->string('status');
-            $table->integer('user_id'); 
+            $table->integer('user_id');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +32,6 @@ class CreateEmailTemplatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('email_templates');
+        Schema::dropIfExists('transaction_status');
     }
 }

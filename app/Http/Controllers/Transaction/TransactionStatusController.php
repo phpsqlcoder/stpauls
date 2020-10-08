@@ -23,7 +23,7 @@ class TransactionStatusController extends Controller
      */
     public function index()
     {
-        $listing = new ListingHelper();
+        $listing = new ListingHelper('desc', 10, 'updated_at');
 
         $transactions = $listing->simple_search(TransactionStatus::class, $this->searchFields);
 
@@ -52,16 +52,17 @@ class TransactionStatusController extends Controller
      */
     public function store(Request $request)
     {
-        $transactionInfo = $request->only(['name']);
-
         $this->validate(
             $request,[
                 'name' => 'required|max:150|unique:transaction_status,name',
+                'subject' => 'required|max:150',
             ]  
         );
 
         TransactionStatus::create([
             'name' => $request->name,
+            'subject' => $request->subject,
+            'content' => $request->content,
             'status' => ($request->has('status') ? 'ACTIVE' : 'INACTIVE'),
             'user_id' => Auth::id()
         ]);

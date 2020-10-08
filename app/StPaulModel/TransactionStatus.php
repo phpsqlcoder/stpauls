@@ -11,7 +11,7 @@ class TransactionStatus extends Model
 	
     public $table = 'transaction_status';
 
-    protected $fillable = ['name','status','user_id'];
+    protected $fillable = ['name','subject', 'content', 'status','user_id'];
     protected $timestamp = true;
 
 }

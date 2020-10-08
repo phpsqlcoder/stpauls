@@ -32,7 +32,8 @@ class ProductRequest extends FormRequest
             'meta_keyword' => 'max:150',
             'meta_description' => 'max:250',
             'price' => 'required',
-            'size' => 'max:30'
+            'size' => 'max:30',
+            'weight' => 'required'
         ];
     }
 }

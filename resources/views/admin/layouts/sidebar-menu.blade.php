@@ -251,7 +251,7 @@
                 <ul>
                     <li @if (\Route::current()->getName() == 'branch.index' || \Route::current()->getName() == 'branch.edit') class="active" @endif><a href="{{ route('branch.index') }}">Manage Branches</a></li>
                     @if (auth()->user()->has_access_to_route('branch.create'))
-                        <li @if (\Route::current()->getName() == 'branch.create') class="active" @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
+                        <li @if (\Route::current()->getName() == 'branch.create') class=" " @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
                     @endif
                 </ul>
             </li>
@@ -259,18 +259,11 @@
 
         @if (auth()->user()->has_access_to_module('transaction-status'))
         <li class="nav-item with-sub @if (request()->routeIs('transaction-status*')) active show @endif">
+
             <a href="" class="nav-link"><i data-feather="users"></i> <span>Transaction Status</span></a>
             <ul>
                 <li @if (\Route::current()->getName() == 'transaction-status.index') class="active" @endif><a href="{{ route('transaction-status.index') }}">Manage Transaction Status</a></li>
                 <li><a href="{{ route('transaction-status.create') }}">Create a Transaction Status</a></li>
-            </ul>
-        </li>
-
-        <li class="nav-item with-sub @if (request()->routeIs('email-templates*')) active show @endif">
-            <a href="" class="nav-link"><i data-feather="users"></i> <span>Email Templates</span></a>
-            <ul>
-                <li @if (\Route::current()->getName() == 'email-templates.index') class="active" @endif><a href="{{ route('email-templates.index') }}">Manage Templates</a></li>
-                <li><a href="{{ route('email-templates.create') }}">Create a Template</a></li>
             </ul>
         </li>
         @endif
