@@ -313,7 +313,7 @@ class SalesController extends Controller
 
     public function send_email_notification($sales,$transactionstatus)
     {
-        $qry = TransactionStatus::where('name',$transactionstatus);
+        $qry = TransactionStatus::where('name',$transactionstatus)->where('status','ACTIVE');
         $count = $qry->count();
 
         if($qry->count() > 0){

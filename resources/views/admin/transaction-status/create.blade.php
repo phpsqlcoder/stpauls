@@ -52,9 +52,15 @@
                             <li>{paid_amount}   = Displays the amount paid of the customer</li>
                             <li>{remarks}       = Displays the sales remarks</li>
                         </ul>
-                        <textarea name="content" id="editor1" rows="10" cols="80">
-                             {{ old('content') }}
+
+                        <textarea name="content" id="editor1" rows="10" cols="80" required>
+                            {{ old('content') }}
                         </textarea>
+                        @hasError(['inputName' => 'content'])
+                        @endhasError
+                        <span class="invalid-feedback" role="alert" id="contentRequired" style="display: none;">
+                            <strong>The content field is required</strong>
+                        </span>
                     </div>
                 </div>
 
@@ -71,7 +77,7 @@
                 </div>
 
                 <div class="col-lg-12 mg-t-30">
-                    <button type="submit" class="btn btn-primary btn-sm btn-uppercase">Save Transaction Status</button>
+                    <button type="submit" class="btn btn-primary btn-sm btn-uppercase" id="btnSave">Save Transaction Status</button>
                     <a href="{{ route('transaction-status.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
                 </div>
 
@@ -99,8 +105,15 @@
 
         };
 
-        CKEDITOR.replace('content', options);
-    
+        let editor = CKEDITOR.replace('content', options);
+        editor.on('required', function (evt) {
+            if ($('.invalid-feedback').length == 1) {
+                $('#contentRequired').show();
+            }
+            $('#cke_editor1').addClass('is-invalid');
+            evt.cancel();
+        });
+
         /** form validations **/
         $("#customSwitch1").change(function() {
             if(this.checked) {
