@@ -28,7 +28,7 @@
                     <div id="login">
                         <div class="row align-items-center">
                             <div class="col-md-8 col-sm-12">
-                                <h2 class="lgin-title">Welcome to STPAULS! Please Login.</h2>
+                                <h2 class="lgin-title">Welcome to ST PAULS! Please Login.</h2>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <p class="text-right" id="new-mem">New member? <a href="{{ route('customer-front.sign-up') }}">Register</a> here.</p>

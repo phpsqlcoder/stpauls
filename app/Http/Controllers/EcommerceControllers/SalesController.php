@@ -127,8 +127,7 @@ class SalesController extends Controller
                     'delivery_fee_amount' => ($qry->is_other == 1) ? $request->shippingfee : $qry->delivery_fee_amount,
                     'net_amount' => ($qry->is_other == 1) ? $qry->net_amount+$request->shippingfee : $qry->net_amount,
                     'gross_amount' => ($qry->is_other == 1) ? $qry->gross_amount+$request->shippingfee : $qry->gross_amount,
-                    'status' => 'APPROVED',
-                    'delivery_status' => 'Processing',
+                    'delivery_status' => 'Scheduled for Processing',
                     'is_approve' => 1,
                     'remarks' => $request->remarks
                 ]);
@@ -162,9 +161,8 @@ class SalesController extends Controller
 
             $payment->update(['is_verify' => 1]);
             $sales->update([
-                'status' => 'PAID',
                 'payment_status' => 'PAID',
-                'delivery_status' => 'Processing',
+                'delivery_status' => 'Scheduled for Processing',
                 'user_id' => Auth::id(),
                 'is_approve' => 1
             ]);
@@ -203,7 +201,6 @@ class SalesController extends Controller
             SalesHeader::find($request->sales_header_id)->update([
                 'delivery_status' => 'Delivered',
                 'payment_status' => 'PAID',
-                'status' => 'COMPLETED'
             ]);
 
 
@@ -229,17 +226,14 @@ class SalesController extends Controller
 
         if($qry->payment_method == 0){
             $qry->update([
-                'status' => 'IN-PROGRESS',
                 'delivery_status' => $request->delivery_status
             ]);
         } else {
             $qry->update([
-                'status' => ($request->delivery_status == 'Delivered') ? 'COMPLETED' : 'PAID',
                 'delivery_status' => $request->delivery_status
             ]);
         }
         
-
         $update_delivery_table = DeliveryStatus::create([
             'order_id' => $request->del_id,
             'user_id' => Auth::id(),
@@ -254,22 +248,6 @@ class SalesController extends Controller
         return back()->with('success','Successfully updated delivery status!');
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // BEGIN CARD PAYMENT
     public function sales_card_payment()
@@ -291,7 +269,39 @@ class SalesController extends Controller
     }
     // END CARD PAYMENT
 
+    // Others
+    public function sales_other()
+    {
+        $listing = new ListingHelper('desc',10,'order_number');
 
+        $sales = SalesHeader::where('payment_status','UNPAID')->where('delivery_type','!=','Store Pick Up')->where('delivery_fee_amount',0);
+
+        // if(isset($_GET['search']) && $_GET['search']<>'')
+        //     $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
+
+        $sales = $sales->orderBy('id','desc');
+        $sales = $sales->paginate(10);
+
+        $filter = $listing->get_filter($this->searchFields);
+        $searchType = 'simple_search';
+
+        return view('admin.sales.others',compact('sales','filter','searchType'));
+    }
+
+    public function add_shippingfee(Request $request)
+    {
+        $sales = SalesHeader::findOrFail($request->orderid);
+
+        $sales->update([
+            'delivery_status' => ($sales->delivery_type == 'Cash on Delivery') ? 'Scheduled for Processing' : 'Waiting for Payment',
+            'is_approve' => ($sales->delivery_type == 'Cash on Delivery') ? 1 : 0,
+            'delivery_fee_amount' => $request->shippingfee,
+            'net_amount' => ($sales->net_amount+$request->shippingfee),
+            'gross_amount' => ($sales->gross_amount+$request->shippingfee)
+        ]);
+
+        return back()->with('success', 'Shipping fee has been added.');
+    }
 
 
 
@@ -335,6 +345,8 @@ class SalesController extends Controller
 
         return back()->with('success','Successfully deleted transaction');
     }
+
+
 
     public function update(Request $request)
     {

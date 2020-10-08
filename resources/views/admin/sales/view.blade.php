@@ -44,7 +44,7 @@
                 </li>               
                 <li class="d-flex justify-content-between">
                     <span>Payment Method</span>
-                    <span>@if($sales->payment_method == 0) Cash @else {{$sales->payment->payment_type }} @endif</span>
+                    <span>{{ \App\EcommerceModel\SalesHeader::payment_type($sales->id) }}</span>
                 </li>
                 <li class="d-flex justify-content-between">
                     <span>Delivery Status</span>
@@ -97,21 +97,24 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th class="wd-10p">Product Code</th>
+                        <th class="wd-10p">Items</th>
+                        <th class="tx-center">Weight (kg)</th>
                         <th class="tx-center">Price (₱)</th>
-                        <th class="tx-right">Quantity</th>
+                        <th class="tx-center">Quantity</th>
                         <th class="tx-right">Total (₱)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php $subtotal = 0; @endphp
+                    @php $subtotal = 0; $totalweight = 0; @endphp
 
                     @forelse($sales->items as $item)
                     @php
                         $subtotal += $item->price*$item->qty;
+                        $totalweight += $item->product->weight*$item->qty;
                     @endphp
                     <tr>
                         <td>{{ $item->product_name}}</td>
+                        <td class="tx-center">{{ ($item->product->weight/1000) }}</td>
                         <td class="text-center">{{ number_format($item->price,2) }}</td>
                         <td class="text-center">{{ number_format($item->qty,2) }}</td>
                         <td class="text-right">{{ number_format($item->price*$item->qty,2) }}</td>
@@ -122,34 +125,67 @@
                     </tr>
                     @endforelse
                     <tr>
-                        <td colspan="3" class="text-right"><strong>Subtotal</strong></td>
+                        <td colspan="4" class="text-right"><strong>Total Weight</strong></td>
+                        <td class="text-right">{{ ($totalweight/1000) }} kg</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4" class="text-right"><strong>Subtotal</strong></td>
                         <td class="text-right">{{ number_format($subtotal,2) }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="text-right"><strong>Shipping Rate</strong></td>
+                        <td colspan="4" class="text-right"><strong>Shipping Fee</strong></td>
                         <td class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="text-right"><strong>Service Fee</strong></td>
+                        <td colspan="4" class="text-right"><strong>Service Fee</strong></td>
                         <td class="text-right">{{ number_format($sales->service_fee,2) }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="text-right"><strong>Loyalty Discount</strong></td>
+                        <td colspan="4" class="text-right"><strong>Loyalty Discount</strong></td>
                         <td class="text-right">{{ number_format($sales->discount_amount,0) }}</td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="text-right"><strong>Grand Total</strong></td>
+                        <td colspan="4" class="text-right"><strong>Grand Total</strong></td>
                         <td class="text-right">{{ number_format($sales->net_amount,2) }}</td>
                     </tr>
                 </tbody>
             </table>
             @if($sales->status != 'CANCELLED')
-                @if($sales->is_approve == 0 && $sales->delivery_type == 'Cash on Delivery')
-                    <button type="button" class="btn btn-sm btn-danger float-right mg-l-5" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','REJECT');">Reject</button>
-                    <button type="button" class="btn btn-sm btn-primary float-right" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','APPROVE');">Approve</button>
+                @if($sales->delivery_status == 'Shipping Fee Validation')
+                    <button type="button" class="btn btn-sm btn-primary float-right mg-l-5" onclick="add_shippingfee('{{$sales->id}}','{{$sales->order_number}}');">Add Shipping Fee</button>
+                @else
+                    @if($sales->is_approve == 0 && $sales->delivery_type == 'Cash on Delivery')
+                        <button type="button" class="btn btn-sm btn-danger float-right mg-l-5" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','REJECT');">Reject</button>
+                        <button type="button" class="btn btn-sm btn-primary float-right" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','APPROVE');">Approve</button>
+                    @endif
                 @endif
             @endif
         </div>
+    </div>
+</div>
+
+<div class="modal effect-scale" id="prompt-add-shippingfee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <form action="{{ route('add-shipping-fee') }}" method="POST">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add Shipping Fee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">  
+                    <input type="hidden" name="orderid" id="shippingfee_orderid">
+                    <p>Enter Shipping fee for order #: <strong><span id="addshippingfee_order"></span></strong></p>
+                    <input type="number" name="shippingfee" class="form-control" min="1">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnDelete">Submit Shipping Fee</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -217,6 +253,12 @@
 
 @section('pagejs')
     <script>
+        function add_shippingfee(id,orderno){
+            $('#shippingfee_orderid').val(id);
+            $('#addshippingfee_order').html(orderno);
+            $('#prompt-add-shippingfee').modal('show');
+        }
+
         function order_response(id,order,status){
             if(status == 'APPROVE'){
                 $('#id_approve').val(id);

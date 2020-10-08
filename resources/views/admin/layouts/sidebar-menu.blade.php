@@ -154,6 +154,7 @@
                 <a href="" class="nav-link"><i data-feather="users"></i> <span>Manage Sales Transaction</span></a>
                 <ul>
                     {{--<li @if (\Route::current()->getName() == 'sales-transaction.index') class="active" @endif><a href="{{ route('sales-transaction.index') }}">Sales Transactions</a></li>--}}
+
                     <li @if (\Route::current()->getName() == 'sales-transaction.money-transfer') class="active" @endif>
                         <a href="{{ route('sales-transaction.money-transfer') }}">Money Transfer 
                             &nbsp;
@@ -178,6 +179,14 @@
                             @endif
                         </a>
                     </li>
+                    {{--<li @if (\Route::current()->getName() == 'sales-transaction.other') class="active" @endif>
+                        <a href="{{ route('sales-transaction.other') }}">Others
+                            &nbsp;
+                            @if(\App\EcommerceModel\SalesHeader::shippingfee_validation() > 0)
+                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesHeader::shippingfee_validation()}}</span>
+                            @endif
+                        </a>
+                    </li>--}}
                 </ul>
             </li>
         @endif
@@ -246,6 +255,24 @@
                     @endif
                 </ul>
             </li>
+        @endif
+
+        @if (auth()->user()->has_access_to_module('transaction-status'))
+        <li class="nav-item with-sub @if (request()->routeIs('transaction-status*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="users"></i> <span>Transaction Status</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'transaction-status.index') class="active" @endif><a href="{{ route('transaction-status.index') }}">Manage Transaction Status</a></li>
+                <li><a href="{{ route('transaction-status.create') }}">Create a Transaction Status</a></li>
+            </ul>
+        </li>
+
+        <li class="nav-item with-sub @if (request()->routeIs('email-templates*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="users"></i> <span>Email Templates</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'email-templates.index') class="active" @endif><a href="{{ route('email-templates.index') }}">Manage Templates</a></li>
+                <li><a href="{{ route('email-templates.create') }}">Create a Template</a></li>
+            </ul>
+        </li>
         @endif
 
         @if (auth()->user()->has_access_to_module('product') || auth()->user()->has_access_to_module('customer') ||

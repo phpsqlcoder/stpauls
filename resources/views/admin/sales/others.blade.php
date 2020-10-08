@@ -25,7 +25,7 @@
                         <li class="breadcrumb-item active" aria-current="page"><a href="{{route('sales-transaction.index')}}">Sales Transaction</a></li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Sales Transaction : Money Transfer</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Sales Transaction : Others</h4>
             </div>
         </div>
 
@@ -81,32 +81,11 @@
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ \App\EcommerceModel\SalesHeader::payment_type($sale->id) }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
-                                    <td>
-                                        @if($count > 0)
-                                            @if($payment->is_verify == 0)
-                                            <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
-                                            @else
-                                            {{ $sale->delivery_status }}
-                                            @endif
-                                        @else
-                                            <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
-                                        @endif
-                                    </td>
+                                    <td>{{ $sale->delivery_status }}</td>
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
                                         <nav class="nav table-options">
                                             <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Page"><i data-feather="eye"></i></a>
-
-                                            @if($sale->payment_status == 'PAID')
-                                            <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i data-feather="settings"></i>
-                                            </a>
-                                            @endif
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
-
-                                                <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
-                                            </div>
                                         </nav>
                                     </td>
                                 </tr>
@@ -195,72 +174,4 @@
     </script>
 
     <script src="{{ asset('js/listing.js') }}"></script>
-@endsection
-
-@section('customjs')
-    <script>
-        function show_payment_details(id){
-            var url = "{{ route('display.payment-details', ':id') }}";
-                url = url.replace(':id',id);
-
-            $.ajax({
-                type: "GET",
-                url: url,
-                data: '',
-                success: function( response ) {
-                    $('#payment_details_tbl').html(response);
-                    $('#prompt-show-payment-details').modal('show');
-                }
-            });
-        }
-
-        function approve_payment(id,status){
-            if(status == 'APPROVE'){
-                var text = 'approve';
-                var btnColor = '#8CD4F5';
-            } else {
-                var text = 'reject'
-                var btnColor = '#d33';
-            }
-
-            swal({
-                title: '',
-                text: "You are about to "+text+" this payment. Do you want to continue?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: btnColor,
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, '+text+' it!'            
-            },
-            function(isConfirm) {
-                if (isConfirm) {
-                    $('#payment_id').val(id);
-                    $('#status').val(status);
-                    $('#payment_form').submit();
-                } 
-                else {                    
-                    swal.close();                   
-                }
-            });
-        }
-
-
-        function change_delivery_status(id){
-            $('#prompt-change-delivery-status').modal('show');
-            $('#del_id').val(id);
-        }
-
-        function show_delivery_history(id){
-            $.ajax({
-                type: "GET",
-                url: "{{ route('display.delivery-history') }}",
-                data: { id : id },
-                success: function( response ) {
-                    $('#delivery_history_tbl').html(response);
-                    $('#prompt-show-delivery-history').modal('show');
-                }
-            });
-        }
-
-    </script>
 @endsection

@@ -142,33 +142,33 @@ class WebController extends Controller
         }
     }
 
-    public function update_ecommerce(Request $request)
-    {
-        $ecommerce = Setting::first();
-        $ecommerce->min_order = $request->min_order;
-        $ecommerce->promo_is_displayed = (isset($_POST['promo_is_displayed']) == '1' ? '1' : '0');
-        $ecommerce->review_is_allowed = (isset($_POST['review_is_allowed']) == '1' ? '1' : '0');
-        $ecommerce->pickup_is_allowed = (isset($_POST['pickup_is_allowed']) == '1' ? '1' : '0');
+    // public function update_ecommerce(Request $request)
+    // {
+    //     $ecommerce = Setting::first();
+    //     $ecommerce->min_order = $request->min_order;
+    //     $ecommerce->promo_is_displayed = (isset($_POST['promo_is_displayed']) == '1' ? '1' : '0');
+    //     $ecommerce->review_is_allowed = (isset($_POST['review_is_allowed']) == '1' ? '1' : '0');
+    //     $ecommerce->pickup_is_allowed = (isset($_POST['pickup_is_allowed']) == '1' ? '1' : '0');
 
-        $ecommerce->min_order_is_allowed = (isset($_POST['min_order_is_allowed']) == '1' ? '1' : '0');
-        $ecommerce->flatrate_is_allowed = (isset($_POST['flatrate_is_allowed']) == '1' ? '1' : '0');
-        $ecommerce->delivery_collect_is_allowed = (isset($_POST['delivery_collect_is_allowed']) == '1' ? '1' : '0');
+    //     $ecommerce->min_order_is_allowed = (isset($_POST['min_order_is_allowed']) == '1' ? '1' : '0');
+    //     $ecommerce->flatrate_is_allowed = (isset($_POST['flatrate_is_allowed']) == '1' ? '1' : '0');
+    //     $ecommerce->delivery_collect_is_allowed = (isset($_POST['delivery_collect_is_allowed']) == '1' ? '1' : '0');
 
-        $ecommerce->delivery_note = $request->delivery_note;
-        $ecommerce->save();
+    //     $ecommerce->delivery_note = $request->delivery_note;
+    //     $ecommerce->save();
 
-        if($ecommerce){
-            return back()->with([
-                'tabname' => 'ecommerce',
-                'success' =>  'Successfully updated the ecommerce settings.'
-            ]);
-        } else {
-            return back()->with([
-                'tabname' => 'ecommerce',
-                'error' =>  'Error occur while updating Ecommerce Settings.'
-            ]);
-        }
-    }
+    //     if($ecommerce){
+    //         return back()->with([
+    //             'tabname' => 'ecommerce',
+    //             'success' =>  'Successfully updated the ecommerce settings.'
+    //         ]);
+    //     } else {
+    //         return back()->with([
+    //             'tabname' => 'ecommerce',
+    //             'error' =>  'Error occur while updating Ecommerce Settings.'
+    //         ]);
+    //     }
+    // }
 
     // public function update_paynamics(Request $request)
     // {

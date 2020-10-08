@@ -642,42 +642,6 @@
                                         </div>
                                     </form>
                                 </div>
-                                <hr>
-
-                                <form method="post" action="{{ route('website-settings.update-ecommerce') }}">
-                                @csrf
-                                    <div class="form-group">
-                                        <div class="parsley-input">                                            
-                                            <input type="checkbox" name="min_order_is_allowed" id="min_order_is_allowed" @if($web->min_order_is_allowed == 1) checked @endif value="{{ old('min_order_is_allowed',$web->min_order_is_allowed) }}">
-                                            Option 8: Add Free delivery option upon reaching minimum order
-                                        </div>
-                                    </div>
-
-                                    <div id="div1" style="display:@if($web->min_order_is_allowed > 0) block @else none @endif; padding-left:20px;">
-                                        <div class="form-group">
-                                            <div id="title" class="parsley-input">
-                                                <label>Minimum Order for Free Delivery</label>
-                                                <input type="number" name="min_order" id="min_order" class="form-control" data-parsley-class-handler="#title" value="{{ old('min_order',$web->min_order) }}" required>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="parsley-input">                                            
-                                            <input type="checkbox" name="flatrate_is_allowed"  @if($web->flatrate_is_allowed == 1) checked @endif   value="{{ old('flatrate_is_allowed',$web->flatrate_is_allowed) }}">
-                                            Option 9: Flat Rate per area. <br><small class="mg-l-15">Note: This option requires you to specify the list of deliverable locations to <i>Delivery Rates Module</i></small>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div id="revd" class="parsley-input">                                            
-                                            <input type="checkbox" name="delivery_collect_is_allowed"  @if($web->delivery_collect_is_allowed == 1) checked @endif  data-parsley-class-handler="#revd" value="{{ old('delivery_collect_is_allowed',$web->delivery_collect_is_allowed) }}">
-                                            Option 10: Delivery Charge Collect
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-xs btn-primary">Save Changes</button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>

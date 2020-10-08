@@ -34,6 +34,9 @@
                             </thead>
                             <tbody>
                                 @forelse($sales as $sale)
+                                @php
+                                    $payment_status = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->count();
+                                @endphp
                                 <tr>
                                     <td>{{ $sale->order_number }}</td>
                                     <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
@@ -42,30 +45,28 @@
                                     <td align="right">
                                         @if($sale->status != 'CANCELLED')
 
-                                            <!-- Cash On Delivery -->
-                                            @if($sale->payment_method == 0)
-                                                @if($sale->is_approve == 0)
+                                            @if($sale->delivery_status == 'Shipping Fee Validation')
                                                 <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
                                                     <span class="lnr lnr-cross mr-2"></span>
                                                 </a>
-                                                @endif
-                                            @endif
+                                            @else
 
-                                            @php
-                                                $payment_status = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->count();
-                                            @endphp
-                                            <!-- Money Transfer -->
-                                            @if($sale->payment_method > 1)
-                                                @if($payment_status == 0)
-                                                    <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
-                                                        <span class="lnr lnr-inbox mr-2"></span>
-                                                    </a>
+                                                @if($sale->delivery_status == 'Waiting for Payment' && $payment_status == 0)
+                                                    @if($sale->payment_method == 1)
+                                                        <a href="" title="Pay now" onclick="globalpay('{{$sale->id}}','{{$sale->net_amount}}')" id="paybtn{{$sale->id}}">
+                                                            <span class="lnr lnr-inbox mr-2"></span>
+                                                        </a>
+                                                    @else
+                                                        <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
+                                                            <span class="lnr lnr-inbox mr-2"></span>
+                                                        </a>
+                                                    @endif
+                                                    
                                                     <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
                                                         <span class="lnr lnr-cross mr-2"></span>
-                                                    </a> 
+                                                    </a>
                                                 @endif
                                             @endif
-
                                         @endif
 
                                         <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
@@ -79,14 +80,39 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        
                     </div>
-                    {{ $sales->appends($_POST)->links() }}
                 </div>
             </div>
         </div>
     </section>
 </main>
+
+<div class="modal fade" id="globalpay_modal" tabindex="-1" role="dialog" aria-labelledby="globalpay_modal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pay Now</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form autocomplete="off" action="{{ route('globalpay-paynow') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Amount" class="col-form-label">Amount *</label>
+                        <input type="hidden" name="orderid" id="orderid">
+                        <input readonly type="text" id="amount" class="form-control">
+                    </div>                            
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Pay Now</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="payment_modal" tabindex="-1" role="dialog" aria-labelledby="payment_modal" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -105,14 +131,6 @@
                         <label for="Amount" class="col-form-label">Payment Type *</label>
                         <input readonly type="text" name="payment_type" id="payment_type" class="form-control">
                     </div>
-                    <!-- <div class="form-group">
-                        <label for="Amount" class="col-form-label">Payment Date *</label>
-                        <input required type="date" name="payment_date" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="Amount" class="col-form-label">Reference # *</label>
-                        <input required type="text" name="refno" class="form-control">
-                    </div> -->
                     <div class="form-group">
                         <label for="Amount" class="col-form-label">Amount *</label>
                         <input readonly type="text" name="amount" id="balance" class="form-control">
@@ -320,6 +338,12 @@
             $('#balance').val(bal.toFixed(2));
 
             $('#balance').prop('max',bal);
+        }
+
+        function globalpay(id,amount){
+            $('#amount').val(parseFloat(amount).toFixed(2));
+            $('#orderid').val(id);
+            $('#globalpay_modal').modal('show');
         }
 
         function cancelOrder(orderid){
