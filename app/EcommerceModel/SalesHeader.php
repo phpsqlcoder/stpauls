@@ -117,8 +117,30 @@ class SalesHeader extends Model
 
     public static function pending_credit_payment()
     {
-        $qry = SalesHeader::where('payment_method',1)->where('status','<>','COMPLETED')->where('status','<>','CANCELLED')->count();
+        $qry = SalesHeader::where('payment_method',1)->where('payment_status','UNPAID')->where('status','<>','CANCELLED')->count();
 
         return $qry;
+    }
+
+    public static function shippingfee_validation()
+    {
+        $sales = SalesHeader::where('status','<>','CANCELLED')->where('payment_status','UNPAID')->where('delivery_type','!=','Store Pick Up')->where('delivery_fee_amount',0)->count();
+
+        return $sales;
+    }
+
+    public static function payment_type($orderid)
+    {
+        $sales = SalesHeader::find($orderid);
+
+        if($sales->payment_method == 0){
+            $type = 'Cash';
+        } elseif($sales->payment_method == 1) {
+            $type = 'Card Payment';
+        } else {
+            $type = $sales->payment_option;
+        }
+
+        return $type;
     }
 }

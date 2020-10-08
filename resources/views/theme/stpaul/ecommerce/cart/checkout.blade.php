@@ -86,14 +86,15 @@
                                                     <option @if($customer->details->country == $country->id) selected @endif value="{{$country->id}}">{{ $country->name }}</option>
                                                     @endforeach
                                                 </select>
+                                                <p id="alert_countryrate" style="display: none;" class="text-danger"><small>The country selected has no shipping rate in the system. Please expect an updated invoice once the order is confirmed.</small></p>
                                                 <p id="p_country" class="text-danger" style="display: none;"><small>The country field is required.</small></p>
                                             </div>
 
                                             <div id="divIntlAddress" style="display: @if($customer->details->country <> 259 && $customer->details->country != "") block; @else none; @endif">
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
-                                                    <p>Address *</p>
-                                                    <textarea name="other_address" class="form-control form-input" rows="3" id="other_address"></textarea>
+                                                    <p>Billing Address *</p>
+                                                    <textarea name="billing_address" class="form-control form-input" rows="3" id="billing_address"></textarea>
                                                     <p id="p_otheradd" class="text-danger" style="display: none;"><small>The address field is required.</small></p>
                                                 </div>
                                             </div>
@@ -125,6 +126,7 @@
                                                     <option value="">-- Select City --</option>
                                                     @endif
                                                     </select>
+                                                    <p id="alert_cityrate" style="display: none;" class="text-danger"><small>The city selected has no shipping rate in the system. Please expect an updated invoice once the order is confirmed.</small></p>
                                                     <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
                                                 </div>
 
@@ -339,7 +341,7 @@
                                     <table class="table tbl-responsive table-invoice bd-b order-table">
                                         <thead>
                                             <tr>
-                                                <th class="w-25">Type</th>
+                                                <th class="w-25">Items</th>
                                                 <th class="w-15">Weight (kg)</th>
                                                 <th class="w-15 text-center">Qty</th>
                                                 <th class="w-15 text-right">Unit Price</th>
@@ -404,7 +406,7 @@
                                                 <span>Total Weight</span>
                                                 <span>
                                                     <input type="hidden" id="input_total_weight" value="{{($weight/1000)}}" name="total_weight">
-                                                    <span id="total-weight">{{ number_format(($weight/1000),2) }}kg </span>
+                                                    <span id="total-weight">{{ number_format(($weight/1000),2) }} </span>kg
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
@@ -417,7 +419,7 @@
                                             <li class="d-flex justify-content-between">
                                                 <span>Shipping Fee</span>
                                                 <span>
-                                                    <input type="hidden" id="input_shippingfee" name="deliveryfee">
+                                                    <input type="hidden" id="input_shippingfee" name="shippingfee">
                                                     ₱ <span id="span_shippingfee">0.00</span>
                                                 </span>
                                             </li>
@@ -579,6 +581,13 @@
                                 'weight' : weight
                             },
                             success: function(response) {
+                                $('#alert_cityrate').css('display','none');
+                                if(response.rate == 0){
+                                    $('#alert_countryrate').css('display','block');
+                                } else {
+                                    $('#alert_countryrate').css('display','none');
+                                }
+
                                 $('#shipping_fee').val(response.rate);
                             }
                         });
@@ -606,6 +615,13 @@
                         'weight' : weight
                     },
                     success: function(response) {
+                        $('#alert_countryrate').css('display','none');
+                        if(response.rate == 0){
+                            $('#alert_cityrate').css('display','block');
+                        } else {
+                            $('#alert_cityrate').css('display','none');
+                        }
+
                         $('#shipping_fee').val(response.rate);
                     }
                 });
@@ -732,11 +748,10 @@
                 address  = $('#input_address').val(), 
                 barangay = $('#input_barangay').val(),
                 zipcode  = $('#input_zipcode').val(),
-                others   = $('#other_address').val(),
                 province = $('#province').val(),
                 city     = $('#city').val(),
                 country  = $('#country').val(),
-                intl_add = $('#other_address').val();
+                intl_add = $('#billing_address').val();
 
 
                 if(country == 259){
@@ -834,7 +849,7 @@
                 if($('#country').val() == 259){
                     $('#customer-address').html($('#input_address').val()+' '+$('#input_barangay').val()+', '+$("#province option:selected" ).text()+' '+$("#city option:selected" ).text()+', '+$('#input_zipcode').val()+' '+$("#country option:selected" ).text());
                 } else {
-                    $('#customer-address').html($('#other_address').val()+', '+$("#country option:selected" ).text());
+                    $('#customer-address').html($('#billing_address').val()+', '+$("#country option:selected" ).text());
                 }
 
                 if(option == 1){

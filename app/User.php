@@ -18,6 +18,9 @@ use App\Notifications\Ecommerce\PaymentRejectedNotification;
 use App\Notifications\Ecommerce\OrderApprovedNotification;
 use App\Notifications\Ecommerce\OrderRejectedNotification;
 
+
+use App\Notifications\SendEmailNotification;
+
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use App\Role;
@@ -129,8 +132,10 @@ class User extends Authenticatable
         return $data->name;
     }
 
-
-
+    public function send_email_notification($sales,$template)
+    {
+        $this->notify(new SendEmailNotification($sales,$template));
+    }
 
 
 
@@ -157,9 +162,9 @@ class User extends Authenticatable
         $this->notify(new CustomerAccountDeactivatedNotification());
     }
 
-    public function customer_send_payment_approved_email($payment)
+    public function customer_send_payment_approved_email($payment,$sales)
     {
-        $this->notify(new PaymentApprovedNotification($payment));
+        $this->notify(new PaymentApprovedNotification($payment,$sales));
     }
 
     public function customer_send_payment_rejected_email()

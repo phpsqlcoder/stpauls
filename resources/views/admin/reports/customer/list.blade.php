@@ -29,6 +29,7 @@
                 <th>Phone</th>
                 <th>Address 1</th>
                 <th>Address 2</th>
+                <th>Province</th>
                 <th>City</th>
                 <th>Postal</th>
             </tr>
@@ -44,7 +45,16 @@
                     <td>{{$r->telno}}</td>
                     <td>{{$r->address}}</td>
                     <td>{{$r->barangay}}</td>
-                    <td>{{$r->cities->city}}</td>
+                    <td>
+                        @if($r->province != '')
+                            {{$r->provinces->province}}
+                        @endif
+                    </td>
+                    <td>
+                        @if($r->city != '')
+                            {{$r->cities->city}}
+                        @endif
+                    </td>
                     <td>{{$r->zipcode}}</td>
                 </tr>
             @empty

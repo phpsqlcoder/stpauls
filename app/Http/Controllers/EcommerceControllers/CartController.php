@@ -25,7 +25,6 @@ use Str;
 use DB;
 use App\EcommerceModel\Customer;
 use App\EcommerceModel\CheckoutOption;
-
 use App\StPaulModel\LoyalCustomer;
 
 use App\Cities;
@@ -229,19 +228,19 @@ class CartController extends Controller
         }
     }
 
-    public function pay_again($id){
-        $r = SalesHeader::findOrFail($id);
+    // public function pay_again($id){
+    //     $r = SalesHeader::findOrFail($id);
 
-        $sales = 
-        $urls = [
-            'notification' => route('cart.payment-notification'),
-            'result' => route('profile.sales'),
-            'cancel' => route('profile.sales'),
-        ];
+    //     $sales = 
+    //     $urls = [
+    //         'notification' => route('cart.payment-notification'),
+    //         'result' => route('profile.sales'),
+    //         'cancel' => route('profile.sales'),
+    //     ];
        
-        $base64Code = PaynamicsHelper::payNow($r->order_number, Auth::user(), $r->items, number_format($r->net_amount, 2, '.', ''), $urls, false ,number_format($r->delivery_fee_amount, 2, '.', ''));
-         return view('theme.paynamics.sender', compact('base64Code'));
-    }
+    //     $base64Code = PaynamicsHelper::payNow($r->order_number, Auth::user(), $r->items, number_format($r->net_amount, 2, '.', ''), $urls, false ,number_format($r->delivery_fee_amount, 2, '.', ''));
+    //      return view('theme.paynamics.sender', compact('base64Code'));
+    // }
 
     public function save_sales(Request $request)
     {
@@ -250,14 +249,25 @@ class CartController extends Controller
         $requestId = $today[0].substr($ran, 2,6);
 
         $delivery_type = CheckoutOption::find($request->shipOption);
-
-        if($request->city == 0){
-            $address = $request->other_address;
-        } else {
+        
+        if($request->country == 259){
             $data_city = Cities::find($request->city);
             $data_province = Provinces::find($request->province);
 
             $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province.', '.$request->zipcode;
+        } else {
+            $address = $request->billing_address;
+        }
+
+        if($request->shipOption != 2 && $request->shippingfee == 0){
+            $deliveryStatus = 'Shipping Fee Validation';
+        } else {
+            // if($request->shipOption == 1 || $request->shipOption == 2){
+            if($request->shipOption == 1){
+                $deliveryStatus = 'Waiting for Approval';
+            } else {
+                $deliveryStatus = 'Waiting for Payment';
+            }
         }
 
         $pickupdate = $request->input('pickup_date_2');
@@ -274,8 +284,8 @@ class CartController extends Controller
             'delivery_tracking_number' => '',
             'delivery_courier' => '',
             'delivery_type' => $delivery_type->name,
-            'delivery_fee_amount' => $request->deliveryfee,
-            'delivery_status' => ($request->shipOption == 1 || $request->shipOption == 2) ? 'Waiting for Approval' : 'Waiting for Payment',
+            'delivery_fee_amount' => $request->shippingfee,
+            'delivery_status' => $deliveryStatus,
             'gross_amount' => $request->totalDue,
             'tax_amount' => 0,
             'net_amount' => $request->totalDue,
@@ -287,64 +297,67 @@ class CartController extends Controller
             'payment_method' => (!isset($request->payment_method)) ? 0 : $request->payment_method,
             'payment_option' => (!isset($request->payment_method)) ? 0 : $request->payment_option,
             'branch' => ($request->shipOption == 2)  ? $request->branch : NULL,
-            'pickup_date' => ($request->shipOption <= 2) ? $pickupdate : NULL,
-            'pickup_time' => ($request->shipOption <= 2) ? $pickuptime : NULL,
+            'pickup_date' => ($request->shipOption == 2) ? $pickupdate : NULL,
+            'pickup_time' => ($request->shipOption == 2) ? $pickuptime : NULL,
             'service_fee' => $request->servicefee,
             'is_approve' => 0,
-            'is_other' => ($request->city == 0) ? 1 : 0
+            'is_other' => ($request->shipOption != 2 && $request->shippingfee == 0) ? 1 : 0
         ]);
 
-        $data = $request->all();
-        $productid = $data['productid'];
-        $qty       = $data['qty'];
-        $price     = $data['product_price'];
+        // Ordered Products
+            $data = $request->all();
+            $productid = $data['productid'];
+            $qty       = $data['qty'];
+            $price     = $data['product_price'];
 
-        foreach($productid as $key => $prodId){
+            foreach($productid as $key => $prodId){
 
-            $product  = Product::find($prodId);
-            $promoQry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$prodId);
+                $product  = Product::find($prodId);
+                $promoQry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$prodId);
 
-            $promoChecker = $promoQry->count();
-            if($promoChecker == 1){
-               $promoDetails = $promoQry->first(); 
+                $promoChecker = $promoQry->count();
+                if($promoChecker == 1){
+                   $promoDetails = $promoQry->first(); 
+                }
+
+                SalesDetail::create([
+                    'sales_header_id' => $salesHeader->id,
+                    'product_id' => $prodId,
+                    'product_name' => $product->name,
+                    'product_category' => $product->category_id,
+                    'price' => $price[$key],
+                    'tax_amount' => $price[$key]-($price[$key]/1.12),
+                    'promo_id' => $promoChecker == 1 ? $promoDetails->id : 0,
+                    'promo_description' => $promoChecker == 1 ? $promoDetails->name : '',
+                    'discount_amount' => $promoChecker == 1 ? $price[$key]*('.'.$promoDetails->discount) : 0.00,
+                    'gross_amount' => $request->totalDue,
+                    'net_amount' => 0,
+                    'qty' => $qty[$key],
+                    'uom' => $product->uom,
+                    'created_by' => Auth::id()
+                ]);
             }
-
-            SalesDetail::create([
-                'sales_header_id' => $salesHeader->id,
-                'product_id' => $prodId,
-                'product_name' => $product->name,
-                'product_category' => $product->category_id,
-                'price' => $price[$key],
-                'tax_amount' => $price[$key]-($price[$key]/1.12),
-                'promo_id' => $promoChecker == 1 ? $promoDetails->id : 0,
-                'promo_description' => $promoChecker == 1 ? $promoDetails->name : '',
-                'discount_amount' => $promoChecker == 1 ? $price[$key]*('.'.$promoDetails->discount) : 0.00,
-                'gross_amount' => $request->totalDue,
-                'net_amount' => 0,
-                'qty' => $qty[$key],
-                'uom' => $product->uom,
-                'created_by' => Auth::id()
-            ]);
-        }
+        // 
 
         Cart::where('user_id', Auth::id())->delete();
 
-        
-        $discountPurchaseAmount = 10000;
-        if($request->totalDue >= $discountPurchaseAmount){
+        // Loyalty
+            $discountPurchaseAmount = 10000;
+            if($request->totalDue >= $discountPurchaseAmount){
 
-            $qry = SalesHeader::where('customer_id',Auth::id())->where('net_amount','>=',$discountPurchaseAmount)->count();
+                $qry = SalesHeader::where('customer_id',Auth::id())->where('net_amount','>=',$discountPurchaseAmount)->count();
 
-            if($qry == 2){
-               LoyalCustomer::create([
-                    'customer_name' => auth()->user()->fullname,
-                    'customer_id' => Auth::id(),
-                    'total_purchase' => 1,
-                    'status' => 'PENDING',
-                    
-                ]); 
+                if($qry == 2){
+                   LoyalCustomer::create([
+                        'customer_name' => auth()->user()->fullname,
+                        'customer_id' => Auth::id(),
+                        'total_purchase' => 1,
+                        'status' => 'PENDING',
+                        
+                    ]); 
+                }
             }
-        }
+        //
 
         if($request->payment_method == 1){
             $address_line1 = ($request->province == 0) ? '' : $request->address;
@@ -354,12 +367,21 @@ class CartController extends Controller
             $zipcode       = ($request->province == 0) ? '' : $request->zipcode;
             $order         = $request;
             $uniqID        = $salesHeader->order_number;
-            
-            return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
+
+            if($request->shipOption == 2){
+                return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
+            } else {
+                if($request->shippingfee > 0){
+                    return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
+                } else {
+                    return redirect(route('account-my-orders'))->with('success',' Order has been placed.');
+                }
+            }
+
         } else {
             return redirect(route('account-my-orders'))->with('success',' Order has been placed.');
         }
-       
+              
     }
 
 
@@ -381,5 +403,21 @@ class CartController extends Controller
                 ]); 
             }
         }
+    }
+
+    public function globalpay(Request $request)
+    {
+        // $sales = SalesHeader::find($request->orderid);
+        
+        // $address_line1 = '';
+        // $address_line2 = '';
+        // $city          = '';
+        // $province      = '';
+        // $zipcode       = '';
+        // $order         = $request;
+        // $uniqID        = $sales->order_number;
+        
+        // return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
+
     }
 }

@@ -21,7 +21,7 @@
 
     <div class="row">
         <div class="col-md-6">
-            <form autocomplete="off" action="{{ route('shippingfee.store') }}" method="post">
+            <form autocomplete="off" action="{{ route('shippingfee.store') }}" method="post" novalidate>
                     @csrf
                     @method('POST')
                     <div class="form-group">
@@ -85,11 +85,11 @@
             if(type == 0){
                 $('#local_input').css('display','block');
                 $("#province").prop("required", true);
-                $("#rate").prop("required", true);
+                $("#rate").attr("required", true);
             } else {
                 $('#local_input').css('display','none');
                 $("#province").prop("required", false);
-                $("#rate").prop("required", false);
+                $("#rate").attr("required", false);
             }
         });
     </script>

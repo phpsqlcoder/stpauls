@@ -35,7 +35,7 @@
         Route::post('cart/add-product','EcommerceControllers\CartController@store')->name('cart.add');
         Route::get('/cart/view', 'EcommerceControllers\CartController@view')->name('cart.front.show');
 
-        Route::post('cart/batch_update','EcommerceControllers\CartController@proceed_checkout')->name('cart.front.proceed_checkout');
+        Route::post('cart/proceed-checkout','EcommerceControllers\CartController@proceed_checkout')->name('cart.front.proceed_checkout');
         Route::post('cart/remove-product','EcommerceControllers\CartController@remove_product')->name('cart.remove_product');
     //
 
@@ -68,6 +68,7 @@
         
         // Account Transactions
             Route::get('/account/my-orders', 'EcommerceControllers\SalesFrontController@orders')->name('account-my-orders');
+            Route::post('/pay-order-globalpay','EcommerceControllers\CartController@globalpay')->name('globalpay-paynow');
             Route::get('/transaction/cancel-order','EcommerceControllers\SalesFrontController@cancel_order')->name('transaction.cancel-order');
             Route::get('/transaction-deliveries','EcommerceControllers\SalesFrontController@display_delivery_history')->name('display-delivery-history');
             Route::any('/transaction-items','EcommerceControllers\SalesFrontController@display_items')->name('display-items');
@@ -87,7 +88,7 @@
         Route::post('/transactions/pay-order','EcommerceControllers\SalesFrontController@pay_order')->name('pay-order');
 
         // Route::post('/account/cancel/order', 'EcommerceControllers\SalesFrontController@cancel_order')->name('my-account.cancel-order');
-        Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
+        // Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
 
         Route::post('product/review/store', 'EcommerceControllers\ProductReviewController@store')->name('product.review.store');
 
@@ -152,7 +153,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         //
 
         // Website
-            Route::post('/website-settings/update-ecommerce', 'Settings\WebController@update_ecommerce')->name('website-settings.update-ecommerce');
+            // Route::post('/website-settings/update-ecommerce', 'Settings\WebController@update_ecommerce')->name('website-settings.update-ecommerce');
             Route::post('/website-settings/ecommerce-payment-add-bank','Settings\WebController@add_bank')->name('ecommerce-setting.add-bank');
             Route::post('/website-settings/ecommerce-payment-update-bank','Settings\WebController@update_bank')->name('ecommerce-setting.update-bank');
             Route::post('/website-settings/ecommerce-payment-delete-bank','Settings\WebController@delete_bank')->name('ecommerce-setting.delete-bank');
@@ -208,7 +209,9 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
             // Card Payment
             Route::get('/admin/sales/card-payment','EcommerceControllers\SalesController@sales_card_payment')->name('sales-transaction.card-payment');
-            
+            // Address that do not have shipping fee
+            Route::get('/admin/sales/other','EcommerceControllers\SalesController@sales_other')->name('sales-transaction.other');
+            Route::post('/admin/add-shippingfee','EcommerceControllers\SalesController@add_shippingfee')->name('add-shipping-fee');
 
 
 
@@ -315,6 +318,15 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/admin/shippingfee-weight/delete_all', 'ShippingFee\ShippingfeeController@weight_delete_all')->name('shippingfee_weight.delete_all');
             Route::post('/admin/shippingfee-weight/upload_csv', 'ShippingFee\ShippingfeeController@weight_upload_csv')->name('shippingfee_weight.upload_csv');
         //
+
+        // Transaction Status
+            Route::resource('/admin/transaction-status','Transaction\TransactionStatusController');
+
+            Route::post('/admin/transaction-status-single-delete', 'Transaction\TransactionStatusController@single_delete')->name('transaction_status.single-delete');
+            Route::get('/admin/transaction-status/restore/{id}', 'Transaction\TransactionStatusController@restore')->name('transaction_status.restore');
+            Route::get('/admin/transaction-status/{id}/{status}', 'Transaction\TransactionStatusController@update_status')->name('transaction_status.change-status');
+            Route::post('/admin/transaction-status-multiple-change-status','Transaction\TransactionStatusController@multiple_change_status')->name('transaction_status.multiple.change.status');
+            Route::post('/admin/transaction-status-multiple-delete','Transaction\TransactionStatusController@multiple_delete')->name('transaction-status.multiple.delete');
 
 
             

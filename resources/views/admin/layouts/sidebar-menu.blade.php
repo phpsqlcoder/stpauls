@@ -154,6 +154,7 @@
                 <a href="" class="nav-link"><i data-feather="users"></i> <span>Manage Sales Transaction</span></a>
                 <ul>
                     {{--<li @if (\Route::current()->getName() == 'sales-transaction.index') class="active" @endif><a href="{{ route('sales-transaction.index') }}">Sales Transactions</a></li>--}}
+
                     <li @if (\Route::current()->getName() == 'sales-transaction.money-transfer') class="active" @endif>
                         <a href="{{ route('sales-transaction.money-transfer') }}">Money Transfer 
                             &nbsp;
@@ -178,6 +179,14 @@
                             @endif
                         </a>
                     </li>
+                    {{--<li @if (\Route::current()->getName() == 'sales-transaction.other') class="active" @endif>
+                        <a href="{{ route('sales-transaction.other') }}">Others
+                            &nbsp;
+                            @if(\App\EcommerceModel\SalesHeader::shippingfee_validation() > 0)
+                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesHeader::shippingfee_validation()}}</span>
+                            @endif
+                        </a>
+                    </li>--}}
                 </ul>
             </li>
         @endif
@@ -242,10 +251,21 @@
                 <ul>
                     <li @if (\Route::current()->getName() == 'branch.index' || \Route::current()->getName() == 'branch.edit') class="active" @endif><a href="{{ route('branch.index') }}">Manage Branches</a></li>
                     @if (auth()->user()->has_access_to_route('branch.create'))
-                        <li @if (\Route::current()->getName() == 'branch.create') class="active" @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
+                        <li @if (\Route::current()->getName() == 'branch.create') class=" " @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
                     @endif
                 </ul>
             </li>
+        @endif
+
+        @if (auth()->user()->has_access_to_module('transaction-status'))
+        <li class="nav-item with-sub @if (request()->routeIs('transaction-status*')) active show @endif">
+
+            <a href="" class="nav-link"><i data-feather="users"></i> <span>Transaction Status</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'transaction-status.index') class="active" @endif><a href="{{ route('transaction-status.index') }}">Manage Transaction Status</a></li>
+                <li><a href="{{ route('transaction-status.create') }}">Create a Transaction Status</a></li>
+            </ul>
+        </li>
         @endif
 
         @if (auth()->user()->has_access_to_module('product') || auth()->user()->has_access_to_module('customer') ||
