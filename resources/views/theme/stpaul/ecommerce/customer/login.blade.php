@@ -49,7 +49,12 @@
                                     </div>
                                     <div class="form-group col-md-5">
                                         <div class="gap-20"></div>
-                                        <button type="submit" class="btn btn-md primary-btn btn-block">login</button>
+                                        <button type="submit" type="login" class="btn btn-md primary-btn btn-block">login</button>
+                                        <div class="gap-10"></div>
+                                        <p>Or, login with</p>
+                                        <div class="gap-10"></div>
+                                        <a href="{{ route('social.oauth-login','facebook') }}" class="btn btn-primary btn-block fb text-white"><i class="fa fa-facebook pr-3"></i>Facebook</a>
+                                        <a href="{{ route('social.oauth-login', 'google') }}" class="btn btn-primary btn-block gl text-white"><i class="fa fa-google-plus pr-3"></i>Google</a>
                                     </div>
                                 </div>
                             </form>

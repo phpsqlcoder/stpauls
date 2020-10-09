@@ -128,6 +128,89 @@ class SocialiteController extends Controller
 
     }
 
+
+    public function loginRedirectToProvider($driver)
+    {
+        if( ! $this->isProviderAllowed($driver) ) {
+            return $this->sendFailedResponse("{$driver} is not currently supported");
+        }
+
+        try {
+            return Socialite::driver($driver)->redirect();
+        } catch (Exception $e) {
+            // You should show something simple fail message
+            return $this->sendFailedResponse($e->getMessage());
+        }
+    }
+
+    public function loginHandleProviderCallback( $driver )
+    {
+        try {
+            if($driver == 'google'){
+                $user = Socialite::driver($driver)->user();
+            } else {
+                $user = Socialite::driver($driver)->fields(['first_name','last_name','email','id'])->user();
+            }
+            
+        } catch (Exception $e) {
+            return $this->sendFailedResponse($e->getMessage());
+        }
+
+        // check for email in returned user
+        return empty( $user->email )
+            ? $this->sendFailedResponse("No email id returned from {$driver} provider.")
+            : $this->loginUsingSocial($user, $driver);
+    }
+
+    protected function loginUsingSocial($providerCostomer, $driver)
+    {
+        $customer = Customer::where('provider_id',$providerCostomer->getId())->where('provider',$driver);
+
+        if($customer->exists()){
+
+            $user = $customer->first();
+
+            $user = User::find($user->customer_id);
+            Auth::login($user);
+
+            $cart = session('cart', []);
+
+            foreach ($cart as $order) {
+                $product = Product::find($order['product_id']);
+                $cart = Cart::where('product_id', $order['product_id'])
+                    ->where('user_id', Auth::id())
+                    ->first();
+
+                if (!empty($cart)) {
+                    $newQty = $cart->qty + $order['qty'];
+                    $cart->update([
+                        'qty' => $newQty,
+                        'price' => $product->price,
+                    ]);
+                } else {
+                    Cart::create([
+                        'product_id' => $order['product_id'],
+                        'user_id' => Auth::id(),
+                        'qty' => $order['qty'],
+                        'price' => $product->price,
+                    ]);
+                }
+            }
+
+            session()->forget('cart');
+            $cnt = Cart::where('user_id',Auth::id())->count();
+            if($cnt > 0)
+                return redirect(route('cart.front.show'));
+            else
+                return redirect(route('home'));
+
+        } else {
+
+            return redirect(route('customer-front.login'))->with('error',"Sorry, we can't find this account. Please make sure that you have an existing social account.");
+        }
+
+    }
+
     private function isProviderAllowed($driver)
     {
         return in_array($driver, $this->providers) && config()->has("services.{$driver}");

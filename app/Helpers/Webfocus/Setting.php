@@ -191,27 +191,27 @@ class Setting {
         return $totalCost;
     }
 
-    public static function paynamics_merchant()
-    {
-        if (env('APP_ENV') == 'production') {
-            // return [
-            //     'id' => '00000017012098612314',
-            //     'key' => 'B129CD44B19F00ACDD37E5C5AF8D7A03',
-            //     'url' => 'https://ptiapps.paynamics.net/webpayment/Default.aspx'
-            // ];
-            return [
-                'id' => '00000012052012620B0B',
-                'key' => '050A11C3E5C9E1A41055E907B21E56FF',
-                'url' => 'https://testpti.payserv.net/webpayment/Default.aspx'
-            ];
-        } else {
-            return [
-                'id' => '00000019121943FC3BD7',
-                'key' => '6B1198B811715D83148DB4E7FC981A54',
-                'url' => 'https://testpti.payserv.net/webpayment/Default.aspx'
-            ];
-        }
-    }
+    // public static function paynamics_merchant()
+    // {
+    //     if (env('APP_ENV') == 'production') {
+    //         // return [
+    //         //     'id' => '00000017012098612314',
+    //         //     'key' => 'B129CD44B19F00ACDD37E5C5AF8D7A03',
+    //         //     'url' => 'https://ptiapps.paynamics.net/webpayment/Default.aspx'
+    //         // ];
+    //         return [
+    //             'id' => '00000012052012620B0B',
+    //             'key' => '050A11C3E5C9E1A41055E907B21E56FF',
+    //             'url' => 'https://testpti.payserv.net/webpayment/Default.aspx'
+    //         ];
+    //     } else {
+    //         return [
+    //             'id' => '00000019121943FC3BD7',
+    //             'key' => '6B1198B811715D83148DB4E7FC981A54',
+    //             'url' => 'https://testpti.payserv.net/webpayment/Default.aspx'
+    //         ];
+    //     }
+    // }
 
     public static function countries(){
 

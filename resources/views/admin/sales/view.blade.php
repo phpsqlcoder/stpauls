@@ -22,26 +22,45 @@
             <h4 class="mg-b-0 tx-spacing--1"> Sales Transaction Summary</h4>
         </div>
         <div>
-            <button class="btn btn-outline-primary btn-sm tx-semibold" onclick="window.print();"><i data-feather="printer"></i> Print</button>
+            <a href="{{route('sales-transaction.invoice',$sales->id) }}" target="_blank" class="btn btn-outline-primary btn-sm tx-semibold"><i data-feather="printer"></i> Print Invoice</a>
         </div>
     </div>
 
     <div class="row row-sm">
         <div class="col-sm-6 col-lg-8">
-            <p class="mg-b-3">&nbsp;</p>
-            <p class="mg-b-3">http:://stpauls.ph/</p>
-            <p class="mg-b-3">&nbsp;</p>
+            <ul class="list-unstyled lh-7">
+                <li>
+                    <span>&nbsp;</span>
+                    <span>&nbsp;</span>
+                </li>
+                <li>
+                    <span>&nbsp;</span>
+                    <span>&nbsp;</span>
+                </li>               
+                <li>
+                    <span>{{ url('/') }}</span>
+                    <span>&nbsp;</span>
+                </li>
+                <li>
+                    <span>&nbsp;</span>
+                    <span>&nbsp;</span>
+                </li>  
+                <li>
+                    <span>Remarks:</span>
+                    <span>{{ $sales->remarks }}</span>
+                </li>  
+            </ul>
         </div>
         <div class="col-sm-6 col-lg-4">
             <ul class="list-unstyled lh-7">
                 <li class="d-flex justify-content-between">
+                    <span>Order Number</span>
+                    <span>{{$sales->order_number}}</span>
+                </li> 
+                <li class="d-flex justify-content-between">
                     <span>Order Date</span>
                     <span>{{ date('m/d/Y h:i:s A', strtotime($sales->created_at))}}</span>
-                </li>
-                <li class="d-flex justify-content-between">
-                    <span>Transaction Number</span>
-                    <span>{{$sales->order_number}}</span>
-                </li>               
+                </li>              
                 <li class="d-flex justify-content-between">
                     <span>Payment Method</span>
                     <span>{{ \App\EcommerceModel\SalesHeader::payment_type($sales->id) }}</span>
@@ -55,9 +74,6 @@
                     <span>{{ $sales->payment_status }}</span>
                 </li>  
             </ul>
-        </div>
-        <div class="col-lg-12">
-            Remarks : {{ $sales->remarks }}
         </div>
 
         <div class="table-responsive mg-t-20">
@@ -97,26 +113,29 @@
             <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th class="wd-10p">Items</th>
-                        <th class="tx-center">Weight (kg)</th>
-                        <th class="tx-center">Price (₱)</th>
-                        <th class="tx-center">Quantity</th>
-                        <th class="tx-right">Total (₱)</th>
+                        <th class="wd-30p">Items</th>
+                        <th class="tx-center wd-15p">Weight (kg)</th>
+                        <th class="tx-center wd-15p">Price (₱)</th>
+                        <th class="tx-center wd-15p">Quantity</th>
+                        <th class="tx-center wd-15p">Total Weight (kg)</th>
+                        <th class="tx-right wd-10p">Total (₱)</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php $subtotal = 0; $totalweight = 0; @endphp
+                    @php $weight = 0; $subtotal = 0; $totalweight = 0; @endphp
 
                     @forelse($sales->items as $item)
                     @php
+                        $weight += $item->product->weight*$item->qty;
                         $subtotal += $item->price*$item->qty;
-                        $totalweight += $item->product->weight*$item->qty;
+                        $totalweight += $weight;
                     @endphp
                     <tr>
                         <td>{{ $item->product_name}}</td>
                         <td class="tx-center">{{ ($item->product->weight/1000) }}</td>
                         <td class="text-center">{{ number_format($item->price,2) }}</td>
                         <td class="text-center">{{ number_format($item->qty,2) }}</td>
+                        <td class="tx-center">{{ ($weight/1000) }}</td>
                         <td class="text-right">{{ number_format($item->price*$item->qty,2) }}</td>
                     </tr>
                     @empty
@@ -125,28 +144,31 @@
                     </tr>
                     @endforelse
                     <tr>
+                        <td colspan="6">&nbsp;</td>
+                    </tr>
+                    <tr>
                         <td colspan="4" class="text-right"><strong>Total Weight</strong></td>
-                        <td class="text-right">{{ ($totalweight/1000) }} kg</td>
+                        <td colspan="2" class="text-right">{{ ($totalweight/1000) }} kg</td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right"><strong>Subtotal</strong></td>
-                        <td class="text-right">{{ number_format($subtotal,2) }}</td>
+                        <td colspan="2" class="text-right">{{ number_format($subtotal,2) }}</td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right"><strong>Shipping Fee</strong></td>
-                        <td class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
+                        <td colspan="2" class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right"><strong>Service Fee</strong></td>
-                        <td class="text-right">{{ number_format($sales->service_fee,2) }}</td>
+                        <td colspan="2" class="text-right">{{ number_format($sales->service_fee,2) }}</td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right"><strong>Loyalty Discount</strong></td>
-                        <td class="text-right">{{ number_format($sales->discount_amount,0) }}%</td>
+                        <td colspan="2" class="text-right">{{ number_format($sales->discount_amount,0) }}%</td>
                     </tr>
                     <tr>
                         <td colspan="4" class="text-right"><strong>Grand Total</strong></td>
-                        <td class="text-right">{{ number_format($sales->net_amount,2) }}</td>
+                        <td colspan="2" class="text-right">{{ number_format($sales->net_amount,2) }}</td>
                     </tr>
                 </tbody>
             </table>

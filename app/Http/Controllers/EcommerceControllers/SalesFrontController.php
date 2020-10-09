@@ -87,5 +87,15 @@ class SalesFrontController extends Controller
 
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.order-items',compact('items','sales'));
     }
+
+    public function order_info($id)
+    {
+        $page = new Page();
+        $page->name = 'Order Summary';
+
+        $sales = SalesHeader::find($id);
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.order-summary', compact('sales','page'));
+    }
   
 }

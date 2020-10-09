@@ -20,6 +20,9 @@
         Route::get('/ajax/deliverable-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_deliverable_cities')->name('ajax.deliverable-cities');
 
         Route::get('/login', 'EcommerceControllers\CustomerFrontController@login')->name('customer-front.login');
+        Route::get('oauth/{driver}', 'Auth\SocialiteController@loginRedirectToProvider')->name('social.oauth-login');
+        Route::get('oauth/{driver}/callback', 'Auth\SocialiteController@loginHandleProviderCallback')->name('social.callback-login');
+        
         Route::post('/login', 'EcommerceControllers\CustomerFrontController@customer_login')->name('customer-front.customer_login');
         Route::get('/customer-logout', 'EcommerceControllers\CustomerFrontController@logout')->name('customer.logout');
 
@@ -68,6 +71,8 @@
         
         // Account Transactions
             Route::get('/account/my-orders', 'EcommerceControllers\SalesFrontController@orders')->name('account-my-orders');
+            Route::get('/account/order-info/{id}', 'EcommerceControllers\SalesFrontController@order_info')->name('account-order-info');
+
             Route::post('/pay-order-globalpay','EcommerceControllers\CartController@globalpay')->name('globalpay-paynow');
             Route::get('/transaction/cancel-order','EcommerceControllers\SalesFrontController@cancel_order')->name('transaction.cancel-order');
             Route::get('/transaction-deliveries','EcommerceControllers\SalesFrontController@display_delivery_history')->name('display-delivery-history');
@@ -231,6 +236,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/admin/sales-transaction/{sales}', 'EcommerceControllers\SalesController@quick_update')->name('sales-transaction.quick_update'); // for verification
 
             Route::get('/admin/sales-transaction/view/{sales}', 'EcommerceControllers\SalesController@show')->name('sales-transaction.view');
+            Route::get('/admin/sales-invoice/{sales}', 'EcommerceControllers\SalesController@invoice')->name('sales-transaction.invoice');
             Route::post('/admin/change-delivery-status', 'EcommerceControllers\SalesController@delivery_status')->name('sales-transaction.delivery_status');
             Route::post('/admin/update-delivery-fee', 'EcommerceControllers\SalesController@update_delivery_fee')->name('sales-transaction.update_delivery_fee');
         //

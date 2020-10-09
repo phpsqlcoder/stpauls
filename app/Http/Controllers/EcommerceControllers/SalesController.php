@@ -17,8 +17,9 @@ use App\EcommerceModel\SalesHeader;
 use App\EcommerceModel\Customer;
 use App\User;
 use App\Page;
+use App\Setting;
 
-use App\StPaulModel\TransactionStatus;;
+use App\StPaulModel\TransactionStatus;
 
 class SalesController extends Controller
 {
@@ -28,6 +29,14 @@ class SalesController extends Controller
     public function __construct()
     {
         Permission::module_init($this, 'sales_transaction');
+    }
+
+    public function invoice($sales)
+    {   
+        $sales = SalesHeader::find($sales);
+        $settings = Setting::find(1);
+
+        return view('admin.sales.invoice',compact('sales','settings'));
     }
 
     public function index()

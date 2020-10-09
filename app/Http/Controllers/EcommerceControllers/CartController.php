@@ -29,6 +29,7 @@ use App\StPaulModel\LoyalCustomer;
 
 use App\Cities;
 use App\Provinces;
+use App\Countries;
 
 
 
@@ -251,10 +252,11 @@ class CartController extends Controller
         $delivery_type = CheckoutOption::find($request->shipOption);
         
         if($request->country == 259){
-            $data_city = Cities::find($request->city);
+            $data_city     = Cities::find($request->city);
             $data_province = Provinces::find($request->province);
+            $data_country  = Countries::find($request->country);
 
-            $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province.', '.$request->zipcode;
+            $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province.', '.$request->zipcode.' '.$data_country->name;
         } else {
             $address = $request->billing_address;
         }

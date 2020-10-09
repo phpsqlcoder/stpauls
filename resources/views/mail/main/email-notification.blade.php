@@ -140,7 +140,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6"></td>
+                            <td colspan="6">&nbsp;</td>
                         </tr>
                         <tr>
                             <td colspan="4" style="text-align:right;"><strong>Total Weight</strong></td>

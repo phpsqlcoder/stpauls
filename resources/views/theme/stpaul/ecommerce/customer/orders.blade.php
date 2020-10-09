@@ -70,7 +70,7 @@
                                         @endif
 
                                         <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
-                                        <a href="#" title="View items" onclick="view_items('{{$sale->id}}','{{$sale->order_number}}','{{date('Y-m-d',strtotime($sale->created_at))}}','{{$sale->payment_status}}','{{$sale->delivery_type}}','{{$sale->branch}}')">
+                                        <a href="{{ route('account-order-info',$sale->id) }}" title="View Order Summary">
                                             <span class="lnr lnr-eye"></span>
                                         </a>
                                     </td>
@@ -191,7 +191,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="items_modal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+<!-- <div class="modal fade" id="items_modal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -231,7 +231,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 @endsection
 
@@ -306,28 +306,28 @@
             });
         }
 
-        function view_items(orderid,orderNo,date,paymentStatus,deliveryType,branch){
-            $.ajax({
-                type: "GET",
-                url: "{{ route('display-items') }}",
-                data: { orderid : orderid },
-                success: function( response ) {
-                    if(branch != ''){
-                        $('#span_branch').html(branch);
-                        $('#branch').css('display','block');
-                    } else {
-                        $('#branch').css('display','none');
-                    }
+        // function view_items(orderid,orderNo,date,paymentStatus,deliveryType,branch){
+        //     $.ajax({
+        //         type: "GET",
+        //         url: "{{ route('display-items') }}",
+        //         data: { orderid : orderid },
+        //         success: function( response ) {
+        //             if(branch != ''){
+        //                 $('#span_branch').html(branch);
+        //                 $('#branch').css('display','block');
+        //             } else {
+        //                 $('#branch').css('display','none');
+        //             }
 
-                    $('#tr_items').html(response);
-                    $('#viewModalLabel').html(orderNo);
-                    $('#order_date').html(date);
-                    $('#payment_status').html(paymentStatus);
-                    $('#delivery_type').html(deliveryType);
-                    $('#items_modal').modal('show');
-                }
-            });
-        }
+        //             $('#tr_items').html(response);
+        //             $('#viewModalLabel').html(orderNo);
+        //             $('#order_date').html(date);
+        //             $('#payment_status').html(paymentStatus);
+        //             $('#delivery_type').html(deliveryType);
+        //             $('#items_modal').modal('show');
+        //         }
+        //     });
+        // }
 
         function pay(order_id,balance,paymentType){
             var bal = parseFloat(balance);
