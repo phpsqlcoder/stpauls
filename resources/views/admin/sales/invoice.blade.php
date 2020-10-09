@@ -93,7 +93,13 @@
         }
 
         table td {
-            padding: 20px;
+            padding: 15px;
+            background: #EEEEEE;
+            border-bottom: 1px solid #FFFFFF;
+        }
+
+        table tfoot td {
+            padding: 10px;
             background: #EEEEEE;
             border-bottom: 1px solid #FFFFFF;
         }
@@ -221,7 +227,7 @@
             </tr>
             <tr>
                 <td colspan="4"></td>
-                <td>Grand Total</td>
+                <td><strong>Grand Total</strong></td>
                 <td>{{ number_format($sales->net_amount,2)}}</td>
             </tr>
         </tfoot>
