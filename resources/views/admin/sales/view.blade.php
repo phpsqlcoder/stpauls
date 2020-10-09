@@ -122,11 +122,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php $weight = 0; $subtotal = 0; $totalweight = 0; @endphp
+                    @php $weight = 0; $total = 0; $subtotal = 0; $totalweight = 0; @endphp
 
                     @forelse($sales->items as $item)
                     @php
-                        $weight += $item->product->weight*$item->qty;
+                        $weight = $item->product->weight*$item->qty;
+                        $total = $item->price*$item->qty;
                         $subtotal += $item->price*$item->qty;
                         $totalweight += $weight;
                     @endphp
@@ -136,7 +137,7 @@
                         <td class="text-center">{{ number_format($item->price,2) }}</td>
                         <td class="text-center">{{ number_format($item->qty,2) }}</td>
                         <td class="tx-center">{{ ($weight/1000) }}</td>
-                        <td class="text-right">{{ number_format($item->price*$item->qty,2) }}</td>
+                        <td class="text-right">{{ number_format($total,2) }}</td>
                     </tr>
                     @empty
                     <tr>
