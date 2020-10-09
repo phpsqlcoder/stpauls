@@ -2698,7 +2698,7 @@ h3+.card-custom-group-wrap {
 .rd-navbar-static .rd-navbar-nav .rd-navbar-submenu.opened>.rd-navbar-megamenu,
 .rd-navbar-static .rd-navbar-nav .rd-navbar-submenu.focus>.rd-navbar-dropdown,
 .rd-navbar-static .rd-navbar-nav .rd-navbar-submenu.focus>.rd-navbar-megamenu {
-    transform: translateY(-1px);
+    transform: translateY(0px);
 }
 
 .rd-navbar-fullwidth .rd-navbar-nav .rd-navbar-submenu .rd-navbar-submenu.focus>.rd-navbar-dropdown,
@@ -3928,7 +3928,7 @@ h3+.card-custom-group-wrap {
 
 .rd-navbar-static .rd-navbar-nav>li>.rd-navbar-dropdown,
 .rd-navbar-static .rd-navbar-nav>li .rd-navbar-megamenu {
-    margin-top: 22px;
+    margin-top: 18px;
 }
 
 .rd-navbar-static.rd-navbar_modern .rd-navbar-top-panel {
@@ -5110,6 +5110,12 @@ html.rd-navbar-fixed-linked .page {
     .rd-navbar .rd-navbar-nav>li>a {
         font-size: 13px !important;
     }
+    .rd-navbar-static .rd-navbar-nav>li>a:hover:after, .rd-navbar-sidebar .rd-navbar-nav>li>a:hover:after, .rd-navbar-static .rd-navbar-nav>li.focus>a:after {
+        top: 22px;
+    }
+    .rd-navbar-static .rd-navbar-nav>li>.rd-navbar-dropdown, .rd-navbar-static .rd-navbar-nav>li .rd-navbar-megamenu {
+        margin-top: 17px;
+    }
     .rd-navbar-static .rd-navbar-nav>li {
         padding: 0 10px;
     }
@@ -5952,7 +5958,7 @@ html.rd-navbar-fixed-linked .page {
 }
 
 .rd-navbar-n-search .rd-n-search__submit::before {
-    content: "\e86f";
+    content: "\ec22";
     position: absolute;
     top: 0;
     right: 0;
@@ -5960,7 +5966,7 @@ html.rd-navbar-fixed-linked .page {
     left: 0;
     width: inherit;
     height: inherit;
-    font: 400 19px Linearicons-Free;
+    font: 400 19px Linearicons;
     line-height: inherit;
     text-align: center;
     color: white;
@@ -5988,7 +5994,7 @@ html.rd-navbar-fixed-linked .page {
     left: 0;
     display: inline-block;
     padding: 2px;
-    font-family: Linearicons-Free;
+    font-family: Linearicons;
     font-weight: 600;
     line-height: 24px;
     text-align: center;
@@ -5999,13 +6005,13 @@ html.rd-navbar-fixed-linked .page {
 
 .rd-navbar .rd-navbar-n-search__toggle::before {
     margin-right: -2px;
-    content: "\e86f";
+    content: "\ec22";
     font-size: 19px;
 }
 
 .rd-navbar .rd-navbar-n-search__toggle::after {
     margin-top: -1px;
-    content: "\e870";
+    content: "\ec35";
     font-size: 22px;
 }
 

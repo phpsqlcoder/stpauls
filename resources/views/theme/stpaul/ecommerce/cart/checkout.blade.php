@@ -46,7 +46,7 @@
                         <div id="tab-1">
                             <div class="checkout-content">
                                 <div class="row">
-                                    <div class="col-lg-6 mb-sm-4">
+                                    <div class="col-lg-6 mb-xs-4">
                                         <div class="checkout-card form-style fs-sm">
                                             <div class="form-row form-wrap">
                                                 <div class="col-md-6">
@@ -338,7 +338,7 @@
                                 <div class="gap-40"></div>
 
                                 <div class="table-responsive mg-t-40">
-                                    <table class="table table-invoice bd-b order-table">
+                                    <table class="table tbl-responsive table-invoice bd-b order-table">
                                         <thead>
                                             <tr>
                                                 <th class="w-25">Items</th>

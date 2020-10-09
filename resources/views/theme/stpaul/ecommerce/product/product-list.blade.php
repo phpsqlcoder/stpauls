@@ -144,8 +144,8 @@
                         <div class="list-product">
                             <div class="row">
                                 @foreach($products as $product)
-                                <div class="col-md-4 col-sm-6 item">
-                                    <div class="product-link">
+                                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-xs-1 pr-xs-1 item">
+                                    <div class="product-link p-0">
                                         <div class="product-card">
                                             <a href="{{ route('product.front.show',$product->slug)}}">
                                                 <div class="prodImg"><img src="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="" /></div>

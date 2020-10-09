@@ -11,10 +11,13 @@
     <section id="default-wrapper">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
+                <div id="col1" class="col-lg-3">
                     @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.account-page-options')
                 </div>
-                <div class="col-lg-9">
+                <div id="col2" class="col-lg-9">
+                    <nav class="rd-navbar">
+                        <div class="rd-navbar-listing-toggle rd-navbar-static--hidden toggle-original" data-rd-navbar-toggle=".listing-filter-wrap"><span class="lnr lnr-list"></span> Options</div>
+                    </nav>
                     <div class="article-content">
                         <h3 class="subpage-heading">My Orders</h3>
                         @if(session('success'))
@@ -22,7 +25,7 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        <table id="salesTransaction" class="table table-md table-hover" style="width:100%">
+                        <table id="salesTransaction" class="table tbl-responsive table-md table-hover" style="width:100%">
                             <thead>
                                 <tr>
                                     <th scope="col">Order #</th>
@@ -245,7 +248,7 @@
     <script>
         $(function () {
             $('#salesTransaction').DataTable({
-                "responsive": true,
+                "responsive": false,
                 "columnDefs": [
                     { responsivePriority: 1, targets: 0 },
                     { responsivePriority: 2, targets: -1 }
@@ -257,7 +260,9 @@
                         "next": "&rsaquo;"
                     }
                 }
-            });
+            }).on( 'stateLoaded.dt', function (e, settings, data) {
+                    console.log($("#salesTransaction").parent());
+                } );
         });
     </script>
     <script>

@@ -94,7 +94,7 @@ $(document).ready(function () {
 			{
 				breakpoint: 640,
 				settings: {
-					slidesToShow: 1,
+					slidesToShow: 2,
 				},
 			},
 		],
@@ -124,7 +124,7 @@ $(document).ready(function () {
 			{
 				breakpoint: 640,
 				settings: {
-					slidesToShow: 1,
+					slidesToShow: 2,
 				},
 			},
 		],
@@ -154,7 +154,7 @@ $(document).ready(function () {
 			{
 				breakpoint: 640,
 				settings: {
-					slidesToShow: 1,
+					slidesToShow: 2,
 				},
 			},
 		],
@@ -208,7 +208,7 @@ $(document).ready(function () {
 			{
 				breakpoint: 640,
 				settings: {
-					slidesToShow: 1,
+					slidesToShow: 2,
 				},
 			},
 		],
@@ -246,7 +246,7 @@ $(document).ready(function () {
 			{
 				breakpoint: 640,
 				settings: {
-					slidesToShow: 1,
+					slidesToShow: 2,
 				},
 			},
 		],
