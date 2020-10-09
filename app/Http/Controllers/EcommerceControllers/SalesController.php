@@ -283,25 +283,6 @@ class SalesController extends Controller
     }
     // END CARD PAYMENT
 
-    // Others
-    public function sales_other()
-    {
-        $listing = new ListingHelper('desc',10,'order_number');
-
-        $sales = SalesHeader::where('payment_status','UNPAID')->where('delivery_type','!=','Store Pick Up')->where('delivery_fee_amount',0);
-
-        // if(isset($_GET['search']) && $_GET['search']<>'')
-        //     $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
-
-        $sales = $sales->orderBy('id','desc');
-        $sales = $sales->paginate(10);
-
-        $filter = $listing->get_filter($this->searchFields);
-        $searchType = 'simple_search';
-
-        return view('admin.sales.others',compact('sales','filter','searchType'));
-    }
-
     public function add_shippingfee(Request $request)
     {
         $sales = SalesHeader::findOrFail($request->orderid);
@@ -313,7 +294,7 @@ class SalesController extends Controller
             $subtotal += $item->price*$item->qty;
         }
 
-        $total = $subtotal+$sales->service_fee+$request->shippingfee;
+        $total = number_format($subtotal+$sales->service_fee+$request->shippingfee,2,'.','');
 
         if($sales->discount_amount > 0){
             $discount = $total*($sales->discount_amount/100);

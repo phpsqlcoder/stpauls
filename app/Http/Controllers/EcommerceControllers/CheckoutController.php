@@ -117,8 +117,6 @@ class CheckoutController extends Controller
             } else {
                 $rate = ($sp->rate+$sp_weight->rate);
             }
-            
-            \Log::info($rate);
         } else {
             $rate = 0;
         }

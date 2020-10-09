@@ -19,41 +19,6 @@ class SalesPayment extends Model
         return $this->belongsTo('\App\EcommerceModel\SalesHeader','sales_header_id');
     }
 
-    public static function check_if_has_added_payments($id)
-    {
-        $data = SalesPayment::where('sales_header_id',$id)->exists();
-
-        if($data){
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    public static function remaining_balance($amount,$id)
-    {
-        $paid_amount = SalesPayment::where('sales_header_id',$id)->sum('amount');
-
-        return $amount-$paid_amount;
-    }
-
-    public static function check_if_has_remaining_balance($gross_amount,$id)
-    {
-        $balance = \App\EcommerceModel\SalesPayment::remaining_balance($gross_amount,$id);
-        if($balance == 0){
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-
-    public static function undelivered_sdd()
-    {
-        $qry = SalesHeader::where('delivery_type','Same Day Delivery')->where('delivery_status','!=','Delivered')->count();
-
-        return $qry;
-    }
-
     public static function pending_money_transfer()
     {   
 
@@ -80,4 +45,44 @@ class SalesPayment extends Model
 
         return $qry;
     }
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    // public static function check_if_has_added_payments($id)
+    // {
+    //     $data = SalesPayment::where('sales_header_id',$id)->exists();
+
+    //     if($data){
+    //         return 1;
+    //     } else {
+    //         return 0;
+    //     }
+    // }
+
+    // public static function remaining_balance($amount,$id)
+    // {
+    //     $paid_amount = SalesPayment::where('sales_header_id',$id)->sum('amount');
+
+    //     return $amount-$paid_amount;
+    // }
+
+    // public static function check_if_has_remaining_balance($gross_amount,$id)
+    // {
+    //     $balance = \App\EcommerceModel\SalesPayment::remaining_balance($gross_amount,$id);
+    //     if($balance == 0){
+    //         return 0;
+    //     } else {
+    //         return 1;
+    //     }
+    // }
 }
