@@ -184,8 +184,8 @@
             @php $subtotal = 0; $weight = 0; $total = 0; $totalweight = 0; @endphp
             @foreach($sales->items as $item)
             @php
-                $weight   += $item->product->weight*$item->qty;
-                $total    += $item->price*$item->qty;
+                $weight   = $item->product->weight*$item->qty;
+                $total    = $item->price*$item->qty;
                 $subtotal += $total;
                 $totalweight += $weight;
             @endphp
