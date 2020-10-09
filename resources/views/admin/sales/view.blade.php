@@ -22,7 +22,9 @@
             <h4 class="mg-b-0 tx-spacing--1"> Sales Transaction Summary</h4>
         </div>
         <div>
+            @if($sales->payment_status == 'PAID')
             <a href="{{route('sales-transaction.invoice',$sales->id) }}" target="_blank" class="btn btn-outline-primary btn-sm tx-semibold"><i data-feather="printer"></i> Print Invoice</a>
+            @endif
         </div>
     </div>
 
