@@ -306,12 +306,28 @@ class SalesController extends Controller
     {
         $sales = SalesHeader::findOrFail($request->orderid);
 
+        $items = SalesDetail::where('sales_header_id',$sales->id)->get();
+
+        $subtotal = 0;
+        foreach($items as $item){
+            $subtotal += $item->price*$item->qty;
+        }
+
+        $total = $subtotal+$sales->service_fee+$request->shippingfee;
+
+        if($sales->discount_amount > 0){
+            $discount = $total*($sales->discount_amount/100);
+            $amount = ($total-$discount);
+        } else {
+            $amount = $total;
+        }
+
         $sales->update([
             'delivery_status' => ($sales->delivery_type == 'Cash on Delivery') ? 'Scheduled for Processing' : 'Waiting for Payment',
             'is_approve' => ($sales->delivery_type == 'Cash on Delivery') ? 1 : 0,
             'delivery_fee_amount' => $request->shippingfee,
-            'net_amount' => ($sales->net_amount+$request->shippingfee),
-            'gross_amount' => ($sales->gross_amount+$request->shippingfee)
+            'net_amount' => $amount,
+            'gross_amount' => $amount
         ]);
 
         $this->send_email_notification($sales,'Add Shipping Fee');
