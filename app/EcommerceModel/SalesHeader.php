@@ -25,32 +25,6 @@ class SalesHeader extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function balance($id){
-        $amount = SalesHeader::whereId($id)->sum('net_amount');        
-        $paid = (float) SalesPayment::where('sales_header_id',$id)->whereStatus('PAID')->sum('amount');
-        return ($amount - $paid);
-    }
-
-    public static function paid($id){
-        $paid = SalesPayment::where('sales_header_id',$id)->whereStatus('PAID')->sum('amount');
-        return $paid;
-    }
-    
-    // public function getPaymentstatusAttribute(){
-    //     $paid = SalesPayment::where('sales_header_id',$this->id)->whereStatus('PAID')->sum('amount');
-  
-    //     if($paid >= $this->net_amount){
-    //         $tag_as_paid = SalesHeader::whereId($this->id)->update(['payment_status' => 'PAID']);
-    //         if($this->delivery_status == 'Waiting for Payment'){
-    //             $update_delivery_status = SalesHeader::whereId($this->id)->update(['delivery_status' => 'Processing Stock']);
-    //         }
-    //         return 'PAID';
-    //     }else{
-    //         return 'UNPAID';
-    //     }
-       
-    // }
-
     public function payment()
     {
         return $this->belongsTo('\App\EcommerceModel\SalesPayment','id', 'sales_header_id')->withDefault([
@@ -60,7 +34,7 @@ class SalesHeader extends Model
     }
 
     public function items(){
-    	return $this->hasMany('App\EcommerceModel\SalesDetail','sales_header_id');
+        return $this->hasMany('App\EcommerceModel\SalesDetail','sales_header_id');
     }
 
     public function deliveries(){
@@ -81,26 +55,6 @@ class SalesHeader extends Model
         return $data->payment_status;
         
     }
-
-    public static function status(){
-        $data = SalesHeader::where('status','PAID')->first();
-        if(!empty($data)){
-            return $data;
-        } else {
-            return NULL;
-        }
-
-    }
-
-    public static function first_payment($id){
-        $data = \App\EcommerceModel\Sales::where('sales_header_id',$id)->get();
-        return $data;
-    }
-
-    // public function payment()
-    // {
-    //     return $this->belongsTo('\App\EcommerceModel\SalesPayment','sales_header_id');
-    // }
 
     public function salesheader_payments()
     {
@@ -143,4 +97,77 @@ class SalesHeader extends Model
 
         return $type;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+    public static function balance($id){
+        $amount = SalesHeader::whereId($id)->sum('net_amount');        
+        $paid = (float) SalesPayment::where('sales_header_id',$id)->whereStatus('PAID')->sum('amount');
+        return ($amount - $paid);
+    }
+
+    public static function paid($id){
+        $paid = SalesPayment::where('sales_header_id',$id)->whereStatus('PAID')->sum('amount');
+        return $paid;
+    }
+    
+    // public function getPaymentstatusAttribute(){
+    //     $paid = SalesPayment::where('sales_header_id',$this->id)->whereStatus('PAID')->sum('amount');
+  
+    //     if($paid >= $this->net_amount){
+    //         $tag_as_paid = SalesHeader::whereId($this->id)->update(['payment_status' => 'PAID']);
+    //         if($this->delivery_status == 'Waiting for Payment'){
+    //             $update_delivery_status = SalesHeader::whereId($this->id)->update(['delivery_status' => 'Processing Stock']);
+    //         }
+    //         return 'PAID';
+    //     }else{
+    //         return 'UNPAID';
+    //     }
+       
+    // }
+
+    
+
+    // public static function status(){
+    //     $data = SalesHeader::where('status','PAID')->first();
+    //     if(!empty($data)){
+    //         return $data;
+    //     } else {
+    //         return NULL;
+    //     }
+
+    // }
+
+    // public static function first_payment($id){
+    //     $data = \App\EcommerceModel\Sales::where('sales_header_id',$id)->get();
+    //     return $data;
+    // }
+
+    // public function payment()
+    // {
+    //     return $this->belongsTo('\App\EcommerceModel\SalesPayment','sales_header_id');
+    // }
 }

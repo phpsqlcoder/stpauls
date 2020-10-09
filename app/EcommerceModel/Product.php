@@ -55,19 +55,19 @@ class Product extends Model
         return $this->belongsTo('\App\EcommerceModel\ProductAdditionalInfo','id','product_id');
     }
 
-    public static function colors($value){
+    // public static function colors($value){
 
-        $colors = \DB::table('products_variations')->select('color')->distinct()->where('product_id',$value)->get();
-        return $colors;
+    //     $colors = \DB::table('products_variations')->select('color')->distinct()->where('product_id',$value)->get();
+    //     return $colors;
 
-    }
+    // }
 
-    public static function sizes($value){
+    // public static function sizes($value){
 
-        $sizes = \DB::table('products_variations')->select('size')->distinct()->where('product_id',$value)->get();
-        return $sizes;
+    //     $sizes = \DB::table('products_variations')->select('size')->distinct()->where('product_id',$value)->get();
+    //     return $sizes;
 
-    }
+    // }
 
     public function photos()
     {
@@ -200,70 +200,8 @@ class Product extends Model
         }
 
         return $data;
-
     }
 
-    public static function totalProduct()
-    {
-        $total = Product::withTrashed()->get()->count();
-
-        return $total;
-    }
-
-    public function is_editable()
-    {
-        return $this->status != 'UNEDITABLE';
-    }
-
-    public static function info($p){
-
-        $pd = Product::where('name','=',$p)->first();
-
-        return $pd;
-    }
-
-    public static function detail($p){
-
-        $pd = Product::where('name',$p)->get();
-
-        return $pd;
-    }    
-
-    public function get_image_file_name()
-    {
-        $path = explode('/', $this->zoom_image);
-        $nameIndex = count($path) - 1;
-        if ($nameIndex < 0)
-            return '';
-
-        return $path[$nameIndex];
-    }
-
-    public function reviews()
-    {
-        return $this->hasMany('App\EcommerceModel\ProductReview');
-    }
-
-    public function getRatingAttribute()
-    {
-        return $this->reviews->avg('rating');
-    }
-
-    public function getRatingStarAttribute(){
-        $star = 5 - (integer) $this->rating;
-        $front = '';
-        for($x = 1; $x<=$this->rating; $x++){
-            $front.='<span class="fa fa-star checked"></span>';
-        }
-
-        for($x = 1; $x<=$star; $x++){
-            $front.='<span class="fa fa-star"></span>';
-        }
-
-        return $front;
-    }
-
-    // Ryan
     public function on_sale()
     {
         return $this->belongsTo('\App\StPaulModel\OnSaleProducts','id','product_id');
@@ -287,6 +225,84 @@ class Product extends Model
 
         return $checkproduct;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    // public static function totalProduct()
+    // {
+    //     $total = Product::withTrashed()->get()->count();
+
+    //     return $total;
+    // }
+
+    // public function is_editable()
+    // {
+    //     return $this->status != 'UNEDITABLE';
+    // }
+
+    // public static function info($p){
+
+    //     $pd = Product::where('name','=',$p)->first();
+
+    //     return $pd;
+    // }
+
+    // public static function detail($p){
+
+    //     $pd = Product::where('name',$p)->get();
+
+    //     return $pd;
+    // }    
+
+    public function get_image_file_name()
+    {
+        $path = explode('/', $this->zoom_image);
+        $nameIndex = count($path) - 1;
+        if ($nameIndex < 0)
+            return '';
+
+        return $path[$nameIndex];
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany('App\EcommerceModel\ProductReview');
+    }
+
+    // public function getRatingAttribute()
+    // {
+    //     return $this->reviews->avg('rating');
+    // }
+
+    // public function getRatingStarAttribute(){
+    //     $star = 5 - (integer) $this->rating;
+    //     $front = '';
+    //     for($x = 1; $x<=$this->rating; $x++){
+    //         $front.='<span class="fa fa-star checked"></span>';
+    //     }
+
+    //     for($x = 1; $x<=$star; $x++){
+    //         $front.='<span class="fa fa-star"></span>';
+    //     }
+
+    //     return $front;
+    // }
+
 
     
 

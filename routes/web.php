@@ -22,7 +22,7 @@
         Route::get('/login', 'EcommerceControllers\CustomerFrontController@login')->name('customer-front.login');
         Route::get('oauth/{driver}', 'Auth\SocialiteController@loginRedirectToProvider')->name('social.oauth-login');
         Route::get('oauth/{driver}/callback', 'Auth\SocialiteController@loginHandleProviderCallback')->name('social.callback-login');
-        
+
         Route::post('/login', 'EcommerceControllers\CustomerFrontController@customer_login')->name('customer-front.customer_login');
         Route::get('/customer-logout', 'EcommerceControllers\CustomerFrontController@logout')->name('customer.logout');
 
@@ -214,8 +214,6 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
             // Card Payment
             Route::get('/admin/sales/card-payment','EcommerceControllers\SalesController@sales_card_payment')->name('sales-transaction.card-payment');
-            // Address that do not have shipping fee
-            Route::get('/admin/sales/other','EcommerceControllers\SalesController@sales_other')->name('sales-transaction.other');
             Route::post('/admin/add-shippingfee','EcommerceControllers\SalesController@add_shippingfee')->name('add-shipping-fee');
 
 

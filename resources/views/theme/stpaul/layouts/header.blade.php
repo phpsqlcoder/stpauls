@@ -133,7 +133,7 @@
                         <div class="col-4">
                             <a class="item" href="{{ route('cart.front.show')}}">
                                 <span class="lnr lnr-cart">
-                                    <span class="counter">{!! Setting::EcommerceCartTotalItems() !!}</p></span>
+                                    <span class="counter">{!! Setting::EcommerceCartTotalItems() !!}</span>
                                 </span>
                                 <span class="text">Cart</span>
                             </a>

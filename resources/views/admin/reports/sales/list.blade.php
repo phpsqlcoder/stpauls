@@ -18,9 +18,7 @@
 @section('content')       
 <div style="margin:0px 40px 200px 40px;font-family:Arial;">
     <h4 class="mg-b-0 tx-spacing--1">Sales Report</h4>
-    <form action="{{route('report.sales.list')}}" method="get">
-        <input type="hidden" name="act" value="go">
-        @csrf
+    <form>
         <table>
             <tr>
                 <td>Start</td>
@@ -49,10 +47,10 @@
                     <select name="product" id="product" class="form-control input-sm">
                         <option value="">Select</option>
                         @php
-                            $products = \App\EcommerceModel\Product::orderBy('name')->get();
+                            $products = \App\EcommerceModel\SalesDetail::select('product_id','product_name')->distinct()->orderBy('product_name')->get(['product_id']);
                         @endphp
                         @forelse($products as $p)
-                            <option value="{{$p->id}}">{{$p->name}}</option>
+                            <option value="{{$p->product_id}}">{{$p->product_name}}</option>
                         @empty
                         @endforelse
                     </select>
@@ -64,7 +62,7 @@
                             $customers = \App\EcommerceModel\SalesHeader::distinct()->orderBy('customer_name')->get(['customer_name']);
                         @endphp
                         @forelse($customers as $cu)
-                            <option value="{{$cu->id}}">{{$cu->customer_name}}</option>
+                            <option value="{{$cu->customer_name}}">{{$cu->customer_name}}</option>
                         @empty
                         @endforelse
                     </select>

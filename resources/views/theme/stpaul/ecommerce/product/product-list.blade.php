@@ -228,6 +228,7 @@
                 success: function(returnData) {
                     if (returnData['success']) {
                         $('.cart-counter').html(returnData['totalItems']);
+                        $('.counter').html(returnData['totalItems']);
                         
                         swal({
                             toast: true,

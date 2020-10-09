@@ -283,35 +283,32 @@ class SalesController extends Controller
     }
     // END CARD PAYMENT
 
-    // Others
-    public function sales_other()
-    {
-        $listing = new ListingHelper('desc',10,'order_number');
-
-        $sales = SalesHeader::where('payment_status','UNPAID')->where('delivery_type','!=','Store Pick Up')->where('delivery_fee_amount',0);
-
-        // if(isset($_GET['search']) && $_GET['search']<>'')
-        //     $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
-
-        $sales = $sales->orderBy('id','desc');
-        $sales = $sales->paginate(10);
-
-        $filter = $listing->get_filter($this->searchFields);
-        $searchType = 'simple_search';
-
-        return view('admin.sales.others',compact('sales','filter','searchType'));
-    }
-
     public function add_shippingfee(Request $request)
     {
         $sales = SalesHeader::findOrFail($request->orderid);
+
+        $items = SalesDetail::where('sales_header_id',$sales->id)->get();
+
+        $subtotal = 0;
+        foreach($items as $item){
+            $subtotal += $item->price*$item->qty;
+        }
+
+        $total = number_format($subtotal+$sales->service_fee+$request->shippingfee,2,'.','');
+
+        if($sales->discount_amount > 0){
+            $discount = $total*($sales->discount_amount/100);
+            $amount = ($total-$discount);
+        } else {
+            $amount = $total;
+        }
 
         $sales->update([
             'delivery_status' => ($sales->delivery_type == 'Cash on Delivery') ? 'Scheduled for Processing' : 'Waiting for Payment',
             'is_approve' => ($sales->delivery_type == 'Cash on Delivery') ? 1 : 0,
             'delivery_fee_amount' => $request->shippingfee,
-            'net_amount' => ($sales->net_amount+$request->shippingfee),
-            'gross_amount' => ($sales->gross_amount+$request->shippingfee)
+            'net_amount' => $amount,
+            'gross_amount' => $amount
         ]);
 
         $this->send_email_notification($sales,'Add Shipping Fee');
