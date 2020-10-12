@@ -78,7 +78,7 @@ class Product extends Model
     {
         $photo = $this->photos()->where('is_primary', 1)->first();
         if(!$photo){
-            return '0/no_image_available.PNG';
+            return '0/no_image_available.jpg';
         }
         else{
             return $photo->path;
