@@ -193,6 +193,14 @@
   margin-left: initial;
 }
 
+#book .slick-track,
+#bible .slick-track,
+#devotional .slick-track,
+#reco-title .slick-track,
+#item-sale .slick-track {
+  margin-left: initial;
+}
+
 #slick-latest .slick-prev,
 #slick-latest .slick-next,
 #product-gallery-slider .slick-prev,
