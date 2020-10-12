@@ -46,7 +46,11 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         if (Auth::attempt($request->only(['email', 'password']))) {
-            return $this->sendLoginResponse($request);
+
+            if(auth::user()->role_id == 3){ // block customers from using this login form
+                Auth::logout();
+                return back()->with('error', 'Customers are not allowed to login in this portal.'); 
+            }
         }
 
         return back()->with('error', __('auth.login.incorrect_input'));

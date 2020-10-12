@@ -195,6 +195,11 @@ class CustomerFrontController extends Controller
         
         if (Auth::attempt($userCredentials)) {
 
+            if(auth::user()->role_id != 3){ // block admin from using this login form
+                Auth::logout();
+                return back()->with('error', 'Administrative account are not allowed to login in this portal.'); 
+            }
+
             if(Auth()->user()->is_active == 0){
                 return back()->with('warning','account inactive');
             }

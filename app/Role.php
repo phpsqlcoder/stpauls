@@ -12,6 +12,8 @@ class Role extends Model
     public $table = 'role';
 
     protected $fillable = [ 'name', 'description', 'created_by',];
+    protected $timestamp = true;
+    
 
     public function is_admin() {
         return $this->id == 1;

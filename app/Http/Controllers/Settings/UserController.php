@@ -29,11 +29,6 @@ class UserController extends Controller
     public function __construct()
     {
         Permission::module_init($this, 'user');
-
-//        $this->middleware('checkPermission:admin/users', ['only' => ['index']]);
-//        $this->middleware('checkPermission:admin/user/create', ['only' => ['create','store']]);
-//        $this->middleware('checkPermission:admin/user/edit', ['only' => ['edit','update']]);
-//        $this->middleware('checkPermission:admin/user/delete', ['only' => ['destroy']]);
     }
 
     public function index($param = null)
@@ -67,7 +62,7 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::orderBy('name','asc')->get();
+        $roles = Role::where('id','<>',3)->orderBy('name','asc')->get();
         return view('admin.users.create',compact('roles'));
     }
 

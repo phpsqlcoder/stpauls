@@ -22,13 +22,7 @@
             <h4 class="mg-b-0 tx-spacing--1">Create a User</h4>
         </div>
     </div>
-
-{{--    @if($message = Session::get('duplicate'))--}}
-{{--        <div class="alert alert-warning d-flex align-items-center mg-t-15" role="alert">--}}
-{{--            <p class="mg-b-0"><i data-feather="alert-circle" class="mg-r-10"></i>{{ $message }}--}}
-{{--        </div>--}}
-{{--    @endif--}}
-
+    
     <div class="row">
         <div class="col-md-6">
             <form action="{{ route('users.store') }}" method="post">

@@ -112,10 +112,6 @@ class CustomerController extends Controller
         } else {
             $user->send_disapproved_account_reactivation_email();
         }
-        
-        // if (Mail::failures()) {
-        //     return back()->withInput($request->only('email'))->withErrors(['email' => trans('passwords.user')]);
-        // }
 
         return back()->with('success', __('standard.customers.reactivate_status', ['status' => $status]));
     }

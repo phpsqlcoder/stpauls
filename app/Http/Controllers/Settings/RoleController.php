@@ -29,7 +29,16 @@ class RoleController extends Controller
 
     public function index()
     {
-        $listing = new ListingHelper('desc', 10, 'updated_at');
+        $customConditions = [
+            [
+                'field' => 'id',
+                'operator' => '!=',
+                'value' => 3,
+                'apply_to_deleted_data' => false
+            ]
+        ];
+
+        $listing = new ListingHelper('desc', 10, 'updated_at',$customConditions);
 
         $roles = $listing->simple_search(Role::class, $this->searchFields);
 
