@@ -252,6 +252,16 @@ $slick-opacity-not-active: 0.25 !default;
     }
 }
 
+#book,
+#bible,
+#devotional,
+#reco-title,
+#item-sale {
+    .slick-track {
+        margin-left: initial;
+    }
+}
+
 #slick-latest,
 #product-gallery-slider {
 
