@@ -249,6 +249,7 @@
         $(function () {
             $('#salesTransaction').DataTable({
                 "responsive": false,
+                "scrollX": true,
                 "columnDefs": [
                     { responsivePriority: 1, targets: 0 },
                     { responsivePriority: 2, targets: -1 }

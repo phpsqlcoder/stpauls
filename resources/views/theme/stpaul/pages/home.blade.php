@@ -11,7 +11,9 @@
             <div class="container">
 
                 <!-- Our Products Navigation Tabs -->
-                <div class="category-nav-1">
+                 <div class="category-flex-1">
+                    <h2 class="category-title"><span>Our Products</span></h2>
+                    <div class="category-nav-1">
                     <ul class="nav nav-pills" id="pills-tab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="pills-book-tab" data-toggle="pill" href="#pills-book" role="tab" aria-controls="pills-home" aria-selected="true">Books</a>
@@ -28,8 +30,9 @@
                         <a href="" class="product-next"><span class="lnr lnr-arrow-right"></span></a>
                     </div>
                 </div>
+                 </div>
+                
                 <!-- END Our Products Navigation Tabs -->
-                <h2 class="category-title"><span>Our Products</span></h2>
 
                 <div class="gap-40"></div>
 
@@ -48,7 +51,7 @@
                                 <div class="product-card">
                                     <a href="{{ route('product.front.show',$book->slug)}}">
                                         <img src="{{ asset('storage/products/'.$book->photoPrimary) }}" alt="" />
-                                        <h3 class="product-price">Php {{ $book->getPriceWithCurrencyAttribute() }}</h3>
+                                        <h3 class="product-price"><br>Php {{ $book->getPriceWithCurrencyAttribute() }}</h3>
                                     </a>
                                     <p class="product-title">{{ $book->name }}</p> 
                                     @if($book->inventory > 0)
@@ -79,7 +82,7 @@
                                 <div class="product-card">
                                     <a href="p{{ route('product.front.show',$bible->slug)}}">
                                         <img src="{{ asset('storage/products/'.$bible->photoPrimary) }}" alt="" />
-                                        <h3 class="product-price">Php {{ $bible->getPriceWithCurrencyAttribute() }}</h3>
+                                        <h3 class="product-price"><br>Php {{ $bible->getPriceWithCurrencyAttribute() }}</h3>
                                     </a>
                                     <p class="product-title">{{ $bible->name }}</p>
                                     @if($bible->inventory > 0)
@@ -110,7 +113,7 @@
                                 <div class="product-card">
                                     <a href="{{ route('product.front.show',$devo->slug)}}">
                                         <img src="{{ asset('storage/products/'.$devo->photoPrimary) }}" alt="" />
-                                        <h3 class="product-price">Php {{ $devo->getPriceWithCurrencyAttribute() }}</h3>
+                                        <h3 class="product-price"><br>Php {{ $devo->getPriceWithCurrencyAttribute() }}</h3>
                                     </a>
                                     <p class="product-title">{{ $devo->name }}</p>
                                     <form>
@@ -149,13 +152,15 @@
                 <div class="gap-70"></div>
 
                 <!-- Home Recommended Titles Section -->
-                <div class="category-nav-2">
+                <div class="category-flex-2">
+                    <h2 class="category-title"><span>Recommended Titles</span></h2>
+                    <div class="category-nav-2">
                     <div class="product-nav">
                         <a href="" class="reco-title-prev"><span class="lnr lnr-arrow-left"></span></a>
                         <a href="" class="reco-title-next"><span class="lnr lnr-arrow-right"></span></a>
                     </div>
                 </div>
-                <h2 class="category-title"><span>Recommended Titles</span></h2>
+                </div>
 
                 <div class="gap-40"></div>
 
@@ -171,7 +176,7 @@
                                 <div class="product-card mb-4">
                                     <a href="{{ route('product.front.show',$b['slug'])}}">
                                         <img src="{{ asset('storage/products/'.$b->photoPrimary) }}" alt="" />
-                                        <h3 class="product-price">Php {{ number_format($b['price'],2) }}</h3>
+                                        <h3 class="product-price"><br>Php {{ number_format($b['price'],2) }}</h3>
                                     </a>
                                     <p class="product-title">{{ $b['name'] }}</p>
                                     <form id="addToCart{{$b['id']}}" data-source="">
@@ -219,11 +224,19 @@
                     @foreach($onsale_products as $product)
                         <div class="product-link">
                             <div class="product-card">
+                                @if($product['discount'] > 0)
+                                    <div class="product-discount">{{ $product->discount }}% OFF</div>
+                                @endif
                                 <a href="{{ route('product.front.show',$product->details->slug)}}">
                                     <img src="{{ asset('storage/products/'.$product->details->photoPrimary) }}" alt="" />
-                                    <h3 class="product-price">Php {{ $product->details->DiscountedPrice }}&nbsp;<small style="font-size: 15px;">{{ $product->discount }}% Off</small><br></h3>
-
-                                    <small style="text-decoration:line-through;">{{ number_format($product->details->price,2) }}</small>
+                                    <h3 class="product-price">
+                                        @if($product['discount'] > 0)
+                                            <div class="old">Php {{ number_format($product->details->price,2) }}</div>
+                                        @else
+                                            <br>
+                                        @endif
+                                        Php {{ $product->details->DiscountedPrice }}
+                                    </h3>
                                 </a>
                                 <p class="product-title">{{ $product->details->name }}</p>
                                 <form>
