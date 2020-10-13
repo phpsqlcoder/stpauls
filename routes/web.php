@@ -461,13 +461,14 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         // Access
         Route::resource('/access', 'Settings\AccessController');
         Route::post('/roles_and_permissions/update', 'Settings\AccessController@update_roles_and_permissions')->name('role-permission.update');
-        if (env('APP_DEBUG') == "true") {
+        
+        //if (env('APP_DEBUG') == "true") {
             // Permission Routes
             Route::resource('/permission', 'Settings\PermissionController');
             Route::get('/permission-search/', 'Settings\PermissionController@search')->name('permission.search');
             Route::post('/permission/destroy', 'Settings\PermissionController@destroy')->name('permission.destroy');
             Route::get('/permission/restore/{id}', 'Settings\PermissionController@restore')->name('permission.restore');
-        }
+        //}
 
     });
 });
