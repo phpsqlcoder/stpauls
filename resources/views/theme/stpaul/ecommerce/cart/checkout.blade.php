@@ -474,7 +474,7 @@
                                                     <label>Recipient : {{ $list->recipient }}</label><br>
                                                     @if($list->qrcode != '')
                                                     <label>QR Code : </label><br>
-                                                    <img style="margin-left: 85px;" src="{{ asset('storage/qrcodes/'.$list->id.'/'.$list->qrcode) }}">
+                                                    <img style="width: 100%;max-width: 150px;" src="{{ asset('storage/qrcodes/'.$list->id.'/'.$list->qrcode) }}">
                                                     @endif
                                                     @endif
                                                 </div>
