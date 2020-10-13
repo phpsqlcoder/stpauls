@@ -49,7 +49,7 @@ class LoginController extends Controller
 
             if(auth::user()->role_id == 3){ // block customers from using this login form
                 Auth::logout();
-                return back()->with('error', 'Customers are not allowed to login in this portal.'); 
+                return back()->with('unauthorize-login', 'Unauthorize login.'); 
             }
         }
 

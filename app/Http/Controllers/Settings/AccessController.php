@@ -26,7 +26,7 @@ class AccessController extends Controller
             $permissions = Permission::where('module', '!=', 'permission')->orderBy('module','asc')->get();
             $modules = Permission::where('module', '!=', 'permission')->distinct()->get(['module']);
         }
-        $roles = Role::where('id', '!=', 2)->orderBy('id','asc')->get();
+        $roles = Role::where('id', '!=', 3)->orderBy('id','asc')->get();
 
         $access = [];
         foreach($permissions as $permission){

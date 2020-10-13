@@ -46,7 +46,7 @@
                                 <tr>
                                     <td width="50%">Module</td>
                                     @foreach($roles as $role)
-                                        @if ($role->is_not_admin())
+                                        @if($role->is_not_admin())
                                             <td>{{ $role->name }}</td>
                                         @endif
                                     @endforeach

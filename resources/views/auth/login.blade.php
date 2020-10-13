@@ -39,6 +39,14 @@
                         <h3 class="mg-b-3">Log In</h3>
                         <p class="tx-color-03 tx-14 mg-b-40">Welcome to {{ \App\Setting::getWebsiteName() }} Admin Portal. Please sign in to continue.</p>
                         <form method="POST" action="{{ route('login') }}">
+
+                            @if($message = Session::get('unauthorize-login'))
+                                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                                    <i data-feather="alert-circle" class="mg-r-10"></i> 
+                                    <span>Unauthorized Access. Please access your account in <a href="{{ route('customer-front.login') }}">customer login</a></span>
+                                </div>
+                            @endif
+
                             @if($message = Session::get('error'))
                                 <div class="alert alert-danger d-flex align-items-center" role="alert">
                                     <i data-feather="alert-circle" class="mg-r-10"></i> {{ $message }}

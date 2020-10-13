@@ -102,162 +102,143 @@
         </li>
     @endif
 
-    @if (auth()->user()->has_access_to_module('product') || auth()->user()->has_access_to_module('product_category') ||
-        auth()->user()->has_access_to_module('product_reviews') || auth()->user()->has_access_to_module('customer') ||
-        auth()->user()->has_access_to_module('sales_transaction') || auth()->user()->has_access_to_module('inventory') ||
-        auth()->user()->has_access_to_module('delivery_flat_rate'))
 
-        <li class="nav-label mg-t-25">E-Commerce</li>
+    <li class="nav-label mg-t-25">E-Commerce</li>
+    @if (auth()->user()->has_access_to_module('products') || auth()->user()->has_access_to_module('product_categories') || auth()->user()->has_access_to_module('product_reviews'))
+        <li class="nav-item with-sub @if (request()->routeIs('products*') || request()->routeIs('product-categories*')|| request()->routeIs('product-review*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="box"></i> <span>Products</span></a>
+            <ul>
+                @if (auth()->user()->has_access_to_module('products'))
+                    <li @if (\Route::current()->getName() == 'products.index' || \Route::current()->getName() == 'products.edit') class="active" @endif><a href="{{ route('products.index') }}">Manage Products</a></li>
+                    @if (auth()->user()->has_access_to_route('products.create'))
+                        <li @if (\Route::current()->getName() == 'products.create') class="active" @endif><a href="{{ route('products.create') }}">Create a Product</a></li>
+                    @endif
+                @endif
+                @if (auth()->user()->has_access_to_module('product_reviews'))
+                    <li @if (\Route::current()->getName() == 'product-review.list') class="active" @endif><a href="{{ route('product-review.list') }}">Product Reviews</a></li>
+                @endif
+                @if (auth()->user()->has_access_to_module('product_categories'))
+                    <li @if (\Route::current()->getName() == 'product-categories.index' || \Route::current()->getName() == 'product-categories.edit') class="active" @endif><a href="{{ route('product-categories.index') }}">Manage Categories</a></li>
+                    @if (auth()->user()->has_access_to_route('product-categories.create'))
+                        <li><a href="{{ route('product-categories.create') }}">Create a Category</a></li>
+                    @endif
+                @endif
+            </ul>
+        </li>
+    @endif
 
-        @if (auth()->user()->has_access_to_module('product') || auth()->user()->has_access_to_module('product_category') || auth()->user()->has_access_to_module('product_reviews'))
-            <li class="nav-item with-sub @if (request()->routeIs('products*') || request()->routeIs('product-categories*')|| request()->routeIs('product-review*')) active show @endif">
-                <a href="" class="nav-link"><i data-feather="box"></i> <span>Products</span></a>
-                <ul>
-                    @if (auth()->user()->has_access_to_module('product'))
-                        <li @if (\Route::current()->getName() == 'products.index' || \Route::current()->getName() == 'products.edit') class="active" @endif><a href="{{ route('products.index') }}">Manage Products</a></li>
-                        @if (auth()->user()->has_access_to_route('products.create'))
-                            <li @if (\Route::current()->getName() == 'products.create') class="active" @endif><a href="{{ route('products.create') }}">Create a Product</a></li>
+    @if (auth()->user()->has_access_to_module('customers'))
+        <li class="nav-item with-sub @if (request()->routeIs('customers*')) active show @endif">
+            <a href="#" class="nav-link"><i data-feather="users"></i> <span>Customers</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'customers.index') class="active" @endif><a href="{{ route('customers.index') }}">Manage Customers</a></li>
+                <li @if (\Route::current()->getName() == 'customers.reactivate-request') class="active" @endif>
+                    <a href="{{ route('customers.reactivate-request') }}">Reactivation Request
+                        &nbsp;
+                        @if(\App\EcommerceModel\Customer::reactivation_request() > 0)
+                            <span class="badge badge-danger">{{\App\EcommerceModel\Customer::reactivation_request()}}</span>
                         @endif
-                    @endif
-                    @if (auth()->user()->has_access_to_module('product_reviews'))
-                        <li @if (\Route::current()->getName() == 'product-review.list') class="active" @endif><a href="{{ route('product-review.list') }}">Product Reviews</a></li>
-                    @endif
-                    @if (auth()->user()->has_access_to_module('product_category'))
-                        <li @if (\Route::current()->getName() == 'product-categories.index' || \Route::current()->getName() == 'product-categories.edit') class="active" @endif><a href="{{ route('product-categories.index') }}">Manage Categories</a></li>
-                        @if (auth()->user()->has_access_to_route('product-categories.create'))
-                            <li><a href="{{ route('product-categories.create') }}">Create a Category</a></li>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    @endif
+
+    @if (auth()->user()->has_access_to_route('sales-transaction.money-transfer') || auth()->user()->has_access_to_route('sales-transaction.card-payment') || auth()->user()->has_access_to_route('sales-transaction.cash-on-delivery'))
+        <li class="nav-item with-sub @if (request()->routeIs('sales-transaction*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="users"></i> <span>Manage Sales Transaction</span></a>
+            <ul>
+                @if(auth()->user()->has_access_to_route('sales-transaction.money-transfer'))
+                <li @if (\Route::current()->getName() == 'sales-transaction.money-transfer') class="active" @endif>
+                    <a href="{{ route('sales-transaction.money-transfer') }}">Money Transfer 
+                        &nbsp;
+                        @if(\App\EcommerceModel\SalesPayment::pending_money_transfer() > 0)
+                            <span class="badge badge-danger">{{\App\EcommerceModel\SalesPayment::pending_money_transfer()}}</span>
                         @endif
-                    @endif
-                </ul>
-            </li>
-        @endif
+                    </a>
+                </li>
+                @endif
 
-        @if (auth()->user()->has_access_to_module('customer'))
-            <li class="nav-item with-sub @if (request()->routeIs('customers*')) active show @endif">
-                <a href="#" class="nav-link"><i data-feather="users"></i> <span>Customers</span></a>
-                <ul>
-                    <li @if (\Route::current()->getName() == 'customers.index') class="active" @endif><a href="{{ route('customers.index') }}">Manage Customers</a></li>
-                    <li @if (\Route::current()->getName() == 'customers.reactivate-request') class="active" @endif>
-                        <a href="{{ route('customers.reactivate-request') }}">Reactivation Request
-                            &nbsp;
-                            @if(\App\EcommerceModel\Customer::reactivation_request() > 0)
-                                <span class="badge badge-danger">{{\App\EcommerceModel\Customer::reactivation_request()}}</span>
-                            @endif
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        @endif
+                @if(auth()->user()->has_access_to_route('sales-transaction.card-payment'))
+                <li @if (\Route::current()->getName() == 'sales-transaction.card-payment') class="active" @endif>
+                    <a href="{{ route('sales-transaction.card-payment') }}">Credit/Debit
+                        &nbsp;
+                        @if(\App\EcommerceModel\SalesHeader::pending_credit_payment() > 0)
+                            <span class="badge badge-danger">{{\App\EcommerceModel\SalesHeader::pending_credit_payment()}}</span>
+                        @endif
+                    </a>
+                </li>
+                @endif
 
-        @if (auth()->user()->has_access_to_module('sales_transaction'))
-            <li class="nav-item with-sub @if (request()->routeIs('sales-transaction*')) active show @endif">
-                <a href="" class="nav-link"><i data-feather="users"></i> <span>Manage Sales Transaction</span></a>
-                <ul>
-                    {{--<li @if (\Route::current()->getName() == 'sales-transaction.index') class="active" @endif><a href="{{ route('sales-transaction.index') }}">Sales Transactions</a></li>--}}
+                @if(auth()->user()->has_access_to_route('sales-transaction.cash-on-delivery'))
+                <li @if (\Route::current()->getName() == 'sales-transaction.cash-on-delivery') class="active" @endif>
+                    <a href="{{ route('sales-transaction.cash-on-delivery') }}">Cash on Delivery
+                        &nbsp;
+                        @if(\App\EcommerceModel\SalesHeader::pending_cod() > 0)
+                            <span class="badge badge-danger">{{ \App\EcommerceModel\SalesHeader::pending_cod() }}</span>
+                        @endif
+                    </a>
+                </li>
+                @endif
+            </ul>
+        </li>
+    @endif
 
-                    <li @if (\Route::current()->getName() == 'sales-transaction.money-transfer') class="active" @endif>
-                        <a href="{{ route('sales-transaction.money-transfer') }}">Money Transfer 
-                            &nbsp;
-                            @if(\App\EcommerceModel\SalesPayment::pending_money_transfer() > 0)
-                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesPayment::pending_money_transfer()}}</span>
-                            @endif
-                        </a>
-                    </li>
-                    <li @if (\Route::current()->getName() == 'sales-transaction.card-payment') class="active" @endif>
-                        <a href="{{ route('sales-transaction.card-payment') }}">Credit/Debit
-                            &nbsp;
-                            @if(\App\EcommerceModel\SalesHeader::pending_credit_payment() > 0)
-                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesHeader::pending_credit_payment()}}</span>
-                            @endif
-                        </a>
-                    </li>
-                    <li @if (\Route::current()->getName() == 'sales-transaction.cash-on-delivery') class="active" @endif>
-                        <a href="{{ route('sales-transaction.cash-on-delivery') }}">Cash on Delivery
-                            &nbsp;
-                            @if(\App\EcommerceModel\SalesHeader::pending_cod() > 0)
-                                <span class="badge badge-danger">{{ \App\EcommerceModel\SalesHeader::pending_cod() }}</span>
-                            @endif
-                        </a>
-                    </li>
-                    {{--<li @if (\Route::current()->getName() == 'sales-transaction.other') class="active" @endif>
-                        <a href="{{ route('sales-transaction.other') }}">Others
-                            &nbsp;
-                            @if(\App\EcommerceModel\SalesHeader::shippingfee_validation() > 0)
-                                <span class="badge badge-danger">{{\App\EcommerceModel\SalesHeader::shippingfee_validation()}}</span>
-                            @endif
-                        </a>
-                    </li>--}}
-                </ul>
-            </li>
-        @endif
+    @if (auth()->user()->has_access_to_module('promos'))
+        <li class="nav-item with-sub @if (request()->routeIs('promos*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="users"></i> <span>Promos</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'promos.index') class="active" @endif><a href="{{ route('promos.index') }}">Manage Promos</a></li>
+                <li><a href="{{ route('promos.create') }}">Create a Promo</a></li>
+            </ul>
+        </li>
+    @endif
 
-        @if (auth()->user()->has_access_to_module('promo'))
-            <li class="nav-item with-sub @if (request()->routeIs('promos*')) active show @endif">
-                <a href="" class="nav-link"><i data-feather="users"></i> <span>Promos</span></a>
-                <ul>
-                    <li @if (\Route::current()->getName() == 'promos.index') class="active" @endif><a href="{{ route('promos.index') }}">Manage Promos</a></li>
-                    <li><a href="{{ route('promos.create') }}">Create a Promo</a></li>
-                </ul>
-            </li>
-        @endif
+    @if (auth()->user()->has_access_to_module('loyalty'))
+        <li class="nav-item with-sub @if (request()->routeIs('loyalty*') || request()->routeIs('discounts*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="users"></i> <span>Loyalty</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'loyalty.index') class="active" @endif><a href="{{ route('loyalty.index') }}">Manage Loyalty</a></li>
+                <li @if (\Route::current()->getName() == 'discounts.index') class="active" @endif><a href="{{ route('discounts.index') }}">Manage Discounts</a></li>
+                <li @if (\Route::current()->getName() == 'discounts.create') class="active" @endif><a href="{{ route('discounts.create') }}">Create a Discount</a></li>
+            </ul>
+        </li>
+    @endif
 
-        @if (auth()->user()->has_access_to_module('loyalty'))
-            <li class="nav-item with-sub @if (request()->routeIs('loyalty*') || request()->routeIs('discounts*')) active show @endif">
-                <a href="" class="nav-link"><i data-feather="users"></i> <span>Loyalty</span></a>
-                <ul>
-                    <li @if (\Route::current()->getName() == 'loyalty.index') class="active" @endif><a href="{{ route('loyalty.index') }}">Manage Loyalty</a></li>
-                    <li @if (\Route::current()->getName() == 'discounts.index') class="active" @endif><a href="{{ route('discounts.index') }}">Manage Discounts</a></li>
-                    <li @if (\Route::current()->getName() == 'discounts.create') class="active" @endif><a href="{{ route('discounts.create') }}">Create a Discount</a></li>
-                </ul>
-            </li>
-        @endif
+    @if (auth()->user()->has_access_to_module('inventory'))
+        <li class="nav-item with-sub @if (request()->routeIs('inventory*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="users"></i> <span>Inventory</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'inventory.index') class="active" @endif><a href="{{ route('inventory.index') }}">Manage Inventory</a></li>
+            </ul>
+        </li>
+    @endif
 
-        @if (auth()->user()->has_access_to_module('inventory'))
-            <li class="nav-item with-sub @if (request()->routeIs('inventory*')) active show @endif">
-                <a href="" class="nav-link"><i data-feather="users"></i> <span>Inventory</span></a>
-                <ul>
-                    <li @if (\Route::current()->getName() == 'inventory.index') class="active" @endif><a href="{{ route('inventory.index') }}">Manage Inventory</a></li>
-                </ul>
-            </li>
-        @endif
+    @if (auth()->user()->has_access_to_module('shipping_rates'))
+        <li class="nav-item with-sub @if (request()->routeIs('shippingfee*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="box"></i> <span>Shipping Rates</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'shippingfee.index' || \Route::current()->getName() == 'shippingfee.edit') class="active" @endif><a href="{{ route('shippingfee.index') }}">Manage Shipping Rates</a></li>
+                @if (auth()->user()->has_access_to_route('shippingfee.create'))
+                    <li @if (\Route::current()->getName() == 'shippingfee.create') class="active" @endif><a href="{{ route('shippingfee.create') }}">Create Shipping Rate</a></li>
+                @endif
+            </ul>
+        </li>
+    @endif
 
-        @if (auth()->user()->has_access_to_module('delivery_flat_rate'))
-            {{--<li class="nav-item with-sub @if (request()->routeIs('locations*')) active show @endif">
-                <a href="" class="nav-link"><i data-feather="box"></i> <span>Delivery Flat Rates</span></a>
-                <ul>
-                    <li @if (\Route::current()->getName() == 'locations.index' || \Route::current()->getName() == 'locations.edit') class="active" @endif><a href="{{ route('locations.index') }}">Manage Flat Rates</a></li>
-                    @if (auth()->user()->has_access_to_route('locations.create'))
-                        <li @if (\Route::current()->getName() == 'locations.create') class="active" @endif><a href="{{ route('locations.create') }}">Create New Rate</a></li>
-                    @endif
-                </ul>
-            </li>--}}
-        @endif
+    @if (auth()->user()->has_access_to_module('branches'))
+        <li class="nav-item with-sub @if (request()->routeIs('branch*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="box"></i> <span>Branches</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'branch.index' || \Route::current()->getName() == 'branch.edit') class="active" @endif><a href="{{ route('branch.index') }}">Manage Branches</a></li>
+                @if (auth()->user()->has_access_to_route('branch.create'))
+                    <li @if (\Route::current()->getName() == 'branch.create') class=" " @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
+                @endif
+            </ul>
+        </li>
+    @endif
 
-        @if (auth()->user()->has_access_to_module('shippingfee'))
-            <li class="nav-item with-sub @if (request()->routeIs('shippingfee*')) active show @endif">
-                <a href="" class="nav-link"><i data-feather="box"></i> <span>Shipping Rates</span></a>
-                <ul>
-                    <li @if (\Route::current()->getName() == 'shippingfee.index' || \Route::current()->getName() == 'shippingfee.edit') class="active" @endif><a href="{{ route('shippingfee.index') }}">Manage Shipping Rates</a></li>
-                    @if (auth()->user()->has_access_to_route('shippingfee.create'))
-                        <li @if (\Route::current()->getName() == 'shippingfee.create') class="active" @endif><a href="{{ route('shippingfee.create') }}">Create Shipping Rate</a></li>
-                    @endif
-                </ul>
-            </li>
-        @endif
-
-        @if (auth()->user()->has_access_to_module('branches'))
-            <li class="nav-item with-sub @if (request()->routeIs('branch*')) active show @endif">
-                <a href="" class="nav-link"><i data-feather="box"></i> <span>Branches</span></a>
-                <ul>
-                    <li @if (\Route::current()->getName() == 'branch.index' || \Route::current()->getName() == 'branch.edit') class="active" @endif><a href="{{ route('branch.index') }}">Manage Branches</a></li>
-                    @if (auth()->user()->has_access_to_route('branch.create'))
-                        <li @if (\Route::current()->getName() == 'branch.create') class=" " @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
-                    @endif
-                </ul>
-            </li>
-        @endif
-
-        @if (auth()->user()->has_access_to_module('transaction-status'))
+    @if (auth()->user()->has_access_to_module('transaction_status'))
         <li class="nav-item with-sub @if (request()->routeIs('transaction-status*')) active show @endif">
 
             <a href="" class="nav-link"><i data-feather="users"></i> <span>Transaction Status</span></a>
@@ -266,55 +247,72 @@
                 <li><a href="{{ route('transaction-status.create') }}">Create a Transaction Status</a></li>
             </ul>
         </li>
+    @endif
+
+    @if (auth()->user()->has_access_to_route('report.customer.list') || auth()->user()->has_access_to_route('report.product.list') || auth()->user()->has_access_to_route('report.product.list') || auth()->user()->has_access_to_route('report.product.best-selling') || auth()->user()->has_access_to_route('report.sales.list') || auth()->user()->has_access_to_route('report.sales.unpaid') || auth()->user()->has_access_to_route('report.sales.payments') || auth()->user()->has_access_to_route('report.inventory.list') || auth()->user()->has_access_to_route('report.inventory.reorder_point'))
+        <li class="nav-label mg-t-25">Reports</li>
+
+        @if (auth()->user()->has_access_to_route('report.customer.list'))
+            <li class="nav-item with-sub @if (request()->routeIs('report.customer*')) active show @endif">
+                <a href="#" class="nav-link"><i data-feather="users"></i> <span>Customers</span></a>
+                <ul>
+                    <li><a href="{{ route('report.customer.list') }}" target="_blank">Customer List</a></li>
+                </ul>
+            </li>
         @endif
 
-        @if (auth()->user()->has_access_to_module('product') || auth()->user()->has_access_to_module('customer') ||
-            auth()->user()->has_access_to_module('sales_transaction') || auth()->user()->has_access_to_module('inventory'))
-            <li class="nav-label mg-t-25">Reports</li>
 
-            @if (auth()->user()->has_access_to_module('customer'))
-                <li class="nav-item with-sub @if (request()->routeIs('report.customer*')) active show @endif">
-                    <a href="#" class="nav-link"><i data-feather="users"></i> <span>Customers</span></a>
-                    <ul>
-                        <li><a href="{{ route('report.customer.list') }}" target="_blank">Customer List</a></li>
-                    </ul>
-                </li>
-            @endif
+        @if (auth()->user()->has_access_to_route('report.product.list') || auth()->user()->has_access_to_route('report.product.best-selling'))
+            <li class="nav-item with-sub @if (request()->routeIs('report.product*')) active show @endif">
+                <a href="#" class="nav-link"><i data-feather="users"></i> <span>Products</span></a>
+                <ul>
+                    @if(auth()->user()->has_access_to_route('report.product.list'))
+                    <li><a href="{{ route('report.product.list') }}" target="_blank">Product List</a></li>
+                    @endif
 
-            @if (auth()->user()->has_access_to_module('product'))
-                <li class="nav-item with-sub @if (request()->routeIs('report.product*')) active show @endif">
-                    <a href="#" class="nav-link"><i data-feather="users"></i> <span>Products</span></a>
-                    <ul>
-                        <li><a href="{{ route('report.product.list') }}" target="_blank">Product List</a></li>
-                        <li><a href="{{ route('report.product.best-selling') }}" target="_blank">Best Selling</a></li>
-                    </ul>
-                </li>
-            @endif
+                    @if(auth()->user()->has_access_to_route('report.product.best-selling'))
+                    <li><a href="{{ route('report.product.best-selling') }}" target="_blank">Best Selling</a></li>
+                    @endif
+                </ul>
+            </li>
+        @endif
 
-            @if (auth()->user()->has_access_to_module('sales_transaction'))
-                <li class="nav-item with-sub @if (request()->routeIs('report.sales*')) active show @endif">
-                    <a href="#" class="nav-link"><i data-feather="users"></i> <span>Sales</span></a>
-                    <ul>
-                        <li><a href="{{ route('report.sales.list') }}" target="_blank">Sales Report</a></li>
-                        <li><a href="{{ route('report.sales.unpaid') }}" target="_blank">Unpaid Transactions</a></li>
-                        <li><a href="{{ route('report.sales.payments') }}" target="_blank">Payments Report</a></li>
-                    </ul>
-                </li>
-            @endif
+        @if (auth()->user()->has_access_to_route('report.sales.list') || auth()->user()->has_access_to_route('report.sales.unpaid') || auth()->user()->has_access_to_route('report.sales.payments'))
+            <li class="nav-item with-sub @if (request()->routeIs('report.sales*')) active show @endif">
+                <a href="#" class="nav-link"><i data-feather="users"></i> <span>Sales</span></a>
+                <ul>
+                    @if(auth()->user()->has_access_to_route('report.sales.list'))
+                    <li><a href="{{ route('report.sales.list') }}" target="_blank">Sales Report</a></li>
+                    @endif
 
-            @if (auth()->user()->has_access_to_module('inventory'))
-                <li class="nav-item with-sub @if (request()->routeIs('report.inventory*')) active show @endif">
-                    <a href="#" class="nav-link"><i data-feather="users"></i> <span>Inventory</span></a>
-                    <ul>
-                        <li><a href="{{ route('report.inventory.list') }}" target="_blank">Product Inventory</a></li>
-                        <li><a href="{{ route('report.inventory.reorder_point') }}" target="_blank">Critical Qty
-                            @if(Setting::belowReorderTotal() > 0)
-                                <span class="badge badge-danger">{{Setting::belowReorderTotal()}}</span>
-                            @endif</a>
-                        </li>
-                    </ul>
-                </li>
-            @endif
+                    @if(auth()->user()->has_access_to_route('report.sales.unpaid'))
+                    <li><a href="{{ route('report.sales.unpaid') }}" target="_blank">Unpaid Transactions</a></li>
+                    @endif
+
+                    @if(auth()->user()->has_access_to_route('report.sales.payments'))
+                    <li><a href="{{ route('report.sales.payments') }}" target="_blank">Payments Report</a></li>
+                    @endif
+                </ul>
+            </li>
+        @endif
+
+        @if (auth()->user()->has_access_to_route('report.inventory.list') || auth()->user()->has_access_to_route('report.inventory.reorder_point'))
+            <li class="nav-item with-sub @if (request()->routeIs('report.inventory*')) active show @endif">
+                <a href="#" class="nav-link"><i data-feather="users"></i> <span>Inventory</span></a>
+                <ul>
+                    @if(auth()->user()->has_access_to_route('report.inventory.list'))
+                    <li><a href="{{ route('report.inventory.list') }}" target="_blank">Product Inventory</a></li>
+                    @endif
+
+                    @if(auth()->user()->has_access_to_route('report.inventory.reorder_point'))
+                    <li><a href="{{ route('report.inventory.reorder_point') }}" target="_blank">Critical Qty
+                        @if(Setting::belowReorderTotal() > 0)
+                            <span class="badge badge-danger">{{Setting::belowReorderTotal()}}</span>
+                        @endif</a>
+                    </li>
+                    @endif
+                </ul>
+            </li>
         @endif
     @endif
 </ul>

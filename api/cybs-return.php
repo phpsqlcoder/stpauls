@@ -17,20 +17,20 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
     $livesitePath = 'http://localhost:8000';
     $tn = $apiRespone['req_transaction_uuid'];
 
-    function getProductImageMaxWidth($id){
+    // function getProductImageMaxWidth($id){
 
-        //pdo connection
-        global $pdo;
+    //     //pdo connection
+    //     global $pdo;
 
-        //query
-        $sql = $pdo->prepare("SELECT `path` FROM product_photos WHERE is_primary = 1 AND product_id=:id");
-        $sql->execute(array(':id' => $id));
+    //     //query
+    //     $sql = $pdo->prepare("SELECT `path` FROM product_photos WHERE is_primary = 1 AND product_id=:id");
+    //     $sql->execute(array(':id' => $id));
 
-        //do the loop and return
-        foreach($sql as $sql => $rs)
-            return !empty($rs->thumb) ? '<img src="' .$livesitePath . '/products/' . $rs['path'] . '" style="max-width:100%;" />' : '';
+    //     //do the loop and return
+    //     foreach($sql as $sql => $rs)
+    //         return !empty($rs->thumb) ? '<img src="' .$livesitePath . '/products/' . $rs['path'] . '" style="max-width:100%;" />' : '';
 
-    }
+    // }
 
     $transaction = '';
     //transaction details
@@ -44,6 +44,23 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
     } else {
         $branch = ': '.$transaction['branch'];
     }
+
+    if($transaction['payment_method'] == 0){
+        $paymenttype = 'Cash';
+    } elseif($transaction['payment_method'] == 1) {
+        $paymenttype = 'Card Payment';
+    } else {
+        $paymenttype = $sales->payment_option;
+    }
+
+
+    $user = '';
+    //transaction details
+    $sqlUser = $pdo->prepare("SELECT * FROM users WHERE id=:customerid");
+    $sqlUser->execute(array(':customerid' => $transaction['customer_id']));
+
+    $user = $sqlUser->fetch();
+
 
     $settings = '';
     $sqlSetting = $pdo->prepare("SELECT * FROM settings WHERE id=:id");
@@ -86,7 +103,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
         </head>
         <body style="background:#f4f4f4;font-family:arial;">
         <p>&nbsp;</p>
-        <table style="width:580px;margin:auto;background:#fff;border:1px solid #dddddd;padding:1em;-webkit-border-radius:5px;border-radius:5px;font-size:12px;">
+        <table style="width:750px;margin:auto;background:#fff;border:1px solid #dddddd;padding:1em;-webkit-border-radius:5px;border-radius:5px;font-size:12px;">
             <tr>
                 <td><a href="'. $livesitePath .'"><img src="' . $livesitePath . '/storage/logos/' . $settings['company_logo'] . '" /></a></td>
             </tr>
@@ -101,21 +118,55 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                     Thank you for shopping at ' . $siteName . '. We are glad that you found what you were looking for.
                     <br />
                     <br />
-                    Your transaction number is ' . $tn . '.
+                    Your order number is ' . $tn . '.
                     <br />
                     <br />
                     Please find the details of your order below, or view it in your <a href="' . $livesitePath . '/account/my-orders">account</a>.
-                    <br />
-                    <br />
-                    <table width="100%">
-                        <thead style="background:#DCEFF5;">
-                            <tr>
-                                <th style="padding:.5em;">Item(s)</th>
-                                <th style="padding:.5em; text-align:center;">Weight (g)</th>
-                                <th style="padding:.5em; text-align:center;">Price (₱)</th>
-                                <th style="padding:.5em; text-align:center;">Quantity</th>
-                                <th style="padding:.5em; text-align:center;">Total Weight (g)</th>
-                                <th style="padding:.5em; text-align:center;">Total (₱)</th>
+                    
+                    <div style="overflow:auto;margin-bottom:20px;">
+                        <div>
+                        </div>
+
+                        <div id="invoice-1">
+                            <small>Order Number</small><br/><span style="color:#b82e24;font-size: 2rem;">'.$tn.'</span>
+                        </div>
+                    </div>
+
+
+                    <div style="margin-bottom: 200px;">
+                        <div id="customer" style="flex: 0 0 40%;max-width: 100%;">
+                            <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Inter UI', Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Billing Details</label>
+                            <h2 class="name">'.$transaction['customer_name'].'</h2>
+                            '.$transaction['customer_delivery_adress'].'<br/>
+                            '.$transaction['customer_contact_number'].'<br/>
+                            <a href="mailto:'.$user['email'].'">'.$user['email'].'</a><br/><br/>
+                            Remarks : '.$transaction['remarks'].'
+                        </div>
+
+                        <div id="invoice" style="flex: 0 0 60%;max-width: 100%;">
+                            <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Inter UI', Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Order Details</label><br/>
+                            Order Date <span style="float: right;">'.date('m/d/Y h:i A',strtotime($transaction['created_at'])).'</span><br/>
+                            Payment Method <span style="float: right;">'.$paymenttype.'</span><br/>
+                            Payment Status <span style="float: right;color:#10b759;font-weight: 600;">'.$transaction['payment_status'].'</span><br/>
+                            <hr>
+                            Delivery Type <span style="float: right;text-transform: uppercase;">'.$transaction['delivery_type'].'</span><br/>
+                            Branch <span style="float: right;">'.($transaction['branch'] == '') ? 'N/A' : $transaction['branch'].'</span><br/>
+                            Delivery Status <span style="float: right;color:#10b759;font-weight: 600;text-transform: uppercase;">'.$transaction['delivery_status'].'</span>
+                        </div>
+                    </div>
+
+
+
+
+                    <table border="0" cellspacing="0" cellpadding="0">
+                        <thead style="background:#b81600;">
+                            <tr style="color:white;">
+                                <th width="30%" style="text-align: left;">Item(s)</th>
+                                <th width="10%" style="text-align: right;">Weight (kg)</th>
+                                <th width="10%" style="text-align: right;">Price (₱)</th>
+                                <th width="10%" style="text-align: right;">Quantity</th>
+                                <th width="20%" style="text-align: right;">Total Weight (g)</th>
+                                <th width="20%" style="text-align: right;">Total (₱)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -135,18 +186,12 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
                         $msg .= '
                             <tr>
-                                <td style="padding:.5em;">
-                                    <div style="width:15%; float:left;">' . getProductImageMaxWidth($rs['product_id']) . '</div>
-                                    <div style="width:80%; float:right;">
-                                        ' . $rs['product_name'] . '
-                                        ' . (!empty($options) ? '<small><table>' . $options . '</table></small>' : '' ) . '
-                                    </div>
-                                </td>
-                                <td style="padding:.5em; text-align:center;">' . $product['weight'] . '</td>
-                                <td style="padding:.5em; text-align:center;">' . number_format($rs['price'], 2) . '</td>
-                                <td style="padding:.5em; text-align:center;">' . number_format($rs['qty']) . '</td>
-                                <td style="padding:.5em; text-align:center;">' . number_format($product['weight'] * $rs['qty']) . '</td>
-                                <td style="padding:.5em; text-align:right;">' . number_format($rs['price'] * $rs['qty'], 2) . '</td>
+                                <td>' . $rs['product_name'] . '</td>
+                                <td style="text-align: right;">' . ($product['weight']/1000) . '</td>
+                                <td style="text-align: right;">' . number_format($rs['price'], 2) . '</td>
+                                <td style="text-align: right;">' . number_format($rs['qty']) . '</td>
+                                <td style="text-align: right;">' . number_format(($product['weight'] * $rs['qty'])/1000) . '</td>
+                                <td style="text-align: right;">' . number_format($rs['price'] * $rs['qty'], 2) . '</td>
                             </tr>
                         ';
 
@@ -169,66 +214,44 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="3" style="text-align:right;"><strong>Total Weight</strong></td>
-                                <td colspan="3" style="text-align:right;">' . $totalWeight . ' kg</td>
+                                <td colspan="4" rowspan="3"></td>
+                                <td>Total Weight</td>
+                                <td style="text-align: right;">' . $totalWeight . ' kg</td>
                             </tr>
                             <tr>
-                                <td colspan="3" style="text-align:right;"><strong>Subtotal</strong></td>
-                                <td colspan="3" style="text-align:right;">₱ ' . number_format($total, 2) . '</td>
+                                <td>Subtotal</td>
+                                <td style="text-align: right;">' . number_format($total, 2) . '</td>
                             </tr>
                             <tr>
-                                <td colspan="3" style="text-align:right;"><strong>Loyalty Discount</strong></td>
-                                <td colspan="3" style="text-align:right;">' . number_format($transaction['discount_amount'], 2) . '%</td>
-                            </tr>
-        ';
-
-    $msg .= '
-                            <tr>
-                                <td colspan="3" style="text-align:right;"><strong>Shipping Rate</strong></td>
-                                <td colspan="3" style="text-align:right;">₱ ' . number_format($transaction['delivery_fee_amount'], 2) . '</td>
+                                <td>Shipping Fee</td>
+                                <td style="text-align: right;">'.number_format($transaction['delivery_fee_amount'],2).'</td>
                             </tr>
                             <tr>
-                                <td colspan="3" style="text-align:right;"><strong>Service Fee</strong></td>
-                                <td colspan="3" style="text-align:right;">₱ ' . number_format($transaction['service_fee'], 2) . '</td>
+                                <td colspan="4" rowspan="3">
+                                    <div class="col-sm-12 col-lg-8 order-2 order-sm-0 mg-t-40 mg-sm-t-0">
+                                        <div class="gap-30"></div>
+                                        <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Inter UI', Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Other Instructions</label>
+                                        <p>'.($transaction['other_instruction'] == '') ? 'N/A' : $transaction['other_instruction'].'</p>
+                                    </div>
+                                </td>
+                                <td>Service Fee</td>
+                                <td style="text-align: right;">{{ number_format($sales->service_fee,2) }}</td>
                             </tr>
                             <tr>
-                                <td colspan="3" style="text-align:right;"><strong>Grand Total</strong></td>
-                                <td colspan="3" style="text-align:right;">₱ ' . number_format($transaction['net_amount'], 2) . '</td>
+                                <td>Loyalty Discount</td>
+                                <td style="text-align: right;">'.number_format($transaction['discount_amount'],0).'%</td>
+                            </tr>
+                            <tr>
+                                <td><span style="color:#10b759;font-size: 1.09375rem;">Grand Total</span></td>
+                                <td style="text-align: right;"><span style="font-size: 1.09375rem;">{'.number_format($transaction['net_amount'],2).'</span></td>
                             </tr>
                         </tfoot>
                     </table>
                     <br />
                     <br />
-    ';
+        ';
 
     $msg .= '
-                    <strong>Your shipping details are as follows:</strong><br /><br />
-                    <table width="100%">
-                        <tr>
-                            <td>
-                                <strong>BILLING INFORMATION</strong><br />
-                                ' . $transaction['customer_name'] . '<br />
-                                ' . $transaction['customer_delivery_adress'] . '
-                            </td>
-                            <td>
-                                <strong>DELIVERY INFORMATION</strong><br />
-                                ' . $transaction['delivery_type'] .$branch.'<br />
-                                ' . $transaction['customer_delivery_adress'] . '
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>PAYMENT METHOD</strong><br />
-                                Credit Card Payment
-                            </td>
-                        </tr>
-                    </table>
-                    <br />
-                    <br />
                     Respectfully yours,<br />
                     Your ' . $siteName . ' family
                     <br />
@@ -250,47 +273,6 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
     $headers .= "From: " . $siteName . " <no-reply@" . $_SERVER['HTTP_HOST'] . ">\r\n";
 
     mail($apiRespone['req_bill_to_email'],$subject,$msg,$headers);
-    //mail($apiRespone['req_bill_to_email'],$subject1,$msg,$headers);
-    //mail($apiRespone['req_bill_to_email'],"Order for Pickup. Transaction #:".$apiRespone['req_transaction_uuid'],$msg,$headers);
-
-    //delete unsuccessfull transactions
-    // $sql = $pdo->prepare("SELECT transaction_number FROM tbl_transactions WHERE active=0 AND member_id=:member_id");
-    // $sql->execute(array(':member_id' => $profile['id']));
-    // foreach($sql as $sql => $rs){
-    //     $pdo->query("DELETE FROM tbl_delivery_address WHERE transaction_number='".$rs->transaction_number."'");
-    //     $pdo->query("DELETE FROM tbl_transaction_cart WHERE transaction_number='".$rs->transaction_number."'");
-    //     $pdo->query("DELETE FROM tbl_transactions WHERE transaction_number='".$rs->transaction_number."'");
-    // }
-
-
-    // $rawTotal = ($transaction['total'] - $transaction['shippingrate']) + $transaction['discount'];
-    // $rewardSql = $pdo->prepare("Select * From tbl_reward_points order by minimum_purchased desc");
-    // $rewardSql->execute();
-    // foreach($rewardSql as $rewardSql => $rdata){
-    //     if($rdata->minimum_purchased <= $rawTotal){
-    //         $points = $rdata->points;
-
-    //         break;
-    //     }
-    // }
-
-    //update reward
-    // $sql = $pdo->prepare("UPDATE tbl_member SET rewards = rewards + :rewards WHERE id=:id");
-    // $sql->execute(array(
-    //     ':rewards'	=> (int)$points,
-    //     ':id'		=> $profile['id']
-    // ));
-
-    //update coupon code
-    // $sql = $pdo->prepare("UPDATE tbl_eproduct_coupons SET quantity=quantity-1 WHERE coupon=(SELECT coupon FROM tbl_transactions WHERE transaction_number=:transaction_number AND active=1)");
-    // $sql->execute(array(':transaction_number' => $transaction['transaction_number']));
-    // unset($_SESSION['mj_'.md5($siteName).'_couponCode']);
-    // unset($_SESSION['mj_'.md5($siteName).'_discount']);
-
-    //empty cart
-    // $pdo->query("DELETE FROM tbl_cart WHERE user_id=".$transaction['member_id']);
-
-    //updateInventoryWeb($transaction['transaction_number']);
 
     $_SESSION['order_success'] = "You've successfully placed the order # ".$apiRespone['req_transaction_uuid']."";
 

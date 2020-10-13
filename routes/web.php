@@ -88,14 +88,14 @@
             Route::post('/account/manage/update-address', 'EcommerceControllers\MyAccountController@update_address_info')->name('my-account.update-address-info');
         //
 
-        Route::get('/ajax-province-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
+            Route::get('/ajax-province-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
 
-        Route::post('/transactions/pay-order','EcommerceControllers\SalesFrontController@pay_order')->name('pay-order');
+            Route::post('/transactions/pay-order','EcommerceControllers\SalesFrontController@pay_order')->name('pay-order');
 
-        // Route::post('/account/cancel/order', 'EcommerceControllers\SalesFrontController@cancel_order')->name('my-account.cancel-order');
-        // Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
+            // Route::post('/account/cancel/order', 'EcommerceControllers\SalesFrontController@cancel_order')->name('my-account.cancel-order');
+            // Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
 
-        Route::post('product/review/store', 'EcommerceControllers\ProductReviewController@store')->name('product.review.store');
+            Route::post('product/review/store', 'EcommerceControllers\ProductReviewController@store')->name('product.review.store');
 
     });
 
@@ -118,7 +118,9 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
     Route::get('/', 'Auth\LoginController@showLoginForm')->name('panel.login');
     Auth::routes(['verify' => true]);
 
-    Route::group(['middleware' => 'admin'], function () {
+    //Route::group(['middleware' => 'admin'], function () {
+    Route::group(['middleware' => ['admin','authenticated']], function () {
+    
 
 
         // Customers
@@ -187,17 +189,17 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         //
 
         // Delivery Flat Rate
-            Route::resource('/locations', 'DeliverablecitiesController');
+            // Route::resource('/locations', 'DeliverablecitiesController');
             
-            Route::get('/location-rate/{id}/{status}', 'DeliverablecitiesController@update_status')->name('location-rate.change-status');
-            Route::post('/location-multiple-change-status','DeliverablecitiesController@multiple_change_status')->name('location-rate.multiple.change.status');
-            Route::post('/location-rate-single-delete', 'DeliverablecitiesController@single_delete')->name('location.single.delete');
-            Route::get('/location-rate-restore/{id}', 'DeliverablecitiesController@restore')->name('location-rate.restore');
-            Route::post('/location-rate-multiple-delete','DeliverablecitiesController@multiple_delete')->name('location-rate.multiple.delete');
+            // Route::get('/location-rate/{id}/{status}', 'DeliverablecitiesController@update_status')->name('location-rate.change-status');
+            // Route::post('/location-multiple-change-status','DeliverablecitiesController@multiple_change_status')->name('location-rate.multiple.change.status');
+            // Route::post('/location-rate-single-delete', 'DeliverablecitiesController@single_delete')->name('location.single.delete');
+            // Route::get('/location-rate-restore/{id}', 'DeliverablecitiesController@restore')->name('location-rate.restore');
+            // Route::post('/location-rate-multiple-delete','DeliverablecitiesController@multiple_delete')->name('location-rate.multiple.delete');
 
-            Route::post('/locations-enable', 'DeliverablecitiesController@enable')->name('locations.enable');
-            Route::post('/locations-disable', 'DeliverablecitiesController@disable')->name('locations.disable');
-            Route::post('/locations-delete', 'DeliverablecitiesController@delete')->name('locations.delete');
+            // Route::post('/locations-enable', 'DeliverablecitiesController@enable')->name('locations.enable');
+            // Route::post('/locations-disable', 'DeliverablecitiesController@disable')->name('locations.disable');
+            // Route::post('/locations-delete', 'DeliverablecitiesController@delete')->name('locations.delete');
         //
 
         // Manage Sales Transactions

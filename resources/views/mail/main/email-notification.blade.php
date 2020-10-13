@@ -1,20 +1,86 @@
 <html>
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>32321</title>
+    <title></title>
+    <style>
+
+        #customer {
+            padding-left: 8px;
+            border-left: 6px solid #b82e24;
+            float: left;
+        }
+
+        #invoice {
+            float: right;
+            padding-right: 8px;
+            border-right: 6px solid #b82e24;
+        }
+
+        #invoice-1 {
+            float: right;
+            text-align: right;
+        }
+
+        #invoice h1 {
+            color: #0087C3;
+            font-size: 2.4em;
+            line-height: 1em;
+            font-weight: normal;
+            margin: 0  0 10px 0;
+        }
+        h2.name {
+            font-size: 1.4em;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        table th {
+            padding: 20px;
+            background: #b81600;
+            border-bottom: 1px solid #FFFFFF;
+        }
+
+        table td {
+            padding: 15px;
+            background: #EEEEEE;
+            border-bottom: 1px solid #FFFFFF;
+        }
+
+        table tfoot td {
+            padding: 10px;
+            background: #EEEEEE;
+            border-bottom: 1px solid #FFFFFF;
+        }
+
+        table th {
+            white-space: nowrap;        
+            font-weight: normal;
+        }
+
+        table tbody tr:last-child td {
+            border: none;
+        }
+
+        table tfoot tr td:second-child {
+            border: none;
+        }
+    </style>
     </head>
-    <body style="background:#f4f4f4;font-family:arial;">
+    <body style="background:#FFFFFF;font-family:arial;">
     <p>&nbsp;</p>
-    <table style="width:580px;margin:auto;background:#fff;border:1px solid #dddddd;padding:1em;-webkit-border-radius:5px;border-radius:5px;font-size:12px;">
+    <table style="width:750px;margin:auto;background:#fff;border:1px solid #dddddd;padding:1em;-webkit-border-radius:5px;border-radius:5px;font-size:12px;">
         <tr>
             <td>
                 <a href="{{ url('/') }}">
                     <img src="{{ asset('storage').'/logos/'.$setting->company_logo }}" alt="ST PAUL" width="175" />
                 </a>
             </td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
         </tr>
         <tr>
             <td>
@@ -30,7 +96,7 @@
                         $paidamount = $payment->amount;
                     } else {
                         $paidamount = 0;
-                    }
+                    }   
 
                     $payment       = $qrypayment->first();
 
@@ -46,132 +112,101 @@
 
                 <br />
                 <br />
-                <strong>Your shipping details are as follows:</strong><br />
-                <table width="100%">
-                    <thead>
-                        <th width="20%">&nbsp;</th>
-                        <th width="35%">&nbsp;</th>
-                        <th width="20%">&nbsp;</th>
-                        <th width="25%">&nbsp;</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Order Number :</td>
-                            <td>{{ $sales->order_number }}</td>
-                            <td>Order Date :</td>
-                            <td>{{ date('Y-m-d h:i A',strtotime($sales->created_at)) }}</td>
-                        </tr>
-                        <tr>
-                            <td>Customer Name :</td>
-                            <td>{{ $sales->customer_name }}</td>
-                            <td>Payment Status :</td>
-                            <td>{{ $sales->payment_status }}</td>
-                        </tr>
-                        <tr>
-                            <td>Billing Address :</td>
-                            <td>{{ $sales->customer_delivery_adress }}</td>
-                            <td>Delivery Status :</td>
-                            <td>{{ $sales->delivery_status }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td>Payment Method :</td>
-                            <td>
-                                @if($sales->payment_option == 0)
-                                    Cash
-                                @else
-                                    $sales->payment_method
-                                @endif
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Remarks :</td>
-                            <td>
-                                {{ $sales->remarks }} 
-                            </td>
-                            <td>Shipping Type :</td>
-                            <td>{{ $sales->delivery_type }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">&nbsp;</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <strong>Your order details are as follows:</strong><br />
 
-                <table width="100%">
-                    <thead style="background:#b81600 ;">
+                <div style="overflow:auto;margin-bottom:20px;">
+                    <div>
+                    </div>
+
+                    <div id="invoice-1">
+                        <small>Order Number</small><br/><span style="color:#b82e24;font-size: 2rem;">{{ $sales->order_number }}</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 200px;">
+                    <div id="customer" style="flex: 0 0 40%;max-width: 100%;">
+                        <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Inter UI', Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Billing Details</label>
+                        <h2 class="name">{{ $sales->customer_name }}</h2>
+                        {{$sales->customer_delivery_adress}}<br/>
+                        {{$sales->customer_contact_number}}<br/>
+                        <a href="mailto:{{ $sales->customer_main_details->email }}">{{ $sales->customer_main_details->email }}</a><br/><br/>
+                        Remarks : {{ $sales->remarks }}
+                    </div>
+
+                    <div id="invoice" style="flex: 0 0 60%;max-width: 100%;">
+                        <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Inter UI', Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Order Details</label><br/>
+                        Order Date <span style="float: right;">{{ date('m/d/Y h:i A',strtotime($sales->created_at)) }}</span><br/>
+                        Payment Method <span style="float: right;">{{ \App\EcommerceModel\SalesHeader::payment_type($sales->id) }}</span><br/>
+                        Payment Status <span style="float: right;color:#10b759;font-weight: 600;">{{ $sales->payment_status }}</span><br/>
+                        <hr>
+                        Delivery Type <span style="float: right;text-transform: uppercase;">{{ $sales->delivery_type }}</span><br/>
+                        Branch <span style="float: right;">{{ $sales->branch ?? 'N/A' }}</span><br/>
+                        Delivery Status <span style="float: right;color:#10b759;font-weight: 600;text-transform: uppercase;">{{ $sales->delivery_status }}</span>
+                    </div>
+                </div>
+
+                <table border="0" cellspacing="0" cellpadding="0">
+                    <thead style="background:#b81600;">
                         <tr style="color:white;">
-                            <th style="padding:.5em;">Item(s)</th>
-                            <th style="padding:.5em; text-align:center;">Weight (kg)</th>
-                            <th style="padding:.5em; text-align:center;">Price (₱)</th>
-                            <th style="padding:.5em; text-align:center;">Quantity</th>
-                            <th style="padding:.5em; text-align:center;">Total Weight (kg)</th>
-                            <th style="padding:.5em; text-align:center;">Total (₱)</th>
+                            <th width="30%" style="text-align: left;">Item(s)</th>
+                            <th width="10%" style="text-align: right;">Weight (kg)</th>
+                            <th width="10%" style="text-align: right;">Price (₱)</th>
+                            <th width="10%" style="text-align: right;">Quantity</th>
+                            <th width="20%" style="text-align: right;">Total Weight (kg)</th>
+                            <th width="20%" style="text-align: right;">Total (₱)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @php 
-                            $weight = 0;
-                            $totalamount = 0;
-                            $subtotal = 0;
-                            $totalweight = 0;
-                        @endphp
-
+                        @php $subtotal = 0; $weight = 0; $total = 0; $totalweight = 0; @endphp
                         @foreach($sales->items as $item)
                         @php
-                            $weight = $item->product->weight*$item->qty;
-                            $totalamount = $item->price*$item->qty;
-                            $subtotal += $totalamount;
+                            $weight   = $item->product->weight*$item->qty;
+                            $total    = $item->price*$item->qty;
+                            $subtotal += $total;
                             $totalweight += $weight;
                         @endphp
                         <tr>
-                            <td style="padding:.5em;">
-                                <div style="width:60%;">
-                                    {{ $item->product->name }}
-                                </div>
-                            </td>
-                            <td style="padding:.5em; text-align:center;">{{ ($item->product->weight/1000) }}</td>
-                            <td style="padding:.5em; text-align:center;">{{ number_format($item->price,2) }}</td>
-                            <td style="padding:.5em; text-align:center;">{{ $item->qty }}</td>
-                            <td style="padding:.5em; text-align:center;">{{ ($weight/1000) }}</td>
-                            <td style="padding:.5em; text-align:right;">{{ number_format($totalamount,2) }}</td>
+                            <td>{{ $item->product_name }}</td>
+                            <td style="text-align: right;">{{ ($item->product->weight/1000) }}</td>
+                            <td style="text-align: right;">{{ number_format($item->price,2) }}</td>
+                            <td style="text-align: right;">{{ $item->qty }}</td>
+                            <td style="text-align: right;">{{ ($weight/1000) }}</td>
+                            <td style="text-align: right;">{{ number_format($total,2) }}</td>
                         </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6">&nbsp;</td>
+                            <td colspan="4" rowspan="3"></td>
+                            <td>Total Weight</td>
+                            <td style="text-align: right;">{{ ($totalweight/1000) }} kg</td>
                         </tr>
                         <tr>
-                            <td colspan="4" style="text-align:right;"><strong>Total Weight</strong></td>
-                            <td></td>
-                            <td style="text-align:right;">{{ ($totalweight/1000) }} kg</td>
+                            <td>Subtotal</td>
+                            <td style="text-align: right;">{{ number_format($subtotal,2) }}</td>
                         </tr>
                         <tr>
-                            <td colspan="4" style="text-align:right;"><strong>Subtotal</strong></td>
-                            <td></td>
-                            <td style="text-align:right;">₱ {{ number_format($subtotal,2) }}</td>
+                            <td>Shipping Fee</td>
+                            <td style="text-align: right;">{{ number_format($sales->delivery_fee_amount,2) }}</td>
                         </tr>
                         <tr>
-                            <td colspan="4" style="text-align:right;"><strong>Loyalty Discount</strong></td>
-                            <td></td>
-                            <td style="text-align:right;">{{ number_format($sales->discount_amount,0) }}%</td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="4" style="text-align:right;"><strong>Shipping Rate</strong></td>
-                            <td></td>
-                            <td style="text-align:right;">₱ {{ number_format($sales->delivery_fee_amount,2) }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" style="text-align:right;"><strong>Service Fee</strong></td>
-                            <td></td>
-                            <td style="text-align:right;">₱ {{ number_format($sales->service_fee,2) }}</td>
+                            <td colspan="4" rowspan="3">
+                                <div class="col-sm-12 col-lg-8 order-2 order-sm-0 mg-t-40 mg-sm-t-0">
+                                    <div class="gap-30"></div>
+                                    <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Inter UI', Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Other Instructions</label>
+                                    <p>{{ $sales->other_instruction ?? 'N/A' }}</p>
+                                </div>
+                            </td>
+                            <td>Service Fee</td>
+                            <td style="text-align: right;">{{ number_format($sales->service_fee,2) }}</td>
                         </tr>
                         <tr>
-                            <td colspan="4" style="text-align:right;"><strong>Grand Total</strong></td>
-                            <td></td>
-                            <td style="text-align:right;">₱ {{number_format($sales->net_amount,2) }}</td>
+                            <td>Loyalty Discount</td>
+                            <td style="text-align: right;">{{ number_format($sales->discount_amount,0) }}%</td>
+                        </tr>
+                        <tr>
+                            <td><span style="color:#10b759;font-size: 1.09375rem;">Grand Total</span></td>
+                            <td style="text-align: right;"><span style="font-size: 1.09375rem;">{{ number_format($sales->net_amount,2)}}</span></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -182,7 +217,7 @@
                 Your {{ $setting->company_name }} family
                 <br />
                 <br />
-                <small style="color:red">This is an auto-generated registration notification, please do not reply. This communication is intended solely for the use of the addressee and authorized recipients. It may contain confidential or legally privileged information and is subject to the conditions in <a href="{{ url('/') }}">{{ url('/') }}</a></small>
+                <small style="color:red">This is an auto-generated notification, please do not reply. This communication is intended solely for the use of the addressee and authorized recipients. It may contain confidential or legally privileged information and is subject to the conditions in <a href="{{ url('/') }}">{{ url('/') }}</a></small>
             </td>
         </tr>
     </table>

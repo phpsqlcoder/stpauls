@@ -83,14 +83,19 @@ class Permission extends Model
             'settings' => 'Settings',
             'users' => 'Users',
             'account_management' => 'Account Management',
+            'roles' => 'Roles',
+            'permissions' => 'Permissions',
             'products' => 'Products',
+            'product_categories' => 'Product Categories',
             'customers' => 'Customers',
-            'manage_sales_transaction' => 'Manage Sales Transaction',
+            'sales_transaction' => 'Manage Sales Transaction',
             'promos' => 'Promos',
             'loyalty' => 'Loyalty',
+            'discounts' => 'Discounts',
             'inventory' => 'Inventory',
-            'delivery_flat_rates' => "Delivery Flat Rates",
+            'shipping_rates' => 'Shipping Rates',
             'branches' => 'Branches',
+            'transaction_status' => 'Transaction Status',
             'reports' => 'Reports'
         ];
     }

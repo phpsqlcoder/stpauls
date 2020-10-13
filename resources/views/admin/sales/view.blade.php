@@ -2,8 +2,47 @@
 
 @section('pagecss')
     <style>
-        .table tbody tr td {
+        h2.name {
+            font-size: 1.4em;
+            font-weight: normal;
+            margin: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 20px;
+        }
+
+        table th {
+            padding: 20px;
+            background: #b81600;
+            border-bottom: 1px solid #FFFFFF;
+        }
+
+        table td {
+            padding: 15px;
+            background: #EEEEEE;
+            border-bottom: 1px solid #FFFFFF;
+        }
+
+        table tfoot td {
             padding: 10px;
+            background: #EEEEEE;
+            border-bottom: 1px solid #FFFFFF;
+        }
+
+        table th {
+            white-space: nowrap;        
+            font-weight: normal;
+        }
+
+        table tbody tr:last-child td {
+            border: none;
+        }
+
+        table tfoot tr td:second-child {
+            border: none;
         }
     </style>
 @endsection
@@ -29,152 +68,122 @@
     </div>
 
     <div class="row row-sm">
-        <div class="col-sm-6 col-lg-8">
-            <ul class="list-unstyled lh-7">
-                <li>
-                    <span>&nbsp;</span>
-                    <span>&nbsp;</span>
-                </li>
-                <li>
-                    <span>&nbsp;</span>
-                    <span>&nbsp;</span>
-                </li>               
-                <li>
-                    <span>{{ url('/') }}</span>
-                    <span>&nbsp;</span>
-                </li>
-                <li>
-                    <span>&nbsp;</span>
-                    <span>&nbsp;</span>
-                </li>  
-                <li>
-                    <span>Remarks:</span>
-                    <span>{{ $sales->remarks }}</span>
-                </li>  
-            </ul>
+        <div class="col-sm-6 col-lg-6 mg-b-20">
+            <img src="{{  asset('storage/logos/'.Setting::getFaviconLogo()->company_logo) }}" alt="StPaul" width="240" />
         </div>
-        <div class="col-sm-6 col-lg-4">
+        <div class="col-sm-6 col-lg-6 mg-b-20">
+            <small class="d-flex justify-content-end">Order Number</small>
+            <h1 class="d-flex justify-content-end" style="margin-top:-2px;color:#b82e24;">{{ $sales->order_number }}</h1>
+        </div>
+        <div class="col-sm-6 col-lg-8" style="border-left: 6px solid #b82e24;">
+            <label class="tx-sans tx-medium tx-spacing-1 tx-color-03">Billing Details</label>
+            <h2 class="name">{{ $sales->customer_name }}</h2>
+            <p class="mg-b-3">{{$sales->customer_address}}</p>
+            <p class="mg-b-3">{{$sales->customer_contact_number}}</p>
+            <p class="mg-b-3"><a href="mailto:{{ $sales->customer_main_details->email }}">{{ $sales->customer_main_details->email }}</a></p>
+            <p>&nbsp;</p>
+            <p>Remarks : {{ $sales->remarks }}</p>
+        </div>
+        <!-- col -->
+
+        <div class="col-sm-6 col-lg-4" style="border-right: 6px solid #b82e24;">
+            <label class="tx-sans tx-medium tx-spacing-1 tx-color-03">Order Details</label>
             <ul class="list-unstyled lh-7">
-                <li class="d-flex justify-content-between">
-                    <span>Order Number</span>
-                    <span>{{$sales->order_number}}</span>
-                </li> 
                 <li class="d-flex justify-content-between">
                     <span>Order Date</span>
-                    <span>{{ date('m/d/Y h:i:s A', strtotime($sales->created_at))}}</span>
-                </li>              
+                    <span>{{ date('m/d/Y h:i A',strtotime($sales->created_at)) }}</span>
+                </li>
                 <li class="d-flex justify-content-between">
                     <span>Payment Method</span>
                     <span>{{ \App\EcommerceModel\SalesHeader::payment_type($sales->id) }}</span>
+                </li>                            
+                <li class="d-flex justify-content-between">
+                    <span>Payment Status</span>
+                    <span class="tx-success tx-semibold tx-uppercase">{{ $sales->payment_status }}</span>
+                </li>
+                <hr>
+                <li class="d-flex justify-content-between">
+                    <span>Delivery Type</span>
+                    <span class="tx-semibold tx-uppercase">{{ $sales->delivery_type }}</span>
+                </li>
+                <li class="d-flex justify-content-between">
+                    <span>Branch</span>
+                    <span class="tx-semibold tx-uppercase">{{ $sales->branch ?? 'N/A' }}</span>
                 </li>
                 <li class="d-flex justify-content-between">
                     <span>Delivery Status</span>
-                    <span>{{ $sales->delivery_status }}</span>
-                </li>  
-                <li class="d-flex justify-content-between">
-                    <span>Payment Status</span>
-                    <span>{{ $sales->payment_status }}</span>
-                </li>  
+                    <span class="tx-success tx-semibold tx-uppercase">{{ $sales->delivery_status }}</span>
+                </li>
             </ul>
         </div>
 
+        <table border="0" cellspacing="0" cellpadding="0" class="mg-t-40">
+            <thead style="background:#b81600;">
+                <tr style="color:white;">
+                    <th width="30%"  style="text-align: left;">Item(s)</th>
+                    <th width="10%" style="text-align: right;">Weight (kg)</th>
+                    <th width="10%" style="text-align: right;">Price (₱)</th>
+                    <th width="10%" style="text-align: right;">Quantity</th>
+                    <th width="20%" style="text-align: right;">Total Weight (kg)</th>
+                    <th width="20%" style="text-align: right;">Total (₱)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php $subtotal = 0; $weight = 0; $total = 0; $totalweight = 0; @endphp
+                @foreach($sales->items as $item)
+                @php
+                    $weight   = $item->product->weight*$item->qty;
+                    $total    = $item->price*$item->qty;
+                    $subtotal += $total;
+                    $totalweight += $weight;
+                @endphp
+                <tr>
+                    <td>{{ $item->product_name }}</td>
+                    <td style="text-align: right;">{{ ($item->product->weight/1000) }}</td>
+                    <td style="text-align: right;">{{ number_format($item->price,2) }}</td>
+                    <td style="text-align: right;">{{ $item->qty }}</td>
+                    <td style="text-align: right;">{{ ($weight/1000) }}</td>
+                    <td style="text-align: right;">{{ number_format($total,2) }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" rowspan="3"></td>
+                    <td>Total Weight</td>
+                    <td class="text-right">{{ ($totalweight/1000) }} kg</td>
+                </tr>
+                <tr>
+                    <td>Subtotal</td>
+                    <td class="text-right">{{ number_format($subtotal,2) }}</td>
+                </tr>
+                <tr>
+                    <td>Shipping Fee</td>
+                    <td class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" rowspan="3">
+                        <div class="col-sm-12 col-lg-8 order-2 order-sm-0 mg-t-40 mg-sm-t-0">
+                            <div class="gap-30"></div>
+                            <label class="tx-sans tx-10 tx-medium tx-spacing-1 tx-color-03">Other Instructions</label>
+                            <p>{{ $sales->other_instruction ?? 'N/A' }}</p>
+                        </div>
+                    </td>
+                    <td>Service Fee</td>
+                    <td class="text-right">{{ number_format($sales->service_fee,2) }}</td>
+                </tr>
+                <tr>
+                    <td>Loyalty Discount</td>
+                    <td class="text-right">{{ number_format($sales->discount_amount,0) }}%</td>
+                </tr>
+                <tr>
+                    <td><h5 class="tx-success">Grand Total</h5></td>
+                    <td class="text-right"><h5>{{ number_format($sales->net_amount,2)}}</h5></td>
+                </tr>
+            </tfoot>
+        </table>
+
         <div class="table-responsive mg-t-20">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th class="wd-60">Billing Information</th>
-                        <th class="wd-40p">{{ $sales->delivery_type }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            {{ $sales->customer_name }}<br>
-                            {{ $sales->customer_delivery_adress }}<br>
-                            {{ $sales->customer_contact_number }}
-                        </td>
-                        <td colspan="3">
-                            @if($sales->branch != '')
-                                Branch : {{ $sales->branch }}<br>
-                            @endif
-
-                            @if($sales->is_other == 1)
-                                Other Address : {{ $sales->customer_delivery_adress }}<br>
-                            @else
-                                {{ $sales->customer_delivery_adress }}<br>
-                            @endif
-
-                            Instruction : {{ $sales->other_instruction }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="table-responsive mg-t-20">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th class="wd-30p">Items</th>
-                        <th class="tx-center wd-15p">Weight (kg)</th>
-                        <th class="tx-center wd-15p">Price (₱)</th>
-                        <th class="tx-center wd-15p">Quantity</th>
-                        <th class="tx-center wd-15p">Total Weight (kg)</th>
-                        <th class="tx-right wd-10p">Total (₱)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php $weight = 0; $total = 0; $subtotal = 0; $totalweight = 0; @endphp
-
-                    @forelse($sales->items as $item)
-                    @php
-                        $weight = $item->product->weight*$item->qty;
-                        $total = $item->price*$item->qty;
-                        $subtotal += $item->price*$item->qty;
-                        $totalweight += $weight;
-                    @endphp
-                    <tr>
-                        <td>{{ $item->product_name}}</td>
-                        <td class="tx-center">{{ ($item->product->weight/1000) }}</td>
-                        <td class="text-center">{{ number_format($item->price,2) }}</td>
-                        <td class="text-center">{{ number_format($item->qty,2) }}</td>
-                        <td class="tx-center">{{ ($weight/1000) }}</td>
-                        <td class="text-right">{{ number_format($total,2) }}</td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td class="tx-center " colspan="4">No items found.</td>
-                    </tr>
-                    @endforelse
-                    <tr>
-                        <td colspan="6">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="text-right"><strong>Total Weight</strong></td>
-                        <td colspan="2" class="text-right">{{ ($totalweight/1000) }} kg</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="text-right"><strong>Subtotal</strong></td>
-                        <td colspan="2" class="text-right">{{ number_format($subtotal,2) }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="text-right"><strong>Shipping Fee</strong></td>
-                        <td colspan="2" class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="text-right"><strong>Service Fee</strong></td>
-                        <td colspan="2" class="text-right">{{ number_format($sales->service_fee,2) }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="text-right"><strong>Loyalty Discount</strong></td>
-                        <td colspan="2" class="text-right">{{ number_format($sales->discount_amount,0) }}%</td>
-                    </tr>
-                    <tr>
-                        <td colspan="4" class="text-right"><strong>Grand Total</strong></td>
-                        <td colspan="2" class="text-right">{{ number_format($sales->net_amount,2) }}</td>
-                    </tr>
-                </tbody>
-            </table>
             @if($sales->status != 'CANCELLED')
                 @if($sales->delivery_status == 'Shipping Fee Validation')
                     <button type="button" class="btn btn-sm btn-primary float-right mg-l-5" onclick="add_shippingfee('{{$sales->id}}','{{$sales->order_number}}');">Add Shipping Fee</button>
