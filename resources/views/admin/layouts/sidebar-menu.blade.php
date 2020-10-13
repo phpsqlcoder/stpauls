@@ -94,8 +94,6 @@
                 <li @if (request()->routeIs('role*')) class="active" @endif><a href="{{ route('role.index') }}">Roles</a></li>
                 @if (auth()->user()->role_id == 1)
                     <li @if (request()->routeIs('access*')) class="active" @endif><a href="{{ route('access.index') }}">Access Rights</a></li>
-                @endif
-                @if (env('APP_DEBUG') == "true")
                     <li @if (request()->routeIs('permission*')) class="active" @endif><a href="{{ route('permission.index') }}">Permissions</a></li>
                 @endif
             </ul>
