@@ -235,7 +235,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                                     </div>
                                 </td>
                                 <td>Service Fee</td>
-                                <td style="text-align: right;">{{ number_format($sales->service_fee,2) }}</td>
+                                <td style="text-align: right;">'.number_format($transaction['service_fee'],2).'</td>
                             </tr>
                             <tr>
                                 <td>Loyalty Discount</td>
@@ -243,7 +243,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                             </tr>
                             <tr>
                                 <td><span style="color:#10b759;font-size: 1.09375rem;">Grand Total</span></td>
-                                <td style="text-align: right;"><span style="font-size: 1.09375rem;">{'.number_format($transaction['net_amount'],2).'</span></td>
+                                <td style="text-align: right;"><span style="font-size: 1.09375rem;">'.number_format($transaction['net_amount'],2).'</span></td>
                             </tr>
                         </tfoot>
                     </table>
