@@ -514,9 +514,9 @@
         initial_value: 0,
         symbols: {
             fontawesome_star: {
-                base: '<span class="fa fa-star-o"></span>',
-                hover: '<span class="fa fa-star checked"></span>',
-                selected: '<span class="fa fa-star checked"></span>',
+                base: '<span class="far fa-star"></span>',
+                hover: '<span class="fas fa-star checked"></span>',
+                selected: '<span class="fas fa-star checked"></span>',
             },
         },
         selected_symbol_type: 'fontawesome_star', // Must be a key from symbols

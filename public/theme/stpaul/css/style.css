@@ -1,14 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:200,300,400,500,600,700,800,900|Open+Sans:200,300,400,500,600,700&display=swap");
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:200,300,400,500,600,700,800,900|Open+Sans:200,300,400,500,600,700&display=swap");
 @font-face {
-  font-family: "FontAwesome";
-  src: url("../plugins/font-awesome/fonts/fontawesome-webfont.eot?v=4.6.3");
-  src: url("../plugins/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.6.3") format("embedded-opentype"), url("../plugins/font-awesome/fonts/fontawesome-webfont.woff2?v=4.6.3") format("woff2"), url("../plugins/font-awesome/fonts/fontawesome-webfont.woff?v=4.6.3") format("woff"), url("../plugins/font-awesome/fonts/fontawesome-webfont.ttf?v=4.6.3") format("truetype"), url("../plugins/font-awesome/fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular") format("svg");
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
   font-family: "Linearicons";
   src: url("fonts/Linearicons.eot?4t1dgh");
   src: url("fonts/Linearicons.eot?4t1dgh#iefix") format("embedded-opentype"), url("fonts/Linearicons.ttf?4t1dgh") format("truetype"), url("fonts/Linearicons.woff?4t1dgh") format("woff"), url("fonts/Linearicons.svg?4t1dgh#Linearicons") format("svg");
@@ -2989,11 +2981,11 @@ p {
   padding: 12px;
 }
 
-.pre-footer .footer-social-links .fa-youtube-play {
+.pre-footer .footer-social-links .fa-youtube {
   background: #e52d27 !important;
 }
 
-.pre-footer .footer-social-links .fa-youtube-play:before {
+.pre-footer .footer-social-links .fa-youtube:before {
   padding: 11px;
 }
 
@@ -3044,12 +3036,18 @@ p {
   padding: 5px 3px;
   position: fixed;
   bottom: 200px;
-  right: -143px;
+  right: -153px;
   display: block;
   cursor: pointer;
-  z-index: 9999;
+  z-index: 888;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
+}
+
+#sticky-contact nav {
+  background-color: transparent !important;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
 }
 
 #sticky-contact img {
@@ -3057,7 +3055,7 @@ p {
 }
 
 #sticky-contact:hover {
-  right: 15px;
+  right: 1px;
 }
 
 .privacy-policy {
@@ -3600,20 +3598,126 @@ p {
   color: #b82e24;
 }
 
-#salesTransaction_wrapper {
-  font-size: 0.85rem;
+.rd-navbar-sl {
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+  padding: 0;
 }
 
-#salesTransaction_wrapper table {
-  white-space: nowrap;
+.rd-navbar-sl-close-toggle {
+  cursor: pointer;
+  font-weight: 700;
+  margin-bottom: 30px;
 }
 
-@font-face {
-  font-family: "FontAwesome";
-  src: url("../plugins/font-awesome/fonts/fontawesome-webfont.eot?v=4.6.3");
-  src: url("../plugins/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.6.3") format("embedded-opentype"), url("../plugins/font-awesome/fonts/fontawesome-webfont.woff2?v=4.6.3") format("woff2"), url("../plugins/font-awesome/fonts/fontawesome-webfont.woff?v=4.6.3") format("woff"), url("../plugins/font-awesome/fonts/fontawesome-webfont.ttf?v=4.6.3") format("truetype"), url("../plugins/font-awesome/fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular") format("svg");
-  font-weight: normal;
-  font-style: normal;
+.rd-navbar-sl-close-toggle span {
+  font-size: 1.3em;
+  font-weight: 800;
+  vertical-align: text-top;
+}
+
+.rd-navbar-sl-toggle {
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.rd-navbar-sl-toggle .lnr-list {
+  vertical-align: text-top;
+  font-size: 1.25em;
+  margin-right: 10px;
+}
+
+.sl-filter-wrap {
+  padding-left: 15px;
+  padding-right: 30px;
+}
+
+.sl-filter-wrap.active {
+  display: block;
+}
+
+.sl-filter-wrap .sl-category-title {
+  font-size: .8em;
+  color: silver;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.sl-filter-wrap .sl-category li {
+  font-size: .9em;
+  font-weight: 500;
+  line-height: 2;
+}
+
+.sl-filter-wrap .sl-category li a {
+  color: #555555;
+}
+
+.sl-filter-wrap .sl-category li a:hover {
+  color: #b82e24;
+}
+
+.sl-filter-wrap .sl-view-link {
+  font-size: .9em;
+  font-weight: 700;
+  line-height: 2;
+  color: #b82e24;
+  text-decoration: underline;
+}
+
+.sl-filter-wrap .sl-filter-title {
+  font-size: .9em;
+  font-weight: 500;
+  color: #555555;
+}
+
+.sl-filter-wrap {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  background: #b82e24;
+  height: 100%;
+  width: 280px;
+  font-size: 16px;
+  -webkit-box-shadow: 0 1px 12px rgba(136, 136, 136, 0.22);
+          box-shadow: 0 1px 12px rgba(136, 136, 136, 0.22);
+  padding: 20px 25px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  -webkit-transform: translateX(110%);
+          transform: translateX(110%);
+  opacity: 0;
+  visibility: hidden;
+  will-change: opacity, transform;
+  -webkit-transition: 0.32s all cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  transition: 0.32s all cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  color: white;
+}
+
+.sl-filter-wrap a {
+  color: white;
+}
+
+.sl-filter-wrap a:hover {
+  color: #e9938c;
+}
+
+.sl-filter-wrap.active {
+  -webkit-transform: translateX(0%);
+          transform: translateX(0%);
+  opacity: 1;
+  visibility: visible;
+}
+
+.sl-filter-wrap .gap-70 {
+  height: 50px;
+}
+
+.page .sl-filter-wrap .icon-primary {
+  color: white;
+  width: 30px;
 }
 
 @font-face {
@@ -3791,6 +3895,9 @@ p {
 }
 
 @media (max-width: 991px) {
+  #sticky-contact {
+    right: -143px;
+  }
   .banner-caption h2 {
     font-size: 1.15em !important;
   }
@@ -4228,9 +4335,6 @@ p {
   .product-card a img {
     padding: 0 15px;
     margin: 5px auto 0 !important;
-  }
-  .list-product .product-card {
-    padding: 7px 7px 40px;
   }
 }
 

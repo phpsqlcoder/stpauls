@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/bootstrap/css/bootstrap.css') }}" />
     
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/jssocials/jssocials-theme-flat.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/font-awesome/css/font-awesome.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/font-awesome/css/all.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/linearicon/linearicon.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/responsive-tabs/css/responsive-tabs.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/slick/slick.css') }}" />
@@ -47,6 +47,58 @@
             @include('theme.sysu.layout.footer')
         </footer>
         <!-- END Page Footer -->
+
+        <!-- SHORTCUT LINKS RIGHT SIDE CONTACT US -->
+        <nav class="rd-navbar rd-navbar-sl">
+            <div class="sl-filter-wrap">
+                <div class="rd-navbar-sl-close-toggle toggle-original"><span class="lnr lnr-cross"></span> Close</div>
+                <div class="gap-20"></div>
+                <ul class="rd-navbar-items-list">
+                    <li>
+                        <div class="unit flex-row align-items-center unit-spacing-xs">
+                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-facebook-f"></span></div>
+                            <div class="unit__body"><a href="#">Facebook</a></div>
+                        </div>
+                        <div class="gap-20"></div>
+                    </li>
+                    <li>
+                        <div class="unit flex-row align-items-center unit-spacing-xs">
+                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-facebook-messenger"></span></div>
+                            <div class="unit__body"><a href="#">Messenger</a></div>
+                        </div>
+                        <div class="gap-20"></div>
+                    </li>
+                    <li>
+                        <div class="unit flex-row align-items-center unit-spacing-xs">
+                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-twitter"></span></div>
+                            <div class="unit__body"><a href="#">Twitter</a></div>
+                        </div>
+                        <div class="gap-20"></div>
+                    </li>
+                    <li>
+                        <div class="unit flex-row align-items-center unit-spacing-xs">
+                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-youtube"></span></div>
+                            <div class="unit__body"><a href="#">Youtube</a></div>
+                        </div>
+                        <div class="gap-20"></div>
+                    </li>
+                    <li>
+                        <div class="unit flex-row align-items-center unit-spacing-xs">
+                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-viber"></span></div>
+                            <div class="unit__body"><a href="#">Viber</a></div>
+                        </div>
+                        <div class="gap-20"></div>
+                    </li>
+                     <li>
+                        <div class="unit flex-row align-items-center unit-spacing-xs">
+                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-whatsapp"></span></div>
+                            <div class="unit__body"><a href="#">Whatsapp</a></div>
+                        </div>
+                        <div class="gap-20"></div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
     </div>
 
     <!-- <div class="privacy-policy">
@@ -66,8 +118,13 @@
         <img src="{{ asset('theme/stpaul/images/misc/top.png') }}" />
     </div>
 
+    <!-- SHORTCUT LINKS RIGHT SIDE CONTACT US -->
     <div id="sticky-contact" class="sticky-hover">
-        <img src="{{ asset('theme/stpaul/images/misc/stpauls_contactus.png') }}" />
+        <nav class="rd-navbar">
+            <div class="rd-navbar-sl-toggle toggle-original" data-rd-navbar-toggle=".sl-filter-wrap">
+                <img src="{{ asset('theme/stpaul/images/misc/stpauls_contactus.png') }}" />
+            </div>
+        </nav>
     </div>
 
     <script type="text/javascript">

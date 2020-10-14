@@ -215,3 +215,9 @@ $('a.remove').on("click", function (event) {
 $(".rd-navbar-listing-close-toggle").on("click", function () {
     $(".listing-filter-wrap").removeClass("active");
 });
+
+// jQuery for closing Shortcut Links Filter Wrap
+
+$(".rd-navbar-sl-close-toggle").on("click", function () {
+    $(".sl-filter-wrap").removeClass("active");
+});

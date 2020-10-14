@@ -3136,6 +3136,7 @@ h3+.card-custom-group-wrap {
     padding: 0 17px;
     font-size: 14px;
     line-height: 1.3;
+    width: 100%;
 }
 
 .rd-navbar-static .rd-navbar-items-list>li:last-child,
