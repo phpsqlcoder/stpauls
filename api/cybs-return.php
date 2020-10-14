@@ -11,26 +11,10 @@ foreach($_REQUEST as $name => $value) {
 }
 
 if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
-    echo "success";
 
     $siteName = 'ST PAULS Online | Catholic Online Bookstore in Philippines';
-    $livesitePath = 'http://localhost:8000';
+    $livesitePath = 'http://cms4.webfocusprod.wsiph2.com/stpaul/public';
     $tn = $apiRespone['req_transaction_uuid'];
-
-    // function getProductImageMaxWidth($id){
-
-    //     //pdo connection
-    //     global $pdo;
-
-    //     //query
-    //     $sql = $pdo->prepare("SELECT `path` FROM product_photos WHERE is_primary = 1 AND product_id=:id");
-    //     $sql->execute(array(':id' => $id));
-
-    //     //do the loop and return
-    //     foreach($sql as $sql => $rs)
-    //         return !empty($rs->thumb) ? '<img src="' .$livesitePath . '/products/' . $rs['path'] . '" style="max-width:100%;" />' : '';
-
-    // }
 
     $transaction = '';
     //transaction details
@@ -39,20 +23,27 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
     $transaction = $sqlTra->fetch();
 
-    if($transaction['branch'] == ''){
-        $branch = '';
-    } else {
-        $branch = ': '.$transaction['branch'];
-    }
-
     if($transaction['payment_method'] == 0){
         $paymenttype = 'Cash';
     } elseif($transaction['payment_method'] == 1) {
         $paymenttype = 'Card Payment';
     } else {
-        $paymenttype = $sales->payment_option;
+        $paymenttype = $transaction['payment_option'];
     }
 
+    if($transaction['branch'] == NULL){
+        $branch = 'N/A';
+    } else {
+        $branch = $transaction['branch'];
+    }
+
+    if($transaction['other_instruction'] == NULL){
+        $instruction = 'N/A';
+    } else {
+        $instruction = $transaction['other_instruction'];
+    }
+
+    
 
     $user = '';
     //transaction details
@@ -100,13 +91,79 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
         <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>' . $siteName . '</title>
+        <style>
+
+            #customer {
+                padding-left: 8px;
+                border-left: 6px solid #b82e24;
+                float: left;
+            }
+
+            #invoice {
+                float: right;
+                padding-right: 8px;
+                border-right: 6px solid #b82e24;
+            }
+
+            #invoice-1 {
+                float: right;
+                text-align: right;
+            }
+
+            #invoice h1 {
+                color: #0087C3;
+                font-size: 2.4em;
+                line-height: 1em;
+                font-weight: normal;
+                margin: 0  0 10px 0;
+            }
+            h2.name {
+                font-size: 1.4em;
+                font-weight: normal;
+                margin: 0;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+
+            table th {
+                padding: 20px;
+                background: #b81600;
+                border-bottom: 1px solid #FFFFFF;
+            }
+
+            table td {
+                padding: 15px;
+                background: #EEEEEE;
+                border-bottom: 1px solid #FFFFFF;
+            }
+
+            table tfoot td {
+                padding: 10px;
+                background: #EEEEEE;
+                border-bottom: 1px solid #FFFFFF;
+            }
+
+            table th {
+                white-space: nowrap;        
+                font-weight: normal;
+            }
+
+            table tbody tr:last-child td {
+                border: none;
+            }
+
+            table tfoot tr td:second-child {
+                border: none;
+            }
+        </style>
         </head>
         <body style="background:#f4f4f4;font-family:arial;">
         <p>&nbsp;</p>
         <table style="width:750px;margin:auto;background:#fff;border:1px solid #dddddd;padding:1em;-webkit-border-radius:5px;border-radius:5px;font-size:12px;">
-            <tr>
-                <td><a href="'. $livesitePath .'"><img src="' . $livesitePath . '/storage/logos/' . $settings['company_logo'] . '" /></a></td>
-            </tr>
             <tr>
                 <td>&nbsp;</td>
             </tr>
@@ -118,13 +175,11 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                     Thank you for shopping at ' . $siteName . '. We are glad that you found what you were looking for.
                     <br />
                     <br />
-                    Your order number is ' . $tn . '.
-                    <br />
-                    <br />
                     Please find the details of your order below, or view it in your <a href="' . $livesitePath . '/account/my-orders">account</a>.
                     
                     <div style="overflow:auto;margin-bottom:20px;">
                         <div>
+                            <a href="'. $livesitePath .'"><img src="' . $livesitePath . '/storage/logos/' . $settings['company_logo'] . '" width="175" /></a>
                         </div>
 
                         <div id="invoice-1">
@@ -135,7 +190,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
                     <div style="margin-bottom: 200px;">
                         <div id="customer" style="flex: 0 0 40%;max-width: 100%;">
-                            <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Inter UI', Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Billing Details</label>
+                            <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Billing Details</label>
                             <h2 class="name">'.$transaction['customer_name'].'</h2>
                             '.$transaction['customer_delivery_adress'].'<br/>
                             '.$transaction['customer_contact_number'].'<br/>
@@ -144,13 +199,13 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                         </div>
 
                         <div id="invoice" style="flex: 0 0 60%;max-width: 100%;">
-                            <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Inter UI', Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Order Details</label><br/>
+                            <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, "Inter UI", Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Order Details</label><br/>
                             Order Date <span style="float: right;">'.date('m/d/Y h:i A',strtotime($transaction['created_at'])).'</span><br/>
                             Payment Method <span style="float: right;">'.$paymenttype.'</span><br/>
                             Payment Status <span style="float: right;color:#10b759;font-weight: 600;">'.$transaction['payment_status'].'</span><br/>
                             <hr>
                             Delivery Type <span style="float: right;text-transform: uppercase;">'.$transaction['delivery_type'].'</span><br/>
-                            Branch <span style="float: right;">'.($transaction['branch'] == '') ? 'N/A' : $transaction['branch'].'</span><br/>
+                            Branch <span style="float: right;">'.$branch.'</span><br/>
                             Delivery Status <span style="float: right;color:#10b759;font-weight: 600;text-transform: uppercase;">'.$transaction['delivery_status'].'</span>
                         </div>
                     </div>
@@ -172,17 +227,17 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                         <tbody>
     ';
 
-    				$totalWeight = 0;
-    				$total = 0;
+                    $totalWeight = 0;
+                    $total = 0;
                     $sql = $pdo->prepare("SELECT * FROM ecommerce_sales_details WHERE sales_header_id=:header_id");
                     $sql->execute(array(':header_id' => $transaction['id']));
                     foreach($sql as $sql => $rs){
 
-                    	$product = '';
-					    $sqlProduct = $pdo->prepare("SELECT * FROM products WHERE id=:id");
-					    $sqlProduct->execute(array(':id' => $rs['product_id']));
+                        $product = '';
+                        $sqlProduct = $pdo->prepare("SELECT * FROM products WHERE id=:id");
+                        $sqlProduct->execute(array(':id' => $rs['product_id']));
 
-					    $product = $sqlProduct->fetch();
+                        $product = $sqlProduct->fetch();
 
                         $msg .= '
                             <tr>
@@ -230,8 +285,8 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
                                 <td colspan="4" rowspan="3">
                                     <div class="col-sm-12 col-lg-8 order-2 order-sm-0 mg-t-40 mg-sm-t-0">
                                         <div class="gap-30"></div>
-                                        <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Inter UI', Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Other Instructions</label>
-                                        <p>'.($transaction['other_instruction'] == '') ? 'N/A' : $transaction['other_instruction'].'</p>
+                                        <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, "Inter U", Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Other Instructions</label>
+                                        <p>'.$instruction.'</p>
                                     </div>
                                 </td>
                                 <td>Service Fee</td>
