@@ -190,7 +190,7 @@
                                                 @endif
                                             
                                                 <input type="radio" id="tab2" name="shipOption" value="2" class="tab">
-                                                <label for="tab2">Store Pick-up <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                <label id="stp_label" for="tab2">Store Pick-up <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                 <div class="tab__content">
                                                     <h3>Store Pick-up</h3>
                                                     <div class="alert alert-info" role="alert">
@@ -227,7 +227,7 @@
                                                 
                                                 @if($amount <= $sdd->maximum_purchase)
                                                 <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                <label for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                <label id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                 <div class="tab__content">
                                                     <div class="alert alert-info" role="alert">
                                                         <h4 class="alert-heading">Reminder!</h4>
@@ -563,12 +563,20 @@
                 if(country != ""){
 
                     if(country == 259){
+                        $('#cod_label').css('display','block');
+                        $('#stp_label').css('display','block');
+                        $('#sdd_label').css('display','block');
+
                         $('#divLocalAddress').css('display','block');
                         $('#divIntlAddress').css('display','none');
 
                         $('#shipping_fee').val(0);
 
                     } else {
+                        $('#cod_label').css('display','none');
+                        $('#stp_label').css('display','none');
+                        $('#sdd_label').css('display','none');
+
                         $('#divLocalAddress').css('display','none');
                         $('#divIntlAddress').css('display','block');
 
