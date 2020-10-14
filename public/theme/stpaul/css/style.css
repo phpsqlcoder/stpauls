@@ -1,6 +1,14 @@
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:200,300,400,500,600,700,800,900|Open+Sans:200,300,400,500,600,700&display=swap");
 @import url("https://fonts.googleapis.com/css?family=IBM+Plex+Sans:200,300,400,500,600,700,800,900|Open+Sans:200,300,400,500,600,700&display=swap");
 @font-face {
+  font-family: 'FontAwesome';
+  font-style: normal;
+  font-display: block;
+  src: url("../plugins/font-awesome/webfonts/fa-solid-900.eot");
+  src: url("../plugins/font-awesome/webfonts/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("../plugins/font-awesome/webfonts/fa-solid-900.woff2") format("woff2"), url("../plugins/font-awesome/webfonts/fa-solid-900.woff") format("woff"), url("../plugins/font-awesome/webfonts/fa-solid-900.ttf") format("truetype"), url("../plugins/font-awesome/webfonts/fa-solid-900.svg#fontawesome") format("svg");
+}
+
+@font-face {
   font-family: "Linearicons";
   src: url("fonts/Linearicons.eot?4t1dgh");
   src: url("fonts/Linearicons.eot?4t1dgh#iefix") format("embedded-opentype"), url("fonts/Linearicons.ttf?4t1dgh") format("truetype"), url("fonts/Linearicons.woff?4t1dgh") format("woff"), url("fonts/Linearicons.svg?4t1dgh#Linearicons") format("svg");
@@ -3718,6 +3726,14 @@ p {
 .page .sl-filter-wrap .icon-primary {
   color: white;
   width: 30px;
+}
+
+@font-face {
+  font-family: 'FontAwesome';
+  font-style: normal;
+  font-display: block;
+  src: url("../plugins/font-awesome/webfonts/fa-solid-900.eot");
+  src: url("../plugins/font-awesome/webfonts/fa-solid-900.eot?#iefix") format("embedded-opentype"), url("../plugins/font-awesome/webfonts/fa-solid-900.woff2") format("woff2"), url("../plugins/font-awesome/webfonts/fa-solid-900.woff") format("woff"), url("../plugins/font-awesome/webfonts/fa-solid-900.ttf") format("truetype"), url("../plugins/font-awesome/webfonts/fa-solid-900.svg#fontawesome") format("svg");
 }
 
 @font-face {
