@@ -662,7 +662,6 @@
                             $.each(data, function(key, value) {
                                 $('select[name="city"]').append('<option value="'+value.id+'">'+value.city+'</option>');
                             });
-                            $('select[name="city"]').append('<option value="0">Others</option>');
                         }
                     });
                 } else {
