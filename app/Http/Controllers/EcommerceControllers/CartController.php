@@ -362,11 +362,11 @@ class CartController extends Controller
         //
 
         if($request->payment_method == 1){
-            $address_line1 = ($request->province == 0) ? '' : $request->address;
-            $address_line2 = ($request->province == 0) ? '' : $request->barangay;
-            $city          = ($request->province == 0) ? '' : $data_city->city;
-            $province      = ($request->province == 0) ? '' : $data_province->province;
-            $zipcode       = ($request->province == 0) ? '' : $request->zipcode;
+            $address_line1 = ($request->country == 259) ? $request->address: $request->billing_address;
+            $address_line2 = ($request->country == 259) ? $request->barangay : '';
+            $city          = ($request->country == 259) ? $data_city->city : '';
+            $province      = ($request->country == 259) ? $data_province->province : '';
+            $zipcode       = ($request->country == 259) ? $request->zipcode : '';
             $order         = $request;
             $uniqID        = $salesHeader->order_number;
 
