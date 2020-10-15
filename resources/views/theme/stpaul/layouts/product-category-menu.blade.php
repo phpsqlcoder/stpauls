@@ -1,6 +1,6 @@
 <ul class="rd-navbar-nav">
     @php
-	    $parentCategories = \App\EcommerceModel\ProductCategory::where('parent_id',0)->where('status', 'PUBLISHED')->orderBy('name','asc')->get();
+	    $parentCategories = \App\EcommerceModel\ProductCategory::where('parent_id',0)->where('status', 'PUBLISHED')->get();
 	@endphp
 
 	@foreach($parentCategories as $category)
