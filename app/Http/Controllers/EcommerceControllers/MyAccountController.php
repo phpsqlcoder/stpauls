@@ -12,6 +12,7 @@ use App\Page;
 use App\EcommerceModel\Customer;
 use App\User;
 use App\Provinces;
+use App\Setting;
 
 use Auth;
 
@@ -129,7 +130,7 @@ class MyAccountController extends Controller
 
         ]);
 
-        $customer = Customer::find(Auth::id());
+        $customer = User::find(Auth::id());
         
         if(\Hash::check($request->current_password, $customer->password)){
             $customer->update(['password' => bcrypt($request->password)]);

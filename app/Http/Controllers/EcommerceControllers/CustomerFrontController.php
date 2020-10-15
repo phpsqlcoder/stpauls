@@ -53,7 +53,7 @@ class CustomerFrontController extends Controller
         return response($data);
     }
 
-    public function show_socialite_set_passwor_form(Request $request)
+    public function show_socialite_set_password_form(Request $request)
     {   
         $page = new Page();
         $page->name = 'Set Password';
@@ -201,6 +201,7 @@ class CustomerFrontController extends Controller
             }
 
             if(Auth()->user()->is_active == 0){
+                Auth::logout();
                 return back()->with('warning','account inactive');
             }
 

@@ -19,7 +19,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="gap-10"></div>
-                                        <p class="text-dark"><strong>Please enter the account that you want to reset the password.</strong></p>
+                                        <p class="text-dark"><strong>Enter your registered email address to receive instructions on how to reset your password.</strong></p>
                                         @if (session('error'))
                                             <div class="gap-20"></div>
                                             <div class="alert alert-danger" role="alert">

@@ -13,7 +13,7 @@
         Route::get('oauth/{driver}', 'Auth\SocialiteController@redirectToProvider')->name('social.oauth');
         Route::get('oauth/{driver}/callback', 'Auth\SocialiteController@handleProviderCallback')->name('social.callback');
 
-        Route::get('/socialite-set-password', 'EcommerceControllers\CustomerFrontController@show_socialite_set_passwor_form')->name('customer.socialite-set-password');
+        Route::get('/socialite-set-password', 'EcommerceControllers\CustomerFrontController@show_socialite_set_password_form')->name('customer.socialite-set-password');
         Route::post('/save-socialite-password', 'EcommerceControllers\CustomerFrontController@save_socialite_password')->name('customer.social_save_password');
 
 
@@ -82,7 +82,7 @@
         // Account Management
             Route::get('/account/manage', 'EcommerceControllers\MyAccountController@manage_account')->name('my-account.manage-account');
             Route::get('/account/change-password', 'EcommerceControllers\MyAccountController@change_password')->name('my-account.change-password');
-            Route::post('/account/change-password', 'EcommerceControllers\MyAccountController@update_password')->name('my-account.update-password');
+            Route::post('/update-password', 'EcommerceControllers\MyAccountController@update_password')->name('my-account.update-password');
             Route::post('/account/manage', 'EcommerceControllers\MyAccountController@update_personal_info')->name('my-account.update-personal-info');
             Route::post('/account/manage/update-contact', 'EcommerceControllers\MyAccountController@update_contact_info')->name('my-account.update-contact-info');
             Route::post('/account/manage/update-address', 'EcommerceControllers\MyAccountController@update_address_info')->name('my-account.update-address-info');

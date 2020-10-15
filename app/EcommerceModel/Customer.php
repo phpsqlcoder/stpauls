@@ -25,7 +25,7 @@ class Customer extends Model
     protected $guard = 'customer';
 
     protected $table = 'customers';
-    protected $fillable = ['customer_id','firstname','lastname','email','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','provider_id','is_subscriber','user_id','reactivate_request','customer_id','country'];
+    protected $fillable = ['customer_id','firstname','lastname','email','telno','mobile','address','barangay','city','province','zipcode','is_active','provider','provider_id','is_subscriber','user_id','reactivate_request','customer_id','country','intl_address'];
 
 
     public function delivery_rate()

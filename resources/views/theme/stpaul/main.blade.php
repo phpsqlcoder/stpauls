@@ -8,19 +8,20 @@
     <title>ST PAULS Online | Catholic Online Bookstore in Philippines</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{  asset('storage/icons/'.Setting::getFaviconLogo()->website_favicon) }}">
 
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/bootstrap/css/bootstrap.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/bootstrap/css/bootstrap.css') }}" />
         
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/jssocials/jssocials-theme-flat.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/font-awesome/css/all.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/linearicon/linearicon.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/responsive-tabs/css/responsive-tabs.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/slick/slick.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/slick/slick-theme.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/css/tagsinput.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/rd-navbar/rd-navbar.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/aos/dist/aos.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/css/animate.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/css/style.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/font-awesome/css/fontawesome.min.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/jssocials/jssocials-theme-flat.min.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/font-awesome/css/all.min.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/linearicon/linearicon.min.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/responsive-tabs/css/responsive-tabs.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/slick/slick.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/slick/slick-theme.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/css/tagsinput.min.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/rd-navbar/rd-navbar.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/aos/dist/aos.min.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/css/animate.min.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/css/style.css') }}" />
 
     
 

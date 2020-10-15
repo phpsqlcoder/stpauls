@@ -25,7 +25,7 @@
         }
 
         .weekDays-selector input[type=checkbox]:checked + label {
-            background: #2AD705;
+            background: #b82e24;
             color: #ffffff;
         }
     </style>
@@ -212,11 +212,12 @@
                                                 <select name="social_media[]"  class="form-control">
                                                     <option value="">Choose One</option>
                                                     <option @if($media->name == 'facebook') selected @endif value="facebook">Facebook</option>
+                                                    <option @if($media->name == 'messenger') selected @endif value="messenger">Messenger</option>
                                                     <option @if($media->name == 'twitter') selected @endif value="twitter">Twitter</option>
+                                                    <option @if($media->name == 'youtube') selected @endif value="youtube">Youtube</option>
+                                                    <option @if($media->name == 'viber') selected @endif value="viber">Viber</option>
+                                                    <option @if($media->name == 'whatsapp') selected @endif value="whatsapp">Whatsapp</option>
                                                     <option @if($media->name == 'instagram') selected @endif value="instagram">Instagram</option>
-                                                    {{--                                            <option @if($media->name == 'youtube') selected @endif value="youtube">Youtube</option>--}}
-                                                    {{--                                            <option @if($media->name == 'google') selected @endif value="google">Google</option>--}}
-                                                    {{--                                            <option @if($media->name == 'dribble') selected @endif value="dribble">Dribble</option>--}}
                                                 </select>
                                                 &nbsp;
                                                 <input type="text" class="form-control" name="url[]" value="{{ $media->media_account }}">
@@ -230,11 +231,12 @@
                                             <select name="social_media[]"  class="form-control">
                                                 <option value="">Choose One</option>
                                                 <option value="facebook">Facebook</option>
+                                                <option value="messenger">Messenger</option>
                                                 <option value="twitter">Twitter</option>
+                                                <option value="youtube">Youtube</option>
+                                                <option value="viber">Viber</option>
+                                                <option value="whatsapp">Whatsapp</option>
                                                 <option value="instagram">Instagram</option>
-                                                {{--<option value="youtube">Youtube</option>--}}
-                                                {{--<option value="google">Google</option>--}}
-                                                {{--<option value="dribble">Dribble</option>--}}
                                             </select>
                                             &nbsp;
                                             <input type="text" class="form-control" name="url[]" placeholder="URL">

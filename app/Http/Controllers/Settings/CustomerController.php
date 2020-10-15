@@ -134,6 +134,8 @@ class CustomerController extends Controller
             'user_id'   => Auth::id(),
         ]);
 
+        Customer::where('customer_id',$user->id)->update(['is_active' => 0]);
+
         $user->customer_send_account_deactivated_email();
 
         return back()->with('success', __('standard.customers.status_success', ['status' => 'deactivated']));

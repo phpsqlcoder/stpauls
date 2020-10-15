@@ -162,7 +162,7 @@
         /** form validations **/
         $(document).ready(function () {
             //called when key is pressed in textbox
-            $("#zipcode,#telno,#mobileno").keypress(function (e) {
+            $("#telno,#mobileno").keypress(function (e) {
                 //if the letter is not digit then display error and don't type anything
                 var charCode = (e.which) ? e.which : event.keyCode
                 if (charCode != 43 && charCode > 31 && (charCode < 48 || charCode > 57))

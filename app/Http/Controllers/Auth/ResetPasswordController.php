@@ -64,14 +64,7 @@ class ResetPasswordController extends Controller
 
     protected function sendResetResponse(Request $request, $response)
     {
-        if(Auth::user()->role_id == 6){
-            return redirect()->route('my-account.manage-account')
-                ->with('success','Password reset successfully!');
-        }else{
-            return redirect()->route('dashboard')
-                ->with('success','Password reset successfully!');
-        }
-
+        return redirect()->route('dashboard')->with('success','Password reset successfully!');
     }
 
     protected function rules()

@@ -9,7 +9,7 @@
                     <div id="login">
                         <div class="row align-items-center">
                             <div class="col-md-12 col-sm-12">
-                                <h2 class="lgin-title">Reset Password?</h2>
+                                <h2 class="lgin-title">Reset Password</h2>
                             </div>
                         </div>
                         <div class="gap-10"></div>
@@ -19,7 +19,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="gap-10"></div>
-                                        <p class="text-dark"><strong>Please enter the account that you want to reset the password.</strong></p>
+                                        <p class="text-dark"><strong>Enter your new password. Password criteria: Minimum of eight (8) alphanumeric characters (combination of letters and numbers) with at least one (1) upper case and one (1) special character.</strong></p>
                                         @if (session('error'))
                                             <div class="gap-20"></div>
                                             <div class="alert alert-danger" role="alert">

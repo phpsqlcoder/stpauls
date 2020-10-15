@@ -113,51 +113,73 @@
                                         @endif                                              
                                         
                                         <div class="gap-10"></div>
+
                                         <div class="form-group form-wrap">
-                                            <label>Address Line 1 *</label>
-                                            <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" placeholder="Unit No./Building/House No./Street" value="{{ old('address', $customer->details->address) }}"/>
-                                            @hasError(['inputName' => 'address'])
-                                            @endhasError
-                                        </div>
-                                       
-                                   
-                                        <div class="form-group form-wrap">
-                                            <label>Address Line 2 *</label>
-                                            <input type="text" class="form-control @error('barangay') is-invalid @enderror" id="barangay" name="barangay" placeholder="Subd/Brgy" value="{{ old('barangay', $customer->details->barangay) }}"/>      
-                                            @hasError(['inputName' => 'barangay'])
-                                            @endhasError
-                                        </div>    
-                                        
-                                        <div class="form-group form-wrap">
-                                            <label>Province *</label>
-                                            <select name="province" id="province" class="form-control @error('province') is-invalid @enderror">
-                                                @foreach($provinces as $province)
-                                                <option @if($customer->details->province == $province->id) selected @endif value="{{$province->id}}">{{$province->province}}</option>
+                                            <label>Country *</label>
+                                            <select name="country" id="country" class="form-control @error('country') is-invalid @enderror">
+                                                @foreach(Setting::countries() as $country)
+                                                <option @if($customer->details->country == $country->id) selected @endif value="{{$country->id}}">{{$country->name}}</option>
                                                 @endforeach
                                             </select>
-                                            @hasError(['inputName' => 'province'])
+                                            @hasError(['inputName' => 'country'])
                                             @endhasError
                                         </div> 
-                                        @php
-                                            $cities = \App\Cities::where('province',$customer->details->province)->orderBy('city','asc')->get();
-                                        @endphp
+
                                         <div class="form-group form-wrap">
-                                            <label>City *</label>
-                                            <select name="city" id="city" class="form-control @error('city') is-invalid @enderror">
-                                                @foreach($cities as $city)
-                                                <option @if($customer->details->city == $city->id) selected @endif value="{{$city->id}}">{{$city->city}}</option>
-                                                @endforeach
-                                            </select>    
-                                            @hasError(['inputName' => 'city'])
-                                            @endhasError
-                                        </div>    
-                                                                     
-                                         <div class="form-group form-wrap">
-                                            <label>Zip Code *</label>
-                                            <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" name="zipcode" value="{{ old('zipcode', $customer->details->zipcode) }}"/>
-                                            @hasError(['inputName' => 'zipcode'])
+                                            <label>Billing Address *</label>
+                                            <textarea name="intl_address" class="form-control form-input @error('intl_address') is-invalid @enderror" rows="3" id="intl_address">
+                                                {{ old('intl_address', $customer->details->intl_address) }}
+                                            </textarea>
+                                            @hasError(['inputName' => 'intl_address'])
                                             @endhasError
                                         </div>
+
+                                        @if($customer->details->country != '')
+                                            <div class="form-group form-wrap">
+                                                <label>Address Line 1 *</label>
+                                                <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" placeholder="Unit No./Building/House No./Street" value="{{ old('address', $customer->details->address) }}"/>
+                                                @hasError(['inputName' => 'address'])
+                                                @endhasError
+                                            </div>
+                                       
+                                            <div class="form-group form-wrap">
+                                                <label>Address Line 2 *</label>
+                                                <input type="text" class="form-control @error('barangay') is-invalid @enderror" id="barangay" name="barangay" placeholder="Subd/Brgy" value="{{ old('barangay', $customer->details->barangay) }}"/>      
+                                                @hasError(['inputName' => 'barangay'])
+                                                @endhasError
+                                            </div>    
+                                            
+                                            <div class="form-group form-wrap">
+                                                <label>Province *</label>
+                                                <select name="province" id="province" class="form-control @error('province') is-invalid @enderror">
+                                                    @foreach($provinces as $province)
+                                                    <option @if($customer->details->province == $province->id) selected @endif value="{{$province->id}}">{{$province->province}}</option>
+                                                    @endforeach
+                                                </select>
+                                                @hasError(['inputName' => 'province'])
+                                                @endhasError
+                                            </div> 
+                                            @php
+                                                $cities = \App\Cities::where('province',$customer->details->province)->orderBy('city','asc')->get();
+                                            @endphp
+                                            <div class="form-group form-wrap">
+                                                <label>City *</label>
+                                                <select name="city" id="city" class="form-control @error('city') is-invalid @enderror">
+                                                    @foreach($cities as $city)
+                                                    <option @if($customer->details->city == $city->id) selected @endif value="{{$city->id}}">{{$city->city}}</option>
+                                                    @endforeach
+                                                </select>    
+                                                @hasError(['inputName' => 'city'])
+                                                @endhasError
+                                            </div>    
+                                                                         
+                                             <div class="form-group form-wrap">
+                                                <label>Zip Code *</label>
+                                                <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" name="zipcode" value="{{ old('zipcode', $customer->details->zipcode) }}"/>
+                                                @hasError(['inputName' => 'zipcode'])
+                                                @endhasError
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="gap-10"></div>

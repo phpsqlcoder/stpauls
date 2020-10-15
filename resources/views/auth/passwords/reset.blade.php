@@ -63,8 +63,7 @@
 
                         <input type="hidden" name="token" value="{{ $token }}">
                         <div class="form-group mg-b-10">
-                            <label class="d-block">{{ $email }}</label>
-                            <input type="hidden" value="{{ $email ?? old('email') }}" name="email" id="email">
+                            <input type="text" class="form-control" readonly value="{{ $email ?? old('email') }}" name="email" id="email">
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
