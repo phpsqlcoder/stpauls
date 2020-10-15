@@ -20,9 +20,8 @@ class Admin
                 // 1 for admin role
                 return $next($request);
             //}
-            else {
-                abort('403','Unauthorized page access');
-            }
+        } else {
+            abort('403','Unauthorized page access');
         }
         
     }
