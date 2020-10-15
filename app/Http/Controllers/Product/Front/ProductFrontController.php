@@ -138,13 +138,14 @@ class ProductFrontController extends Controller
 
         if($request->has('search')){
 
-            $products = Product::whereStatus('PUBLISHED');
+            $products = Product::join('product_additional_info','products.id','=','product_additional_info.product_id')->select('products.*','product_additional_info.authors')->whereStatus('PUBLISHED');
 
             if(!empty($request->searchtxt)){  
                 $searchtxt = $request->searchtxt;      
                 $products = $products->where(function($query) use ($searchtxt){
-                    $query->where('name','like','%'.$searchtxt.'%')
-                        ->orWhere('description','like','%'.$searchtxt.'%');
+                    $query->where('products.name','like','%'.$searchtxt.'%')
+                        ->orWhere('products.description','like','%'.$searchtxt.'%')
+                        ->orWhere('authors','like','%'.$searchtxt.'%');
                     });
             }
 

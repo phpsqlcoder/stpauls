@@ -16,10 +16,10 @@ class Admin
     public function handle($request, Closure $next)
     {
         if(Auth::check()){
-            if(Auth::user()->role_id <> 3){
+            //if(Auth::user()->role_id <> 3){
                 // 1 for admin role
                 return $next($request);
-            }
+            //}
             else {
                 abort('403','Unauthorized page access');
             }
