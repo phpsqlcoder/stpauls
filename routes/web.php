@@ -438,7 +438,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         Route::get('/account/edit', 'Settings\AccountController@edit')->name('account.edit');
         Route::put('/account/update', 'Settings\AccountController@update')->name('account.update');
         Route::put('/account/update_email', 'Settings\AccountController@update_email')->name('account.update-email');
-        Route::put('/account/update_password', 'Settings\AccountController@update_password')->name('account.update-password');
+        Route::put('/account/update_password', 'Settings\AccountController@update_password')->name('admin-account.update-password');
         // Audit
         Route::get('/audit-logs', 'Settings\LogsController@index')->name('audit-logs.index');
         // CMS

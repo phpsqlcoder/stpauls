@@ -1,9 +1,10 @@
 @extends('theme.'.env('FRONTEND_TEMPLATE').'.main')
 
 @section('pagecss')
-    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/datatables/datatables.min.css') }}" />
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <style>
+        .pagination { margin-top: 0px; }
+    </style>
 @endsection
 
 @section('content')
@@ -83,6 +84,16 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        <div class="filter-product">
+                            <div class="row">
+                                <div id="col2" class="col-6">
+                                    <p class="tx-gray-400 tx-12 d-inline">Showing {{ $sales->firstItem() }} to {{ $sales->lastItem() }} of {{ $sales->total() }} items</p>
+                                </div>
+                                <div class="col-6 pd-0">
+                                    {{ $sales->links() }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -239,32 +250,30 @@
 @endsection
 
 @section('pagejs')
-    <script src="{{ asset('theme/stpaul/plugins/datatables/datatables.min.js') }}"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 @endsection
 
 @section('customjs')
     <script>
-        $(function () {
-            $('#salesTransaction').DataTable({
-                "responsive": false,
-                "scrollX": true,
-                "columnDefs": [
-                    { responsivePriority: 1, targets: 0 },
-                    { responsivePriority: 2, targets: -1 }
-                ],
-                "order": [[0, 'desc']],
-                "language": {
-                    "paginate": {
-                        "previous": "&lsaquo;",
-                        "next": "&rsaquo;"
-                    }
-                }
-            }).on( 'stateLoaded.dt', function (e, settings, data) {
-                    console.log($("#salesTransaction").parent());
-                } );
-        });
+        // $(function () {
+        //     $('#salesTransaction').DataTable({
+        //         "responsive": false,
+        //         "scrollX": true,
+        //         "columnDefs": [
+        //             { responsivePriority: 1, targets: 0 },
+        //             { responsivePriority: 2, targets: -1 }
+        //         ],
+        //         "order": [[0, 'desc']],
+        //         "language": {
+        //             "paginate": {
+        //                 "previous": "&lsaquo;",
+        //                 "next": "&rsaquo;"
+        //             }
+        //         }
+        //     }).on( 'stateLoaded.dt', function (e, settings, data) {
+        //             console.log($("#salesTransaction").parent());
+        //         } );
+        // });
     </script>
     <script>
         var _URL = window.URL || window.webkitURL;

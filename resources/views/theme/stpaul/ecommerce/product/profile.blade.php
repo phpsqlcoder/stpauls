@@ -195,20 +195,17 @@
                     <div class="product-additional">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="synopsis-tab" data-toggle="tab" href="#synopsis" role="tab" aria-controls="synopsis" aria-selected="true">Synopsis</a>
+                                <a class="nav-link active" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Details about the product</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Details about the product</a>
+                                <a class="nav-link" id="synopsis-tab" data-toggle="tab" href="#synopsis" role="tab" aria-controls="synopsis" aria-selected="true">{{ ($product->category->name == 'Books') ? 'Synopsis' : 'Prayer' }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false">Reviews</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="synopsis" role="tabpanel" aria-labelledby="synopsis-tab">
-                                {!! $product->additional_info->synopsis !!}
-                            </div>
-                            <div class="tab-pane fade" id="detail" role="tabpanel" aria-labelledby="detail-tab">
+                            <div class="tab-pane fade show active" id="detail" role="tabpanel" aria-labelledby="detail-tab">
                                 <table>
                                     <tr>
                                         <td><p><b>Weight (grams):</b> {{ $product->weight }}</p></td>
@@ -238,6 +235,9 @@
                                         <td><p><b>Additional Information:</b> {{ $product->additional_info->additional_info }}</p></td>
                                     </tr>
                                 </table>
+                            </div>
+                            <div class="tab-pane fade" id="synopsis" role="tabpanel" aria-labelledby="synopsis-tab">
+                                {!! $product->additional_info->synopsis !!}
                             </div>
                             <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
                                 @if($reviews_count > 0)

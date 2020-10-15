@@ -137,7 +137,7 @@
                                 </a>
 
                                 <div class="collapse mg-t-15 @if ($showPassword) show @endif" id="collapseExample">
-                                    <form method="post" action="{{ route('account.update-password') }}">
+                                    <form method="post" action="{{ route('admin-account.update-password') }}">
                                         @csrf
                                         @method('PUT')
                                         <div class="form-group">

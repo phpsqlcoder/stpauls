@@ -69,16 +69,17 @@
         <ul>
             <li @if (\Route::current()->getName() == 'account.edit') class="active" @endif><a href="{{ route('account.edit') }}">Account Settings</a></li>
 
-            @if (auth()->user()->has_access_to_website_settings_module())
+            @if(auth()->user()->has_access_to_website_settings_module())
                 <li @if (\Route::current()->getName() == 'website-settings.edit') class="active" @endif><a href="{{ route('website-settings.edit') }}">Website Settings</a></li>
             @endif
 
-            @if (auth()->user()->has_access_to_audit_logs_module())
-                <li style="display:none;" @if (\Route::current()->getName() == 'audit-logs.index') class="active" @endif><a href="{{ route('audit-logs.index') }}">Audit Trail</a></li>
+            @if(auth()->user()->has_access_to_audit_logs_module())
+                <li @if (\Route::current()->getName() == 'audit-logs.index') class="active" @endif><a href="{{ route('audit-logs.index') }}">Audit Trail</a></li>
             @endif
         </ul>
     </li>
-    @if (auth()->user()->is_an_admin())
+
+    @if(auth()->user()->has_access_to_module('users'))
         <li class="nav-item with-sub @if (request()->routeIs('users*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="users"></i> <span>Users</span></a>
             <ul>
@@ -87,13 +88,20 @@
             </ul>
         </li>
     @endif
-    @if (auth()->user()->is_an_admin())
+
+    @if (auth()->user()->has_access_to_route('role.index') || auth()->user()->has_access_to_route('access.index') || auth()->user()->has_access_to_route('permission.index'))
         <li class="nav-item with-sub @if (request()->routeIs('role*') || request()->routeIs('access*') || request()->routeIs('permission*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="user"></i> <span>Account Management</span></a>
             <ul>
+                @if(auth()->user()->has_access_to_route('role.index'))
                 <li @if (request()->routeIs('role*')) class="active" @endif><a href="{{ route('role.index') }}">Roles</a></li>
-                @if (auth()->user()->role_id == 1)
+                @endif
+
+                @if(auth()->user()->has_access_to_route('access.index'))
                     <li @if (request()->routeIs('access*')) class="active" @endif><a href="{{ route('access.index') }}">Access Rights</a></li>
+                @endif
+
+                @if(auth()->user()->has_access_to_route('permission.index'))
                     <li @if (request()->routeIs('permission*')) class="active" @endif><a href="{{ route('permission.index') }}">Permissions</a></li>
                 @endif
             </ul>
