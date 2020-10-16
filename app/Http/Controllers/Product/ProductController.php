@@ -232,6 +232,7 @@ class ProductController extends Controller
             'meta_keyword' => 'max:150',
             'meta_description' => 'max:250',
             'price' => 'required',
+            'weight' => 'required',
             'size' => 'max:30'
         ])->validate();
 

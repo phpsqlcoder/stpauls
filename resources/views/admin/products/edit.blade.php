@@ -96,7 +96,9 @@
                     </div>
                     <div class="form-group">
                         <label class="d-block">Weight (grams)</label>
-                        <input type="number" class="form-control" name="weight" value="{{ old('weight', $product->weight) }}" >
+                        <input required type="number" class="form-control @error('weight') is-invalid @enderror" name="weight" id="weight" value="{{ old('weight', $product->weight) }}" >
+                        @hasError(['inputName' => 'weight'])
+                        @endhasError
                     </div>
                     <div class="form-group">
                         <label class="d-block">Size</label>
