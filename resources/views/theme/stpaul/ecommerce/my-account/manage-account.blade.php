@@ -125,16 +125,18 @@
                                             @endhasError
                                         </div> 
 
-                                        <div class="form-group form-wrap">
-                                            <label>Billing Address *</label>
-                                            <textarea name="intl_address" class="form-control form-input @error('intl_address') is-invalid @enderror" rows="3" id="intl_address">
-                                                {{ old('intl_address', $customer->details->intl_address) }}
-                                            </textarea>
-                                            @hasError(['inputName' => 'intl_address'])
-                                            @endhasError
+                                        <div id="intl_address" style="display: @if($customer->details->country <> 259 && $customer->details->country != '') block @else none @endif">
+                                           <div class="form-group form-wrap">
+                                                <label>Billing Address *</label>
+                                                <textarea name="intl_address" class="form-control form-input @error('intl_address') is-invalid @enderror" rows="3" id="intl_address">
+                                                    {{ old('intl_address', $customer->details->intl_address) }}
+                                                </textarea>
+                                                @hasError(['inputName' => 'intl_address'])
+                                                @endhasError
+                                            </div> 
                                         </div>
 
-                                        @if($customer->details->country != '')
+                                        <div id="local_address" style="display: @if($customer->details->country == 259) block @else none @endif">
                                             <div class="form-group form-wrap">
                                                 <label>Address Line 1 *</label>
                                                 <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" placeholder="Unit No./Building/House No./Street" value="{{ old('address', $customer->details->address) }}"/>
@@ -172,14 +174,13 @@
                                                 @hasError(['inputName' => 'city'])
                                                 @endhasError
                                             </div>    
-                                                                         
-                                             <div class="form-group form-wrap">
-                                                <label>Zip Code *</label>
-                                                <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" name="zipcode" value="{{ old('zipcode', $customer->details->zipcode) }}"/>
-                                                @hasError(['inputName' => 'zipcode'])
-                                                @endhasError
-                                            </div>
-                                        @endif
+                                        </div>
+                                        <div class="form-group form-wrap">
+                                            <label>Zip Code *</label>
+                                            <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" name="zipcode" value="{{ old('zipcode', $customer->details->zipcode) }}"/>
+                                            @hasError(['inputName' => 'zipcode'])
+                                            @endhasError
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="gap-10"></div>
@@ -217,6 +218,17 @@
 @section('customjs')
     <script>
         $(document).ready(function() {
+            $('select[name="country"]').on('change', function() {
+                var country = $(this).val();
+                if(country == 259){
+                    $('#local_address').css('display','block');
+                    $('#intl_address').css('display','none');
+                } else {
+                    $('#intl_address').css('display','block');
+                    $('#local_address').css('display','none');
+                }
+            });
+
             $('select[name="province"]').on('change', function() {
                 var provinceID = $(this).val();
                 if(provinceID) {

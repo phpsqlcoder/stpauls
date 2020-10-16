@@ -229,20 +229,6 @@ class CartController extends Controller
         }
     }
 
-    // public function pay_again($id){
-    //     $r = SalesHeader::findOrFail($id);
-
-    //     $sales = 
-    //     $urls = [
-    //         'notification' => route('cart.payment-notification'),
-    //         'result' => route('profile.sales'),
-    //         'cancel' => route('profile.sales'),
-    //     ];
-       
-    //     $base64Code = PaynamicsHelper::payNow($r->order_number, Auth::user(), $r->items, number_format($r->net_amount, 2, '.', ''), $urls, false ,number_format($r->delivery_fee_amount, 2, '.', ''));
-    //      return view('theme.paynamics.sender', compact('base64Code'));
-    // }
-
     public function save_sales(Request $request)
     {
         $today = getdate();
@@ -264,7 +250,6 @@ class CartController extends Controller
         if($request->shipOption != 2 && $request->shippingfee == 0){
             $deliveryStatus = 'Shipping Fee Validation';
         } else {
-            // if($request->shipOption == 1 || $request->shipOption == 2){
             if($request->shipOption == 1){
                 $deliveryStatus = 'Waiting for Approval';
             } else {
@@ -306,39 +291,50 @@ class CartController extends Controller
             'is_other' => ($request->shipOption != 2 && $request->shippingfee == 0) ? 1 : 0
         ]);
 
+        Customer::where('customer_id',Auth::id())->update([
+            'mobile' => $request->mobile,
+            'country' => $request->country,
+            'address' => ($request->country == 259) ? $request->address : '',
+            'barangay' => ($request->country == 259) ? $request->barangay : '',
+            'city' => ($request->country == 259) ? $request->city : NULL,
+            'province' => ($request->country == 259) ? $request->province : NULL,
+            'zipcode' => $request->zipcode,
+            'intl_address' => ($request->country <> 259) ? $request->billing_address : ''
+        ]);
+
         // Ordered Products
-            $data = $request->all();
-            $productid = $data['productid'];
-            $qty       = $data['qty'];
-            $price     = $data['product_price'];
+        $data = $request->all();
+        $productid = $data['productid'];
+        $qty       = $data['qty'];
+        $price     = $data['product_price'];
 
-            foreach($productid as $key => $prodId){
+        foreach($productid as $key => $prodId){
 
-                $product  = Product::find($prodId);
-                $promoQry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$prodId);
+            $product  = Product::find($prodId);
+            $promoQry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$prodId);
 
-                $promoChecker = $promoQry->count();
-                if($promoChecker == 1){
-                   $promoDetails = $promoQry->first(); 
-                }
-
-                SalesDetail::create([
-                    'sales_header_id' => $salesHeader->id,
-                    'product_id' => $prodId,
-                    'product_name' => $product->name,
-                    'product_category' => $product->category_id,
-                    'price' => $price[$key],
-                    'tax_amount' => $price[$key]-($price[$key]/1.12),
-                    'promo_id' => $promoChecker == 1 ? $promoDetails->id : 0,
-                    'promo_description' => $promoChecker == 1 ? $promoDetails->name : '',
-                    'discount_amount' => $promoChecker == 1 ? $price[$key]*('.'.$promoDetails->discount) : 0.00,
-                    'gross_amount' => $request->totalDue,
-                    'net_amount' => 0,
-                    'qty' => $qty[$key],
-                    'uom' => $product->uom,
-                    'created_by' => Auth::id()
-                ]);
+            $promoChecker = $promoQry->count();
+            if($promoChecker == 1){
+               $promoDetails = $promoQry->first(); 
             }
+
+            SalesDetail::create([
+                'sales_header_id' => $salesHeader->id,
+                'product_id' => $prodId,
+                'product_name' => $product->name,
+                'product_category' => $product->category_id,
+                'price' => $price[$key],
+                'tax_amount' => $price[$key]-($price[$key]/1.12),
+                'promo_id' => $promoChecker == 1 ? $promoDetails->id : 0,
+                'promo_description' => $promoChecker == 1 ? $promoDetails->name : '',
+                'discount_amount' => $promoChecker == 1 ? $price[$key]*('.'.$promoDetails->discount) : 0.00,
+                'gross_amount' => $request->totalDue,
+                'net_amount' => 0,
+                'qty' => $qty[$key],
+                'uom' => $product->uom,
+                'created_by' => Auth::id()
+            ]);
+        }
         // 
 
         Cart::where('user_id', Auth::id())->delete();
@@ -384,27 +380,6 @@ class CartController extends Controller
             return redirect(route('account-my-orders'))->with('success',' Order has been placed.');
         }
               
-    }
-
-
-    public function check_loyalty($purchasedAmount)
-    {
-        $discountPurchaseAmount = 10000;
-
-        if($purchasedAmount >= $discountPurchaseAmount){
-
-            $qry = SalesHeader::where('customer_id',Auth::id())->where('net_amount','>=',$discountPurchaseAmount)->count();
-
-            if($qry == 2){
-               LoyalCustomer::create([
-                    'customer_name' => auth()->user()->fullname,
-                    'customer_id' => Auth::id(),
-                    'total_purchase' => 1,
-                    'status' => 'PENDING',
-                    
-                ]); 
-            }
-        }
     }
 
     public function globalpay(Request $request)

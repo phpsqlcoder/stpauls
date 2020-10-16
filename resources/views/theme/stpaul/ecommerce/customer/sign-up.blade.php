@@ -74,7 +74,7 @@
                                             <div class="col-md-12">
                                                 <p>Password *</p>
                                                 <input required type="password" name="password" class="form-control form-input @error('password') is-invalid @enderror">
-                                                <small>Minimum of eight (8) alphanumeric characters (combination of letters and numbers) with at least one (1) upper case and one (1) special character.</small>
+                                                <small class=><b>Minimum of eight (8) alphanumeric characters (combination of letters and numbers) with at least one (1) upper case and one (1) special character.</b></small>
                                                 @hasError(['inputName' => 'password'])
                                                 @endhasError
                                                 <div class="gap-10"></div>    

@@ -26,7 +26,7 @@
                             <li>
                                 <a href="#tab-1">
                                     <span class="step">1</span>
-                                    <span class="title">Billing Information and Shipping Options</span>
+                                    <span class="title">Delivery Information and Shipping Options</span>
                                 </a>
                             </li>
                             <li>
@@ -94,7 +94,7 @@
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>Billing Address *</p>
-                                                    <textarea name="billing_address" class="form-control form-input" rows="3" id="billing_address"></textarea>
+                                                    <textarea name="billing_address" class="form-control form-input" rows="3" id="billing_address">{{ $customer->details->intl_address }}</textarea>
                                                     <p id="p_otheradd" class="text-danger" style="display: none;"><small>The address field is required.</small></p>
                                                 </div>
                                             </div>
@@ -143,13 +143,13 @@
                                                     <input required type="text" class="form-control form-input" name="barangay" id="input_barangay" value="{{ $customer->details->barangay }}">
                                                     <p id="p_barangay" class="text-danger" style="display: none;"><small>The address line 2 field is required.</small></p>
                                                 </div>
+                                            </div>
 
-                                                <div class="gap-10"></div>
-                                                <div class="form-group form-wrap">
-                                                    <p>Zip Code *</p>
-                                                    <input required type="text" class="form-control form-input" name="zipcode" id="input_zipcode" value="{{ $customer->details->zipcode }}">
-                                                    <p id="p_zipcode" class="text-danger" style="display: none;"><small>The zip code field is required.</small></p>
-                                                </div>
+                                            <div class="gap-10"></div>
+                                            <div class="form-group form-wrap">
+                                                <p>Zip Code *</p>
+                                                <input required type="text" class="form-control form-input" name="zipcode" id="input_zipcode" value="{{ $customer->details->zipcode }}">
+                                                <p id="p_zipcode" class="text-danger" style="display: none;"><small>The zip code field is required.</small></p>
                                             </div>
 
                                             <div class="gap-10"></div>
@@ -856,7 +856,7 @@
                 if($('#country').val() == 259){
                     $('#customer-address').html($('#input_address').val()+' '+$('#input_barangay').val()+', '+$("#province option:selected" ).text()+' '+$("#city option:selected" ).text()+', '+$('#input_zipcode').val()+' '+$("#country option:selected" ).text());
                 } else {
-                    $('#customer-address').html($('#billing_address').val()+', '+$("#country option:selected" ).text());
+                    $('#customer-address').html($('#billing_address').val()+', '+$('#input_zipcode').val()+', '+$("#country option:selected" ).text());
                 }
 
                 if(option == 1){

@@ -83,23 +83,41 @@ class MyAccountController extends Controller
 
     public function update_address_info(Request $request)
     {
-        $addressInfo = $request->only(['address', 'barangay', 'province', 'city','zipcode']);
+        $localAddressInfo = $request->only(['address', 'barangay', 'province', 'city','zipcode']);
+        $intlAddressInfo = $request->only(['country','zipcode','intl_address']);
 
-        $validateData = Validator::make(
-            $addressInfo, 
-            [
-                'address' => 'required',
-                'barangay' => 'required',
-                'province' => 'required',
-                'city' => 'required',
-                'zipcode' => 'required'
-            ],
-            [
-                'address.required' => 'The address line 1 field is required.',
-                'barangay.required' => 'The address line 2 field is required.',
-                'zipcode.required' => 'The zip code field is required.'
-            ]
-        );
+        if($request->country == 259){
+            $validateData = Validator::make(
+                $localAddressInfo, 
+                [
+                    'address' => 'required',
+                    'barangay' => 'required',
+                    'province' => 'required',
+                    'city' => 'required',
+                    'zipcode' => 'required'
+                ],
+                [
+                    'address.required' => 'The address line 1 field is required.',
+                    'barangay.required' => 'The address line 2 field is required.',
+                    'zipcode.required' => 'The zip code field is required.'
+                ]
+            );
+         } else {
+            $validateData = Validator::make(
+                $intlAddressInfo, 
+                [
+                    'country' => 'required',
+                    'intl_address' => 'required',
+                    'zipcode' => 'required'
+                ],
+                [   
+                    'country.required' => 'The country field is required.',
+                    'intl_address.required' => 'The billing address field is required.',
+                    'zipcode.required' => 'The zip code field is required.'
+                ]
+            );
+         }
+       
 
         if ($validateData->fails()) {
            return back()->with([
@@ -107,7 +125,15 @@ class MyAccountController extends Controller
             ])->withErrors($validateData)->withInput();
         }
 
-        Customer::where('customer_id',Auth::id())->update($addressInfo);
+        Customer::where('customer_id',Auth::id())->update([
+            'country' => $request->country,
+            'address' => ($request->country == 259) ? $request->address : '',
+            'barangay' => ($request->country == 259) ? $request->barangay : '',
+            'city' => ($request->country == 259) ? $request->city : NULL,
+            'province' => ($request->country == 259) ? $request->province : NULL,
+            'zipcode' => $request->zipcode,
+            'intl_address' => ($request->country <> 259) ? $request->intl_address : ''
+        ]);
 
         return back()->with([
             'tabname' => 'my-address',
