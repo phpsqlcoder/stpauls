@@ -38,7 +38,7 @@
                                     <p>For more details, track your delivery status under <strong>My Account > My Orders</strong></p>
                                 </div>
                                 <div class="col-md-5 mb-4 align-self-center">
-                                    <a href="{{ route('account-order-info',$sales->id) }}" class="btn btn-md primary-btn btn-block">View Order</a>
+                                    <a href="{{ route('account-order-info',$sales->id) }}" class="btn btn-md primary-btn btn-block text-white">View Order</a>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="gap-20"></div>
