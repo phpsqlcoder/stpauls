@@ -32,9 +32,9 @@ class CustomerFrontController extends Controller
         $page = new Page();
         $page->name = 'Sign Up';
         
-        $fbdata = $request;
+        $socialData = $request;
 
-        return view('theme.stpaul.ecommerce.customer.sign-up',compact('page','fbdata'));
+        return view('theme.stpaul.ecommerce.customer.sign-up',compact('page','socialData'));
 
     }
 
@@ -90,8 +90,10 @@ class CustomerFrontController extends Controller
                 'remember_token' => str_random(60),
             ]);
 
+            Auth::login($customer);
+
         if($customer){
-            Auth::login($customer->id);
+            
             Customer::create([
                 'customer_id' => $customer->id,
                 'firstname' => $request->firstname,
