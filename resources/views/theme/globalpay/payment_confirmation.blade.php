@@ -43,7 +43,7 @@
 	$apiFields['locale'] = 'en';
 	$apiFields['transaction_type'] = 'authorization';
 	$apiFields['reference_number'] = time();
-	$apiFields['amount'] = $order['totalDue'];
+	$apiFields['amount'] = $order['net_amount'];
 	$apiFields['currency'] = 'PHP';
 
 ?>
@@ -74,7 +74,7 @@
 
 		<input type="text" name="transaction_type" value="authorization">
 		<input type="text" name="reference_number" value="<?php echo time(); ?>">
-		<input type="text" name="amount" value="<?php echo $order['totalDue']; ?>">
+		<input type="text" name="amount" value="<?php echo $order['net_amount']; ?>">
 		<input type="text" name="currency" value="PHP">
 		<input type="text" id="signature" name="signature" value="<?php echo sign($apiFields); ?>">
 	</form>

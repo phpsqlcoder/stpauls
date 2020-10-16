@@ -264,6 +264,7 @@ class CartController extends Controller
             'order_number' => $requestId,
             'customer_id' => Auth::id(),
             'customer_name' => $request->firstname.' '.$request->lastname,
+            'email' => $request->email,
             'customer_contact_number' => $request->mobile,
             'customer_address' => $address,
             'customer_delivery_adress' => $address,
@@ -273,9 +274,9 @@ class CartController extends Controller
             'delivery_type' => $delivery_type->name,
             'delivery_fee_amount' => $request->shippingfee,
             'delivery_status' => $deliveryStatus,
-            'gross_amount' => $request->totalDue,
+            'gross_amount' => $request->net_amount,
             'tax_amount' => 0,
-            'net_amount' => $request->totalDue,
+            'net_amount' => $request->net_amount,
             'discount_amount' => $request->loyaltydiscount,
             'payment_status' => 'UNPAID',
             'status' => 'active',
@@ -328,7 +329,7 @@ class CartController extends Controller
                 'promo_id' => $promoChecker == 1 ? $promoDetails->id : 0,
                 'promo_description' => $promoChecker == 1 ? $promoDetails->name : '',
                 'discount_amount' => $promoChecker == 1 ? $price[$key]*('.'.$promoDetails->discount) : 0.00,
-                'gross_amount' => $request->totalDue,
+                'gross_amount' => $request->net_amount,
                 'net_amount' => 0,
                 'qty' => $qty[$key],
                 'uom' => $product->uom,
@@ -341,7 +342,7 @@ class CartController extends Controller
 
         // Loyalty
             $discountPurchaseAmount = 10000;
-            if($request->totalDue >= $discountPurchaseAmount){
+            if($request->net_amount >= $discountPurchaseAmount){
 
                 $qry = SalesHeader::where('customer_id',Auth::id())->where('net_amount','>=',$discountPurchaseAmount)->count();
 
@@ -366,35 +367,35 @@ class CartController extends Controller
             $order         = $request;
             $uniqID        = $salesHeader->order_number;
 
-            if($request->shipOption == 2){
+            if($request->shippingfee > 0){
                 return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
             } else {
-                if($request->shippingfee > 0){
-                    return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
-                } else {
-                    return redirect(route('account-my-orders'))->with('success',' Order has been placed.');
-                }
+
+                return redirect(route('order.received',$requestId));
             }
 
         } else {
-            return redirect(route('order.received',$requestId))->with('success',' Order has been placed.');
+            return redirect(route('order.received',$requestId));
         }
               
     }
 
     public function globalpay(Request $request)
     {
-        // $sales = SalesHeader::find($request->orderid);
+        $sales = SalesHeader::find($request->orderid);
+        $customer = Customer::where('customer_id',$sales->customer_id)->first();
+        $data_city = Cities::find($customer->city);
+        $data_province = Provinces::find($customer->province);
+
+        $address_line1 = ($customer->country == 259) ? $customer->address: $customer->intl_address;
+        $address_line2 = ($customer->country == 259) ? $customer->barangay : '';
+        $city          = ($customer->country == 259) ? $data_city->city : '';
+        $province      = ($customer->country == 259) ? $data_province->province : '';
+        $zipcode       = $customer->zipcode;
+        $order         = $sales;
+        $uniqID        = $sales->order_number;
         
-        // $address_line1 = '';
-        // $address_line2 = '';
-        // $city          = '';
-        // $province      = '';
-        // $zipcode       = '';
-        // $order         = $request;
-        // $uniqID        = $sales->order_number;
-        
-        // return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
+        return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
 
     }
 }

@@ -440,7 +440,7 @@
                                             <li class="d-flex justify-content-between">
                                                 <strong>Total Due</strong>
                                                 <strong>
-                                                    <input type="hidden" name="totalDue" id="input_total_due" name="totalDue">
+                                                    <input type="hidden" name="net_amount" id="input_total_due" name="totalDue">
                                                     ₱ <span id="totalDue"></span>
                                                 </strong>
                                             </li>

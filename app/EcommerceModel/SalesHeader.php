@@ -15,7 +15,7 @@ class SalesHeader extends Model
         'user_id', 'order_number', 'order_source', 'response_code', 'customer_name', 'customer_contact_number', 'customer_address', 'customer_delivery_adress', 'delivery_tracking_number', 'delivery_fee_amount', 'delivery_courier', 'delivery_type',
         'gross_amount', 'tax_amount', 'net_amount', 'discount_amount', 'payment_status',
         'delivery_status', 'status','other_instruction','customer_id','payment_method','branch','pickup_date','pickup_time','payment_option',
-        'service_fee','is_approve','remarks','is_other'
+        'service_fee','is_approve','remarks','is_other','email'
     ];
 
     public $timestamp = true;
