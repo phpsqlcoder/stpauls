@@ -211,12 +211,12 @@ class Product extends Model
     {
         $discount = ($this->on_sale->promo_details->discount/100);
 
-        return ($this->price * number_format($discount,2));
+        return ($this->price * $discount);
     }
 
     public function getDiscountedPriceAttribute()
     {
-        return number_format(($this->price - $this->DiscountedAmount),2);
+        return ($this->price - $this->DiscountedAmount);
     }
 
     public static function onsale_checker($id)
