@@ -209,9 +209,9 @@ class Product extends Model
 
     public function getDiscountedAmountAttribute()
     {
-        $discount = '.'.$this->on_sale->promo_details->discount;
+        $discount = ($this->on_sale->promo_details->discount/100);
 
-        return ($this->price * $discount);
+        return ($this->price * number_format($discount,2));
     }
 
     public function getDiscountedPriceAttribute()
