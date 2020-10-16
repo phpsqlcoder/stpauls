@@ -34,11 +34,11 @@
                                     </div>
                                     <div class="col-md-2 col-sm-12"></div>
                                     <div class="col-md-4 col-sm-12">
-                                        <a href="{{ route('social.oauth', 'facebook') }}" class="btn btn-primary btn-block fb"><i class="fa fa-facebook pr-3"></i>Facebook</a>
+                                        <a href="{{ route('social.oauth', 'facebook') }}" class="btn btn-primary btn-block fb"><i class="fab fa-facebook-f pr-3"></i>Facebook</a>
                                         <div class="gap-20"></div>
                                     </div>
                                     <div class="col-md-4 col-sm-12">
-                                        <a href="{{ route('social.oauth', 'google') }}" class="btn btn-primary btn-block gl"><i class="fa fa-google-plus pr-3"></i>Google</a>
+                                        <a href="{{ route('social.oauth', 'google') }}" class="btn btn-primary btn-block gl"><i class="fab fa-google-plus-g pr-3"></i>Google</a>
                                         <div class="gap-20"></div>
                                     </div>
                                     <div class="col-md-2 col-sm-12"></div>

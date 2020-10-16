@@ -46,23 +46,9 @@
                     <li class="nav-item">
                         <a class="nav-link @if($showTab2) active @endif " id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Account</a>
                     </li>
-                    {{--                <li class="nav-item">--}}
-                    {{--                    <a class="nav-link" id="avatar-tab" data-toggle="tab" href="#avatar" role="tab" aria-controls="avatar" aria-selected="false">Avatar</a>--}}
-                    {{--                </li>--}}
                 </ul>
                 <div class="tab-content rounded bd bd-gray-300 bd-t-0 pd-20" id="myTabContent">
                     <div class="tab-pane fade @if(!$showTab2) show active @endif" id="home" role="tabpanel" aria-labelledby="home-tab">
-                        {{--                    @if ($errors->any())--}}
-                        {{--                        <div class="alert alert-solid alert-danger d-flex align-items-center" role="alert">--}}
-                        {{--                            <ul id="errorMessage">--}}
-                        {{--                                @foreach ($errors->all() as $error)--}}
-                        {{--                                    <li>--}}
-                        {{--                                        <i data-feather="x-circle" class="mg-r-10"></i> {{ $error }}--}}
-                        {{--                                    </li>--}}
-                        {{--                                @endforeach--}}
-                        {{--                            </ul>--}}
-                        {{--                        </div>--}}
-                        {{--                    @endif--}}
                         <form class="col-md-6" method="POST" action="{{ route('account.update', $user->id) }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
@@ -158,32 +144,6 @@
                                             @hasError(['inputName' => 'confirm_password'])
                                             @endhasError
                                         </div>
-
-                                        {{--                                <div class="form-group mg-b-10">--}}
-                                        {{--                                    <label class="d-block tx-12">Current Password <i class="tx-danger">*</i></label>--}}
-                                        {{--                                    <div class="form-group pass_show">--}}
-                                        {{--                                        <input type="hidden" name="uid" value="{{ $user->id }}">--}}
-                                        {{--                                        <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirm Password">--}}
-                                        {{--                                    </div>--}}
-                                        {{--                                </div>--}}
-                                        {{--                                <div class="form-row">--}}
-                                        {{--                                    <div class="col-md-6">--}}
-                                        {{--                                        <div class="form-group mg-b-10">--}}
-                                        {{--                                            <label for="new_password" class="d-block tx-12">New Password <i class="tx-danger">*</i></label>--}}
-                                        {{--                                            <div class="form-group pass_show">--}}
-                                        {{--                                                <input type="password" id="new_password" name="new_password" class="form-control" placeholder="New Password">--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
-                                        {{--                                    </div>--}}
-                                        {{--                                    <div class="col-md-6">--}}
-                                        {{--                                        <div class="form-group mg-b-10">--}}
-                                        {{--                                            <label for="confirm_password" class="d-block tx-12">Confirm Password <i class="tx-danger">*</i></label>--}}
-                                        {{--                                            <div class="form-group pass_show">--}}
-                                        {{--                                                <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirm Password">--}}
-                                        {{--                                            </div>--}}
-                                        {{--                                        </div>--}}
-                                        {{--                                    </div>--}}
-                                        {{--                                </div>--}}
                                         <div class="form-row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">

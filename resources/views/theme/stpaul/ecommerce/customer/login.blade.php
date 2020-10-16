@@ -53,8 +53,8 @@
                                         <div class="gap-10"></div>
                                         <p>Or, login with</p>
                                         <div class="gap-10"></div>
-                                        <a href="{{ route('social.oauth-login','facebook') }}" class="btn btn-primary btn-block fb text-white"><i class="fa fa-facebook pr-3"></i>Facebook</a>
-                                        <a href="{{ route('social.oauth-login', 'google') }}" class="btn btn-primary btn-block gl text-white"><i class="fa fa-google-plus pr-3"></i>Google</a>
+                                        <a href="{{ route('social.oauth-login','facebook') }}" class="btn btn-primary btn-block fb text-white"><i class="fab fa-facebook-f pr-3"></i>Facebook</a>
+                                        <a href="{{ route('social.oauth-login', 'google') }}" class="btn btn-primary btn-block gl text-white"><i class="fab fa-google-plus-g pr-3"></i>Google</a>
                                     </div>
                                 </div>
                             </form>

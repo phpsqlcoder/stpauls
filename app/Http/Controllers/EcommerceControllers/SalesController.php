@@ -104,7 +104,6 @@ class SalesController extends Controller
         return view('admin.sales.payment-details',compact('payment'));
     }
 
-    // BEGIN Cash On Delivery
     public function sales_cash_on_delivery()
     {
         $listing = new ListingHelper('desc',10,'order_number');
@@ -123,7 +122,32 @@ class SalesController extends Controller
         return view('admin.sales.cash-on-delivery',compact('sales','filter','searchType'));
     }
 
-    public function approve_order(Request $request)
+    public function sales_card_payment()
+    {
+        $listing = new ListingHelper('desc',10,'order_number');
+
+        $sales = SalesHeader::where('payment_method',1);
+
+        if(isset($_GET['search']) && $_GET['search']<>'')
+            $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
+
+        $sales = $sales->orderBy('id','desc');
+        $sales = $sales->paginate(10);
+
+        $filter = $listing->get_filter($this->searchFields);
+        $searchType = 'simple_search';
+
+        return view('admin.sales.card-payment',compact('sales','filter','searchType'));
+    }
+
+
+
+
+
+
+
+
+    public function order_response(Request $request)
     {   
         $sales = SalesHeader::find($request->orderid);
         $user = User::find($sales->customer_id);
@@ -143,7 +167,7 @@ class SalesController extends Controller
                     'remarks' => $request->remarks
                 ]);
 
-                $this->send_email_notification($sales,'Order Approve');
+                $this->send_email_notification($sales,'Approve Order');
 
                 return back()->with('success', 'Order has been approved.');
 
@@ -155,12 +179,11 @@ class SalesController extends Controller
                     'remarks' => $request->remarks
                 ]);
 
-                $user->customer_send_order_rejected_email();
+                $this->send_email_notification($sales,'Reject Order');
                 return back()->with('success', 'Order has been rejected.');
 
             }
-        }
-        
+        }   
     }
 
     public function validate_payment(Request $request)
@@ -180,7 +203,6 @@ class SalesController extends Controller
             ]);
 
             $this->send_email_notification($sales,'Approve Payment');
-
             return back()->with('success',__('standard.sales.approve_success'));
 
         } else {
@@ -191,7 +213,7 @@ class SalesController extends Controller
                 'user_id' => Auth::id()
             ]);
 
-            $user->customer_send_payment_rejected_email();
+            $this->send_email_notification($sales,'Reject Payment');
             return back()->with('success',__('standard.sales.reject_success'));
         }
         
@@ -212,7 +234,8 @@ class SalesController extends Controller
         ]);
 
         if($payment){
-            SalesHeader::find($request->sales_header_id)->update([
+            $sales = SalesHeader::find($request->sales_header_id);
+            $sales->update([
                 'delivery_status' => 'Delivered',
                 'payment_status' => 'PAID',
             ]);
@@ -228,11 +251,11 @@ class SalesController extends Controller
                     'remarks' => $request->payment_remarks
                 ]); 
             }
+            $this->send_email_notification($sales,'Add Payment');
         }
 
         return back()->with('success','Payment has been added.');
     }
-    // END COD
 
     public function delivery_status(Request $request)
     {
@@ -255,33 +278,11 @@ class SalesController extends Controller
             'remarks' => $request->del_remarks
         ]);
 
-        $order = SalesHeader::findOrFail($request->del_id);
-
-        //$this->sms_update_order_status($order->customer_contact_number,$order);
+        $this->send_email_notification($qry,$request->delivery_status);
 
         return back()->with('success','Successfully updated delivery status!');
 
     }
-
-    // BEGIN CARD PAYMENT
-    public function sales_card_payment()
-    {
-        $listing = new ListingHelper('desc',10,'order_number');
-
-        $sales = SalesHeader::where('payment_method',1);
-
-        if(isset($_GET['search']) && $_GET['search']<>'')
-            $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
-
-        $sales = $sales->orderBy('id','desc');
-        $sales = $sales->paginate(10);
-
-        $filter = $listing->get_filter($this->searchFields);
-        $searchType = 'simple_search';
-
-        return view('admin.sales.card-payment',compact('sales','filter','searchType'));
-    }
-    // END CARD PAYMENT
 
     public function add_shippingfee(Request $request)
     {
@@ -346,19 +347,6 @@ class SalesController extends Controller
 
 
 
-
-
-
-
-
-    
-
-    // public function validate_payment(Request $request)
-    // {
-    //     SalesPayment::find($request->payment_id)->update(['is_verify' => 1]);
-
-    //     return back()->with('success',__('standard.sales.validate_success'));
-    // }
 
     public function store(Request $request)
     {
@@ -433,24 +421,6 @@ class SalesController extends Controller
         return back()->with('success','Successfully updated delivery status!');
 
     }
-
-    // public function sms_update_order_status($number,$order){
-
-    //     $message = "Your order #".$order->order_number." is now on ".strtoupper($order->delivery_status)." status -LydiasLechon";
-    //     $apicode = "TR-JUNDR725076_39D3A";
-    //     $url = 'https://www.itexmo.com/php_api/api.php';
-    //     $itexmo = array('1' => $number, '2' => $message, '3' => $apicode);
-    //     $param = array(
-    //         'http' => array(
-    //             'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-    //             'method'  => 'POST',
-    //             'content' => http_build_query($itexmo),
-    //         ),
-    //     );
-    //     $context  = stream_context_create($param);
-    //    // return;
-    //     return file_get_contents($url, false, $context);
-    // }
 
     public function view_payment($id)
     {

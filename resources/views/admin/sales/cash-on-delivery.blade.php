@@ -214,26 +214,6 @@
 
 @section('customjs')
     <script>
-
-        function order_response(id,order,status,isother){
-            if(status == 'APPROVE'){
-                if(isother == 1){
-                    $('#divshippingfee').css('display','block');
-                    $('#shippingfee').prop('required',true);
-                } else {
-                    $('#divshippingfee').css('display','none');
-                    $('#shippingfee').prop('required',false);
-                }
-                $('#id_approve').val(id);
-                $('#span_approve_order').html(order);
-                $('#prompt-approve-order').modal('show');
-            } else {
-                $('#id_reject').val(id);
-                $('#span_reject_order').html(order);
-                $('#prompt-reject-order').modal('show');
-            }
-        }
-
         function change_delivery_status(id){
             $('#prompt-change-delivery-status').modal('show');
             $('#del_id').val(id);
@@ -260,53 +240,11 @@
             });
         }
 
-
-
-
-
-
-
-
-
-        function validate_payment(id,orderno,refno,type,date){
-            $('#prompt-validate-payment').modal('show');
-
-            $('#pay_id').val(id);
-            $('#orderno').html(orderno);
-            $('#refno').html(refno);
-            $('#pay_type').html(type);
-            $('#pay_date').html(date);
-
-        }
-
-        function delete_sales(x,order_number){
-            $('#frm_delete').attr('action',"{{route('sales-transaction.destroy',"x")}}");
-            $('#id_delete').val(x);
-            $('#delete_order_div').html(order_number);
-            $('#prompt-delete').modal('show');
-        }
-
-        function show_added_payments(id){
-            $.ajax({
-                type: "GET",
-                url: "{{ route('display.added-payments') }}",
-                data: { id : id },
-                success: function( response ) {
-                    $('#added_payments_tbl').html(response);
-                    $('#prompt-show-added-payments').modal('show');
-                }
-            });
-        }
-
         $(".js-range-slider").ionRangeSlider({
             grid: true,
             from: selected,
             values: perPage
         });
-
-        
-
-
 
     </script>
 @endsection

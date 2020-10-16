@@ -23,7 +23,7 @@ Manage Customer
                         <li class="breadcrumb-item active" aria-current="page">Transaction Status</li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Manage Transaction Status</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Manage Transactions</h4>
             </div>
         </div>
 
@@ -84,12 +84,12 @@ Manage Customer
                                             Actions
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            @if (auth()->user()->has_access_to_route('product.category.multiple.change.status'))
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('ACTIVE')">Active</a>
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('INACTIVE')">Inactive</a>
+                                            @if (auth()->user()->has_access_to_route('transactions.multiple.change.status'))
+                                                <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('ACTIVE')">ACTIVE</a>
+                                                <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('INACTIVE')">INACTIVE</a>
                                             @endif
 
-                                                @if (auth()->user()->has_access_to_route('product.category.multiple.delete'))
+                                                @if (auth()->user()->has_access_to_route('transactions.multiple.delete'))
                                                 <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_transactions()">{{__('common.delete')}}</a>
                                             @endif
                                         </div>
@@ -98,19 +98,17 @@ Manage Customer
                             @endif
                         </div>
 
-                        <div class="ml-auto bd-highlight mg-t-10 @if($counter > 0) mg-r-10 @endif mg-b-20">
+                        <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
                             <form class="form-inline" id="searchForm">
-                                <div class="search-form">
+                                <div class="search-form mg-r-10">
                                     <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Name" value="{{ $filter->search }}">
                                     <button class="btn filter" type="button" id="btnSearch"><i data-feather="search"></i></button>
                                 </div>
                             </form>
                         </div>
                         <div class="mg-t-10">
-                            @if (auth()->user()->has_access_to_route('product-categories.create'))
-                                @if($counter > 0)
-                                <a class="btn btn-primary btn-sm mg-b-20" href="{{ route('transaction-status.create') }}">Create a Template</a>
-                                @endif
+                            @if (auth()->user()->has_access_to_route('transactions.create'))
+                                <a class="btn btn-primary btn-sm mg-b-20" href="{{ route('transactions.create') }}">Create a Transaction</a>
                             @endif
                         </div>
                     </div>
@@ -132,11 +130,10 @@ Manage Customer
                                             <label class="custom-control-label" for="checkbox_all"></label>
                                         </div>
                                     </th>
-                                    <th width="15%">Name</th>
-                                    <th width="15%">Subject</th>
-                                    <th width="30%">Content</th>
+                                    <th width="30%">Name</th>
+                                    <th width="15%">Transaction Type</th>
                                     <th width="10%">Status</th>
-                                    <th width="15%">Last Date Modified</th>
+                                    <th width="2%">Last Date Modified</th>
                                     <th width="10%">Options</th>
                                 </tr>
                             </thead>
@@ -152,25 +149,24 @@ Manage Customer
                                 <td>
                                     <strong @if($transaction->trashed()) style="text-decoration:line-through;" @endif> {{ $transaction->name }}</strong>
                                 </td>
-                                <td>{{ $transaction->subject }}</td>
-                                <td>{{ str_limit(strip_tags($transaction->content), 80, $end ='...') }}</td>
+                                <td>{{ $transaction->type }}</td>
                                 <td>{{ $transaction->status }}</td>
                                 <td>{{ Setting::date_for_listing($transaction->updated_at) }}</td>
                                 <td>
                                     @if($transaction->trashed())
-                                        @if (auth()->user()->has_access_to_route('product.category.restore'))
+                                        @if (auth()->user()->has_access_to_route('transactions.restore'))
                                             <nav class="nav table-options">
-                                                <a class="nav-link" href="{{route('transaction_status.restore', $transaction->id)}}" title="Restore this transaction status"><i data-feather="rotate-ccw"></i></a>
+                                                <a class="nav-link" href="{{route('transactions.restore', $transaction->id)}}" title="Restore this transaction"><i data-feather="rotate-ccw"></i></a>
                                             </nav>
                                         @endif
                                     @else
                                         <nav class="nav table-options">
                                             @if (auth()->user()->has_access_to_route('product-categories.edit'))
-                                                <a class="nav-link" href="{{ route('transaction-status.edit',$transaction->id) }}" title="Edit Transaction Status"><i data-feather="edit"></i></a>
+                                                <a class="nav-link" href="{{ route('transactions.edit',$transaction->id) }}" title="Edit Transaction"><i data-feather="edit"></i></a>
                                             @endif
 
                                             @if (auth()->user()->has_access_to_route('product.category.single.delete'))
-                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_status('{{$transaction->id}}')" title="Delete Transaction Status"><i data-feather="trash"></i></a>
+                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_transaction('{{$transaction->id}}','{{$transaction->name}}')" title="Delete Transaction"><i data-feather="trash"></i></a>
                                             @endif
 
                                             @if (auth()->user()->has_access_to_route('product.category.change-status'))
@@ -179,9 +175,9 @@ Manage Customer
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     @if($transaction->status == 'ACTIVE')
-                                                        <a class="dropdown-item" href="{{route('transaction_status.change-status',[$transaction->id,'INACTIVE'])}}" > Inactive</a>
+                                                        <a class="dropdown-item" href="{{route('transactions.change-status',[$transaction->id,'INACTIVE'])}}"> INACTIVE</a>   
                                                     @else
-                                                        <a class="dropdown-item" href="{{route('transaction_status.change-status',[$transaction->id,'ACTIVE'])}}"> Active</a>
+                                                        <a class="dropdown-item" href="{{route('transactions.change-status',[$transaction->id,'ACTIVE'])}}" > ACTIVE</a>
                                                     @endif
                                                 </div>
                                             @endif
@@ -191,7 +187,7 @@ Manage Customer
                             </tr>
                             @empty
                             <tr>
-                                <th colspan="7" style="text-align: center;"> <p class="text-danger">No transaction status found.</p></th>
+                                <th colspan="6" style="text-align: center;"> <p class="text-danger">No categories found.</p></th>
                             </tr>
                             @endforelse
                             </tbody>
@@ -275,7 +271,7 @@ Manage Customer
                     </button>
                 </div>
                 <div class="modal-body">
-                    You are about to <span id="transactionStatus"></span> this item. Do you want to continue?
+                    You are about to <span id="categoryStatus"></span> this item. Do you want to continue?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-danger" id="btnUpdateStatus">Yes, Update</button>
@@ -311,7 +307,7 @@ Manage Customer
     <script src="{{ asset('lib/ion-rangeslider/js/ion.rangeSlider.min.js') }}"></script>
 
     <script>
-        let listingUrl = "{{ route('transaction-status.index') }}";
+        let listingUrl = "{{ route('transactions.index') }}";
         let searchType = "{{ $searchType }}";
     </script>
     <script src="{{ asset('js/listing.js') }}"></script>
@@ -331,28 +327,21 @@ Manage Customer
             $('.cb').not(this).prop('checked', this.checked);
         });
 
-        function post_form(url,status,transactions){
+        function post_form(url,status,transaction){
             $('#posting_form').attr('action',url);
-            $('#transactions').val(transactions);
+            $('#transactions').val(transaction);
             $('#status').val(status);
             $('#posting_form').submit();
-        }
-
-        function delete_one_status(id){
-            $('#prompt-delete').modal('show');
-            $('#btnDelete').on('click', function() {
-                post_form("{{route('transaction_status.single-delete')}}",'',id);
-            });
         }
 
         /*** handles the changing of status of multiple pages ***/
         function change_status(status){
             var counter = 0;
-            var selected_transactions = '';
+            var selected_transaction = '';
             $(".cb:checked").each(function(){
                 counter++;
                 fid = $(this).attr('id');
-                selected_transactions += fid.substring(2, fid.length)+'|';
+                selected_transaction += fid.substring(2, fid.length)+'|';
             });
             if(parseInt(counter) < 1){
                 $('#prompt-no-selected').modal('show');
@@ -360,26 +349,33 @@ Manage Customer
             }
             else{
                 if(parseInt(counter)>1){ // ask for confirmation when multiple pages was selected
-                    $('#transactionStatus').html(status)
+                    $('#categoryStatus').html(status)
                     $('#prompt-update-status').modal('show');
 
                     $('#btnUpdateStatus').on('click', function() {
-                        post_form("{{route('transaction_status.multiple.change.status')}}",status,selected_transactions);
+                        post_form("{{route('transactions.multiple.change.status')}}",status,selected_transaction);
                     });
                 }
                 else{
-                    post_form("{{route('transaction_status.multiple.change.status')}}",status,selected_transactions);
+                    post_form("{{route('transactions.multiple.change.status')}}",status,selected_transaction);
                 }
             }
         }
 
+        function delete_one_transaction(id,page){
+            $('#prompt-delete').modal('show');
+            $('#btnDelete').on('click', function() {
+                post_form("{{route('transactions.single.delete')}}",'',id);
+            });
+        }
+
         function delete_transactions(){
             var counter = 0;
-            var selected_transactions = '';
+            var selected_transaction = '';
             $(".cb:checked").each(function(){
                 counter++;
                 fid = $(this).attr('id');
-                selected_transactions += fid.substring(2, fid.length)+'|';
+                selected_transaction += fid.substring(2, fid.length)+'|';
             });
 
             if(parseInt(counter) < 1){
@@ -389,7 +385,7 @@ Manage Customer
             else{
                 $('#prompt-multiple-delete').modal('show');
                 $('#btnDeleteMultiple').on('click', function() {
-                    post_form("{{route('transaction-status.multiple.delete')}}",'',selected_transactions);
+                    post_form("{{route('transactions.multiple.delete')}}",'',selected_transaction);
                 });
             }
         }

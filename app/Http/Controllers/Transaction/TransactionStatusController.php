@@ -8,6 +8,7 @@ use App\Helpers\ListingHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\StPaulModel\TransactionStatus;
+use App\StPaulModel\Transaction;
 
 use Auth;
 
@@ -31,7 +32,12 @@ class TransactionStatusController extends Controller
         $filter = $listing->get_filter($this->searchFields);
         $searchType = 'simple_search';
 
-        return view('admin.transaction-status.index',compact('transactions', 'filter', 'searchType'));
+        $counter = 
+            Transaction::whereNotIn('name',function($query){
+                $query->select('name')->from('transaction_status');
+            })->where('status','ACTIVE')->count();
+
+        return view('admin.transaction-status.index',compact('transactions', 'counter', 'filter', 'searchType'));
     }
 
     /**
@@ -41,7 +47,12 @@ class TransactionStatusController extends Controller
      */
     public function create()
     {
-        return view('admin.transaction-status.create');
+        $transactions = 
+            Transaction::whereNotIn('name',function($query){
+                $query->select('name')->from('transaction_status');
+            })->where('status','ACTIVE')->orderBy('name','asc')->get();
+
+        return view('admin.transaction-status.create',compact('transactions'));
     }
 
     /**
@@ -54,13 +65,16 @@ class TransactionStatusController extends Controller
     {
         $this->validate(
             $request,[
-                'name' => 'required|max:150|unique:transaction_status,name',
+                'transaction_name' => 'required',
                 'subject' => 'required|max:150',
             ]  
         );
 
+        $transaction = Transaction::find($request->transaction_name);
+
         TransactionStatus::create([
-            'name' => $request->name,
+            'name' => $transaction->name,
+            'transaction_id' => $transaction->id,
             'subject' => $request->subject,
             'content' => $request->content,
             'status' => ($request->has('status') ? 'ACTIVE' : 'INACTIVE'),

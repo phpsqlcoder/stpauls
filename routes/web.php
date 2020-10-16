@@ -211,7 +211,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/sales-validate-payment','EcommerceControllers\SalesController@validate_payment')->name('sales.validate-payment');
             // Cash on Delivery
             Route::get('/admin/sales/cash-on-delivery','EcommerceControllers\SalesController@sales_cash_on_delivery')->name('sales-transaction.cash-on-delivery');
-            Route::post('/cod-approve-order','EcommerceControllers\SalesController@approve_order')->name('cod-approve-order');
+            Route::post('/cod-order-response','EcommerceControllers\SalesController@order_response')->name('cod-order-response');
             Route::post('/payment-add-store','EcommerceControllers\SalesController@payment_add_store')->name('payment.add.store');
 
             // Card Payment
@@ -333,6 +333,15 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/admin/transaction-status/{id}/{status}', 'Transaction\TransactionStatusController@update_status')->name('transaction_status.change-status');
             Route::post('/admin/transaction-status-multiple-change-status','Transaction\TransactionStatusController@multiple_change_status')->name('transaction_status.multiple.change.status');
             Route::post('/admin/transaction-status-multiple-delete','Transaction\TransactionStatusController@multiple_delete')->name('transaction-status.multiple.delete');
+
+            // Transaction
+            Route::resource('/admin/transactions','Transaction\TransactionController');
+
+            Route::get('/transactions/{id}/{status}', 'Transaction\TransactionController@update_status')->name('transactions.change-status');
+            Route::post('/transactions-multiple-change-status','Transaction\TransactionController@multiple_change_status')->name('transactions.multiple.change.status');
+            Route::post('/transactions-single-delete', 'Transaction\TransactionController@single_delete')->name('transactions.single.delete');
+            Route::post('/transactions-multiple-delete','Transaction\TransactionController@multiple_delete')->name('transactions.multiple.delete');
+            Route::get('/transactions-restore/{id}', 'Transaction\TransactionController@restore')->name('transactions.restore');
 
 
             

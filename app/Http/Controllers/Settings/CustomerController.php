@@ -24,6 +24,7 @@ use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Support\Facades\Validator;
 
 
+use App\StPaulModel\TransactionStatus;
 use App\EcommerceModel\Customer;
 use App\User;
 
@@ -139,6 +140,19 @@ class CustomerController extends Controller
         $user->customer_send_account_deactivated_email();
 
         return back()->with('success', __('standard.customers.status_success', ['status' => 'deactivated']));
+    }
+
+    public function send_email_notification($sales,$transactionstatus)
+    {
+        $qry = TransactionStatus::where('name',$transactionstatus)->where('status','ACTIVE');
+        $count = $qry->count();
+
+        if($qry->count() > 0){
+            $template = $qry->first();
+
+            $user = User::find($sales->customer_id);
+            $user->send_email_notification($sales,$template);
+        }
     }
 
     

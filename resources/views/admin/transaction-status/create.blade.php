@@ -26,9 +26,14 @@
                 @csrf
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="d-block">Name *</label>
-                        <input required name="name" id="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" maxlength="150">
-                        @hasError(['inputName' => 'name'])
+                        <label class="d-block">Transaction name*</label>
+                        <select required name="transaction_name" id="transaction_name" class="form-control @error('transaction_name') is-invalid @enderror">
+                            <option value="">-- Choose One --</option>
+                            @foreach($transactions as $transaction)
+                            <option value="{{$transaction->id}}">{{ $transaction->name }}</option>
+                            @endforeach
+                        </select>
+                        @hasError(['inputName' => 'transaction_name'])
                         @endhasError
                     </div>
 
