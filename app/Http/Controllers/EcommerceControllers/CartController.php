@@ -377,7 +377,7 @@ class CartController extends Controller
             }
 
         } else {
-            return redirect(route('account-my-orders'))->with('success',' Order has been placed.');
+            return redirect(route('order.received',$requestId))->with('success',' Order has been placed.');
         }
               
     }

@@ -43,7 +43,7 @@
                             @if($message = Session::get('unauthorize-login'))
                                 <div class="alert alert-danger d-flex align-items-center" role="alert">
                                     <i data-feather="alert-circle" class="mg-r-10"></i> 
-                                    <span>Unauthorized Access. Please access your account in <a href="{{ route('customer-front.login') }}">customer login</a></span>
+                                    <span>Unauthorized Access. Please contact the administrator.</span>
                                 </div>
                             @endif
 
