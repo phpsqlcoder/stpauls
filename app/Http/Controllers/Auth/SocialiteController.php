@@ -149,31 +149,13 @@ class SocialiteController extends Controller
 
                 } else {
 
-                    $customer = User::create([
-                        'firstname' => $first_name,
-                        'lastname' => $last_name,
-                        'email' => $user->email,
-                        'email_verified_at' => now(),
-                        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // temporary password : password
-                        'role_id' => 3,
-                        'is_active' => 1,
-                        'remember_token' => str_random(60),
-                    ]);
-
-                    Customer::create([
-                        'customer_id' => $customer->id,
-                        'firstname' => $first_name,
-                        'lastname' => $last_name,
-                        'email' => $user->email,
-                        'is_active' => 1,
-                        'provider' => $driver,
-                        'provider_id' => $user->id,
-                        'reactivate_request' => 0
-                    ]);
-
                     session::forget('ptype');
                     return redirect(route('customer.socialite-set-password',[ 
                         'email' => $user->email,
+                        'firstname' => $first_name,
+                        'lastname' => $last_name,
+                        'provider' => $driver,
+                        'provider_id' => $user->id
                     ]));
                 }
             }
@@ -185,109 +167,6 @@ class SocialiteController extends Controller
         return redirect()->route('social.login')
             ->withErrors(['msg' => $msg ?: 'Unable to login, try with another provider to login.']);
     }
-
-    // protected function createAccount($providerCostomer, $driver)
-    // {
-    //     switch($driver){
-    //        case 'facebook':
-    //           $first_name = $providerCostomer['first_name'];
-    //           $last_name = $providerCostomer['last_name'];
-    //           break;
-
-    //        case 'google':
-    //           $first_name = $providerCostomer->offsetGet('given_name');
-    //           $last_name = $providerCostomer->offsetGet('family_name');
-    //           break;
-
-    //        default:
-    //           $first_name = $providerCostomer->getName();
-    //           $last_name = $providerCostomer->getName();
-    //     }
-
-    //     if(User::where('email',$providerCostomer->getEmail())->exists()){
-
-    //         return redirect(route('customer-front.sign-up'))->with('error','This email address is already existing in the system. You may use other email address or login to your account.');
-
-    //     } else {
-
-    //         $user = User::create([
-    //             'firstname' => $first_name,
-    //             'lastname' => $last_name,
-    //             'email' => $providerCostomer->getEmail(),
-    //             'email_verified_at' => now(),
-    //             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // temporary password : password
-    //             'role_id' => 3,
-    //             'is_active' => 1,
-    //             'remember_token' => str_random(60),
-    //         ]);
-
-    //         $customer = Customer::create([
-    //             'customer_id' => $user->id,
-    //             'firstname' => $first_name,
-    //             'lastname' => $last_name,
-    //             'email' => $providerCostomer->getEmail(),
-    //             'is_active' => 1,
-    //             'provider' => $driver,
-    //             'provider_id' => $providerCostomer->getId(),
-    //             'reactivate_request' => 0
-    //         ]);
-
-    //         return redirect(route('customer.socialite-set-password',[ 
-    //             'email' => $providerCostomer->getEmail(),
-    //         ]));
-    //     }
-
-    // }
-
-
-    // protected function loginUsingSocial($providerCostomer, $driver)
-    // {
-    //     $customer = Customer::where('provider_id',$providerCostomer->getId())->where('provider',$driver);
-
-    //     if($customer->exists()){
-
-    //         $user = $customer->first();
-
-    //         $user = User::find($user->customer_id);
-    //         Auth::login($user);
-
-    //         $cart = session('cart', []);
-
-    //         foreach ($cart as $order) {
-    //             $product = Product::find($order['product_id']);
-    //             $cart = Cart::where('product_id', $order['product_id'])
-    //                 ->where('user_id', Auth::id())
-    //                 ->first();
-
-    //             if (!empty($cart)) {
-    //                 $newQty = $cart->qty + $order['qty'];
-    //                 $cart->update([
-    //                     'qty' => $newQty,
-    //                     'price' => $product->price,
-    //                 ]);
-    //             } else {
-    //                 Cart::create([
-    //                     'product_id' => $order['product_id'],
-    //                     'user_id' => Auth::id(),
-    //                     'qty' => $order['qty'],
-    //                     'price' => $product->price,
-    //                 ]);
-    //             }
-    //         }
-
-    //         session()->forget('cart');
-    //         $cnt = Cart::where('user_id',Auth::id())->count();
-    //         if($cnt > 0)
-    //             return redirect()->intended('cart.front.show');
-    //         else
-    //             return redirect()->intended('home');
-
-    //     } else {
-
-    //         return redirect()->intended('customer-front.login')->with('error',"Sorry, we can't find this account. Please make sure that you have an existing social account.");
-    //     }
-
-    // }
 
     private function isProviderAllowed($driver)
     {

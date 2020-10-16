@@ -58,70 +58,116 @@ class CustomerFrontController extends Controller
         $page = new Page();
         $page->name = 'Set Password';
 
-        $fbdata = $request;
+        $socialData = $request;
 
-        return view('theme.stpaul.ecommerce.customer.socialite-set-password',compact('page','fbdata'));
+        return view('theme.stpaul.ecommerce.customer.socialite-set-password',compact('page','socialData'));
     }
 
     public function save_socialite_password(Request $request)
     {
         $credentials = $request->validate([
-            'email' => 'required',
-            'password' => 'required|max:150|min:8',
+            'password' => 'required|max:150|min:8|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
             'password_confirmation' => 'required|same:password',
         ]);
 
+        $customer = 
+            User::create([
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'email' => $request->email,
+                'email_verified_at' => now(),
+                'password' => \Hash::make($request->password),
+                'role_id' => 3,
+                'is_active' => 1,
+                'remember_token' => str_random(60),
+            ]);
 
-        $userCredentials = [
-            'email'    => $request->email,
-            'password' => $request->password
-        ];
+        if($customer){
+            Auth::login($customer->id);
+            Customer::create([
+                'customer_id' => $customer->id,
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'email' => $request->email,
+                'is_active' => 1,
+                'provider' => $request->provider,
+                'provider_id' => $request->provider_id,
+                'reactivate_request' => 0
+            ]);
 
-
-        $user = User::where('email',$request->email)->update([
-            'password' => \Hash::make($request->password)
-        ]);
-
-        if($user){
             $cart = session('cart', []);
-        
-            if (Auth::attempt($userCredentials)) {
+            foreach ($cart as $order) {
+                $product = Product::find($order['product_id']);
+                $cart = Cart::where('product_id', $order['product_id'])
+                    ->where('user_id', Auth::id())
+                    ->first();
 
-                foreach ($cart as $order) {
-                    $product = Product::find($order['product_id']);
-                    $cart = Cart::where('product_id', $order['product_id'])
-                        ->where('user_id', Auth::id())
-                        ->first();
-
-                    if (!empty($cart)) {
-                        $newQty = $cart->qty + $order['qty'];
-                        $cart->update([
-                            'qty' => $newQty,
-                            'price' => $product->price,
-                        ]);
-                    } else {
-                        Cart::create([
-                            'product_id' => $order['product_id'],
-                            'user_id' => Auth::id(),
-                            'qty' => $order['qty'],
-                            'price' => $product->price,
-                        ]);
-                    }
+                if (!empty($cart)) {
+                    $newQty = $cart->qty + $order['qty'];
+                    $cart->update([
+                        'qty' => $newQty,
+                        'price' => $product->price,
+                    ]);
+                } else {
+                    Cart::create([
+                        'product_id' => $order['product_id'],
+                        'user_id' => Auth::id(),
+                        'qty' => $order['qty'],
+                        'price' => $product->price,
+                    ]);
                 }
-
-                session()->forget('cart');
-                $cnt = Cart::where('user_id',Auth::id())->count();
-
-                if($cnt > 0)
-                    return redirect(route('cart.front.show'));
-                else
-                    return redirect(route('home'));
-
-            } else {
-                Auth::logout();
-                return back()->with('error', __('auth.login.incorrect_input'));    
             }
+
+            session()->forget('cart');
+            $cnt = Cart::where('user_id',Auth::id())->count();
+
+            if($cnt > 0)
+                return redirect(route('cart.front.show'));
+            else
+                return redirect(route('home'));
         }
+
+
+        // if($user){
+        //     $cart = session('cart', []);
+        
+        //     if (Auth::attempt($userCredentials)) {
+
+        //         foreach ($cart as $order) {
+        //             $product = Product::find($order['product_id']);
+        //             $cart = Cart::where('product_id', $order['product_id'])
+        //                 ->where('user_id', Auth::id())
+        //                 ->first();
+
+        //             if (!empty($cart)) {
+        //                 $newQty = $cart->qty + $order['qty'];
+        //                 $cart->update([
+        //                     'qty' => $newQty,
+        //                     'price' => $product->price,
+        //                 ]);
+        //             } else {
+        //                 Cart::create([
+        //                     'product_id' => $order['product_id'],
+        //                     'user_id' => Auth::id(),
+        //                     'qty' => $order['qty'],
+        //                     'price' => $product->price,
+        //                 ]);
+        //             }
+        //         }
+
+        //         session()->forget('cart');
+        //         $cnt = Cart::where('user_id',Auth::id())->count();
+
+        //         if($cnt > 0)
+        //             return redirect(route('cart.front.show'));
+        //         else
+        //             return redirect(route('home'));
+
+        //     } else {
+        //         Auth::logout();
+        //         return back()->with('error', __('auth.login.incorrect_input'));    
+        //     }
+        // }
     }
 
 
@@ -269,6 +315,5 @@ class CustomerFrontController extends Controller
         $page->name = 'Forgot Password';
 
         return view('theme.sysu.ecommerce.customer.register-guest');
-
     }
 }
