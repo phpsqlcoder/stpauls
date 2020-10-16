@@ -34,6 +34,7 @@
                             <option value="">-- None --</option>
                             <option value="Payment">Payment</option>
                             <option value="Order">Order</option>
+                            <option value="Shipping Fee">Shipping Fee</option>
                             <option value="Delivery Status">Delivery Status</option>
                             <option value="Reactivation Request">Reactivation Request</option>
                         </select>
