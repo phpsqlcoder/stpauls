@@ -12,7 +12,7 @@ foreach($_REQUEST as $name => $value) {
 
 if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
-    $livesitePath = 'https://beta.stpauls.ph';
+    $livesitePath = 'https://beta.stpauls.ph/public';
     $tn = $apiRespone['req_transaction_uuid'];
 
     $transaction = '';
