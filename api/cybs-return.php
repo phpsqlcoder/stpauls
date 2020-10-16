@@ -12,7 +12,6 @@ foreach($_REQUEST as $name => $value) {
 
 if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
-    $siteName = 'ST PAULS Online | Catholic Online Bookstore in Philippines';
     $livesitePath = 'https://beta.stpauls.ph';
     $tn = $apiRespone['req_transaction_uuid'];
 
