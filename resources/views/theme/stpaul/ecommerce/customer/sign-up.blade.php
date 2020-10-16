@@ -49,8 +49,8 @@
                                     <div class="form-group col-md-12">
                                         <div class="form-row">
                                             <div class="col-md-6">
-                                                <input type="text" name="provider" value="{{ $socialData->provider }}">
-                                                <input type="text" name="provider_id" value="{{ $socialData->provider_id }}">
+                                                <input type="hidden" name="provider" value="{{ $socialData->provider }}">
+                                                <input type="hidden" name="provider_id" value="{{ $socialData->provider_id }}">
                                                 <p>First Name *</p>
                                                 <input required type="text" name="firstname" class="form-control form-input @error('firstname') is-invalid @enderror" value="{{ old('firstname',$socialData->firstname) }}">
                                                 @hasError(['inputName' => 'firstname'])
@@ -126,7 +126,7 @@
                                             </div>
                                             <div class="col-md-5" id="zipcodediv" style="display: none;">
                                                 <p>Zip Code</p>
-                                                <input type="text" name="zipcode" class="form-control form-input" value="{{ old('zipcode') }}" min="1">
+                                                <input type="text" name="zipcode" class="form-control form-input" value="{{ old('zipcode') }}">
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-md-12">
