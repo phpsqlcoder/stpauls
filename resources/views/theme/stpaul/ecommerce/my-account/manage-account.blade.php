@@ -128,32 +128,28 @@
                                         <div id="intl_address" style="display: @if($customer->details->country <> 259 && $customer->details->country != '') block @else none @endif">
                                            <div class="form-group form-wrap">
                                                 <label>Billing Address *</label>
-                                                <textarea name="intl_address" class="form-control form-input @error('intl_address') is-invalid @enderror" rows="3" id="intl_address">
+                                                <textarea @if($customer->details->country <> 259) required @endif name="intl_address" class="form-control" rows="3" id="intlAddress">
                                                     {{ old('intl_address', $customer->details->intl_address) }}
                                                 </textarea>
-                                                @hasError(['inputName' => 'intl_address'])
-                                                @endhasError
                                             </div> 
                                         </div>
 
                                         <div id="local_address" style="display: @if($customer->details->country == 259) block @else none @endif">
                                             <div class="form-group form-wrap">
                                                 <label>Address Line 1 *</label>
-                                                <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" placeholder="Unit No./Building/House No./Street" value="{{ old('address', $customer->details->address) }}"/>
-                                                @hasError(['inputName' => 'address'])
-                                                @endhasError
+                                                <input @if($customer->details->country == 259) required @endif type="text" class="form-control" id="address" name="address" placeholder="Unit No./Building/House No./Street" value="{{ old('address', $customer->details->address) }}"/>
                                             </div>
                                        
                                             <div class="form-group form-wrap">
                                                 <label>Address Line 2 *</label>
-                                                <input type="text" class="form-control @error('barangay') is-invalid @enderror" id="barangay" name="barangay" placeholder="Subd/Brgy" value="{{ old('barangay', $customer->details->barangay) }}"/>      
+                                                <input @if($customer->details->country == 259) required @endif type="text" class="form-control" id="barangay" name="barangay" placeholder="Subd/Brgy" value="{{ old('barangay', $customer->details->barangay) }}"/>      
                                                 @hasError(['inputName' => 'barangay'])
                                                 @endhasError
                                             </div>    
                                             
                                             <div class="form-group form-wrap">
                                                 <label>Province *</label>
-                                                <select name="province" id="province" class="form-control @error('province') is-invalid @enderror">
+                                                <select @if($customer->details->country ==259) required @endif name="province" id="province" class="form-control">
                                                     @foreach($provinces as $province)
                                                     <option @if($customer->details->province == $province->id) selected @endif value="{{$province->id}}">{{$province->province}}</option>
                                                     @endforeach
@@ -166,7 +162,7 @@
                                             @endphp
                                             <div class="form-group form-wrap">
                                                 <label>City *</label>
-                                                <select name="city" id="city" class="form-control @error('city') is-invalid @enderror">
+                                                <select @if($customer->details->country == 259) required @endif name="city" id="city" class="form-control @error('city') is-invalid @enderror">
                                                     @foreach($cities as $city)
                                                     <option @if($customer->details->city == $city->id) selected @endif value="{{$city->id}}">{{$city->city}}</option>
                                                     @endforeach
@@ -223,7 +219,19 @@
                 if(country == 259){
                     $('#local_address').css('display','block');
                     $('#intl_address').css('display','none');
+
+                    $('#address').attr('required',true);
+                    $('#barangay').attr('required',true);
+                    $('#province').attr('required',true);
+                    $('#city').attr('required',true);
+                    $('#intlAddress').attr('required',false);
                 } else {
+                    $('#intlAddress').attr('required',true);
+                    $('#address').attr('required',false);
+                    $('#barangay').attr('required',false);
+                    $('#province').attr('required',false);
+                    $('#city').attr('required',false);
+
                     $('#intl_address').css('display','block');
                     $('#local_address').css('display','none');
                 }

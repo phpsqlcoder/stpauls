@@ -160,7 +160,7 @@ Manage Customer
                                             </nav>
                                         @else
                                             <nav class="nav table-options">
-                                                <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#promo-details_{{$promo->id}}" class="accordion-toggle" title="View Items"><i data-feather="list"></i></a>
+                                                <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#promo-details_{{$promo->id}}" class="accordion-toggle" title="View Items"><i data-feather="eye"></i></a>
 
                                                 <a class="nav-link" href="{{ route('promos.edit',$promo->id) }}" title="Edit Promo"><i data-feather="edit"></i></a>
 
