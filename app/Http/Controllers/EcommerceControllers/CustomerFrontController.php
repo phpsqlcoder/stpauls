@@ -64,9 +64,17 @@ class CustomerFrontController extends Controller
     }
 
     public function save_socialite_password(Request $request)
-    {
-        $credentials = $request->validate([
-            'password' => 'required|max:150|min:8|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/',
+    {   
+        $request->validate([
+            'password' => [
+                'required',
+                'max:150',
+                'min:8',
+                'regex:/[a-z]/', // must contain at least one lowercase letter
+                'regex:/[A-Z]/', // must contain at least one uppercase letter
+                'regex:/[0-9]/', // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
+            ],
             'password_confirmation' => 'required|same:password',
         ]);
 
