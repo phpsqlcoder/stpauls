@@ -340,7 +340,11 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
 
             
-
+            // Migrate products
+            Route::post('/product-upload-main','Product\ProductController@upload_main')->name('products.upload.main');
+            Route::post('/product-upload-additional','Product\ProductController@upload_additional')->name('products.upload.additional');
+            Route::post('/product-upload-featured','Product\ProductController@upload_featured')->name('products.upload.featured');
+            Route::post('/product-upload-category','Product\ProductController@upload_category')->name('products.upload.category');
 
 
 
