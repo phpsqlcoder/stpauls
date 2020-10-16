@@ -98,7 +98,7 @@
                     </div>
                     <div class="form-group">
                         <label>Weight (grams) *</label>
-                        <input required class="form-control @error('weight') is-invalid @enderror" type="text" name="weight" id="weight">
+                        <input required class="form-control @error('weight') is-invalid @enderror" type="number" name="weight" id="weight">
                         @hasError(['inputName' => 'weight'])
                         @endhasError
                     </div>

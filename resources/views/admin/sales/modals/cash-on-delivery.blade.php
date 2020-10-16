@@ -1,6 +1,6 @@
 <div class="modal effect-scale" id="prompt-approve-order" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form action="{{ route('cod-approve-order') }}" method="POST">
+        <form action="{{ route('cod-order-response') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
@@ -34,7 +34,7 @@
 
 <div class="modal effect-scale" id="prompt-reject-order" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form action="{{ route('cod-approve-order') }}" method="POST">
+        <form action="{{ route('cod-order-response') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
