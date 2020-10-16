@@ -150,7 +150,7 @@ class SocialiteController extends Controller
                 } else {
 
                     session::forget('ptype');
-                    return redirect(route('customer.socialite-set-password',[ 
+                    return redirect(route('customer-front.sign-up',[ 
                         'email' => $user->email,
                         'firstname' => $first_name,
                         'lastname' => $last_name,
