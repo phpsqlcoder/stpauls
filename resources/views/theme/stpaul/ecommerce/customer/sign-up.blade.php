@@ -141,7 +141,7 @@
                                                 <div class="gap-10"></div>    
                                             </div>
 
-                                            <div class="col-md-12">
+                                            {{--<div class="col-md-12">
                                                 <script src="https://www.google.com/recaptcha/api.js?hl=en" async="" defer="" ></script>
                                                 <div class="g-recaptcha" data-sitekey="{{ \Setting::info()->google_recaptcha_sitekey }}"></div>
                                                 <label class="control-label text-danger" for="g-recaptcha-response" id="catpchaError" style="display:none;font-size: 14px;"><i class="fa fa-times-circle-o"></i>The Captcha field is required.</label></br>
@@ -150,7 +150,7 @@
                                                         <label class="control-label text-danger" for="g-recaptcha-response"><i class="fa fa-times-circle-o"></i>{{ $message }}</label></br>
                                                     @endforeach
                                                 @endif
-                                            </div>
+                                            </div>--}}
                                             <div class="col-lg-6 col-md-7">
                                                 <div class="gap-10"></div>
                                                 <button type="submit" class="btn btn-md primary-btn btn-block">Sign Up</button>
@@ -189,14 +189,14 @@
 
 @section('customjs')
     <script>
-        $('#signUpForm').submit(function (evt) {
-            let recaptcha = $("#g-recaptcha-response").val();
-            if (recaptcha === "") {
-                evt.preventDefault();
-                $('#catpchaError').show();
-                return false;
-            }
-        });
+        // $('#signUpForm').submit(function (evt) {
+        //     let recaptcha = $("#g-recaptcha-response").val();
+        //     if (recaptcha === "") {
+        //         evt.preventDefault();
+        //         $('#catpchaError').show();
+        //         return false;
+        //     }
+        // });
 
         $(document).ready(function() {
             $('select[name="country"]').on('change', function() {

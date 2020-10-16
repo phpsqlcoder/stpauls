@@ -97,5 +97,15 @@ class SalesFrontController extends Controller
 
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.order-summary', compact('sales','page'));
     }
+
+    public function globalpay_success($orderno)
+    {
+        $page = new Page();
+        $page->name = 'Success Payment';
+
+        $sales = SalesHeader::where('order_number',$orderno)->first();
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.globalpay-success',compact('page','sales'));
+    }
   
 }

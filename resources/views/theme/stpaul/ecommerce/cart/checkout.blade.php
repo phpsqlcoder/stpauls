@@ -431,10 +431,10 @@
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
-                                                <span>Loyalty Discount (%)</span>
+                                                <span>Loyalty Discount ({{$loyalty_discount}}%)</span>
                                                 <span>
                                                     <input type="hidden" id="input_loyalty_discount" name="loyaltydiscount" value="{{$loyalty_discount}}">
-                                                    <span id="servicefee">{{ number_format($loyalty_discount,0) }}</span>
+                                                    ₱ <span id="span_discount"></span>
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
@@ -897,24 +897,15 @@
 
         function shippingFee(option){
 
-            //var subTotal = $('#input_sub_total').val();
-            // var purchasedAmount  = $('#total_purchased_amount').val();
-            // var codMaxPurchase   = $('#cod_max_purchase').val();
-            // var sddMaxPurchase   = $('#sdd_max_purchase').val();
             var codServiceFee    = $('#cod_service_fee').val();
-            // var deliveryRate = $('#delivery_rate').val();
-
-            // var locationfee = $('#location_fee').val();
             var shippingfee   = $('#shipping_fee').val();
 
             if(option == 1 || option == 3 || option == 4){
 
                 if(option == 1){
-                    //var maxPurchase = codMaxPurchase;
                     $('#input_servicefee').val(codServiceFee);
                     $('#span_servicefee').html(FormatAmount(codServiceFee,2));
                 } else {
-                    //var maxPurchase = sddMaxPurchase;
                     $('#input_servicefee').val(0);
                     $('#span_servicefee').html('0.00');
                 }
@@ -922,13 +913,6 @@
                 $('#input_shippingfee').val(shippingfee);
                 $('#span_shippingfee').html(FormatAmount(shippingfee,2));
 
-                // if(parseFloat(purchasedAmount) <= parseFloat(maxPurchase)){
-                //     $('#input_shippingfee').val(locationfee);
-                //     $('#span_shippingfee').html(FormatAmount(locationfee,2));
-                // } else {
-                //     $('#input_shippingfee').val(weightfee);
-                //     $('#span_shippingfee').html(FormatAmount(weightfee,2));
-                // }
             } else {
                 $('#input_servicefee').val(0);
                 $('#span_servicefee').html('0.00');
@@ -936,14 +920,6 @@
                 $('#input_shippingfee').val(0);
                 $('#span_shippingfee').html('0.00');
             }
-
-            // if(option == 2){
-            //     $('#input_servicefee').val(0);
-            //     $('#span_servicefee').html('0.00');
-
-            //     $('#input_shippingfee').val(0);
-            //     $('#span_shippingfee').html('0.00');
-            // }
 
         }
 
@@ -1025,7 +1001,7 @@
             var mult = total * disc; // gives the value for subtract from main value
             var grandTotal = total - mult;
 
-
+            $('#span_discount').html(FormatAmount(mult,2));
             $('#input_total_due').val(grandTotal);
             $('#totalDue').html(FormatAmount(grandTotal,2));
         }

@@ -289,7 +289,7 @@ class ProductController extends Controller
             ]);
         }
 
-        return redirect()->route('products.index')->with('success', __('standard.products.product.update_success'));
+        return back()->with('success', __('standard.products.product.update_success'));
     }
 
     public function update_product_additional_info($prodID,$request)

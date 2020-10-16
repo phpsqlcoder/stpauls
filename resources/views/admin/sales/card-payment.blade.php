@@ -79,7 +79,9 @@
                                     <td>@if($sale->payment_status == 'PAID') {{ $payment->payment_date }} @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
-                                    <td>{{ $sale->delivery_status }}</td>
+                                    <td>
+                                        <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
+                                    </td>
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
                                         <nav class="nav table-options">
