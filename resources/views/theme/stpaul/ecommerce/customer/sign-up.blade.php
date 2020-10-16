@@ -73,7 +73,8 @@
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Password *</p>
-                                                <input required type="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password should have a minimum of 8 alphanumeric characters and has at least 1 upper case and 1 special character." class="form-control form-input @error('password') is-invalid @enderror">
+                                                <input required type="password" name="password" class="form-control form-input @error('password') is-invalid @enderror">
+                                                <small>Minimum of eight (8) alphanumeric characters (combination of letters and numbers) with at least one (1) upper case and one (1) special character.</small>
                                                 @hasError(['inputName' => 'password'])
                                                 @endhasError
                                                 <div class="gap-10"></div>    
