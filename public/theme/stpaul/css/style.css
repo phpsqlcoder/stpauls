@@ -568,7 +568,7 @@ p {
   position: absolute;
   top: 35%;
   right: 30px;
-  font: 600 14px 'Linearicons-Free';
+  font: 600 14px 'Linearicon';
   border: none;
 }
 
@@ -3728,6 +3728,11 @@ p {
   width: 30px;
 }
 
+#salesTransaction_wrapper .dataTables_scroll,
+  #salesTransaction_wrapper .dataTables_info {
+    font-size: 0.95rem;
+  }
+
 @font-face {
   font-family: 'FontAwesome';
   font-style: normal;
@@ -3864,8 +3869,12 @@ p {
   .list-product .product-card .product-price {
     font-size: 1.1rem;
   }
-  #salesTransaction_wrapper {
+  #salesTransaction_wrapper .dataTables_scroll,
+  #salesTransaction_wrapper .dataTables_info {
     font-size: 0.8rem;
+  }
+  #salesTransaction_wrapper .dataTables_info {
+    text-align: left !important;
   }
 }
 

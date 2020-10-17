@@ -1,6 +1,7 @@
 @extends('theme.'.env('FRONTEND_TEMPLATE').'.main')
 
 @section('pagecss')
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/datatables/datatables.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
     <style>
         .pagination { margin-top: 0px; }
@@ -26,7 +27,7 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        <table id="salesTransaction" class="table tbl-responsive table-md table-hover" style="width:100%">
+                        <table id="salesTransaction" class="table table-md table-hover text-nowrap" style="width:100%">
                             <thead>
                                 <tr>
                                     <th scope="col">Order #</th>
@@ -46,7 +47,7 @@
                                     <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
                                     <td>{{ number_format($sale->gross_amount,2) }}</td>
                                     <td class="text-uppercase">{{ $sale->delivery_status }}</td>
-                                    <td align="right">
+                                    <td class="text-right">
                                         @if($sale->status != 'CANCELLED')
 
                                             @if($sale->delivery_status == 'Shipping Fee Validation')
@@ -84,7 +85,7 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        <div class="filter-product">
+                        <!-- <div class="filter-product">
                             <div class="row">
                                 <div id="col2" class="col-6">
                                     <p class="tx-gray-400 tx-12 d-inline">Showing {{ $sales->firstItem() }} to {{ $sales->lastItem() }} of {{ $sales->total() }} items</p>
@@ -93,7 +94,7 @@
                                     {{ $sales->links() }}
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -250,30 +251,33 @@
 @endsection
 
 @section('pagejs')
+    <script src="{{ asset('theme/stpaul/plugins/datatables/datatables.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 @endsection
 
 @section('customjs')
     <script>
-        // $(function () {
-        //     $('#salesTransaction').DataTable({
-        //         "responsive": false,
-        //         "scrollX": true,
-        //         "columnDefs": [
-        //             { responsivePriority: 1, targets: 0 },
-        //             { responsivePriority: 2, targets: -1 }
-        //         ],
-        //         "order": [[0, 'desc']],
-        //         "language": {
-        //             "paginate": {
-        //                 "previous": "&lsaquo;",
-        //                 "next": "&rsaquo;"
-        //             }
-        //         }
-        //     }).on( 'stateLoaded.dt', function (e, settings, data) {
-        //             console.log($("#salesTransaction").parent());
-        //         } );
-        // });
+        $(function () {
+            $('#salesTransaction').DataTable({
+                "responsive": false,
+                "scrollX": true,
+                "scrollCollapse": true,
+                "searching": false,
+                "columnDefs": [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: -1 }
+                ],
+                "order": [[0, 'desc']],
+                "language": {
+                    "paginate": {
+                        "previous": "<i class='nr lnr-chevron-left'></i>",
+                        "next": "<i class='nr lnr-chevron-right'></i>"
+                    }
+                },
+                "pageLength": 10,
+                "dom": 'rtip'
+            });
+        });
     </script>
     <script>
         var _URL = window.URL || window.webkitURL;

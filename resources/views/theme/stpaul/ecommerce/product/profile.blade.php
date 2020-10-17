@@ -27,10 +27,12 @@
     <!-- <section id="home-body"> -->
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
+                <div id="col1" class="col-lg-3">
                     <h2 class="listing-title">{{ $product->category->name }}</h2>
                     <div class="gap-10"></div>
+                    <nav class="rd-navbar rd-navbar-listing">
                     <div class="listing-filter-wrap">
+                        <div class="rd-navbar-listing-close-toggle rd-navbar-static--hidden toggle-original"><span class="lnr lnr-cross"></span> Close</div>
                         <h3 class="listing-category-title">Categories</h3>
                         <ul class="listing-category">
                             @foreach($categories as $category)
@@ -100,8 +102,12 @@
                             </a>
                         </div>
                     </div>
+                    </nav>
                 </div>
-                <div class="col-lg-9">
+                <div id="col2" class="col-lg-9">
+                    <nav class="rd-navbar">
+                        <div class="rd-navbar-listing-toggle rd-navbar-static--hidden toggle-original" data-rd-navbar-toggle=".listing-filter-wrap"><span class="lnr lnr-list"></span> Filter</div>
+                    </nav>
                     <div class="product-wrap">
                         <div class="row">
                             <div class="col-lg-5">

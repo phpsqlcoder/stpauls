@@ -11502,7 +11502,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfo": "Showing _START_ to _END_ of _TOTAL_ sales transactions",
+			"sInfo": "Showing _START_ to _END_ of _TOTAL_ items",
 	
 	
 			/**
@@ -11523,7 +11523,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sInfoEmpty": "Showing 0 to 0 of 0 sales transactions",
+			"sInfoEmpty": "Showing 0 to 0 of 0 items",
 	
 	
 			/**
@@ -11663,7 +11663,7 @@
 			 *      } );
 			 *    } );
 			 */
-			"sLengthMenu": "Show _MENU_ sales transactions",
+			"sLengthMenu": "Show _MENU_ items",
 	
 	
 			/**
