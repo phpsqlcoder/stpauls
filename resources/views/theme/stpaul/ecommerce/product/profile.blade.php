@@ -136,7 +136,7 @@
                                             <div class="form-row">
                                                 <div class="product-rating" data-rate-value="{{ $product->ratings()->where('is_approved',1)->avg('rating') }}"></div>
                                                 <span class="rating-count" style="font-size: .75em;color: #a7a7a7;margin-left: 5px;margin-top:4px;font-weight: 500;">
-                                                    ({{ number_format($product->ratings()->where('is_approved',1)->avg('rating'),2) }}) Customer ratings
+                                                    ({{ number_format($product->ratings()->where('is_approved',1)->where('rating','>',0)->avg('rating'),2) }}) Customer ratings
                                                 </span>
                                             </div>
                                             
