@@ -52,9 +52,8 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
         $responseMessage = 'Transaction (ID: '. $apiRespone['req_transaction_uuid'] .') unsuccessful, please try again.';
     }
 
-    //$_SESSION['errmsg'] = $responseMessage;
 
-    echo $responseMessage;
+    echo $responseMessage
 
 }
 ?>
