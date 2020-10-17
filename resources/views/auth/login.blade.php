@@ -43,7 +43,7 @@
                             @if($message = Session::get('unauthorize-login'))
                                 <div class="alert alert-danger d-flex align-items-center" role="alert">
                                     <i data-feather="alert-circle" class="mg-r-10"></i> 
-                                    <span>Unauthorized Access. Please contact the administrator.</span>
+                                    <span>Unauthorized login. Please contact your system administrator.</span>
                                 </div>
                             @endif
 
