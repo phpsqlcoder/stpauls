@@ -76,7 +76,7 @@
             <h1 class="d-flex justify-content-end" style="margin-top:-2px;color:#b82e24;">{{ $sales->order_number }}</h1>
         </div>
         <div class="col-sm-6 col-lg-8" style="border-left: 6px solid #b82e24;">
-            <label class="tx-sans tx-medium tx-spacing-1 tx-color-03">Billing Details</label>
+            <label class="tx-sans tx-medium tx-spacing-1 tx-color-03">Delivery Details</label>
             <h2 class="name">{{ $sales->customer_name }}</h2>
             <p class="mg-b-3">{{$sales->customer_address}}</p>
             <p class="mg-b-3">{{$sales->customer_contact_number}}</p>

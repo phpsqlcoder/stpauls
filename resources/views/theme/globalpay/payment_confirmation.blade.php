@@ -43,7 +43,7 @@
 	$apiFields['locale'] = 'en';
 	$apiFields['transaction_type'] = 'authorization';
 	$apiFields['reference_number'] = time();
-	$apiFields['amount'] = $order['net_amount'];
+	$apiFields['amount'] = number_format($order['net_amount'],2,'.','');
 	$apiFields['currency'] = 'PHP';
 
 ?>
@@ -74,7 +74,7 @@
 
 		<input type="text" name="transaction_type" value="authorization">
 		<input type="text" name="reference_number" value="<?php echo time(); ?>">
-		<input type="text" name="amount" value="<?php echo $order['net_amount']; ?>">
+		<input type="text" name="amount" value="<?php echo number_format($order['net_amount'],2,'.',''); ?>">
 		<input type="text" name="currency" value="PHP">
 		<input type="text" id="signature" name="signature" value="<?php echo sign($apiFields); ?>">
 	</form>
@@ -82,8 +82,7 @@
 	<script type="text/javascript">
 		window.onload = function(){
 		  document.getElementById('globalpayForm').submit();
-		}
-	    
+		}	    
 	</script>
 
 </body>
