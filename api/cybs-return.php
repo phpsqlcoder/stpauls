@@ -53,7 +53,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
     }
 
 
-    echo $responseMessage
+    echo $responseMessage;
 
 }
 ?>
