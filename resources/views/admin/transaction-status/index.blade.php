@@ -20,10 +20,10 @@ Manage Customer
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-style1 mg-b-5">
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('dashboard')}}">CMS</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Transaction Status</li>
+                        <li class="breadcrumb-item active" aria-current="page">Email Notifications</li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Manage Transaction Status</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Manage Email</h4>
             </div>
         </div>
 
@@ -109,7 +109,7 @@ Manage Customer
                         <div class="mg-t-10">
                             @if (auth()->user()->has_access_to_route('product-categories.create'))
                                 @if($counter > 0)
-                                <a class="btn btn-primary btn-sm mg-b-20" href="{{ route('transaction-status.create') }}">Create a Template</a>
+                                <a class="btn btn-primary btn-sm mg-b-20" href="{{ route('transaction-status.create') }}">Create an Email</a>
                                 @endif
                             @endif
                         </div>
@@ -160,17 +160,17 @@ Manage Customer
                                     @if($transaction->trashed())
                                         @if (auth()->user()->has_access_to_route('product.category.restore'))
                                             <nav class="nav table-options">
-                                                <a class="nav-link" href="{{route('transaction_status.restore', $transaction->id)}}" title="Restore this transaction status"><i data-feather="rotate-ccw"></i></a>
+                                                <a class="nav-link" href="{{route('transaction_status.restore', $transaction->id)}}" title="Restore this email"><i data-feather="rotate-ccw"></i></a>
                                             </nav>
                                         @endif
                                     @else
                                         <nav class="nav table-options">
                                             @if (auth()->user()->has_access_to_route('product-categories.edit'))
-                                                <a class="nav-link" href="{{ route('transaction-status.edit',$transaction->id) }}" title="Edit Transaction Status"><i data-feather="edit"></i></a>
+                                                <a class="nav-link" href="{{ route('transaction-status.edit',$transaction->id) }}" title="Edit Email"><i data-feather="edit"></i></a>
                                             @endif
 
                                             @if (auth()->user()->has_access_to_route('product.category.single.delete'))
-                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_status('{{$transaction->id}}')" title="Delete Transaction Status"><i data-feather="trash"></i></a>
+                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_status('{{$transaction->id}}')" title="Delete Email"><i data-feather="trash"></i></a>
                                             @endif
 
                                             @if (auth()->user()->has_access_to_route('product.category.change-status'))

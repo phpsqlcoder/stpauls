@@ -25,7 +25,7 @@
     
     <div class="row">
         <div class="col-md-6">
-            <form action="{{ route('users.store') }}" method="post">
+            <form autocomplete="off" action="{{ route('users.store') }}" method="post">
                     @csrf
                     @method('POST')
                     <div class="form-group">

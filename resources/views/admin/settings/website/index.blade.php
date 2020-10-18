@@ -346,20 +346,22 @@
                                             <table class="table table-borderless">
                                                 <thead>
                                                     <th></th>
-                                                    <th>Name</th>
-                                                        <th>Account #</th>
-                                                        <th>Branch</th>
-                                                        <th></th>
+                                                    <th>Bank Name</th>
+                                                    <th>Account Name</th>
+                                                    <th>Account #</th>
+                                                    <th>Branch</th>
+                                                    <th></th>
                                                 </thead>
                                                 <tbody>
                                                     @foreach($banks as $bank)
                                                     <tr>
                                                         <td class="text-right" width="10%"><input type="checkbox" name="bank[]" value="{{$bank->id}}" @if($bank->is_active == 1) checked @endif id="{{ $bank->id }}"></td>
                                                         <td>{{ $bank->name }}</td>
+                                                        <td>{{ $bank->account_name }}</td>
                                                         <td>{{ $bank->account_no }}</td>
                                                         <td>{{ $bank->branch }}</td>
                                                         <td class="text-right">
-                                                            <a href="javascript:void(0)" onclick="edit_bank('{{$bank->id}}','{{$bank->name}}','{{$bank->account_no}}','{{$bank->branch}}')"><i class="fa fa-edit"></i></a>
+                                                            <a href="javascript:void(0)" onclick="edit_bank('{{$bank->id}}','{{$bank->name}}','{{$bank->account_no}}','{{$bank->branch}}','{{$bank->account_name}}')"><i class="fa fa-edit"></i></a>
                                                             <a href="javascript:void(0)" onclick="delete_bank('{{$bank->id}}')"><i class="fa fa-trash"></i></a>
                                                         </td>
                                                     </tr>
@@ -442,7 +444,7 @@
                                             <div id="title" class="parsley-input">
                                                 <label>Service Fee</label>
                                                 <input type="hidden" name="id" value="{{$cod->id}}">
-                                                <input type="number" name="service_fee" id="service_fee" class="form-control" data-parsley-class-handler="#service_fee" value="{{ $cod->service_fee }}" required>
+                                                <input type="number" name="service_fee" id="cod_service_fee" class="form-control" data-parsley-class-handler="#service_fee" value="{{ $cod->service_fee }}" required>
                                             </div>
                                         </div>
 
@@ -580,7 +582,7 @@
                                             <div id="title" class="parsley-input">
                                                 <label>Service Fee</label>
                                                 <input type="hidden" name="id" value="{{$sdd->id}}">
-                                                <input type="number" name="service_fee" id="service_fee" class="form-control" data-parsley-class-handler="#title" value="{{ $sdd->service_fee }}" required>
+                                                <input type="number" name="service_fee" id="sdd_service_fee" class="form-control" data-parsley-class-handler="#title" value="{{ $sdd->service_fee }}" required>
                                             </div>
                                         </div>
 
@@ -892,11 +894,12 @@
             $('#prompt-add-bank').modal('show');
         }
 
-        function edit_bank(id,name,accountno,branch,isdefault,isactive){
+        function edit_bank(id,name,accountno,branch,account_name){
             $('#prompt-edit-bank').modal('show');
             $('#bank_id').val(id);
             $('#bankname').val(name);
             $('#bankaccountno').val(accountno);
+            $('#bankaccountname').val(account_name);
             $('#bankbranch').val(branch);
         }
 

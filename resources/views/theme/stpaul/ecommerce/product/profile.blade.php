@@ -39,7 +39,16 @@
                             <li><a href="{{ route('product.front.list',$category->slug) }}">{{ $category->name }}</a></li>
                             @endforeach
                         </ul>
-                        <a class="listing-view-link" href="">View all categories under {{ $product->category->name }}</a>
+                        
+                        @if(count($product->category->child_categories))
+                        <a href="#" class="listing-view-link" data-toggle="collapse" data-target="#child_categories" class="accordion-toggle" >View all categories under {{ $product->category->name }}</a>
+                        @endif
+
+                        <ul class="listing-category collapse" id="child_categories">
+                            @foreach($product->category->child_categories as $category)
+                            <li><a href="{{ route('product.front.list',$category->slug) }}">{{ $category->name }}</a></li>
+                            @endforeach
+                        </ul>
 
                         <div class="gap-70"></div>
 
@@ -238,7 +247,7 @@
                                         <td><p><b>About the Author:</b> {!! $product->additional_info->about_author !!}</p></td>
                                     </tr>
                                     <tr>
-                                        <td><p><b>Additional Information:</b> {{ $product->additional_info->additional_info }}</p></td>
+                                        <td><p><b>Description:</b> {!! $product->description !!}</p></td>
                                     </tr>
                                 </table>
                             </div>
@@ -406,7 +415,7 @@
             type: "double",
             grid: true,
             min:0,
-            max:1000,
+            max:5000,
             from: 0,
             to: $('#product_price').val()
         });

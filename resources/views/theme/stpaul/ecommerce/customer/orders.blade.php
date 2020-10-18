@@ -85,16 +85,6 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        <!-- <div class="filter-product">
-                            <div class="row">
-                                <div id="col2" class="col-6">
-                                    <p class="tx-gray-400 tx-12 d-inline">Showing {{ $sales->firstItem() }} to {{ $sales->lastItem() }} of {{ $sales->total() }} items</p>
-                                </div>
-                                <div class="col-6 pd-0">
-                                    {{ $sales->links() }}
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>

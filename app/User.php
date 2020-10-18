@@ -207,7 +207,6 @@ class User extends Authenticatable
     public function send_reset_temporary_password_email()
     {
         $token = app('auth.password.broker')->createToken($this);
-        //logger($token);
         $this->notify(new NewUserResetPasswordNotification($token));
     }
 

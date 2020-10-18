@@ -231,10 +231,10 @@
         <thead style="background:#b81600;">
             <tr style="color:white;">
                 <th width="30%"  style="text-align: left;">Item(s)</th>
-                <th width="10%" style="text-align: right;">Weight (kg)</th>
+                <th width="5%" style="text-align: right;">Weight (kg)</th>
                 <th width="10%" style="text-align: right;">Price (₱)</th>
-                <th width="10%" style="text-align: right;">Quantity</th>
-                <th width="20%" style="text-align: right;">Total Weight (kg)</th>
+                <th width="5%" style="text-align: right;">Quantity</th>
+                <th width="30%" style="text-align: right;">Total Weight (kg)</th>
                 <th width="20%" style="text-align: right;">Total (₱)</th>
             </tr>
         </thead>
@@ -283,8 +283,8 @@
                 <td class="text-right">{{ number_format($sales->service_fee,2) }}</td>
             </tr>
             <tr>
-                <td>Loyalty Discount</td>
-                <td class="text-right">{{ number_format($sales->discount_amount,0) }}%</td>
+                <td class="text-danger">Less: Loyalty Discount({{number_format($sales->discount_amount,0)}}%)</td>
+                <td class="text-right text-danger">{{ \App\EcommerceModel\SalesHeader::discounted_amount($sales->id) }}</td>
             </tr>
             <tr>
                 <td><h5 class="tx-success">Grand Total</h5></td>

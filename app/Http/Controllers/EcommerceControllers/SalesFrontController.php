@@ -23,19 +23,10 @@ class SalesFrontController extends Controller
         $page = new Page();
         $page->name = 'Transaction History';
 
-        $sales = SalesHeader::where('customer_id',Auth::id())->orderBy('id','desc')->paginate(10);
+        $sales = SalesHeader::where('customer_id',Auth::id())->orderBy('id','desc')->get();
 
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.orders', compact('sales','page'));
     }
-
-    // public function ajax_payment_types($id)
-    // {
-    //     $sales = SalesHeader::find($id);
-
-    //     $types = PaymentOption::where('payment_id',$sales->payment_method)->where('is_active',1)->orderBy('name','asc')->get();
-
-    //     return response($types);
-    // }
 
     public function pay_order(Request $request)
     {

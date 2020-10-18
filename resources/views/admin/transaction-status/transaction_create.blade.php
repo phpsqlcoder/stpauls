@@ -7,11 +7,11 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                     <li class="breadcrumb-item" aria-current="page"><a href="{{route('dashboard')}}">CMS</a></li>
-                    <li class="breadcrumb-item" aria-current="page"><a href="{{route('transaction-status.index')}}">Transaction Status</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Create a Transaction</li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="{{route('transaction-status.index')}}">Email Notifications</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Create a Transaction Status</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Create a Transaction</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Create a Transaction Status</h4>
         </div>
     </div>
 
@@ -50,7 +50,7 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Transaction</button>
+                    <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Save Transaction Status</button>
                     <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('transactions.index') }}">Cancel</a>
                 </form>
             </div>

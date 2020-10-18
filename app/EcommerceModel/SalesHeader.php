@@ -99,6 +99,21 @@ class SalesHeader extends Model
     }
 
 
+    public static function discounted_amount($salesid)
+    {
+        $sales = SalesHeader::find($salesid);
+
+        $subtotal = 0;
+        foreach ($sales->items as $item) {
+            $subtotal += $item->price*$item->qty;
+        }
+
+        $amount = $subtotal+$sales->delivery_fee_amount+$sales->service_fee;
+        
+        return number_format($sales->net_amount-$amount,2);
+    }
+
+
 
 
 

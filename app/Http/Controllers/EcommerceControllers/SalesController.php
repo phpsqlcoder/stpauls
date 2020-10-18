@@ -309,7 +309,8 @@ class SalesController extends Controller
             'is_approve' => ($sales->delivery_type == 'Cash on Delivery') ? 1 : 0,
             'delivery_fee_amount' => $request->shippingfee,
             'net_amount' => $amount,
-            'gross_amount' => $amount
+            'gross_amount' => $amount,
+            'is_approve' => 1
         ]);
 
         $this->send_email_notification($sales,'Add Shipping Fee');

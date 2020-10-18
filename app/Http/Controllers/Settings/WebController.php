@@ -243,6 +243,7 @@ class WebController extends Controller
     {
         PaymentOption::create([
             'payment_id' => 2,
+            'account_name' => $request->account_name,
             'name' => $request->name,
             'type' => 'bank',
             'account_no' => $request->account_no,
@@ -328,6 +329,7 @@ class WebController extends Controller
     {
         PaymentOption::find($request->id)->update([
             'name' => $request->name,
+            'account_name' => $request->account_name,
             'account_no' => $request->account_no,
             'branch' => $request->branch,
             'user_id' => Auth::id()

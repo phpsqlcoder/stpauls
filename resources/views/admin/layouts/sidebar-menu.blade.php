@@ -247,12 +247,12 @@
     @if (auth()->user()->has_access_to_module('transaction_status'))
         <li class="nav-item with-sub @if (request()->routeIs('transaction-status*') || request()->routeIs('transactions*')) active show @endif">
 
-            <a href="" class="nav-link"><i data-feather="users"></i> <span>Transaction Status</span></a>
+            <a href="" class="nav-link"><i data-feather="users"></i> <span>Email Notifications</span></a>
             <ul>
-                <li @if (\Route::current()->getName() == 'transaction-status.index') class="active" @endif><a href="{{ route('transaction-status.index') }}">Manage Transaction Status</a></li>
-                <li><a href="{{ route('transaction-status.create') }}">Create a Transaction Status</a></li>
-                <li @if (\Route::current()->getName() == 'transactions.index') class="active" @endif><a href="{{ route('transactions.index') }}">Manage Transactions</a></li>
-                <li><a href="{{ route('transactions.create') }}">Create a Transaction</a></li>
+                <li @if (\Route::current()->getName() == 'transaction-status.index') class="active" @endif><a href="{{ route('transaction-status.index') }}">Manage Email</a></li>
+                <li><a href="{{ route('transaction-status.create') }}">Create an Email</a></li>
+                <li @if (\Route::current()->getName() == 'transactions.index') class="active" @endif><a href="{{ route('transactions.index') }}">Manage Transaction Status</a></li>
+                <li><a href="{{ route('transactions.create') }}">Create a Transaction Status</a></li>
             </ul>
         </li>
     @endif

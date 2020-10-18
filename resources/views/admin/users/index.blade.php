@@ -119,10 +119,14 @@
                                     <td>{{ $user->email }}</td>
                                     <td><span class="badge badge-primary">{{ \App\User::userRole($user->role_id) }}</span></td>
                                     <td>
-                                        @if($user->is_active == 1)
-                                            <span class="badge badge-success">Active</span>
+                                        @if($user->email_verified_at == '')
+                                            <span class="badge badge-warning">For Activation</span>
                                         @else
-                                            <span class="badge badge-danger">Inactive</span>
+                                            @if($user->is_active == 1)
+                                                <span class="badge badge-success">Active</span>
+                                            @else
+                                                <span class="badge badge-danger">Inactive</span>
+                                            @endif
                                         @endif
                                     </td>
                                     <td>

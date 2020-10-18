@@ -89,6 +89,11 @@
                     </div>
                     
                     <div class="form-group">
+                        <label class="d-block">Account Name *</label>
+                        <input required type="text" name="account_name" class="form-control">
+                    </div>
+
+                    <div class="form-group">
                         <label class="d-block">Account Number *</label>
                         <input required type="text" name="account_no" class="form-control"> 
                     </div>
@@ -126,6 +131,11 @@
                         <input required type="text" name="name" id="bankname" class="form-control">
                     </div>
                     
+                    <div class="form-group">
+                        <label class="d-block">Account Name *</label>
+                        <input required type="text" name="account_name" id="bankaccountname" class="form-control">
+                    </div>
+
                     <div class="form-group">
                         <label class="d-block">Account Number *</label>
                         <input required type="text" name="account_no" id="bankaccountno" class="form-control"> 

@@ -64,51 +64,36 @@
                         <input type="hidden" name="token" value="{{ $token }}">
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('passwords.email') }}</label>
-
-                            <div class="col-md-6">
+                            <div class="col-md-12">
+                                <label for="email">{{ __('passwords.email') }}</label>
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" readonly>
-
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                @hasError(['inputName' => 'email'])
+                                @endhasError
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
+                            <div class="col-md-12">
+                                <label for="password">{{ __('Password') }}</label>
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                @hasError(['inputName' => 'password'])
+                                @endhasError
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            <div class="col-md-12">
+                                <label for="password-confirm">{{ __('Confirm Password') }}</label>
+                                <input id="password-confirm" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" required autocomplete="new-password">
+                                @hasError(['inputName' => 'password_confirmation'])
+                                @endhasError
                             </div>
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6">
-                                <button type="submit" class="btn btn-primary">
-                                    Set Password
-                                </button>
-                            </div>
-                            <div class="col-md-3 col-md-offset-4" style="padding-left: 0px;">
-                                <a href="{{route('login')}}" class="btn btn-outline-secondary btn-uppercase">
-                                    Cancel
-                                </a>
+                            <div class="col-md-12">
+                                <button class="btn btn-primary btn-sm btn-uppercase" type="submit">Set Password</button>
+                                <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('login') }}">Cancel</a>
                             </div>
                         </div>
                     </form>

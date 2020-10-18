@@ -32,7 +32,6 @@ class ProductFrontController extends Controller
             ProductCategory::where('parent_id',0)
             ->where('status','PUBLISHED')
             ->where('id','<>',$product->category_id)
-            ->orderBy('name','asc')
             ->get();
 
         $qry_reviews = 
@@ -73,12 +72,12 @@ class ProductFrontController extends Controller
         $category = ProductCategory::where('slug',$slug)->first();
 
         $page = new Page();
-        $page->name = $category->name;
+        $page = $category;
         $pageLimit = 40;
         $maxPrice   = 1000;
 
         $products = Product::where('category_id',$category->id)->where('status','PUBLISHED')->paginate(10);
-        $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED') ->where('id','<>',$category->id) ->orderBy('name','asc')->get();
+        $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->where('id','<>',$category->id)->get();
 
         if($request->has('search')){
 
@@ -128,7 +127,7 @@ class ProductFrontController extends Controller
         $pageLimit  = 40;
         $maxPrice   = 1000;
 
-        $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->orderBy('name','asc')->get();
+        $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get();
 
         if(!empty($request->searchtxt)){
             $searchtxt = $request->searchtxt;

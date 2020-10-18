@@ -32,4 +32,17 @@ class ProductReview extends Model
 
         return $qry;
     }
+
+    public static function category_rating_counter($category,$rating)
+    {
+        $count = 
+            \App\EcommerceModel\Product::where('status','PUBLISHED')->where('category_id',$category)->whereIn('id', function($query) use ($rating){
+                $query->select('product_id')->from('ecommerce_product_review')
+                    ->where('is_approved',1)
+                    ->where('rating',$rating);
+            })->count();
+
+        return $count;
+
+    }
 }

@@ -127,7 +127,7 @@ Manage Customer
                                             <label class="custom-control-label" for="checkbox_all"></label>
                                         </div>
                                     </th>
-                                    <th style="width: 25%;overflow: hidden;">Name</th>
+                                    <th style="width: 25%;overflow: hidden;">Title</th>
                                     <th style="width: 10%">Discount</th>
                                     <th style="width: 10%;">Status</th>
                                     <th style="width: 10%;">Last Date Modified</th>
@@ -146,7 +146,7 @@ Manage Customer
                                     <td>
                                         <strong @if($discount->trashed()) style="text-decoration:line-through;" @endif> {{ $discount->name }}</strong>
                                     </td>
-                                    <td>{{ $discount->discount }}</td>
+                                    <td>{{ number_format($discount->discount,0) }}</td>
                                     <td>{{ $discount->status }}</td>
                                     <td>{{ Setting::date_for_listing($discount->updated_at) }}</td>
                                     <td>

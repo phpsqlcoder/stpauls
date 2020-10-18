@@ -33,7 +33,7 @@
         <div class="row row-sm">
             <div class="col-lg-6">
             	<div class="form-group">
-            		<label class="d-block">Name*</label>
+            		<label class="d-block">Discount title*</label>
             		<input required type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" maxlength="150">
             		@hasError(['inputName' => 'name'])
                     @endhasError

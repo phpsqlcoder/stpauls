@@ -13,11 +13,11 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('dashboard')}}">CMS</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"><a href="{{route('transaction-status.index')}}">Transaction Status</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Create a Transaction Status</li>
+                        <li class="breadcrumb-item active" aria-current="page"><a href="{{route('transaction-status.index')}}">Email Notifications</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Create an Email</li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Create a Transaction Status</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Create an Email</h4>
             </div>
         </div>
         <form autocomplete="off" id="albumForm" method="POST" action="{{ route('transaction-status.store') }}" enctype="multipart/form-data">
@@ -50,12 +50,14 @@
                         <label class="d-block" id="long_descriptionLabel">Content *</label>
                         <span>To display order details, you need to add the following keywords.</span>
                         <ul>
-                            <li>{shippingfee}   = Displays the shipping fee</li>
-                            <li>{customer_name} = Displays the customer name</li>
-                            <li>{order_number}  = Displays the order number</li>
-                            <li>{company_name}  = Displays the company name</li>
-                            <li>{paid_amount}   = Displays the amount paid of the customer</li>
-                            <li>{remarks}       = Displays the sales remarks</li>
+                            <li>{shippingfee}       = Displays the shipping fee</li>
+                            <li>{customer_name}     = Displays the customer name</li>
+                            <li>{order_number}      = Displays the order number</li>
+                            <li>{company_name}      = Displays the company name</li>
+                            <li>{paid_amount}       = Displays the amount paid of the customer</li>
+                            <li>{net_amount}        = Displays the sales net amount</li>
+                            <li>{delivery_status}   = Displays the sales delivery status</li>
+                            <li>{remarks}           = Displays the sales remarks</li>
                         </ul>
 
                         <textarea name="content" id="editor1" rows="10" cols="80" required>
@@ -82,7 +84,7 @@
                 </div>
 
                 <div class="col-lg-12 mg-t-30">
-                    <button type="submit" class="btn btn-primary btn-sm btn-uppercase" id="btnSave">Save Transaction Status</button>
+                    <button type="submit" class="btn btn-primary btn-sm btn-uppercase" id="btnSave">Save Email</button>
                     <a href="{{ route('transaction-status.index') }}" class="btn btn-outline-secondary btn-sm btn-uppercase">Cancel</a>
                 </div>
 

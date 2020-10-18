@@ -60,8 +60,8 @@
 	    <input type="text" name="signed_field_names" value="access_key,profile_id,transaction_uuid,signed_field_names,unsigned_field_names,signed_date_time,locale,transaction_type,reference_number,amount,currency">
 	    <input type="text" name="unsigned_field_names" value="bill_to_forename,bill_to_surname,bill_to_email,bill_to_address_line1,bill_to_address_line2,bill_to_address_city,bill_to_address_country,bill_to_address_state,bill_to_address_postal_code">
 
-	    <input type="text" name="bill_to_forename" value="Ryan">
-	    <input type="text" name="bill_to_surname" value="Nolasco">
+	    <input type="text" name="bill_to_forename" value="<?php echo $order['firstname'] ?>">
+	    <input type="text" name="bill_to_surname" value="<?php echo $order['lastname'] ?>">
 	    <input type="text" name="bill_to_email" value="<?php echo $order['email']; ?>">
 	    <input type="text" name="bill_to_address_line1" value="<?php echo $address_line1; ?>">
 	    <input type="text" name="bill_to_address_line2" value="<?php echo $address_line2; ?>">

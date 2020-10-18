@@ -83,7 +83,9 @@
                                     <td>@if($sale->payment_status == 'PAID') {{$payment->payment_date}} @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
-                                    <td>{{ $sale->delivery_status }}</td>
+                                    <td>
+                                        <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
+                                    </td>
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
                                         <nav class="nav table-options">
@@ -234,10 +236,20 @@
         function addPayment(id,amount){
             $('#prompt-add-payment').modal('show');
             $('#sales_header_id').val(id);
+            $("#payment_amount").val(FormatAmount(amount,2));
             $("#payment_amount").attr({
                 "max" : amount,
                 "min" : amount
             });
+        }
+
+        function FormatAmount(number, numberOfDigits) {
+
+            var amount = parseFloat(number).toFixed(numberOfDigits);
+            var num_parts = amount.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            return num_parts.join(".");
         }
 
         $(".js-range-slider").ionRangeSlider({

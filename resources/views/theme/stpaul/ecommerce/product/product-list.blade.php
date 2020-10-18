@@ -31,7 +31,16 @@
                                             <li><a href="{{ route('product.front.list',$category->slug) }}">{{ $category->name }}</a></li>
                                         @endforeach
                                     </ul>
-                                    <a class="listing-view-link" href="">View all categories under Books</a>
+
+                                    @if(count($page->child_categories))
+                                    <a href="#" class="listing-view-link" data-toggle="collapse" data-target="#child_categories" class="accordion-toggle" >View all categories under {{ $page->name }}</a>
+                                    @endif
+
+                                    <ul class="listing-category collapse" id="child_categories">
+                                        @foreach($page->child_categories as $category)
+                                        <li><a href="{{ route('product.front.list',$category->slug) }}">{{ $category->name }}</a></li>
+                                        @endforeach
+                                    </ul>
 
                                     <div class="gap-70"></div>
 
@@ -45,53 +54,53 @@
                                     <h3 class="listing-filter-title">Ratings</h3>
                                     <div class="gap-10"></div>
                                     <div class="rating">
-                                        <a id="five-star" href="">
+                                        <a href="">
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
-                                            <span class="rating-count">561</span>
+                                            <span class="rating-count">{{ \App\EcommerceModel\ProductReview::category_rating_counter($page->id,5) }}</span>
                                         </a>
                                     </div>
                                     <div class="rating">
-                                        <a id="four-star" href="">
+                                        <a href="">
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star unchecked"></span>
-                                            <span class="rating-count">459</span>
+                                            <span class="rating-count">{{ \App\EcommerceModel\ProductReview::category_rating_counter($page->id,4) }}</span>
                                         </a>
                                     </div>
                                     <div class="rating">
-                                        <a id="three-star" href="">
+                                        <a href="">
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star unchecked"></span>
                                             <span class="fa fa-star unchecked"></span>
-                                            <span class="rating-count">200</span>
+                                            <span class="rating-count">{{ \App\EcommerceModel\ProductReview::category_rating_counter($page->id,3) }}</span>
                                         </a>
                                     </div>
                                     <div class="rating">
-                                        <a id="two-star" href="">
+                                        <a href="">
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star unchecked"></span>
                                             <span class="fa fa-star unchecked"></span>
                                             <span class="fa fa-star unchecked"></span>
-                                            <span class="rating-count">2</span>
+                                            <span class="rating-count">{{ \App\EcommerceModel\ProductReview::category_rating_counter($page->id,2) }}</span>
                                         </a>
                                     </div>
                                     <div class="rating">
-                                        <a id="one-star" href="">
+                                        <a href="">
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star unchecked"></span>
                                             <span class="fa fa-star unchecked"></span>
                                             <span class="fa fa-star unchecked"></span>
                                             <span class="fa fa-star unchecked"></span>
-                                            <span class="rating-count">12</span>
+                                            <span class="rating-count">{{ \App\EcommerceModel\ProductReview::category_rating_counter($page->id,1) }}</span>
                                         </a>
                                     </div>
                                     <div class="gap-30"></div>
@@ -184,7 +193,7 @@
             type: "double",
             grid: true,
             min:0,
-            max:1000,
+            max:5000,
             from: 0,
             to: $('#max_price_range').val()
         });

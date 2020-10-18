@@ -42,8 +42,8 @@ class UserController extends Controller
             ],
             [
                 'field' => 'role_id',
-                'operator' => '=',
-                'value' => 2,
+                'operator' => '<>',
+                'value' => 3,
                 'apply_to_deleted_data' => true
             ]
         ];

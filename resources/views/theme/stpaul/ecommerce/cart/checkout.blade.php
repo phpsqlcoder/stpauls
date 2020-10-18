@@ -431,10 +431,10 @@
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
-                                                <span>Loyalty Discount ({{$loyalty_discount}}%)</span>
+                                                <span class="text-danger">Less: Loyalty Discount ({{number_format($loyalty_discount,0)}}%)</span>
                                                 <span>
                                                     <input type="hidden" id="input_loyalty_discount" name="loyaltydiscount" value="{{$loyalty_discount}}">
-                                                    ₱ <span id="span_discount"></span>
+                                                    ₱ <span class="text-danger" id="span_discount"></span>
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
@@ -469,6 +469,9 @@
                                             <label for="paylist{{$list->id}}">{{ $list->name }}</label>
                                             <div class="sub2">
                                                 <div>
+                                                    @if($list->type == 'bank')
+                                                    <label>Account Name : {{ $list->account_name }}</label><br>
+                                                    @endif
                                                     <label>Account # : {{ $list->account_no }}</label><br>
                                                     @if($list->type == 'remittance')
                                                     <label>Recipient : {{ $list->recipient }}</label><br>
