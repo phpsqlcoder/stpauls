@@ -38,6 +38,11 @@ class Customer extends Model
         return $this->belongsTo('\App\Countries','country');
     }
 
+    public function countries()
+    {
+        return $this->belongsTo('\App\Countries','country');
+    }
+
     public function cities()
     {
         return $this->belongsTo('\App\Cities','city');

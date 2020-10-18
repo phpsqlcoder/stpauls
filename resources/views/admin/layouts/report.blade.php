@@ -26,14 +26,18 @@
 <body>
 
    
-
-   
-            <table width="100%" align="center" class="text-center">
-                <tr>
-                    <td style="font-size:25px;"><b>ST PAULS Catholic Online Bookstore</b></td>
+            <table width="100%">
+                <tr width="30%">
+                    <td><img src="{{  asset('storage/logos/'.Setting::getFaviconLogo()->company_logo) }}" alt="StPaul" width="200" /></td>
+                    <td width="40%" style="font-size:25px;" class="text-center">
+                        <b>ST PAULS Catholic Online Bookstore</b>
+                    </td>
+                    <td width="30%">&nbsp;</td>
                 </tr>
                 <tr>
-                    <td style="font-size:15px;">7708 St. Paul Road, San Antonio Village, 1203 Makati City, Philippines</td>
+                    <td width="30%"></td>
+                    <td width="40%" style="font-size:15px;" class="text-center">7708 St. Paul Road, San Antonio Village, 1203 Makati City, Philippines</td>
+                    <td width="30%">&nbsp;</td>
                 </tr>
             </table>
         

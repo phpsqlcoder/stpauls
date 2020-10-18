@@ -18,7 +18,7 @@
 @section('content')
 <div style="margin:0px 40px 200px 40px;">
     <h4 class="mg-b-0 tx-spacing--1">Customer List</h4>
-    <table id="example" class="display nowrap" style="width:100%;font: normal 13px/150% Arial, sans-serif, Helvetica;">
+    <table id="example" class="display nowrap" style="width:100%;font: normal 13px/150% Arial, sans-serif, Helvetica;word-break: break-all;">
         <thead>
             <tr>
                 <th>Name</th>
@@ -31,6 +31,7 @@
                 <th>Address 2</th>
                 <th>Province</th>
                 <th>City</th>
+                <th>Country</th>
                 <th>Postal</th>
             </tr>
         </thead>
@@ -43,7 +44,13 @@
                     <td>{{$r->created_at}}</td>
                     <td>{{$r->mobile}}</td>
                     <td>{{$r->telno}}</td>
-                    <td>{{$r->address}}</td>
+                    <td>
+                        @if($r->country == 259)
+                            {{$r->address}}
+                        @else
+                            {{$r->intl_address}}
+                        @endif
+                    </td>
                     <td>{{$r->barangay}}</td>
                     <td>
                         @if($r->province != '')
@@ -53,6 +60,11 @@
                     <td>
                         @if($r->city != '')
                             {{$r->cities->city}}
+                        @endif
+                    </td>
+                    <td>
+                        @if($r->country != '')
+                            {{$r->countries->name}}
                         @endif
                     </td>
                     <td>{{$r->zipcode}}</td>
