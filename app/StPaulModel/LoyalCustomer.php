@@ -25,7 +25,7 @@ class LoyalCustomer extends Model
 
     public static function total_purchase($customerId)
     {
-        $count = \App\EcommerceModel\SalesHeader::where('customer_id',$customerId)->where('status','<>','CANCELLED')->count();
+        $count = \App\EcommerceModel\SalesHeader::where('customer_id',$customerId)->count();
 
         return $count;
     }
