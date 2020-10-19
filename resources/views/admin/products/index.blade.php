@@ -126,10 +126,10 @@
                                         </div>
                                     </th>
                                     <th width="25%">Name</th>
-                                    <th width="25%">Category</th>
+                                    <th width="20%">Category</th>
                                     <th width="10%">Price</th>
                                     <th width="5%">Inventory</th>
-                                    <th width="5%">Status</th>
+                                    <th width="10%">Status</th>
                                     <th width="15%">Last Date Modified</th>
                                     <th width="10%">Options</th>
                                 </tr>

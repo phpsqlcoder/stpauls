@@ -291,7 +291,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/inventory-download-template','InventoryReceiverHeaderController@download_template')->name('inventory.download.template');
             Route::post('/inventory-upload-template','InventoryReceiverHeaderController@upload_template')->name('inventory.upload.template');
             Route::get('/inventory-post/{id}','InventoryReceiverHeaderController@post')->name('inventory.post');
-            Route::get('/inventory-cancel/{id}','InventoryReceiverHeaderController@cancel')->name('inventory.cancel');
+            Route::post('/inventory-cancel','InventoryReceiverHeaderController@cancel')->name('inventory.cancel');
             Route::get('/inventory-view/{id}','InventoryReceiverHeaderController@view')->name('inventory.view');
         //
 

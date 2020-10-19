@@ -69,15 +69,18 @@ class InventoryReceiverHeaderController extends Controller
             ]);
         return back()->with('success','Successfully posted inventory');
     }
-    public function cancel($id)
+
+    public function cancel(Request $request)
     {
-        $update = InventoryReceiverHeader::whereId($id)->update([
-                'cancelled_at' => date('Y-m-d H:i:s'),
-                'cancelled_by' => Auth::id(),
-                'status' => 'CANCELLED'
-            ]);
-        return back()->with('success','Successfully cancelled inventory');
+        InventoryReceiverHeader::whereId($request->inventoryid)->update([
+            'cancelled_at' => date('Y-m-d H:i:s'),
+            'cancelled_by' => Auth::id(),
+            'status' => 'CANCELLED'
+        ]);
+
+        return back()->with('success','Inventory has been cancelled.');
     }
+
     public function view($id)
     {
         $data = InventoryReceiverDetail::where('header_id',$id)->get();

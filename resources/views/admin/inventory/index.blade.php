@@ -136,7 +136,7 @@ Manage Inventory
                                                     @endif
 
                                                     @if (auth()->user()->has_access_to_route('inventory.cancel'))
-                                                        <a class="nav-link" href="{{route('inventory.cancel',$list->id)}}" title="Cancel this inventory"><i data-feather="delete"></i></a>
+                                                        <a class="nav-link" href="javascript:void(0)" onclick="cancel_inventory('{{$list->id}}')" title="Cancel this inventory"><i data-feather="delete"></i></a>
                                                     @endif
                                                     <a class="nav-link" target="_blank" href="{{route('inventory.view',$list->id)}}" title="View items"><i data-feather="eye"></i></a>
                                                 </nav>
@@ -230,6 +230,31 @@ Manage Inventory
             </div>
         </div>
     </div>
+
+    <div class="modal effect-scale" id="prompt-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form method="post" action="{{ route('inventory.cancel') }}">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Cancel Inventory</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You are about to cancel this inventory. Do you want to continue?</p>
+                        <input type="hidden" name="inventoryid" id="inventoryid">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-sm btn-danger" id="btnDelete">Yes, Cancel</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('pagejs')
@@ -244,6 +269,11 @@ Manage Inventory
 @endsection
 
 @section('customjs')
-
+    <script>
+        function cancel_inventory(id){
+            $('#prompt-delete').modal('show');
+            $('#inventoryid').val(id);
+        }
+    </script>
 
 @endsection

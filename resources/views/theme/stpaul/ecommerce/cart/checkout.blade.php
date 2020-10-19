@@ -177,8 +177,7 @@
                                             <input type="hidden" id="array_days" value="{{ rtrim($stp_allowed_days,',') }}">
                                             
                                             <div class="tab-wrap vertical">
-                                                @if($cod->outside_metro_manila == 1)
-                                                    @if($amount <= $cod->maximum_purchase)
+                                                @if($customer->details->country == '')
                                                     <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
                                                     <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                     <div class="tab__content">
@@ -188,9 +187,37 @@
                                                             <p>{{ $cod->reminder }}</p>
                                                         </div>
                                                     </div>
+                                                @else
+                                                    @if($cod->outside_metro_manila == 1 && $customer->details->country == 259)
+                                                        @if($amount <= $cod->maximum_purchase)
+                                                        <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
+                                                        <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                        <div class="tab__content">
+                                                            <h3>Cash on Delivery</h3>
+                                                            <div class="alert alert-info" role="alert">
+                                                                <h4 class="alert-heading">Reminder!</h4>
+                                                                <p>{{ $cod->reminder }}</p>
+                                                            </div>
+                                                        </div>
+                                                        @endif
+                                                    @else
+                                                        @if($customer->details->city == 49)
+                                                        <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
+                                                        <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                        <div class="tab__content">
+                                                            <h3>Cash on Delivery</h3>
+                                                            <div class="alert alert-info" role="alert">
+                                                                <h4 class="alert-heading">Reminder!</h4>
+                                                                <p>{{ $cod->reminder }}</p>
+                                                            </div>
+                                                        </div>
+                                                        @endif
+
                                                     @endif
                                                 @endif
-                                            
+                                                
+                                                
+                                                @if($customer->details->country == 259 || $customer->details->country == '')
                                                 <input type="radio" id="tab2" name="shipOption" value="2" class="tab">
                                                 <label id="stp_label" for="tab2">Store Pick-up <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                 <div class="tab__content">
@@ -226,18 +253,21 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
-                                                @if($amount <= $sdd->maximum_purchase)
-                                                <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                <label id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                <div class="tab__content">
-                                                    <div class="alert alert-info" role="alert">
-                                                        <h4 class="alert-heading">Reminder!</h4>
-                                                        <p>{{ $sdd->reminder }}</p>
-                                                    </div>
-                                                </div>
                                                 @endif
-                                            
+                                                
+                                                @if($customer->details->country == 259 || $customer->details->country == '')
+                                                    @if($amount <= $sdd->maximum_purchase)
+                                                    <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
+                                                    <label id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                    <div class="tab__content">
+                                                        <div class="alert alert-info" role="alert">
+                                                            <h4 class="alert-heading">Reminder!</h4>zipcode
+                                                            <p>{{ $sdd->reminder }}</p>
+                                                        </div>
+                                                    </div>
+                                                    @endif
+                                                @endif
+
                                                 <input type="radio" id="tab4" name="shipOption" value="3" class="tab">
                                                 <label for="tab4">Door-to-door (D2D) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                 <div class="tab__content">
@@ -442,7 +472,7 @@
                                             <li class="d-flex justify-content-between">
                                                 <strong>Total Due</strong>
                                                 <strong>
-                                                    <input type="hidden" name="net_amount" id="input_total_due" name="totalDue">
+                                                    <input type="text" name="net_amount" id="input_total_due" name="totalDue">
                                                     ₱ <span id="totalDue"></span>
                                                 </strong>
                                             </li>

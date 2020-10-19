@@ -2,6 +2,9 @@
 
 @section('pagecss')
     <link href="{{ asset('js/multiselect/css/multi-select.css') }}" rel="stylesheet">
+    <style type="text/css">
+        .ms-container { width: auto; }
+    </style>
 @endsection
 
 @section('content')
@@ -15,7 +18,7 @@
                     <li class="breadcrumb-item active" aria-current="page">Manage Zone</li>
                 </ol>
             </nav>
-            <h4 class="mg-b-0 tx-spacing--1">Manage Rate</h4>
+            <h4 class="mg-b-0 tx-spacing--1">Edit Shipping Rate</h4>
         </div>
     </div>
 
@@ -44,7 +47,7 @@
                 @endphp
                 <div class="form-group">
                     <label>@if($sp->is_international == 0) Cities* @else Countries* @endif</label>
-                    <select id='custom-headers' multiple='multiple' name="selected_locations[]">
+                    <select class="form-control" id='custom-headers' multiple='multiple' name="selected_locations[]">
                         @if($sp->is_international == 0)
                             @foreach($cities as $city)
                                 @php
@@ -71,7 +74,7 @@
                         @endif
                     </select>
                 </div>                
-                <button class="btn btn-primary btn-sm btn-uppercase" type="button" id="btnUpdateRate">Update Rate</button>
+                <button class="btn btn-primary btn-sm btn-uppercase" type="button" id="btnUpdateRate">Update Shipping Rate</button>
                 <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('shippingfee.index') }}">Cancel</a>
             </form> 
         </div>
