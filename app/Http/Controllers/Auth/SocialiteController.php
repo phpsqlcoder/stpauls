@@ -85,9 +85,15 @@ class SocialiteController extends Controller
 
                 if($customer->exists()){
 
-                    $user = $customer->first();
+                    $customer = $customer->first();
 
-                    $user = User::find($user->customer_id);
+                    $user = User::find($customer->customer_id);
+
+                    if($user->is_active == 0){
+                        Auth::logout();
+                        return redirect(route('customer-front.login'))->with('warning','account inactive');
+                    }
+                    
                     Auth::login($user);
 
                     $cart = session('cart', []);

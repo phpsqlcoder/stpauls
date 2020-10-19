@@ -31,7 +31,7 @@ class ReportsController extends Controller
     public function sales_list(Request $request)
     {
         
-        $qry = "SELECT h.*,d.*,h.created_at as hcreated,h.id as hid,p.category_id,c.name as catname,p.brand,p.code FROM `ecommerce_sales_details` d left join ecommerce_sales_headers h on h.id=d.sales_header_id left join products p on p.id=d.product_id left join product_categories c on c.id=p.category_id where h.id>0 and h.status<>'CANCELLED' and h.delivery_status<>'CANCELLED'";
+        $qry = "SELECT h.*,d.*,h.created_at as hcreated,h.id as hid,p.category_id,c.name as catname,p.brand,p.code FROM `ecommerce_sales_details` d left join ecommerce_sales_headers h on h.id=d.sales_header_id left join products p on p.id=d.product_id left join product_categories c on c.id=p.category_id where h.id>0";
 
         if(isset($_GET['customer']) && $_GET['customer']<>''){
             $qry.= " and h.customer_name='".$_GET['customer']."'";

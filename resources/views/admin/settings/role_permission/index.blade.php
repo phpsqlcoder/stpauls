@@ -64,7 +64,7 @@
                             <tbody>
                             @foreach($modules as $module)
                                 <tr>
-                                    <td width="50%"><p class="mg-0 pd-t-5 pd-b-5 tx-uppercase tx-semibold tx-primary">{{ $module->module }} module</p></td>
+                                    <td width="50%"><p class="mg-0 pd-t-5 pd-b-5 tx-uppercase tx-semibold tx-primary">{{ str_replace('_',' ',$module->module) }} module</p></td>
                                     @foreach($roles as $role)
                                         @if ($role->is_not_admin())
                                             <td>

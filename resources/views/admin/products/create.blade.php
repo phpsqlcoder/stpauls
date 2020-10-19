@@ -51,6 +51,7 @@
                     <div class="form-group">
                         <label class="d-block">Name *</label>
                         <input required name="name" id="name" value="{{ old('name') }}" type="text" class="form-control @error('name') is-invalid @enderror" maxlength="150">
+                        <small id="product_slug"></small>
                         @hasError(['inputName' => 'name'])
                         @endhasError
                     </div>
@@ -465,8 +466,26 @@
             $('#image-details').on('hide.bs.modal', function() {
                 imageId = 0;
             });
+        });
 
-            
+        /** Generation of the page slug **/
+        $('#name').change(function(){
+
+            var url = $('#name').val();
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                type: "GET",
+                url: "/admin/product-get-slug",
+                data: { url: url }
+            })
+
+            .done(function(response){
+                slug_url = '{{env('APP_URL')}}/products/'+response;
+                $('#product_slug').html("<a target='_blank' href='"+slug_url+"'>"+slug_url+"</a>");
+            });
         });
 
        

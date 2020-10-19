@@ -41,13 +41,8 @@ Manage Customer
                                 <div class="dropdown-menu">
                                     <form id="filterForm" class="pd-20">
                                         <div class="form-group">
-                                            <label for="exampleDropdownFormEmail1">{{__('common.sort_by')}}</label>
                                             <div class="custom-control custom-radio">
-                                                <input type="radio" id="orderBy1" name="orderBy" class="custom-control-input" value="updated_at" @if ($filter->orderBy == 'updated_at') checked @endif>
-                                                <label class="custom-control-label" for="orderBy1">{{__('common.date_modified')}}</label>
-                                            </div>
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" id="orderBy2" name="orderBy" class="custom-control-input" value="name" @if ($filter->orderBy == 'name') checked @endif>
+                                                <input type="radio" id="orderBy2" name="orderBy" class="custom-control-input" value="product_name" @if ($filter->orderBy == 'product_name') checked @endif>
                                                 <label class="custom-control-label" for="orderBy2">{{__('common.name')}}</label>
                                             </div>
                                             <div class="custom-control custom-radio">
@@ -99,7 +94,7 @@ Manage Customer
                         <div class="ml-auto bd-highlight mg-t-10">
                             <form class="form-inline" id="searchForm">
                                 <div class="search-form">
-                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Product Name" value="{{ $filter->search }}">
+                                    <input style="width: 200px;" name="search" type="search" id="search" class="form-control"  placeholder="Search by Product Name" value="{{ $filter->search }}">
                                     <button class="btn filter" type="button" id="btnSearch"><i data-feather="search"></i></button>
                                 </div>
                             </form>
@@ -113,8 +108,8 @@ Manage Customer
             <!-- Start Pages -->
             <div class="col-md-12">
                 <div class="table-list mg-b-10">
-                    <div class="table-responsive-lg text-nowrap">
-                        <table class="table mg-b-0 table-light table-hover" style="width:100%;">
+                    <div class="table-responsive-lg">
+                        <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                                 <tr>
                                     <th style="width: 5%;">
@@ -123,12 +118,12 @@ Manage Customer
                                             <label class="custom-control-label" for="checkbox_all"></label>
                                         </div>
                                     </th>
-                                    <th scope="col">Product Name</th>
-                                    <th scope="col">Customer Name</th>
-                                    <th scope="col" width="20%">Summary</th>
-                                    <th scope="col">Star Rating</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Options</th>
+                                    <th scope="col" width="25%">Product Name</th>
+                                    <th scope="col" width="15%">Customer Name</th>
+                                    <th scope="col" width="30%">Review</th>
+                                    <th scope="col" width="5%">Star Rating</th>
+                                    <th scope="col" width="10%">Status</th>
+                                    <th scope="col" width="10%">Options</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -141,7 +136,7 @@ Manage Customer
                                         </div>
                                     </th>
                                     <td>
-                                        <strong @if($review->trashed()) style="text-decoration:line-through;" @endif> {{ $review->product->name }}</strong>
+                                        <strong @if($review->trashed()) style="text-decoration:line-through;" @endif> {{ $review->product_name }}</strong>
                                     </td>
                                     <td>{{ $review->customer->fullname }}</td>
                                     <td>{{ $review->review }}</td>

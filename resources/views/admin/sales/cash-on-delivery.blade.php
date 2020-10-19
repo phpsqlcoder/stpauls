@@ -8,11 +8,6 @@
     <link href="{{ asset('lib/bselect/dist/css/bootstrap-select.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet">
     <link href="{{ asset('lib/ion-rangeslider/css/ion.rangeSlider.min.css') }}" rel="stylesheet">
-    <style>
-        .row-selected {
-            background-color: #92b7da !important;
-        }
-    </style>
 @endsection
 
 @section('content')
@@ -34,15 +29,53 @@
 
             <!-- Start Filters -->
             <div class="col-md-12">
-                <div class="filter-buttons">
+                <div class="filter-buttons mg-b-10">
                     <div class="d-md-flex bd-highlight">
-                        <div class="ml-auto bd-highlight mg-t-5">
-                            <form class="form-inline" id="searchForm">
-                                <div class="mg-b-10 mg-r-5">
-                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Receipt #" value="{{ $filter->search }}">
+                        <div class="bd-highlight mg-r-10 mg-t-10">
+                            <div class="dropdown d-inline mg-r-5">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Filters
+                                </button>
+                                <div class="dropdown-menu">
+                                    <form id="filterForm" class="pd-20">
+                                        <div class="form-group">
+                                            <label for="exampleDropdownFormEmail1">{{__('common.sort_by')}}</label>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" id="orderBy1" name="orderBy" class="custom-control-input" value="created_at" @if ($filter->orderBy == 'created_at') checked @endif>
+                                                <label class="custom-control-label" for="orderBy1">Order Date</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" id="orderBy2" name="orderBy" class="custom-control-input" value="order_number" @if ($filter->orderBy == 'order_number') checked @endif>
+                                                <label class="custom-control-label" for="orderBy2">Order Number</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleDropdownFormEmail1">{{__('common.sort_order')}}</label>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" id="sortByAsc" name="sortBy" class="custom-control-input" value="asc" @if ($filter->sortBy == 'asc') checked @endif>
+                                                <label class="custom-control-label" for="sortByAsc">{{__('common.ascending')}}</label>
+                                            </div>
+
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" id="sortByDesc" name="sortBy" class="custom-control-input" value="desc"  @if ($filter->sortBy == 'desc') checked @endif>
+                                                <label class="custom-control-label" for="sortByDesc">{{__('common.descending')}}</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mg-b-40">
+                                            <label class="d-block">{{__('common.item_displayed')}}</label>
+                                            <input id="displaySize" type="text" class="js-range-slider" name="perPage" value="{{ $filter->perPage }}"/>
+                                        </div>
+                                        <button id="filter" type="button" class="btn btn-sm btn-primary">{{__('common.apply_filters')}}</button>
+                                    </form>
                                 </div>
-                                <div class="mg-b-8">
-                                    <button class="btn btn-sm btn-info" type="button" id="btnSearch">Search</button>
+                            </div>
+                        </div>
+
+                        <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
+                            <form class="form-inline" id="searchForm">
+                                <div class="search-form mg-r-10">
+                                    <input style="width: 280px;" name="search" type="search" id="search" class="form-control"  placeholder="Search by Order # and Customer Name" value="{{ $filter->search }}">
+                                    <button class="btn filter" type="button" id="btnSearch"><i data-feather="search"></i></button>
                                 </div>
                             </form>
                         </div>
@@ -115,7 +148,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <th colspan="9" style="text-align: center;"> <p class="text-danger">No Transactions Found.</p></th>
+                                    <th colspan="9" style="text-align: center;"> <p class="text-danger">No Sales Transaction Found.</p></th>
                                 </tr>
                             @endforelse
                             </tbody>
@@ -251,12 +284,5 @@
 
             return num_parts.join(".");
         }
-
-        $(".js-range-slider").ionRangeSlider({
-            grid: true,
-            from: selected,
-            values: perPage
-        });
-
     </script>
 @endsection

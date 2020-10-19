@@ -79,12 +79,12 @@
             <thead>
             <tr>
                 <th align="left">Order#</th>
-                <th align="left">Date</th>
+                <th align="left">Order Date</th>
                 <th align="left">Customer</th>
                 <th align="left">Product Code</th>
                 <th align="left">Product Details</th>
                 <th align="left">Category</th>
-                <th align="left">Delivery Status</th>
+                <th align="left">Order Status</th>
                 <th align="left">Price</th>
                 <th align="left">Qty</th>
                 <th align="left">Total Amount</th>

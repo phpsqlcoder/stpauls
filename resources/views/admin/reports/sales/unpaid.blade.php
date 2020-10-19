@@ -41,7 +41,7 @@
                     <th>Date</th>
                     <th>Customer</th>
                     <th>Product</th>
-                    <th>Delivery Status</th>
+                    <th>Order Status</th>
                     <th>Price</th>
                     <th>Qty</th>
                     <th>Total Amount</th>

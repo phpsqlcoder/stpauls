@@ -12,12 +12,12 @@ use Auth;
 
 class ProductReviewController extends Controller
 {
-    private $searchFields = ['product_id','rating'];
+    private $searchFields = ['product_name','rating'];
 
     public function index($param = null)
     {
         
-        $listing = new ListingHelper('desc', 10, 'updated_at');
+        $listing = new ListingHelper('asc', 10, 'product_name');
 
         $reviews = $listing->simple_search(ProductReview::class, $this->searchFields);
 
@@ -31,8 +31,11 @@ class ProductReviewController extends Controller
 
     public function store(Request $request)
     {
-        $product = ProductReview::create([
-            'product_id' => $request->product_id,
+        $product = Product::find($request->product_id);
+
+        ProductReview::create([
+            'product_id' => $product->id,
+            'product_name' => $product->name,
             'review' => $request->review,
             'rating' => $request->rating,           
             'customer_id' => Auth::id()           

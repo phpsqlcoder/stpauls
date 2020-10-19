@@ -19,7 +19,6 @@
         </div>
 
         <div class="row row-sm">
-
             <!-- Start Filters -->
             <div class="col-md-12">
                 <div class="filter-buttons">

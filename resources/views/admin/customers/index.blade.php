@@ -188,5 +188,3 @@
     <script src="{{ asset('js/listing.js') }}"></script>
 @endsection
 
-@section('customjs')
-@endsection

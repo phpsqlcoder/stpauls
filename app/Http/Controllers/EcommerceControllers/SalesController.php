@@ -23,8 +23,7 @@ use App\StPaulModel\TransactionStatus;
 
 class SalesController extends Controller
 {
-    private $searchFields = ['order_number','response_code','updated_at'];
-    private $paymentsSearchFields = ['payment_date','receipt_number'];
+    private $searchFields = ['order_number','customer_name','updated_at'];
 
     public function __construct()
     {
@@ -73,50 +72,52 @@ class SalesController extends Controller
 
     public function sales_money_transfer()
     {
+        $customConditions = [
+            [
+                'field' => 'payment_method',
+                'operator' => '>',
+                'value' => 1,
+                'apply_to_deleted_data' => false
+            ]
+        ];
 
-        $listing = new ListingHelper('desc',10,'order_number');
+        $listing = new ListingHelper('desc', 10, 'created_at', $customConditions);
 
-        $sales = SalesHeader::where('payment_method','>',1);
+        $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
 
-        // if(isset($_GET['startdate']) && $_GET['startdate']<>'')
-        //     $sales = $sales->where('ecommerce_sales_payments.payment_date','>=',$_GET['startdate']);
+        // Simple search init data
+        $filter = $listing->get_filter($this->searchFields);
 
-        // if(isset($_GET['enddate']) && $_GET['enddate']<>'')
-        //     $sales = $sales->where('ecommerce_sales_payments.payment_date','<=',$_GET['enddate'].' 23:59:59');
-
-        // if(isset($_GET['search']) && $_GET['search']<>'')
-        //     $sales = $sales->where('ecommerce_sales_payments.receipt_number','like','%'.$_GET['search'].'%');
-
-        $sales = $sales->orderBy('id','desc');
-        $sales = $sales->paginate(10);
-
-        $filter = $listing->get_filter($this->paymentsSearchFields);
         $searchType = 'simple_search';
 
         return view('admin.sales.money-transfer',compact('sales','filter','searchType'));
 
     }
 
-    public function display_payment_details($id){
-
-        $payment = SalesPayment::where('sales_header_id',$id)->first();
-
-        return view('admin.sales.payment-details',compact('payment'));
-    }
-
     public function sales_cash_on_delivery()
     {
-        $listing = new ListingHelper('desc',10,'order_number');
+        $customConditions = [
+            [
+                'field' => 'payment_method',
+                'operator' => '=',
+                'value' => 0,
+                'apply_to_deleted_data' => false
+            ],
+            [
+                'field' => 'delivery_type',
+                'operator' => '=',
+                'value' => 'Cash on Delivery',
+                'apply_to_deleted_data' => false
+            ]
+        ];
 
-        $sales = SalesHeader::where('payment_method',0);
+        $listing = new ListingHelper('desc', 10, 'created_at', $customConditions);
 
-        if(isset($_GET['search']) && $_GET['search']<>'')
-            $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
+        $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
 
-        $sales = $sales->orderBy('id','desc');
-        $sales = $sales->paginate(10);
-
+        // Simple search init data
         $filter = $listing->get_filter($this->searchFields);
+
         $searchType = 'simple_search';
 
         return view('admin.sales.cash-on-delivery',compact('sales','filter','searchType'));
@@ -124,17 +125,22 @@ class SalesController extends Controller
 
     public function sales_card_payment()
     {
-        $listing = new ListingHelper('desc',10,'order_number');
+        $customConditions = [
+            [
+                'field' => 'payment_method',
+                'operator' => '=',
+                'value' => 1,
+                'apply_to_deleted_data' => false
+            ]
+        ];
 
-        $sales = SalesHeader::where('payment_method',1);
+        $listing = new ListingHelper('desc', 10, 'created_at', $customConditions);
 
-        if(isset($_GET['search']) && $_GET['search']<>'')
-            $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
+        $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
 
-        $sales = $sales->orderBy('id','desc');
-        $sales = $sales->paginate(10);
-
+        // Simple search init data
         $filter = $listing->get_filter($this->searchFields);
+
         $searchType = 'simple_search';
 
         return view('admin.sales.card-payment',compact('sales','filter','searchType'));
@@ -146,6 +152,12 @@ class SalesController extends Controller
 
 
 
+    public function display_payment_details($id){
+
+        $payment = SalesPayment::where('sales_header_id',$id)->first();
+
+        return view('admin.sales.payment-details',compact('payment'));
+    }
 
     public function order_response(Request $request)
     {   

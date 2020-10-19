@@ -215,14 +215,16 @@
             });
         });
 
-        // $('form#promo_form').submit(function(){
-        //     var productCount = $('#product_tbl tr').length;
 
-        //     if(productCount < 1){
-        //         $('#prompt-no-selected').modal('show');
-        //         return false;
-        //     }
-        // });
+        
+        $('#promo_form').submit(function(){
+            if(!$("input[name='productid[]']:checked").val()) {        
+                $('#prompt-no-selected').modal('show');
+                return false;
+            } else {
+                return true;
+            }
+        });
 
         /** form validations **/
         $(document).ready(function () {

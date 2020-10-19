@@ -10,7 +10,7 @@ class ProductReview extends Model
     use SoftDeletes;
 
     protected $table = 'ecommerce_product_review';
-    protected $fillable = ['product_id', 'user_id','review','rating','customer_id','is_approved','approver','approved_date'];
+    protected $fillable = ['product_id', 'product_name', 'user_id','review','rating','customer_id','is_approved','approver','approved_date'];
 
     public function customer()
     {
