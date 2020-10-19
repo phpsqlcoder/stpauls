@@ -95,7 +95,8 @@ class Permission extends Model
             'inventory' => 'Inventory',
             'shipping_rates' => 'Shipping Rates',
             'branches' => 'Branches',
-            'transaction_status' => 'Transaction Status',
+            'transaction_status' => 'Email Notifications',
+            'transactions' => 'Transactions',
             'reports' => 'Reports'
         ];
     }

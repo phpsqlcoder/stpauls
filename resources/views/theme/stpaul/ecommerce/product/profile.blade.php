@@ -332,7 +332,7 @@
                                             <div class="gap-20"></div>
                                             <div class="form-wrap">
                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                <textarea id="message" class="form-control form-input" name="review"></textarea>
+                                                <textarea id="message" class="form-control form-input" name="review" maxlength="150"></textarea>
                                                 <label class="form-label textarea" for="message">Tell us what you thought about it</label>
                                             </div>
                                         </div>
