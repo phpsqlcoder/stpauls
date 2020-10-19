@@ -244,12 +244,12 @@
         </li>
     @endif
 
-    @if (auth()->user()->has_access_to_module('transaction_status') || auth()->user()->has_access_to_module('transactions.index'))
+    @if (auth()->user()->has_access_to_module('email_notifications') || auth()->user()->has_access_to_module('transactions.index'))
         <li class="nav-item with-sub @if (request()->routeIs('transaction-status*') || request()->routeIs('transactions*')) active show @endif">
 
             <a href="" class="nav-link"><i data-feather="users"></i> <span>Email Notifications</span></a>
             <ul>
-                @if(auth()->user()->has_access_to_module('transaction_status'))
+                @if(auth()->user()->has_access_to_module('email_notifications'))
                 <li @if (\Route::current()->getName() == 'transaction-status.index') class="active" @endif><a href="{{ route('transaction-status.index') }}">Manage Email</a></li>
                 <li><a href="{{ route('transaction-status.create') }}">Create an Email</a></li>
                 @endif

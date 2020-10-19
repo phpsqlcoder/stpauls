@@ -96,7 +96,7 @@ class Permission extends Model
             'shipping_rates' => 'Shipping Rates',
             'branches' => 'Branches',
             'email_notifications' => 'Email Notifications',
-            'transaction_status' => 'Transactions Status',
+            'transaction_status' => 'Transaction Status',
             'reports' => 'Reports'
         ];
     }
