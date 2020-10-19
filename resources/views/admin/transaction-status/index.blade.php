@@ -63,12 +63,6 @@ Manage Customer
                                                 <label class="custom-control-label" for="sortByDesc">{{__('common.descending')}}</label>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" id="showDeleted" name="showDeleted" class="custom-control-input" @if ($filter->showDeleted) checked @endif>
-                                                <label class="custom-control-label" for="showDeleted">{{__('common.show_deleted')}}</label>
-                                            </div>
-                                        </div>
                                         <div class="form-group mg-b-40">
                                             <label class="d-block">{{__('common.item_displayed')}}</label>
                                             <input id="displaySize" type="text" class="js-range-slider" name="perPage" value="{{ $filter->perPage }}"/>
@@ -157,36 +151,28 @@ Manage Customer
                                 <td>{{ $transaction->status }}</td>
                                 <td>{{ Setting::date_for_listing($transaction->updated_at) }}</td>
                                 <td>
-                                    @if($transaction->trashed())
-                                        @if (auth()->user()->has_access_to_route('product.category.restore'))
-                                            <nav class="nav table-options">
-                                                <a class="nav-link" href="{{route('transaction_status.restore', $transaction->id)}}" title="Restore this email"><i data-feather="rotate-ccw"></i></a>
-                                            </nav>
+                                    <nav class="nav table-options">
+                                        @if (auth()->user()->has_access_to_route('product-categories.edit'))
+                                            <a class="nav-link" href="{{ route('transaction-status.edit',$transaction->id) }}" title="Edit Email"><i data-feather="edit"></i></a>
                                         @endif
-                                    @else
-                                        <nav class="nav table-options">
-                                            @if (auth()->user()->has_access_to_route('product-categories.edit'))
-                                                <a class="nav-link" href="{{ route('transaction-status.edit',$transaction->id) }}" title="Edit Email"><i data-feather="edit"></i></a>
-                                            @endif
 
-                                            @if (auth()->user()->has_access_to_route('product.category.single.delete'))
-                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_status('{{$transaction->id}}')" title="Delete Email"><i data-feather="trash"></i></a>
-                                            @endif
+                                        @if (auth()->user()->has_access_to_route('product.category.single.delete'))
+                                            <a class="nav-link" href="javascript:void(0)" onclick="delete_one_status('{{$transaction->id}}')" title="Delete Email"><i data-feather="trash"></i></a>
+                                        @endif
 
-                                            @if (auth()->user()->has_access_to_route('product.category.change-status'))
-                                                <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i data-feather="settings"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    @if($transaction->status == 'ACTIVE')
-                                                        <a class="dropdown-item" href="{{route('transaction_status.change-status',[$transaction->id,'INACTIVE'])}}" > Inactive</a>
-                                                    @else
-                                                        <a class="dropdown-item" href="{{route('transaction_status.change-status',[$transaction->id,'ACTIVE'])}}"> Active</a>
-                                                    @endif
-                                                </div>
-                                            @endif
-                                        </nav>
-                                    @endif
+                                        @if (auth()->user()->has_access_to_route('product.category.change-status'))
+                                            <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i data-feather="settings"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                @if($transaction->status == 'ACTIVE')
+                                                    <a class="dropdown-item" href="{{route('transaction_status.change-status',[$transaction->id,'INACTIVE'])}}" > Inactive</a>
+                                                @else
+                                                    <a class="dropdown-item" href="{{route('transaction_status.change-status',[$transaction->id,'ACTIVE'])}}"> Active</a>
+                                                @endif
+                                            </div>
+                                        @endif
+                                    </nav>
                                 </td>
                             </tr>
                             @empty

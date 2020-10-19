@@ -141,16 +141,9 @@ class TransactionStatusController extends Controller
     {
         $category = TransactionStatus::findOrFail($request->transactions);
         $category->update([ 'user_id' => Auth::id() ]);
-        $category->delete();
+        $category->forceDelete();
 
         return back()->with('success','Transaction status has been deleted.');
-    }
-
-    public function restore($transaction){
-        TransactionStatus::withTrashed()->find($transaction)->update(['user_id' => Auth::id() ]);
-        TransactionStatus::whereId($transaction)->restore();
-
-        return back()->with('success','Transaction status has been restored.');
     }
 
     public function update_status($id,$status)
@@ -183,7 +176,7 @@ class TransactionStatusController extends Controller
 
         foreach($transactions as $transaction){
             TransactionStatus::whereId($transaction)->update(['user_id' => Auth::id() ]);
-            TransactionStatus::whereId($transaction)->delete();
+            TransactionStatus::whereId($transaction)->forceDelete();
         }
 
         return back()->with('success','Selected transaction status has been deleted.');
