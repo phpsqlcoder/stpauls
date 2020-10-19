@@ -230,7 +230,7 @@
                         <p>You're about to disapprove this customer loyalty. Do you want to continue?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-sm btn-danger">Yes, Deactivate</button>
+                        <button type="submit" class="btn btn-sm btn-danger">Yes, Disapprove</button>
                         <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -263,7 +263,7 @@
                         <p>You're about to approve this customer loyalty. Do you want to continue?</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-sm btn-primary">Yes, Approved</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Yes, Approve</button>
                         <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -295,7 +295,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Update Discount</button>
                         <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
