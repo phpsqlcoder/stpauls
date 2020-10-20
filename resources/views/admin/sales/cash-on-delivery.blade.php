@@ -269,20 +269,11 @@
         function addPayment(id,amount){
             $('#prompt-add-payment').modal('show');
             $('#sales_header_id').val(id);
-            $("#payment_amount").val(FormatAmount(amount,2));
+            $("#payment_amount").val(amount.toFixed());
             $("#payment_amount").attr({
                 "max" : amount,
                 "min" : amount
             });
-        }
-
-        function FormatAmount(number, numberOfDigits) {
-
-            var amount = parseFloat(number).toFixed(numberOfDigits);
-            var num_parts = amount.toString().split(".");
-            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-            return num_parts.join(".");
         }
     </script>
 @endsection
