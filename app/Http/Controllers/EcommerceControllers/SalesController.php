@@ -299,29 +299,14 @@ class SalesController extends Controller
     public function add_shippingfee(Request $request)
     {
         $sales = SalesHeader::findOrFail($request->orderid);
-
-        $items = SalesDetail::where('sales_header_id',$sales->id)->get();
-
-        $subtotal = 0;
-        foreach($items as $item){
-            $subtotal += $item->price*$item->qty;
-        }
-
-        $total = number_format($subtotal+$sales->service_fee+$request->shippingfee,2,'.','');
-
-        if($sales->discount_amount > 0){
-            $discount = $total*($sales->discount_amount/100);
-            $amount = ($total-$discount);
-        } else {
-            $amount = $total;
-        }
+        $netamount = ($sales->net_amount+$request->shippingfee);
 
         $sales->update([
             'delivery_status' => ($sales->delivery_type == 'Cash on Delivery') ? 'Scheduled for Processing' : 'Waiting for Payment',
             'is_approve' => ($sales->delivery_type == 'Cash on Delivery') ? 1 : 0,
             'delivery_fee_amount' => $request->shippingfee,
-            'net_amount' => number_format($amount,2,'.',''),
-            'gross_amount' => number_format($amount,2,'.',''),
+            'net_amount' => number_format($netamount,2,'.',''),
+            'gross_amount' => number_format($netamount,2,'.',''),
             'is_approve' => 1
         ]);
 

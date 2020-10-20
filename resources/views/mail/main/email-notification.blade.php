@@ -201,8 +201,8 @@
                             <td style="text-align: right;">{{ number_format($sales->service_fee,2) }}</td>
                         </tr>
                         <tr>
-                            <td style="color:red;">Less: Loyalty Discount({{number_format($sales->discount_amount,0)}}%)</td>
-                            <td style="text-align: right;color:red;">{{ \App\EcommerceModel\SalesHeader::discounted_amount($sales->id) }}</td>
+                            <td style="color:red;">Less: Loyalty Discount({{$sales->discount_percentage}}%)</td>
+                            <td style="text-align: right;color:red;">{{ number_format($sales->discount_amount,2) }}</td>
                         </tr>
                         <tr>
                             <td><span style="color:#10b759;font-size: 1.09375rem;">Grand Total</span></td>

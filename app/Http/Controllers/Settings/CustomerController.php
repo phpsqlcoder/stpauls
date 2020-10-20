@@ -104,7 +104,10 @@ class CustomerController extends Controller
             'user_id'   => Auth::id(),
         ]);
 
-        $user->update(['is_active' => 1]);
+        $user->update([
+            'is_active' => $request->status,
+            'user_id' => Auth::id()
+        ]);
 
 
         $status = ($request->status == 1) ? 'approved' : 'disapproved';
@@ -119,7 +122,13 @@ class CustomerController extends Controller
 
     public function activate(Request $request)
     {
-        User::find($request->customer_id)->update([
+        $user = User::find($request->customer_id);
+        $user->update([
+            'is_active' => 1,
+            'user_id'   => Auth::id(),
+        ]);
+
+        Customer::where('customer_id',$user->id)->update([
             'is_active' => 1,
             'user_id'   => Auth::id(),
         ]);

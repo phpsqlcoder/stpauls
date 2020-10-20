@@ -335,13 +335,6 @@
                                                     </span>
                                                 </li>
 
-                                                <!-- <li class="d-flex justify-content-between">
-                                                    <span>Location Fee</span>
-                                                    <span>
-                                                        <input type="text" id="location_fee" value="">
-                                                    </span>
-                                                </li> -->
-
                                                 <li class="d-flex justify-content-between">
                                                     <span>Shipping Fee</span>
                                                     <span>
@@ -477,7 +470,8 @@
                                                 <span class="text-danger">Less: Loyalty Discount ({{number_format($loyalty_discount,0)}}%)</span>
                                                 <span>
                                                     <input type="hidden" id="input_loyalty_discount" name="loyaltydiscount" value="{{$loyalty_discount}}">
-                                                    ₱ <span class="text-danger" id="span_discount"></span>
+                                                    <input type="hidden" id="input_discount_amount" name="discount_amount">
+                                                    <span class="text-danger" id="span_discount"> </span>
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
@@ -1041,13 +1035,14 @@
             var servicefee  = $('#input_servicefee').val();
             var discount    = $('#input_loyalty_discount').val();
 
-            var total = (parseFloat(subtotal)+parseFloat(shippingfee)+parseFloat(servicefee));
-            
-            var disc = (discount / 100).toFixed(2); //its convert 10 into 0.10
-            var mult = total * disc; // gives the value for subtract from main value
-            var grandTotal = total - mult;
 
-            $('#span_discount').html(FormatAmount(mult,2));
+            var disc = (discount / 100).toFixed(2); //its convert 10 into 0.10
+            var discounted_amount = subtotal * disc; // gives the value for subtract from main value
+
+            var grandTotal = (parseFloat(subtotal)+parseFloat(shippingfee)+parseFloat(servicefee))-parseFloat(discounted_amount);
+
+            $('#input_discount_amount').val(discounted_amount);
+            $('#span_discount').html('₱ '+FormatAmount(discounted_amount,2));
             $('#input_total_due').val(grandTotal);
             $('#totalDue').html(FormatAmount(grandTotal,2));
         }

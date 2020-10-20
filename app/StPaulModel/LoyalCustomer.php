@@ -29,4 +29,16 @@ class LoyalCustomer extends Model
 
         return $count;
     }
+
+    public static function loyal_customer($customerid)
+    {
+        $qry = LoyalCustomer::where('customer_id',$customerid)->where('status','APPROVED');
+
+        if($qry->count() > 0){
+            $data = $qry->first();
+            return 'As a thank you for being one of our loyal customers, you are now entitled to a '.number_format($data->discount_details->discount,0).'% discount on your order.';
+        } else {
+            return '';
+        }
+    }
 }
