@@ -320,8 +320,8 @@ class SalesController extends Controller
             'delivery_status' => ($sales->delivery_type == 'Cash on Delivery') ? 'Scheduled for Processing' : 'Waiting for Payment',
             'is_approve' => ($sales->delivery_type == 'Cash on Delivery') ? 1 : 0,
             'delivery_fee_amount' => $request->shippingfee,
-            'net_amount' => $amount,
-            'gross_amount' => $amount,
+            'net_amount' => number_format($amount,2,'.',''),
+            'gross_amount' => number_format($amount,2,'.',''),
             'is_approve' => 1
         ]);
 

@@ -188,31 +188,32 @@
                                                         </div>
                                                     </div>
                                                 @else
-                                                    @if($cod->outside_metro_manila == 1 && $customer->details->country == 259)
-                                                        @if($amount <= $cod->maximum_purchase)
-                                                        <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
-                                                        <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                        <div class="tab__content">
-                                                            <h3>Cash on Delivery</h3>
-                                                            <div class="alert alert-info" role="alert">
-                                                                <h4 class="alert-heading">Reminder!</h4>
-                                                                <p>{{ $cod->reminder }}</p>
+                                                    @if($customer->details->country == 259)
+                                                        @if($customer->details->province == 49)
+                                                            @if($amount <= $cod->maximum_purchase)
+                                                            <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
+                                                            <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                            <div class="tab__content">
+                                                                <h3>Cash on Delivery</h3>
+                                                                <div class="alert alert-info" role="alert">
+                                                                    <h4 class="alert-heading">Reminder!</h4>
+                                                                    <p>{{ $cod->reminder }}</p>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        @endif
-                                                    @else
-                                                        @if($customer->details->city == 49)
-                                                        <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
-                                                        <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                        <div class="tab__content">
-                                                            <h3>Cash on Delivery</h3>
-                                                            <div class="alert alert-info" role="alert">
-                                                                <h4 class="alert-heading">Reminder!</h4>
-                                                                <p>{{ $cod->reminder }}</p>
+                                                            @endif
+                                                        @elseif($cod->outside_metro_manila == 1)
+                                                            @if($amount <= $cod->maximum_purchase)
+                                                            <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
+                                                            <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                            <div class="tab__content">
+                                                                <h3>Cash on Delivery</h3>
+                                                                <div class="alert alert-info" role="alert">
+                                                                    <h4 class="alert-heading">Reminder!</h4>
+                                                                    <p>{{ $cod->reminder }}</p>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                            @endif
                                                         @endif
-
                                                     @endif
                                                 @endif
                                                 
@@ -472,7 +473,7 @@
                                             <li class="d-flex justify-content-between">
                                                 <strong>Total Due</strong>
                                                 <strong>
-                                                    <input type="text" name="net_amount" id="input_total_due" name="totalDue">
+                                                    <input type="hidden" name="net_amount" id="input_total_due" name="totalDue">
                                                     ₱ <span id="totalDue"></span>
                                                 </strong>
                                             </li>
