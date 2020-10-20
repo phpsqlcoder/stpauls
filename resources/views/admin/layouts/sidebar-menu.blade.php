@@ -100,10 +100,6 @@
                 @if(auth()->user()->has_access_to_route('access.index'))
                     <li @if (request()->routeIs('access*')) class="active" @endif><a href="{{ route('access.index') }}">Access Rights</a></li>
                 @endif
-
-                @if(auth()->user()->has_access_to_route('permission.index'))
-                    <li @if (request()->routeIs('permission*')) class="active" @endif><a href="{{ route('permission.index') }}">Permissions</a></li>
-                @endif
             </ul>
         </li>
     @endif
