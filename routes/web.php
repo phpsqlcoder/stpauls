@@ -235,7 +235,6 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/admin/sales-transaction/view/{sales}', 'EcommerceControllers\SalesController@show')->name('sales-transaction.view');
             Route::get('/admin/sales-invoice/{sales}', 'EcommerceControllers\SalesController@invoice')->name('sales-transaction.invoice');
             Route::post('/admin/change-delivery-status', 'EcommerceControllers\SalesController@delivery_status')->name('sales-transaction.delivery_status');
-            Route::post('/admin/update-delivery-fee', 'EcommerceControllers\SalesController@update_delivery_fee')->name('sales-transaction.update_delivery_fee');
         //
 
         // Loyalty

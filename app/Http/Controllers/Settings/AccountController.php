@@ -75,11 +75,11 @@ class AccountController extends Controller
         Validator::make($request->all(), [
             'new_password' => [
                 'required',
-                'min:8'
-                // 'regex:/[a-z]/', // must contain at least one lowercase letter
-                // 'regex:/[A-Z]/', // must contain at least one uppercase letter
-                // 'regex:/[0-9]/', // must contain at least one digit
-                // 'regex:/[@$!%*#?&]/', // must contain a special character
+                'min:8',
+                'regex:/[a-z]/', // must contain at least one lowercase letter
+                'regex:/[A-Z]/', // must contain at least one uppercase letter
+                'regex:/[0-9]/', // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
             ],
             'confirm_password' => 'required|same:new_password',
             'current_password' => ['required', function ($attribute, $value, $fail) {

@@ -128,9 +128,7 @@
                                         <div id="intl_address" style="display: @if($customer->details->country <> 259 && $customer->details->country != '') block @else none @endif">
                                            <div class="form-group form-wrap">
                                                 <label>Billing Address *</label>
-                                                <textarea @if($customer->details->country <> 259) required @endif name="intl_address" class="form-control" rows="3" id="intlAddress">
-                                                    {{ old('intl_address', $customer->details->intl_address) }}
-                                                </textarea>
+                                                <textarea @if($customer->details->country <> 259) required @endif name="intl_address" class="form-control" rows="3" id="intlAddress">{{ old('intl_address', $customer->details->intl_address) }}</textarea>
                                             </div> 
                                         </div>
 

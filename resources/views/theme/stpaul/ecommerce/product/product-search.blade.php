@@ -37,66 +37,69 @@
 
 		                            <h3 class="listing-filter-title">Price Range</h3>
 		                            <div class="gap-10"></div>
-		                            <input type="hidden" id="max_price_range" value="{{ $maxPrice }}">
-		                            <input type="text" class="js-range-slider" name="price" id="price" value="" />
+                                    <input type="hidden" name="rating" id="rating" value="@if(request()->has('rating')) {{$request->rating}}  @endif">
+                                    <input type="hidden" id="product_max_price" value="{{$productMaxPrice}}">
+                                    <input type="hidden" id="min_price_range" value="{{ $minPrice }}">
+                                    <input type="hidden" id="max_price_range" value="{{ $maxPrice }}">
+		                            <input type="hidden" class="js-range-slider" name="price" id="price" value="" />
 
 		                            <div class="gap-70"></div>
 
 		                            <h3 class="listing-filter-title">Ratings</h3>
 		                            <div class="gap-10"></div>
 		                            <div class="rating">
-		                                <a id="five-star" href="">
+		                                <a id="five-star" href="" onclick="ratings(5);">
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star checked"></span>
-		                                    <span class="rating-count">561</span>
+		                                    <span class="rating-count">{{ \App\EcommerceModel\ProductReview::search_product_rating_counter($searchtxt,5) }}</span>
 		                                </a>
 		                            </div>
 		                            <div class="rating">
-		                                <a id="four-star" href="">
+		                                <a id="four-star" href="" onclick="ratings(4);">
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star unchecked"></span>
-		                                    <span class="rating-count">459</span>
+		                                    <span class="rating-count">{{ \App\EcommerceModel\ProductReview::search_product_rating_counter($searchtxt,4) }}</span>
 		                                </a>
 		                            </div>
 		                            <div class="rating">
-		                                <a id="three-star" href="">
+		                                <a id="three-star" href="" onclick="ratings(3);">
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star unchecked"></span>
 		                                    <span class="fa fa-star unchecked"></span>
-		                                    <span class="rating-count">200</span>
+		                                    <span class="rating-count">{{ \App\EcommerceModel\ProductReview::search_product_rating_counter($searchtxt,3) }}</span>
 		                                </a>
 		                            </div>
 		                            <div class="rating">
-		                                <a id="two-star" href="">
+		                                <a id="two-star" href="" onclick="ratings(2);">
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star unchecked"></span>
 		                                    <span class="fa fa-star unchecked"></span>
 		                                    <span class="fa fa-star unchecked"></span>
-		                                    <span class="rating-count">2</span>
+		                                    <span class="rating-count">{{ \App\EcommerceModel\ProductReview::search_product_rating_counter($searchtxt,2) }}</span>
 		                                </a>
 		                            </div>
 		                            <div class="rating">
-		                                <a id="one-star" href="">
+		                                <a id="one-star" href="" onclick="ratings(1);">
 		                                    <span class="fa fa-star checked"></span>
 		                                    <span class="fa fa-star unchecked"></span>
 		                                    <span class="fa fa-star unchecked"></span>
 		                                    <span class="fa fa-star unchecked"></span>
 		                                    <span class="fa fa-star unchecked"></span>
-		                                    <span class="rating-count">12</span>
+		                                    <span class="rating-count">{{ \App\EcommerceModel\ProductReview::search_product_rating_counter($searchtxt,1) }}</span>
 		                                </a>
 		                            </div>
 		                            <div class="gap-30"></div>
 		                            <a href="#" class="btn btn-primary btn-sm text-light" onclick="$('#filter_form').submit();">Apply Filter</a>
-	                        		<a href="#" class="btn btn-primary btn-sm text-light" onclick="reset_form();">Clear All</a>
+	                        		<a href="#" class="btn btn-success btn-sm text-light" onclick="reset_form();">Clear All</a>
 		                        </div>
 	                    	</form>
 	                    </nav>
@@ -191,23 +194,30 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 	
 	<script>
-		$(".js-range-slider").ionRangeSlider({
+        $(".js-range-slider").ionRangeSlider({
             type: "double",
             grid: true,
-            min:0,
-            max:5000,
-            from: 0,
+            min:1,
+            max:$('#product_max_price').val(),
+            from: $('#min_price_range').val(),
             to: $('#max_price_range').val()
         });
-	</script>
+    </script>
 @endsection
 
 @section('customjs')
 	<script>
-		function reset_form(){        
+        function ratings(rating){
+            $('#rating').val(rating);
+            $('#filter_form').submit(); 
+        }
+
+        function reset_form(){
+            var maxPrice = $('#product_max_price').val();
             $('#sort').val('');
             $('#limit').val(40);
-            $('#price').val('0;1000');
+            $('#price').val('1;'+maxPrice);
+            $('#rating').val('');
             $('#filter_form').submit(); 
         }
 

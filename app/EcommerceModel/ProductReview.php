@@ -45,4 +45,23 @@ class ProductReview extends Model
         return $count;
 
     }
+
+    public static function search_product_rating_counter($searchtxt,$rating)
+    {
+        $count = 
+            \App\EcommerceModel\Product::join('product_additional_info','products.id','=','product_additional_info.product_id')->select('products.*','product_additional_info.authors')->whereStatus('PUBLISHED')->where(
+                    function($query) use ($searchtxt){
+                        $query->where('products.name','like','%'.$searchtxt.'%')
+                        ->orWhere('products.description','like','%'.$searchtxt.'%')
+                        ->orWhere('authors','like','%'.$searchtxt.'%');
+                    })->whereIn('products.id', 
+                        function($query) use ($rating){
+                            $query->select('product_id')->from('ecommerce_product_review')
+                            ->where('is_approved',1)
+                            ->where('rating',$rating);
+                    })->count();
+
+        return $count;
+
+    }
 }

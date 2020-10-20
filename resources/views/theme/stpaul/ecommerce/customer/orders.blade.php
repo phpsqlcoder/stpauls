@@ -141,7 +141,7 @@
                         <input readonly type="text" name="amount" id="balance" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label for="attachment" class="col-form-label">Attachment *</label>
+                        <label for="attachment" class="col-form-label">Attach proof of payment *</label>
                         <input required type="file" name="attachment" id="attachment" class="form-control">
                         <br>
                         <span id="file_type" style="display: none;" class="text-danger"></span>
@@ -314,29 +314,6 @@
                 }
             });
         }
-
-        // function view_items(orderid,orderNo,date,paymentStatus,deliveryType,branch){
-        //     $.ajax({
-        //         type: "GET",
-        //         url: "{{ route('display-items') }}",
-        //         data: { orderid : orderid },
-        //         success: function( response ) {
-        //             if(branch != ''){
-        //                 $('#span_branch').html(branch);
-        //                 $('#branch').css('display','block');
-        //             } else {
-        //                 $('#branch').css('display','none');
-        //             }
-
-        //             $('#tr_items').html(response);
-        //             $('#viewModalLabel').html(orderNo);
-        //             $('#order_date').html(date);
-        //             $('#payment_status').html(paymentStatus);
-        //             $('#delivery_type').html(deliveryType);
-        //             $('#items_modal').modal('show');
-        //         }
-        //     });
-        // }
 
         function pay(order_id,balance,paymentType){
             var bal = parseFloat(balance);

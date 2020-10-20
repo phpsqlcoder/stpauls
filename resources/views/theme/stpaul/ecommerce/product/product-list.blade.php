@@ -46,6 +46,9 @@
 
                                     <h3 class="listing-filter-title">Price Range</h3>
                                     <div class="gap-10"></div>
+                                    <input type="hidden" name="rating" id="rating" value="@if(request()->has('rating')) {{$request->rating}}  @endif">
+                                    <input type="hidden" id="product_max_price" value="{{$productMaxPrice}}">
+                                    <input type="hidden" id="min_price_range" value="{{ $minPrice }}">
                                     <input type="hidden" id="max_price_range" value="{{ $maxPrice }}">
                                     <input type="text" class="js-range-slider" name="price" id="price" value="" />
 
@@ -54,7 +57,7 @@
                                     <h3 class="listing-filter-title">Ratings</h3>
                                     <div class="gap-10"></div>
                                     <div class="rating">
-                                        <a href="">
+                                        <a href="" onclick="ratings(5);">
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
@@ -64,7 +67,7 @@
                                         </a>
                                     </div>
                                     <div class="rating">
-                                        <a href="">
+                                        <a href="" onclick="ratings(4);">
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
@@ -74,7 +77,7 @@
                                         </a>
                                     </div>
                                     <div class="rating">
-                                        <a href="">
+                                        <a href="" onclick="ratings(3);">
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
@@ -84,7 +87,7 @@
                                         </a>
                                     </div>
                                     <div class="rating">
-                                        <a href="">
+                                        <a href="" onclick="ratings(2);">
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star unchecked"></span>
@@ -94,7 +97,7 @@
                                         </a>
                                     </div>
                                     <div class="rating">
-                                        <a href="">
+                                        <a href="" onclick="ratings(1);">
                                             <span class="fa fa-star checked"></span>
                                             <span class="fa fa-star unchecked"></span>
                                             <span class="fa fa-star unchecked"></span>
@@ -105,7 +108,7 @@
                                     </div>
                                     <div class="gap-30"></div>
                                     <a href="#" class="btn btn-primary btn-sm text-light" onclick="$('#filter_form').submit();">Apply Filter</a>
-                                    <a href="#" class="btn btn-primary btn-sm text-light" onclick="reset_form();">Clear All</a>
+                                    <a href="#" class="btn btn-success btn-sm text-light" onclick="reset_form();">Clear All</a>
                                 </div>
                             </form>
                         </nav>
@@ -192,9 +195,9 @@
         $(".js-range-slider").ionRangeSlider({
             type: "double",
             grid: true,
-            min:0,
-            max:5000,
-            from: 0,
+            min:1,
+            max:$('#product_max_price').val(),
+            from: $('#min_price_range').val(),
             to: $('#max_price_range').val()
         });
     </script>
@@ -202,10 +205,17 @@
 
 @section('customjs')
     <script>
-        function reset_form(){        
+        function ratings(rating){
+            $('#rating').val(rating);
+            $('#filter_form').submit(); 
+        }
+
+        function reset_form(){
+            var maxPrice = $('#product_max_price').val();
             $('#sort').val('');
             $('#limit').val(40);
-            $('#price').val('0;1000');
+            $('#price').val('1;'+maxPrice);
+            $('#rating').val('');
             $('#filter_form').submit(); 
         }
 

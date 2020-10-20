@@ -467,18 +467,4 @@ class SalesController extends Controller
         return view('admin.sales.delivery_history',compact('delivery'));
     }
 
-    public function update_delivery_fee(Request $request)
-    {
-        $sales = SalesHeader::find($request->salesid);
-
-        $sales->update([
-            'delivery_fee_amount' => $request->delivery_fee,
-            'gross_amount' => ($sales->gross_amount+$request->delivery_fee),
-            'net_amount' => ($sales->net_amount+$request->delivery_fee),
-            'user_id' => Auth::id()
-        ]);
-
-        return back()->with('success','Delivery has been added updated.');
-    }
-
 }

@@ -272,18 +272,22 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-            <p>Make sure to use standard csv template</p>
-            <form action="{{route('shippingfee_weight.upload_csv')}}" method="post" enctype="multipart/form-data">
-                @csrf      
-                <input type="hidden" name="shipping_id_csv" value="{{$sp->id}}">  
-                <input type="file" name="csv">  
+            <form action="{{route('shippingfee_weight.upload_csv')}}" method="post" enctype="multipart/form-data" id="formUploadCsv">
+            @csrf
+                <div class="modal-body">
+                <p><strong>Note: Previous data will be overwritten once new csv file is uploaded.</strong></p>       
+                    <input type="hidden" name="shipping_id_csv" value="{{$sp->id}}">  
+                    <input type="file" name="csv" id="csvfile">  
+                    <br>
+                    <small>File extension: .csv</small>
+                    <span id="filext" style="display: none;" class="text-danger"></span>
+                    <span id="nofile" style="display: none;" class="text-danger"></span>
+                </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-sm btn-info">Upload</button>                    
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
-            </div>
         </div>
     </div>
 </div>
@@ -377,6 +381,31 @@
 
 @section('customjs')
     <script>
+        $('#csvfile').change(function () {
+            var file = $(this)[0].files[0];
+            var ext  = $(this).val().split('.').pop().toLowerCase();
+
+            if (ext != 'csv') {
+                $('#csvfile').val('');
+                $('#filext').css('display','block');
+                $('#filext').html(file.name+ ' has invalid extension');         
+            } else {
+                $('#nofile').css('display','none');
+                $('#filext').css('display','none');
+            }
+        });
+
+        $('#formUploadCsv').submit(function(){
+            if($('#csvfile').val() == ''){
+                $('#nofile').css('display','block');
+                $('#nofile').html('Please upload a csv file.');
+                return false;
+            } else {
+                return true;
+            }
+        });
+
+
         $('#btnUpdateRate').click(function(){
             var count = $('#weight_counter').val();
 

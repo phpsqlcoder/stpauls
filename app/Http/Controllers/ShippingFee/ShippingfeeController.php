@@ -183,14 +183,27 @@ class ShippingfeeController extends Controller
                 // number of fields in the csv
                 $col_count = count($data);
                 if($row > 1){
-                    $save = ShippingfeeWeight::create([
-                        'weight' => $data[0],
-                        'shippingfee_id' => $request->shipping_id_csv,
-                        'rate' => $data[1],
-                        'user_id' => Auth::id()            
-                    ]);
-                }
 
+                    $shippingfee = ShippingfeeWeight::where('shippingfee_id',$request->shipping_id_csv)->where('weight',$data[0]);
+
+                    if($shippingfee->exists()){
+
+                        $shippingfee->update([
+                            'rate' => $data[1],
+                            'user_id' => Auth::id()
+                        ]);
+
+                    } else {
+
+                        ShippingfeeWeight::create([
+                            'shippingfee_id' => $request->shipping_id_csv,
+                            'weight' => $data[0],
+                            'rate' => $data[1],
+                            'user_id' => Auth::id()
+                        ]);
+
+                    }
+                }
 
             }
             fclose($handle);

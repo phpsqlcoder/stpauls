@@ -50,22 +50,6 @@ class ProductFrontController extends Controller
 
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.profile',compact('product', 'page','categories','reviews','reviews_count'));
     }
-
-    // public function checkIfUserPurchasedTheItem($id){
-
-    //     $rs = DB::select("SELECT d.*                  
-    //                 FROM `ecommerce_sales_details` d 
-    //                 left join ecommerce_sales_headers h on h.id=d.sales_header_id 
-    //                 where d.product_id='".$id."' and h.user_id='".Auth::id()."'
-    //                  ");
-
-    //     if (empty($rs)) {
-    //         return 0;
-    //     }else{
-    //         return 1;
-    //     }
-
-    // }
     
     public function product_list(Request $request, $slug)
     {
@@ -74,14 +58,23 @@ class ProductFrontController extends Controller
         $page = new Page();
         $page = $category;
         $pageLimit = 40;
-        $maxPrice   = 1000;
 
-        $products = Product::where('category_id',$category->id)->where('status','PUBLISHED')->paginate(10);
+        $products = Product::where('category_id',$category->id)->where('status','PUBLISHED');
+        $maxPrice = $products->max('price');
+        $minPrice = 1;
+
         $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->where('id','<>',$category->id)->get();
 
         if($request->has('search')){
 
-            $products = Product::where('category_id',$category->id)->whereStatus('PUBLISHED');
+            if(!empty($request->rating)){
+                $rating = $request->rating;
+                $products->whereIn('id',function($query) use($rating){
+                    $query->select('product_id')->from('ecommerce_product_review')
+                    ->where('rating',$rating)
+                    ->where('is_approved',1);
+                });
+            }
 
             if(!empty($request->sort)){            
                 if($request->sort == 'Price low to high'){
@@ -103,21 +96,23 @@ class ProductFrontController extends Controller
                 $price = explode(';',$request->price);
                 $products = $products->whereBetween('price',[$price[0],$price[1]]);
 
+                $productMaxPrice = $maxPrice;
                 $maxPrice = $price[1];
+                $minPrice = $price[0];
+
             }
 
             $total_product = $products->count();
             $products = $products->orderBy('name','asc')->paginate($pageLimit);
         }
         else{
-
-            $qry = Product::where('category_id',$category->id)->where('status','PUBLISHED');
-            $products = $qry->paginate($pageLimit);
-            $total_product = $qry->count();
-        
+            $productMaxPrice = $maxPrice;
+            $minPrice = $minPrice;
+            $total_product = $products->count();
+            $products = $products->paginate($pageLimit);
         }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-list',compact('products','page','categories','total_product','maxPrice','category','request'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-list',compact('products','page','categories','total_product','maxPrice','minPrice','productMaxPrice','category','request'));
     }
 
     public function search_product(Request $request)
@@ -125,8 +120,8 @@ class ProductFrontController extends Controller
         $page = new Page();
         $page->name = 'Products';
         $pageLimit  = 40;
-        $maxPrice   = 1000;
 
+        $minPrice = 1;
         $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get();
 
         if(!empty($request->searchtxt)){
@@ -147,6 +142,16 @@ class ProductFrontController extends Controller
                         ->orWhere('authors','like','%'.$searchtxt.'%');
                     });
             }
+            $productMaxPrice = $products->max('price');
+
+            if(!empty($request->rating)){
+                $rating = $request->rating;
+                $products->whereIn('products.id',function($query) use($rating){
+                    $query->select('product_id')->from('ecommerce_product_review')
+                    ->where('rating',$rating)
+                    ->where('is_approved',1);
+                });
+            }
 
             if(!empty($request->sort)){            
                 if($request->sort == 'Price low to high'){
@@ -169,17 +174,19 @@ class ProductFrontController extends Controller
                 $products = $products->whereBetween('price',[$price[0],$price[1]]);
 
                 $maxPrice = $price[1];
+                $minPrice = $price[0];
+            } else {
+                $maxPrice = $productMaxPrice;
             }
 
-            
             $total_product = $products->count();
             $products = $products->orderBy('name','asc')->paginate($pageLimit);
         }
         else{
-        
+            
         }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-search',compact('products','categories','total_product','page','request','searchtxt','maxPrice'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-search',compact('products','categories','total_product','productMaxPrice','page','request','searchtxt','maxPrice','minPrice'));
 
     }
 }

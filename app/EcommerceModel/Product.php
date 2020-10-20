@@ -22,7 +22,7 @@ class Product extends Model
 
     public function get_url()
     {
-        return env('APP_URL')."/products/".$this->slug;
+        return env('APP_URL')."/product-info/".$this->slug;
     }
 
     public function user()
