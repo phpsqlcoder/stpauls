@@ -67,10 +67,10 @@ class Customer extends Model
     //     $this->notify(new CustomerApprovedAccountReactivationNotification($token));
     // }
 
-    public function send_disapproved_account_reactivation_email()
-    {
-        $this->notify(new CustomerDisapprovedAccountReactivationNotification());
-    }
+    // public function send_disapproved_account_reactivation_email()
+    // {
+    //     $this->notify(new CustomerDisapprovedAccountReactivationNotification());
+    // }
 
     // public function send_account_deactivated_email()
     // {

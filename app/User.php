@@ -18,6 +18,8 @@ use App\Notifications\Ecommerce\PaymentRejectedNotification;
 use App\Notifications\Ecommerce\OrderApprovedNotification;
 use App\Notifications\Ecommerce\OrderRejectedNotification;
 
+use App\Notifications\Ecommerce\CustomerDisapprovedAccountReactivationNotification;
+
 
 use App\Notifications\SendEmailNotification;
 
@@ -148,6 +150,11 @@ class User extends Authenticatable
         $token = app('auth.password.broker')->createToken($this);
 
         $this->notify(new CustomerApprovedAccountReactivationNotification($token));
+    }
+
+    public function send_disapproved_account_reactivation_email()
+    {
+        $this->notify(new CustomerDisapprovedAccountReactivationNotification());
     }
 
     public function customer_send_reset_password_email()
