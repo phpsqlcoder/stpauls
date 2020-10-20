@@ -267,9 +267,10 @@
         }
 
         function addPayment(id,amount){
+            var topay = parseFloat(amount);
             $('#prompt-add-payment').modal('show');
             $('#sales_header_id').val(id);
-            $("#payment_amount").val(amount.toFixed());
+            $("#payment_amount").val(topay.toFixed(2));
             $("#payment_amount").attr({
                 "max" : amount,
                 "min" : amount
