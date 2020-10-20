@@ -123,7 +123,7 @@
                                     <td>
                                         <nav class="nav table-options">
                                             
-                                            <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Transaction"><i data-feather="eye"></i></a>
+                                            <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Details"><i data-feather="eye"></i></a>
 
                                             @if($sale->status != 'CANCELLED')
                                                 @if($sale->is_approve == 1)

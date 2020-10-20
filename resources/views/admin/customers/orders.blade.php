@@ -18,7 +18,7 @@
                         <li class="breadcrumb-item active" aria-current="page">Customers</li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Manage Customers</h4>
+                <h4 class="mg-b-0 tx-spacing--1">{{ $user->fullname }} Orders</h4>
             </div>
         </div>
 
@@ -31,6 +31,7 @@
                     <div class="d-md-flex bd-highlight">
                         <div class="bd-highlight mg-r-10 mg-t-10">
                             <div class="dropdown d-inline mg-r-5">
+                                <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('customers.index') }}">Back</a>
                                 <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Filters
                                 </button>
@@ -39,12 +40,12 @@
                                         <div class="form-group">
                                             <label for="exampleDropdownFormEmail1">{{__('common.sort_by')}}</label>
                                             <div class="custom-control custom-radio">
-                                                <input type="radio" id="orderBy1" name="orderBy" class="custom-control-input" value="updated_at" @if ($filter->orderBy == 'updated_at') checked @endif>
-                                                <label class="custom-control-label" for="orderBy1">{{__('common.date_modified')}}</label>
+                                                <input type="radio" id="orderBy1" name="orderBy" class="custom-control-input" value="created_at" @if ($filter->orderBy == 'created_at') checked @endif>
+                                                <label class="custom-control-label" for="orderBy1">Order Date</label>
                                             </div>
                                             <div class="custom-control custom-radio">
-                                                <input type="radio" id="orderBy2" name="orderBy" class="custom-control-input" value="firstname" @if ($filter->orderBy == 'firstname') checked @endif>
-                                                <label class="custom-control-label" for="orderBy2">{{__('common.name')}}</label>
+                                                <input type="radio" id="orderBy2" name="orderBy" class="custom-control-input" value="order_number" @if ($filter->orderBy == 'order_number') checked @endif>
+                                                <label class="custom-control-label" for="orderBy2">Order Number</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -57,13 +58,6 @@
                                             <div class="custom-control custom-radio">
                                                 <input type="radio" id="sortByDesc" name="sortBy" class="custom-control-input" value="desc"  @if ($filter->sortBy == 'desc') checked @endif>
                                                 <label class="custom-control-label" for="sortByDesc">{{__('common.descending')}}</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" id="showInactive" name="showDeleted" class="custom-control-input" @if ($filter->showDeleted) checked @endif>
-                                                <label class="custom-control-label" for="showInactive">Show Inactive Customers</label>
                                             </div>
                                         </div>
                                         <div class="form-group mg-b-40">
@@ -79,7 +73,7 @@
                         <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
                             <form class="form-inline" id="searchForm">
                                 <div class="search-form mg-r-10">
-                                    <input name="search" type="search" id="search" class="form-control"  placeholder="Search by Name" value="{{ $filter->search }}">
+                                    <input style="width: 200px;" name="search" type="search" id="search" class="form-control"  placeholder="Search by Order Number" value="{{ $filter->search }}">
                                     <button class="btn filter" type="button" id="btnSearch"><i data-feather="search"></i></button>
                                 </div>
                             </form>
@@ -99,48 +93,33 @@
                         <table class="table mg-b-0 table-light table-hover" style="width:100%;">
                             <thead>
                                 <tr>
-                                    <th scope="col" width="30%">Name</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Options</th>
+                                    <th scope="col" width="20%">Order#</th>
+                                    <th scope="col">Order Date</th>
+                                    <th scope="col">Customer Name</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Delivery Type</th>
+                                    <th scope="col">Order Status</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($customers as $customer)
+                                @forelse($sales as $sale)
                                     <tr>
-                                        <th>
-                                            <strong @if($customer->is_active == 0) style="text-decoration:line-through;" @endif> {{ $customer->fullName }}</strong>
-                                        </th>
-                                        <td>{{ $customer->email }}</td>
-                                        <td>
-                                            @if($customer->is_active == 1)
-                                                <span class="badge badge-success">Active</span>
-                                            @else
-                                                <span class="badge badge-danger">Inactive</span>
-                                            @endif
-                                        </td>
+                                        <th>{{ $sale->order_number }}</th>
+                                        <td>{{ date('Y-m-d',strtotime($sale->created_at)) }}</td>
+                                        <td>{{ $sale->customer_name }}</td>
+                                        <td>{{ number_format($sale->net_amount,2) }}</td>
+                                        <td>{{ $sale->delivery_type }}</td>
+                                        <td>{{ $sale->delivery_status }}</td>
                                         <td>
                                             <nav class="nav table-options justify-content-begin">
-                                                <a class="nav-link" href="{{ route('customer.orders', $customer->id) }}" title="View Orders"><i data-feather="eye"></i></a>
-                                                @if($customer->is_active == 1)
-                                                    <a style="display:none;" class="nav-link" href="{{ route('customers.edit', $customer->id) }}" title="Edit User"><i data-feather="edit"></i></a>
-                                                @endif
-
-                                                @if($customer->is_active == 1)
-                                                    @if (auth()->user()->has_access_to_route('customer.deactivate'))
-                                                        <a class="nav-link deactivate_user" data-user_id="{{ $customer->id }}" href="#" title="Deactivate User" data-toggle="modal" data-target="#modalUserDeactivate"><i data-feather="user-x"></i></a>
-                                                    @endif
-                                                @else
-                                                    @if (auth()->user()->has_access_to_route('customer.activate'))
-                                                        <a class="nav-link activate_user" data-user_id="{{ $customer->id }}" href="#" title="Activate User" data-toggle="modal" data-target="#modalUserActivate"><i data-feather="user-check"></i></a>
-                                                    @endif
-                                                @endif
+                                                <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Details"><i data-feather="eye"></i></a>
                                             </nav>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" style="text-align: center;"> <p class="text-danger">No customers found.</p></td>
+                                        <td colspan="6" style="text-align: center;"> <p class="text-danger">No orders found.</p></td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -153,10 +132,10 @@
             <!-- Start Navigation -->
             <div class="col-md-6">
                 <div class="mg-t-5">
-                    @if ($customers->firstItem() == null)
+                    @if ($sales->firstItem() == null)
                         <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
                     @else
-                        <p class="tx-gray-400 tx-12 d-inline">Showing {{$customers->firstItem()}} to {{$customers->lastItem()}} of {{$customers->total()}} customers</p>
+                        <p class="tx-gray-400 tx-12 d-inline">Showing {{$sales->firstItem()}} to {{$sales->lastItem()}} of {{$sales->total()}} customers</p>
                     @endif
 
                 </div>
@@ -164,7 +143,7 @@
             <div class="col-md-6">
                 <div class="text-md-right float-md-right mg-t-5">
                     <div>
-                        {{ $customers->appends((array) $filter)->links() }}
+                        {{ $sales->appends((array) $filter)->links() }}
                     </div>
                 </div>
             </div>
@@ -182,7 +161,7 @@
     <script src="{{ asset('scripts/user/scripts.js') }}"></script>
 
     <script>
-        let listingUrl = "{{ route('customers.index') }}";
+        let listingUrl = "{{ route('customer.orders',$user->id) }}";
         let advanceListingUrl = "";
         let searchType = "{{ $searchType }}";
     </script>

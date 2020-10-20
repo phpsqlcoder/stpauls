@@ -25,8 +25,10 @@ use Illuminate\Support\Facades\Validator;
 
 
 use App\StPaulModel\TransactionStatus;
+use App\EcommerceModel\SalesHeader;
 use App\EcommerceModel\Customer;
 use App\User;
+
 
 
 class CustomerController extends Controller
@@ -39,6 +41,7 @@ class CustomerController extends Controller
     }
 
     private $searchFields = ['firstname','lastname','updated_at'];
+    private $salesHeadersearchFields = ['order_number','created_at'];
 
 
     public function index($param = null)
@@ -68,6 +71,31 @@ class CustomerController extends Controller
         $searchType = 'simple_search';
 
         return view('admin.customers.index',compact('customers','filter', 'searchType'));
+    }
+
+    public function orders($id)
+    {
+        $customConditions = [
+            [
+                'field' => 'customer_id',
+                'operator' => '=',
+                'value' => $id,
+                'apply_to_deleted_data' => true
+            ]
+        ];
+
+        $user = \App\User::find($id);
+
+        $listing = new ListingHelper('desc', 10, 'created_at', $customConditions);
+
+        $sales = $listing->simple_search(SalesHeader::class, $this->salesHeadersearchFields);
+
+        // Simple search init data
+        $filter = $listing->get_filter($this->salesHeadersearchFields);
+
+        $searchType = 'simple_search';
+
+        return view('admin.customers.orders',compact('sales','filter', 'searchType','user'));        
     }
 
     public function reactivate_request($param = null)

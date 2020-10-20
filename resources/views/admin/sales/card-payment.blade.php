@@ -124,7 +124,7 @@
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
                                         <nav class="nav table-options">
-                                            <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Summary"><i data-feather="eye"></i></a>
+                                            <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Details"><i data-feather="eye"></i></a>
 
                                             @if($sale->payment_status == 'PAID')
                                             <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

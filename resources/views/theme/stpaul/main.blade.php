@@ -55,48 +55,19 @@
                 <div class="rd-navbar-sl-close-toggle toggle-original"><span class="lnr lnr-cross"></span> Close</div>
                 <div class="gap-20"></div>
                 <ul class="rd-navbar-items-list">
-                    <li>
-                        <div class="unit flex-row align-items-center unit-spacing-xs">
-                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-facebook-f"></span></div>
-                            <div class="unit__body"><a href="#">Facebook</a></div>
-                        </div>
-                        <div class="gap-20"></div>
-                    </li>
-                    <li>
-                        <div class="unit flex-row align-items-center unit-spacing-xs">
-                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-facebook-messenger"></span></div>
-                            <div class="unit__body"><a href="#">Messenger</a></div>
-                        </div>
-                        <div class="gap-20"></div>
-                    </li>
-                    <li>
-                        <div class="unit flex-row align-items-center unit-spacing-xs">
-                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-twitter"></span></div>
-                            <div class="unit__body"><a href="#">Twitter</a></div>
-                        </div>
-                        <div class="gap-20"></div>
-                    </li>
-                    <li>
-                        <div class="unit flex-row align-items-center unit-spacing-xs">
-                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-youtube"></span></div>
-                            <div class="unit__body"><a href="#">Youtube</a></div>
-                        </div>
-                        <div class="gap-20"></div>
-                    </li>
-                    <li>
-                        <div class="unit flex-row align-items-center unit-spacing-xs">
-                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-viber"></span></div>
-                            <div class="unit__body"><a href="#">Viber</a></div>
-                        </div>
-                        <div class="gap-20"></div>
-                    </li>
-                     <li>
-                        <div class="unit flex-row align-items-center unit-spacing-xs">
-                            <div class="unit__left"><span class="icon icon-md icon-primary fab fa-whatsapp"></span></div>
-                            <div class="unit__body"><a href="#">Whatsapp</a></div>
-                        </div>
-                        <div class="gap-20"></div>
-                    </li>
+                    @php 
+                        $media_accounts = \App\MediaAccounts::all();
+                    @endphp
+
+                    @foreach($media_accounts as $media)
+                        <li>
+                            <div class="unit flex-row align-items-center unit-spacing-xs">
+                                <div class="unit__left"><span class="icon icon-md icon-primary fab {{ \App\MediaAccounts::icons($media->name) }}"></span></div>
+                                <div class="unit__body"><a href="{{$media->media_account}}" target="_blank">{{ ucwords($media->name) }}</a></div>
+                            </div>
+                            <div class="gap-20"></div>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
         </nav>

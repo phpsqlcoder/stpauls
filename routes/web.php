@@ -122,6 +122,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
         // Customers
             Route::resource('/admin/customers', 'Settings\CustomerController');
+            Route::get('/customer-orders/{id}','Settings\CustomerController@orders')->name('customer.orders');
             Route::get('/admin/customer/reactivate-request','Settings\CustomerController@reactivate_request')->name('customers.reactivate-request');
             Route::post('/customer/deactivate', 'Settings\CustomerController@deactivate')->name('customer.deactivate');
             Route::post('/customer/reactivate', 'Settings\CustomerController@reactivate')->name('customer.reactivate');
