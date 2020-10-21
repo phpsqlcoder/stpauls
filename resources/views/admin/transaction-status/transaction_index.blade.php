@@ -79,8 +79,8 @@ Manage Customer
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             @if (auth()->user()->has_access_to_route('transactions.multiple.change.status'))
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('ACTIVE')">ACTIVE</a>
-                                                <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('INACTIVE')">INACTIVE</a>
+                                                <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('ACTIVE')">Active</a>
+                                                <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('INACTIVE')">Inactive</a>
                                             @endif
 
                                                 @if (auth()->user()->has_access_to_route('transactions.multiple.delete'))

@@ -165,7 +165,10 @@
                                 </div>
                             </div>
                             @if(Auth::check())
-                            <div class="shipping-message">{{ \App\StPaulModel\LoyalCustomer::loyal_customer(auth()->user()->id) }}</div>
+                            <div class="shipping-message">
+                                {{ \App\StPaulModel\LoyalCustomer::loyal_customer(auth()->user()->id) }}<br><br>
+                                Shipping fees will apply upon checkout.
+                            </div>
                             @endif
                             <div class="cart-btn">
                                 <div class="row">

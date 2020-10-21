@@ -13,7 +13,7 @@
                     <div id="order-detail">
                         <div class="row align-items-center">
                             <div class="col-lg-12">
-                                <h2 class="text-center"><strong>The following critical errors have occured</strong></h2>
+                                <h2 class="text-center"><strong>Errors have occured</strong></h2>
                             </div>
                         </div>
                         <div class="gap-20"></div>

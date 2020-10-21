@@ -121,33 +121,6 @@ class CustomerController extends Controller
         return view('admin.customers.reactivate-request',compact('customers','filter', 'searchType'));
     }
 
-    public function reactivate(Request $request)
-    {
-        $customer = Customer::find($request->customer_id);
-        $user     = User::find($customer->customer_id);
-
-        $customer->update([
-            'is_active' => $request->status,
-            'reactivate_request' => 0,
-            'user_id'   => Auth::id(),
-        ]);
-
-        $user->update([
-            'is_active' => $request->status,
-            'user_id' => Auth::id()
-        ]);
-
-
-        $status = ($request->status == 1) ? 'approved' : 'disapproved';
-        if($request->status == 1){
-            $this->send_email_notification($request->customer_id,'Approve Reactivation Request');
-        } else {
-            $this->send_email_notification($request->customer_id,'Disapprove Reactivation Request');
-        }
-
-        return back()->with('success', __('standard.customers.reactivate_status', ['status' => $status]));
-    }
-
     public function activate(Request $request)
     {
         $user = User::find($request->customer_id);
@@ -179,12 +152,37 @@ class CustomerController extends Controller
         return back()->with('success', __('standard.customers.status_success', ['status' => 'deactivated']));
     }
 
+    public function reactivate(Request $request)
+    {
+        $customer = Customer::find($request->customer_id);
+        $user     = User::find($customer->customer_id);
+
+        $customer->update([
+            'is_active' => $request->status,
+            'reactivate_request' => 0,
+            'user_id'   => Auth::id(),
+        ]);
+
+        $user->update([
+            'is_active' => $request->status,
+            'user_id' => Auth::id()
+        ]);
+
+        $status = ($request->status == 1) ? 'approved' : 'disapproved';
+        if($request->status == 1){
+            $this->send_email_notification($request->customer_id,'Approve Reactivation Request');
+        } else {
+            $this->send_email_notification($request->customer_id,'Disapprove Reactivation Request');
+        }
+
+        return back()->with('success', __('standard.customers.reactivate_status', ['status' => $status]));
+    }
+
     public function send_email_notification($customer_id,$transactionstatus)
     {
         $qry = TransactionStatus::where('name',$transactionstatus)->where('status','ACTIVE');
-        $count = $qry->count();
 
-        if($qry->count() > 0){
+        if($qry->exists()){
             $template = $qry->first();
 
             $user = User::find($customer_id);

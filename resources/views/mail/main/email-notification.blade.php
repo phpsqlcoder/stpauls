@@ -180,12 +180,12 @@
                             <td style="text-align: right;">{{ ($totalweight/1000) }} kg</td>
                         </tr>
                         <tr>
-                            <td>Subtotal</td>
+                            <td>Sub-Total</td>
                             <td style="text-align: right;">{{ number_format($subtotal,2) }}</td>
                         </tr>
                         <tr>
-                            <td>Shipping Fee</td>
-                            <td style="text-align: right;">{{ number_format($sales->delivery_fee_amount,2) }}</td>
+                            <td style="color:red;">LESS: Loyalty Discount({{$sales->discount_percentage}}%)</td>
+                            <td style="text-align: right;color:red;">{{ number_format($sales->discount_amount,2) }}</td>
                         </tr>
                         <tr>
                             <td colspan="4" rowspan="3">
@@ -195,15 +195,15 @@
                                     <p>{{ $sales->other_instruction ?? 'N/A' }}</p>
                                 </div>
                             </td>
-                            <td>Service Fee</td>
+                            <td>ADD: Shipping Fee</td>
+                            <td style="text-align: right;">{{ number_format($sales->delivery_fee_amount,2) }}</td>
+                        </tr>
+                        <tr>
+                            <td>ADD: Service Fee</td>
                             <td style="text-align: right;">{{ number_format($sales->service_fee,2) }}</td>
                         </tr>
                         <tr>
-                            <td style="color:red;">Less: Loyalty Discount({{$sales->discount_percentage}}%)</td>
-                            <td style="text-align: right;color:red;">{{ number_format($sales->discount_amount,2) }}</td>
-                        </tr>
-                        <tr>
-                            <td><span style="color:#10b759;font-size: 1.09375rem;">Grand Total</span></td>
+                            <td><span style="color:#10b759;font-size: 1.09375rem;">TOTAL DUE</span></td>
                             <td style="text-align: right;"><span style="font-size: 1.09375rem;">{{ number_format($sales->net_amount,2)}}</span></td>
                         </tr>
                     </tfoot>

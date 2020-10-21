@@ -177,7 +177,7 @@ Manage Customer
                             </tr>
                             @empty
                             <tr>
-                                <th colspan="7" style="text-align: center;"> <p class="text-danger">No transaction status found.</p></th>
+                                <th colspan="7" style="text-align: center;"> <p class="text-danger">No Email Notifications Found.</p></th>
                             </tr>
                             @endforelse
                             </tbody>
@@ -221,7 +221,7 @@ Manage Customer
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>{{__('common.delete_confirmation')}}</p>
+                    <p>You are about to permanently delete this item? Do you want to continue?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-danger" id="btnDelete">Yes, Delete</button>
@@ -241,7 +241,7 @@ Manage Customer
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{__('common.delete_mutiple_confirmation')}}
+                    You are about to permanently delete the selected items? Do you want to continue?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-danger" id="btnDeleteMultiple">Yes, Delete</button>

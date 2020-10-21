@@ -144,12 +144,12 @@
                                         <td class="text-right">{{ ($totalweight/1000) }} kg</td>
                                     </tr>
                                     <tr>
-                                        <td>Subtotal</td>
+                                        <td>Sub-Total</td>
                                         <td class="text-right">{{ number_format($subtotal,2) }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Shipping Fee</td>
-                                        <td class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
+                                        <td class="text-danger">LESS: Loyalty Discount({{$sales->discount_percentage}}%)</td>
+                                        <td class="text-right text-danger">{{ number_format($sales->discount_amount,2) }}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="4" rowspan="3">
@@ -159,15 +159,15 @@
                                                 <p>{{ $sales->other_instruction ?? 'N/A' }}</p>
                                             </div>
                                         </td>
-                                        <td>Service Fee</td>
+                                        <td>ADD: Shipping Fee</td>
+                                        <td class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ADD: Service Fee</td>
                                         <td class="text-right">{{ number_format($sales->service_fee,2) }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="text-danger">Less: Loyalty Discount({{$sales->discount_percentage}}%)</td>
-                                        <td class="text-right text-danger">{{ number_format($sales->discount_amount,2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><h5 class="text-success"><b>Grand Total</b></h5></td>
+                                        <td><h5 class="text-success"><b>TOTAL DUE</b></h5></td>
                                         <td class="text-right"><h5>{{ number_format($sales->net_amount,2)}}</h5></td>
                                     </tr>
                                 </tfoot>

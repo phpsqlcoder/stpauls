@@ -453,21 +453,7 @@
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
-                                                <span>Shipping Fee</span>
-                                                <span>
-                                                    <input type="hidden" id="input_shippingfee" name="shippingfee">
-                                                    ₱ <span id="span_shippingfee">0.00</span>
-                                                </span>
-                                            </li>
-                                            <li class="d-flex justify-content-between">
-                                                <span>Service Fee</span>
-                                                <span>
-                                                    <input name="servicefee" type="hidden" id="input_servicefee" name="servicefee">
-                                                    ₱ <span id="span_servicefee">0.00</span>
-                                                </span>
-                                            </li>
-                                            <li class="d-flex justify-content-between">
-                                                <span class="text-danger">Less: Loyalty Discount ({{number_format($loyalty_discount,0)}}%)</span>
+                                                <span class="text-danger">LESS: Loyalty Discount ({{number_format($loyalty_discount,0)}}%)</span>
                                                 <span>
                                                     <input type="hidden" id="input_loyalty_discount" name="loyaltydiscount" value="{{$loyalty_discount}}">
                                                     <input type="hidden" id="input_discount_amount" name="discount_amount">
@@ -475,7 +461,22 @@
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
-                                                <strong>Total Due</strong>
+                                                <span>ADD: Shipping Fee</span>
+                                                <span>
+                                                    <input type="hidden" id="input_shippingfee" name="shippingfee">
+                                                    ₱ <span id="span_shippingfee">0.00</span>
+                                                </span>
+                                            </li>
+                                            <li class="d-flex justify-content-between">
+                                                <span>ADD: Service Fee</span>
+                                                <span>
+                                                    <input name="servicefee" type="hidden" id="input_servicefee" name="servicefee">
+                                                    ₱ <span id="span_servicefee">0.00</span>
+                                                </span>
+                                            </li>
+                                            
+                                            <li class="d-flex justify-content-between">
+                                                <strong>TOTAL DUE</strong>
                                                 <strong>
                                                     <input type="hidden" name="net_amount" id="input_total_due" name="totalDue">
                                                     ₱ <span id="totalDue"></span>

@@ -68,8 +68,8 @@
                                                     <i data-feather="settings"></i>
                                                 </a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="javascript:;" onclick="approve('{{$customer->id}}')">Approve</a>
-                                                    <a class="dropdown-item" href="javascript:;" onclick="disapprove('{{$customer->id}}')">Disapprove</a>
+                                                    <a class="dropdown-item" href="javascript:;" onclick="approve('{{$customer->customer_id}}')">Approve</a>
+                                                    <a class="dropdown-item" href="javascript:;" onclick="disapprove('{{$customer->customer_id}}')">Disapprove</a>
                                                 </div>
                                             </nav>
                                         </td>

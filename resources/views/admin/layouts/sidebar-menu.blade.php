@@ -247,7 +247,11 @@
             <ul>
                 @if(auth()->user()->has_access_to_module('email_notifications'))
                 <li @if (\Route::current()->getName() == 'transaction-status.index') class="active" @endif><a href="{{ route('transaction-status.index') }}">Manage Email</a></li>
+
+                @if(\App\StPaulModel\Transaction::email_counter() > 0)
                 <li><a href="{{ route('transaction-status.create') }}">Create an Email</a></li>
+                @endif
+
                 @endif
                 @if(auth()->user()->has_access_to_module('transactions.index'))
                 <li @if (\Route::current()->getName() == 'transactions.index') class="active" @endif><a href="{{ route('transactions.index') }}">Manage Transaction Status</a></li>
