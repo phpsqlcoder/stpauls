@@ -23,8 +23,8 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
     $transaction = $sqlTra->fetch();
 
 
-    $sql = $pdo->prepare("UPDATE ecommerce_sales_headers SET payment_status='PAID', delivery_status='Scheduled for Processing', is_approve=1 WHERE order_number=:order_number");
-    $sql->execute(array(':order_number' => $tn));
+    $sql = $pdo->prepare("UPDATE ecommerce_sales_headers SET response_code=:responsecode, payment_status='PAID', delivery_status='Scheduled for Processing', is_approve=1 WHERE order_number=:order_number");
+    $sql->execute(array(':order_number' => $tn, ':responsecode' => $apiRespone['reason_code']));
 
     $payment = $pdo->prepare("INSERT INTO ecommerce_sales_payments (sales_header_id, payment_type, amount, status, payment_date, receipt_number, created_by, created_at, is_verify) VALUES (:header_id, :payment_type, :amount, :status, :payment_date, :receipt_number, :created_by, :created_at, :isverify)");
     $payment->execute([
@@ -43,17 +43,12 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
 } else {
 
-    // $bankError = [201, 203, 204, 205, 208, 210, 211];
-    // if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'CANCEL') {
-    //     $responseMessage = 'Transaction (ID: '. $apiRespone['req_transaction_uuid'] .') was cancelled.';
-    // } else if(isset($apiRespone['reason_code']) && in_array($apiRespone['reason_code'], $bankError)) {
-    //     $responseMessage = 'Transaction (ID: '. $apiRespone['req_transaction_uuid'] .') rejected, please contact your bank.';
-    // } else {
-    //     $responseMessage = 'Transaction (ID: '. $apiRespone['req_transaction_uuid'] .') unsuccessful, please try again.';
-    // }
 
-    header('location:'.$livesitePath.'/payment-failed/'.$apiRespone['reason_code']);
+    $tn = $apiRespone['req_transaction_uuid'];
+    $sql = $pdo->prepare("UPDATE ecommerce_sales_headers SET response_code=:responsecode WHERE order_number=:order_number");
+    $sql->execute(array(':order_number' => $tn, ':responsecode' => $apiRespone['reason_code']));
 
+    header('location:'.$livesitePath.'/payment-failed/'.$tn.'/'.$apiRespone['reason_code']);
 
 }
 ?>

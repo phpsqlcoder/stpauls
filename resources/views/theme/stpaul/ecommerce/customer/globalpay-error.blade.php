@@ -27,12 +27,21 @@
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="gap-20"></div>
-                                    <p>aw</p>
+                                    @php
+                                        $bankError = [201, 203, 204, 205, 208, 210, 211]
+                                    @endphp
+                                    <h5 class="success-msg" style="color: black;">
+                                        @if(in_array($responsecode,$bankError))
+                                            Transaction (ID: {{$orderno}}) rejected, please contact your bank.
+                                        @else
+                                            Transaction (ID: {{$orderno}}) unsuccessful, please try again.
+                                        @endif
+                                    </h5>
                                     <hr>
                                     <div class="gap-40"></div>
                                 </div>
                                 <div class="col-md-12 mb-4 align-self-center">
-                                    <a href="" class="btn btn-md primary-btn btn-block text-white">View Order</a>
+                                    <a href="{{ route('account-my-orders') }}" class="btn btn-md primary-btn btn-block text-white">View My Orders</a>
                                 </div>
                             </div>
                         </div>
