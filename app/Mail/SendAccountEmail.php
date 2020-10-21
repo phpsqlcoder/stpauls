@@ -7,13 +7,13 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PaymentApprovedMail extends Mailable
+class SendAccountEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $setting;
     public $customer;
-    public $sales;
+    public $template;
 
     /**
      * Create a new message instance.
@@ -22,11 +22,11 @@ class PaymentApprovedMail extends Mailable
      * @param $customer
      * @param $token
      */
-    public function __construct($setting, $customer, $sales)
+    public function __construct($setting, $customer, $template)
     {
-        $this->setting = $setting;
+        $this->setting  = $setting;
         $this->customer = $customer;
-        $this->sales = $sales;
+        $this->template = $template;
     }
 
     /**
@@ -36,8 +36,8 @@ class PaymentApprovedMail extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.order.email')
-            ->text('mail.payment.payment-approved-plain')
-            ->subject('Payment Approved');
+        return $this->view('mail.main.account-notification')
+            ->text('mail.main.account-notification-plain')
+            ->subject($this->template->subject);
     }
 }

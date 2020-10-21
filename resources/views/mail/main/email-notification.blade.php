@@ -84,8 +84,6 @@
         </tr>
         <tr>
             <td>
-                Dear {{ $sales->customer_name }},
-
                 @php
                     $qrypayment    = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sales->id);
                     $countpayment  = $qrypayment->count();
@@ -210,11 +208,6 @@
                         </tr>
                     </tfoot>
                 </table>
-                <br />
-                <br />
-                
-                Respectfully yours,<br />
-                Your {{ $setting->company_name }} family
                 <br />
                 <br />
                 <small style="color:red">This is an auto-generated notification, please do not reply. This communication is intended solely for the use of the addressee and authorized recipients. It may contain confidential or legally privileged information and is subject to the conditions in <a href="{{ url('/') }}">{{ url('/') }}</a></small>

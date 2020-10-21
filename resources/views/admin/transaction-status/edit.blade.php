@@ -20,21 +20,26 @@
                 <h4 class="mg-b-0 tx-spacing--1">Edit an Email</h4>
             </div>
         </div>
-        <form autocomplete="off" id="albumForm" method="POST" action="{{ route('transaction-status.update',$transaction->id) }}" enctype="multipart/form-data">
+        <form autocomplete="off" id="albumForm" method="POST" action="{{ route('transaction-status.update',$email->id) }}" enctype="multipart/form-data">
             <div class="row row-sm">
                 @method('PUT')
                 @csrf
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="d-block">Name *</label>
-                        <input required name="name" id="name" value="{{ old('name',$transaction->name) }}" type="text" class="form-control @error('name') is-invalid @enderror" maxlength="150">
-                        @hasError(['inputName' => 'name'])
+                        <label class="d-block">Transaction name*</label>
+                        <select required name="transaction_name" id="transaction_name" class="form-control @error('transaction_name') is-invalid @enderror">
+                            <option value="{{$email->name}}">{{ $email->name }}</option>
+                            @foreach($transactions as $transaction)
+                            <option value="{{$transaction->name}}">{{ $transaction->name }}</option>
+                            @endforeach
+                        </select>
+                        @hasError(['inputName' => 'transaction_name'])
                         @endhasError
                     </div>
 
                     <div class="form-group">
                         <label class="d-block">Email Subject *</label>
-                        <input required name="subject" id="subject" value="{{ old('subject',$transaction->subject) }}" type="text" class="form-control @error('subject') is-invalid @enderror" maxlength="150">
+                        <input required name="subject" id="subject" value="{{ old('subject',$email->subject) }}" type="text" class="form-control @error('subject') is-invalid @enderror" maxlength="150">
                         @hasError(['inputName' => 'subject'])
                         @endhasError
                     </div>
@@ -45,18 +50,23 @@
                         <label class="d-block" id="long_descriptionLabel">Content *</label>
                         <span>To display order details, you need to add the following keywords.</span>
                         <ul>
-                            <li>{shippingfee}       = Displays the shipping fee</li>
-                            <li>{customer_name}     = Displays the customer name</li>
-                            <li>{order_number}      = Displays the order number</li>
-                            <li>{company_name}      = Displays the company name</li>
-                            <li>{paid_amount}       = Displays the amount paid of the customer</li>
-                            <li>{net_amount}        = Displays the sales net amount</li>
-                            <li>{delivery_status}   = Displays the sales delivery status</li>
-                            <li>{remarks}           = Displays the sales remarks</li>
+                            <li>{shippingfee}       = Displays the shipping fee.</li>
+                            <li>{order_number}      = Displays the order number.</li>
+                            <li>{company_name}      = Displays the company name.</li>
+                            <li>{paid_amount}       = Displays the amount paid of the customer.</li>
+                            <li>{net_amount}        = Displays the sales net amount.</li>
+                            <li>{delivery_status}   = Displays the sales delivery status.</li>
+                            <li>{remarks}           = Displays the sales remarks.</li>
+                            <br>
+                            <li>{customer_name}     = Displays the customer name.</li>
+                            <li>{company_name}      = Displays the company name.</li>
+                            <li>{company_address    = Displays the company address.</li>
+                            <li>{tel_no}            = Displays the company telephone number.</li>
+                            <li>{mobile_no}         = Displays the company mobile number.</li>
                         </ul>
 
                         <textarea name="content" id="editor1" rows="10" cols="80" required>
-                            {{ old('content',$transaction->content) }}
+                            {{ old('content',$email->content) }}
                         </textarea>
                         @hasError(['inputName' => 'content'])
                         @endhasError
@@ -69,8 +79,8 @@
                 <div class="form-group">
                     <label class="d-block">Status</label>
                     <div class="custom-control custom-switch @error('status') is-invalid @enderror">
-                        <input type="checkbox" class="custom-control-input" name="status" {{ (old("status") == "ON" || $transaction->status == "ACTIVE" ? "checked":"") }} id="customSwitch1">
-                        <label class="custom-control-label" id="label_visibility" for="customSwitch1">{{ucfirst(strtolower($transaction->status))}}</label>
+                        <input type="checkbox" class="custom-control-input" name="status" {{ (old("status") == "ON" || $email->status == "ACTIVE" ? "checked":"") }} id="customSwitch1">
+                        <label class="custom-control-label" id="label_visibility" for="customSwitch1">{{ucfirst(strtolower($email->status))}}</label>
                     </div>
                     @hasError(['inputName' => 'status'])
                     @endhasError

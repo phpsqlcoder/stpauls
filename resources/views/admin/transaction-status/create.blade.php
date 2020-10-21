@@ -30,7 +30,7 @@
                         <select required name="transaction_name" id="transaction_name" class="form-control @error('transaction_name') is-invalid @enderror">
                             <option value="">-- Choose One --</option>
                             @foreach($transactions as $transaction)
-                            <option value="{{$transaction->id}}">{{ $transaction->name }}</option>
+                            <option value="{{$transaction->name}}">{{ $transaction->name }}</option>
                             @endforeach
                         </select>
                         @hasError(['inputName' => 'transaction_name'])
@@ -50,14 +50,19 @@
                         <label class="d-block" id="long_descriptionLabel">Content *</label>
                         <span>To display order details, you need to add the following keywords.</span>
                         <ul>
-                            <li>{shippingfee}       = Displays the shipping fee</li>
-                            <li>{customer_name}     = Displays the customer name</li>
-                            <li>{order_number}      = Displays the order number</li>
-                            <li>{company_name}      = Displays the company name</li>
-                            <li>{paid_amount}       = Displays the amount paid of the customer</li>
-                            <li>{net_amount}        = Displays the sales net amount</li>
-                            <li>{delivery_status}   = Displays the sales delivery status</li>
-                            <li>{remarks}           = Displays the sales remarks</li>
+                            <li>{shippingfee}       = Displays the shipping fee.</li>
+                            <li>{order_number}      = Displays the order number.</li>
+                            <li>{company_name}      = Displays the company name.</li>
+                            <li>{paid_amount}       = Displays the amount paid of the customer.</li>
+                            <li>{net_amount}        = Displays the sales net amount.</li>
+                            <li>{delivery_status}   = Displays the sales delivery status.</li>
+                            <li>{remarks}           = Displays the sales remarks.</li>
+                            <br>
+                            <li>{customer_name}     = Displays the customer name.</li>
+                            <li>{company_name}      = Displays the company name.</li>
+                            <li>{company_address    = Displays the company address.</li>
+                            <li>{tel_no}            = Displays the company telephone number.</li>
+                            <li>{mobile_no}         = Displays the company mobile number.</li>
                         </ul>
 
                         <textarea name="content" id="editor1" rows="10" cols="80" required>

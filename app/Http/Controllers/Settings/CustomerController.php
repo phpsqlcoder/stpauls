@@ -140,9 +140,9 @@ class CustomerController extends Controller
 
         $status = ($request->status == 1) ? 'approved' : 'disapproved';
         if($request->status == 1){
-            $user->customer_send_approved_account_reactivation_email();
+            $this->send_email_notification($request->customer_id,'Approve Reactivation Request');
         } else {
-            $user->send_disapproved_account_reactivation_email();
+            $this->send_email_notification($request->customer_id,'Disapprove Reactivation Request');
         }
 
         return back()->with('success', __('standard.customers.reactivate_status', ['status' => $status]));
@@ -174,12 +174,12 @@ class CustomerController extends Controller
 
         Customer::where('customer_id',$user->id)->update(['is_active' => 0]);
 
-        $user->customer_send_account_deactivated_email();
+        $this->send_email_notification($request->customer_id,'Deactivate Account');
 
         return back()->with('success', __('standard.customers.status_success', ['status' => 'deactivated']));
     }
 
-    public function send_email_notification($sales,$transactionstatus)
+    public function send_email_notification($customer_id,$transactionstatus)
     {
         $qry = TransactionStatus::where('name',$transactionstatus)->where('status','ACTIVE');
         $count = $qry->count();
@@ -187,26 +187,9 @@ class CustomerController extends Controller
         if($qry->count() > 0){
             $template = $qry->first();
 
-            $user = User::find($sales->customer_id);
-            $user->send_email_notification($sales,$template);
+            $user = User::find($customer_id);
+            $user->send_account_email_notification($template);
         }
     }
-
-    
-
-
-
-
-
-
-
-
-    // public function show($id, $param = null)
-    // {
-    //     $user = Customer::where('id',$id)->first();
-    //     $logs = Logs::where('created_by',$id)->orderBy('id','desc')->paginate(10);
-
-    //     return view('admin.customers.profile',compact('user','logs','param'));
-    // }
 
 }

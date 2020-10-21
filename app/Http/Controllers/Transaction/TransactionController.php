@@ -150,7 +150,7 @@ class TransactionController extends Controller
     {
         $category = Transaction::findOrFail($request->transactions);
         $category->update([ 'user_id' => Auth::id() ]);
-        $category->delete();
+        $category->forceDelete();
 
         return back()->with('success','Transaction has been deleted.');
     }
@@ -169,7 +169,7 @@ class TransactionController extends Controller
 
         foreach($transactions as $transaction){
             Transaction::whereId($transaction)->update(['user_id' => Auth::id() ]);
-            Transaction::whereId($transaction)->delete();
+            Transaction::whereId($transaction)->forceDelete();
         }
 
         return back()->with('success','Selected transaction(s) has been deleted.');

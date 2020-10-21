@@ -43,17 +43,17 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
 
 } else {
 
-    $bankError = [201, 203, 204, 205, 208, 210, 211];
-    if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'CANCEL') {
-        $responseMessage = 'Transaction (ID: '. $apiRespone['req_transaction_uuid'] .') was cancelled.';
-    } else if(isset($apiRespone['reason_code']) && in_array($apiRespone['reason_code'], $bankError)) {
-        $responseMessage = 'Transaction (ID: '. $apiRespone['req_transaction_uuid'] .') rejected, please contact your bank.';
-    } else {
-        $responseMessage = 'Transaction (ID: '. $apiRespone['req_transaction_uuid'] .') unsuccessful, please try again.';
-    }
+    // $bankError = [201, 203, 204, 205, 208, 210, 211];
+    // if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'CANCEL') {
+    //     $responseMessage = 'Transaction (ID: '. $apiRespone['req_transaction_uuid'] .') was cancelled.';
+    // } else if(isset($apiRespone['reason_code']) && in_array($apiRespone['reason_code'], $bankError)) {
+    //     $responseMessage = 'Transaction (ID: '. $apiRespone['req_transaction_uuid'] .') rejected, please contact your bank.';
+    // } else {
+    //     $responseMessage = 'Transaction (ID: '. $apiRespone['req_transaction_uuid'] .') unsuccessful, please try again.';
+    // }
 
+    header('location:'.$livesitePath.'/payment-failed/'.$apiRespone['reason_code']);
 
-    echo $responseMessage;
 
 }
 ?>

@@ -73,7 +73,9 @@
             Route::get('/transaction-deliveries','EcommerceControllers\SalesFrontController@display_delivery_history')->name('display-delivery-history');
             Route::any('/transaction-items','EcommerceControllers\SalesFrontController@display_items')->name('display-items');
 
+
             Route::get('/order-received/{orderno}', 'EcommerceControllers\SalesFrontController@globalpay_success')->name('order.received');
+            Route::get('/payment-failed/{reasoncode}', 'EcommerceControllers\SalesFrontController@globalpay_failed')->name('payment.failed');
         //
 
         // Account Management

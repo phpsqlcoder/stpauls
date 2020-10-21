@@ -63,12 +63,6 @@ Manage Customer
                                                 <label class="custom-control-label" for="sortByDesc">{{__('common.descending')}}</label>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" id="showDeleted" name="showDeleted" class="custom-control-input" @if ($filter->showDeleted) checked @endif>
-                                                <label class="custom-control-label" for="showDeleted">{{__('common.show_deleted')}}</label>
-                                            </div>
-                                        </div>
                                         <div class="form-group mg-b-40">
                                             <label class="d-block">{{__('common.item_displayed')}}</label>
                                             <input id="displaySize" type="text" class="js-range-slider" name="perPage" value="{{ $filter->perPage }}"/>
@@ -153,36 +147,28 @@ Manage Customer
                                 <td>{{ $transaction->status }}</td>
                                 <td>{{ Setting::date_for_listing($transaction->updated_at) }}</td>
                                 <td>
-                                    @if($transaction->trashed())
-                                        @if (auth()->user()->has_access_to_route('transactions.restore'))
-                                            <nav class="nav table-options">
-                                                <a class="nav-link" href="{{route('transactions.restore', $transaction->id)}}" title="Restore this transaction status"><i data-feather="rotate-ccw"></i></a>
-                                            </nav>
+                                    <nav class="nav table-options">
+                                        @if (auth()->user()->has_access_to_route('product-categories.edit'))
+                                            <a class="nav-link" href="{{ route('transactions.edit',$transaction->id) }}" title="Edit Transaction Status"><i data-feather="edit"></i></a>
                                         @endif
-                                    @else
-                                        <nav class="nav table-options">
-                                            @if (auth()->user()->has_access_to_route('product-categories.edit'))
-                                                <a class="nav-link" href="{{ route('transactions.edit',$transaction->id) }}" title="Edit Transaction Status"><i data-feather="edit"></i></a>
-                                            @endif
 
-                                            @if (auth()->user()->has_access_to_route('product.category.single.delete'))
-                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_transaction('{{$transaction->id}}','{{$transaction->name}}')" title="Delete Transaction Status"><i data-feather="trash"></i></a>
-                                            @endif
+                                        @if (auth()->user()->has_access_to_route('product.category.single.delete'))
+                                            <a class="nav-link" href="javascript:void(0)" onclick="delete_one_transaction('{{$transaction->id}}','{{$transaction->name}}')" title="Delete Transaction Status"><i data-feather="trash"></i></a>
+                                        @endif
 
-                                            @if (auth()->user()->has_access_to_route('product.category.change-status'))
-                                                <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i data-feather="settings"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    @if($transaction->status == 'ACTIVE')
-                                                        <a class="dropdown-item" href="{{route('transactions.change-status',[$transaction->id,'INACTIVE'])}}"> INACTIVE</a>   
-                                                    @else
-                                                        <a class="dropdown-item" href="{{route('transactions.change-status',[$transaction->id,'ACTIVE'])}}" > ACTIVE</a>
-                                                    @endif
-                                                </div>
-                                            @endif
-                                        </nav>
-                                    @endif
+                                        @if (auth()->user()->has_access_to_route('product.category.change-status'))
+                                            <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i data-feather="settings"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                @if($transaction->status == 'ACTIVE')
+                                                    <a class="dropdown-item" href="{{route('transactions.change-status',[$transaction->id,'INACTIVE'])}}"> INACTIVE</a>   
+                                                @else
+                                                    <a class="dropdown-item" href="{{route('transactions.change-status',[$transaction->id,'ACTIVE'])}}" > ACTIVE</a>
+                                                @endif
+                                            </div>
+                                        @endif
+                                    </nav>
                                 </td>
                             </tr>
                             @empty

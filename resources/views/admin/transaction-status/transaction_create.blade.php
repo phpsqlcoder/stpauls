@@ -32,6 +32,7 @@
                         <label class="d-block">Transaction type</label>
                         <select name="type" id="type" class="form-control">
                             <option value="">-- None --</option>
+                            <option value="Customer">Customer</option>
                             <option value="Payment">Payment</option>
                             <option value="Order">Order</option>
                             <option value="Shipping Fee">Shipping Fee</option>

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Notifications\Ecommerce;
+namespace App\Notifications;
 
 use App\Helpers\Webfocus\Setting;
-use App\Mail\PaymentApprovedMail;
+use App\Mail\SendAccountEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class PaymentApprovedNotification extends Notification
+class SendAccountEmailNotification extends Notification
 {
     use Queueable;
 
@@ -21,10 +21,9 @@ class PaymentApprovedNotification extends Notification
      * @param $token
      * @param $customer
      */
-    public function __construct($payment,$sales)
+    public function __construct($template)
     {
-    	$this->payment = $payment;
-        $this->sales   = $sales;
+        $this->template = $template; 
     }
 
     /**
@@ -48,7 +47,7 @@ class PaymentApprovedNotification extends Notification
     {
         $customer = $notifiable;
 
-        return (new PaymentApprovedMail(Setting::info(), $customer, $this->payment, $this->sales, $this->token))->to($customer->email);
+        return (new SendAccountEmail(Setting::info(), $customer, $this->template))->to($customer->email);
     }
 
     /**

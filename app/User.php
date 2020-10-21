@@ -2,26 +2,17 @@
 
 namespace App;
 
-use App\Notifications\NewUserResetPasswordNotification;
-use App\Notifications\UserResetPasswordNotification;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Notifications\Ecommerce\CustomerResetPasswordNotification;
-use App\Notifications\Ecommerce\CustomerAccountDeactivatedNotification;
-use App\Notifications\Ecommerce\CustomerApprovedAccountReactivationNotification;
-
-
-use App\Notifications\Ecommerce\PaymentApprovedNotification;
-use App\Notifications\Ecommerce\PaymentRejectedNotification;
-use App\Notifications\Ecommerce\OrderApprovedNotification;
-use App\Notifications\Ecommerce\OrderRejectedNotification;
-
-use App\Notifications\Ecommerce\CustomerDisapprovedAccountReactivationNotification;
+use App\Notifications\NewUserResetPasswordNotification;
+use App\Notifications\UserResetPasswordNotification;
 
 
 use App\Notifications\SendEmailNotification;
+use App\Notifications\SendAccountEmailNotification;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -134,73 +125,18 @@ class User extends Authenticatable
         return $data->name;
     }
 
+
+
+
     public function send_email_notification($sales,$template)
     {
         $this->notify(new SendEmailNotification($sales,$template));
     }
 
-
-
-
-
-
-
-    public function customer_send_approved_account_reactivation_email()
+    public function send_account_email_notification($template)
     {
-        $token = app('auth.password.broker')->createToken($this);
-
-        $this->notify(new CustomerApprovedAccountReactivationNotification($token));
+        $this->notify(new SendAccountEmailNotification($template));
     }
-
-    public function send_disapproved_account_reactivation_email()
-    {
-        $this->notify(new CustomerDisapprovedAccountReactivationNotification());
-    }
-
-    public function customer_send_reset_password_email()
-    {
-        $token = app('auth.password.broker')->createToken($this);
-
-        $this->notify(new CustomerResetPasswordNotification($token));
-    }
-
-    public function customer_send_account_deactivated_email()
-    {
-        $this->notify(new CustomerAccountDeactivatedNotification());
-    }
-
-    public function customer_send_payment_approved_email($payment,$sales)
-    {
-        $this->notify(new PaymentApprovedNotification($payment,$sales));
-    }
-
-    public function customer_send_payment_rejected_email()
-    {
-        $this->notify(new PaymentRejectedNotification());
-    }
-
-    public function customer_send_order_approved_email()
-    {
-        $this->notify(new OrderApprovedNotification());
-    }
-
-    public function customer_send_order_rejected_email()
-    {
-        $this->notify(new OrderRejectedNotification());
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function send_reset_password_email()
     {
@@ -208,8 +144,6 @@ class User extends Authenticatable
 
         $this->notify(new UserResetPasswordNotification($token));
     }
-
-
 
     public function send_reset_temporary_password_email()
     {

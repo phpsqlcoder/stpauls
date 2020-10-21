@@ -70,11 +70,8 @@ class TransactionStatusController extends Controller
             ]  
         );
 
-        $transaction = Transaction::find($request->transaction_name);
-
         TransactionStatus::create([
-            'name' => $transaction->name,
-            'transaction_id' => $transaction->id,
+            'name' => $request->transaction_name,
             'subject' => $request->subject,
             'content' => $request->content,
             'status' => ($request->has('status') ? 'ACTIVE' : 'INACTIVE'),
@@ -102,10 +99,15 @@ class TransactionStatusController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        $transaction = TransactionStatus::findOrFail($id);
+    {   
+        $transactions = 
+            Transaction::whereNotIn('name',function($query){
+                $query->select('name')->from('transaction_status');
+            })->where('status','ACTIVE')->orderBy('name','asc')->get();
 
-        return view('admin.transaction-status.edit',compact('transaction'));
+        $email = TransactionStatus::findOrFail($id);
+
+        return view('admin.transaction-status.edit',compact('transactions','email'));
     }
 
     /**
@@ -118,7 +120,9 @@ class TransactionStatusController extends Controller
     public function update(Request $request, $id)
     {
         TransactionStatus::findOrFail($id)->update([
-            'name' => $request->name,
+            'name' => $request->transaction_name,
+            'subject' => $request->subject,
+            'content' => $request->content,
             'status' => ($request->has('status') ? 'ACTIVE' : 'INACTIVE'),
             'user_id' => Auth::id()
         ]);

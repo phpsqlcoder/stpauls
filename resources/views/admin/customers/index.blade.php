@@ -123,12 +123,8 @@
                                             <nav class="nav table-options justify-content-begin">
                                                 <a class="nav-link" href="{{ route('customer.orders', $customer->id) }}" title="View Orders"><i data-feather="eye"></i></a>
                                                 @if($customer->is_active == 1)
-                                                    <a style="display:none;" class="nav-link" href="{{ route('customers.edit', $customer->id) }}" title="Edit User"><i data-feather="edit"></i></a>
-                                                @endif
-
-                                                @if($customer->is_active == 1)
                                                     @if (auth()->user()->has_access_to_route('customer.deactivate'))
-                                                        <a class="nav-link deactivate_user" data-user_id="{{ $customer->id }}" href="#" title="Deactivate User" data-toggle="modal" data-target="#modalUserDeactivate"><i data-feather="user-x"></i></a>
+                                                        <a class="nav-link deactivate_user" data-user_id="{{ $customer->id }}" href="#" title="Deactivate Customer" data-toggle="modal" data-target="#modalUserDeactivate"><i data-feather="user-x"></i></a>
                                                     @endif
                                                 @else
                                                     @if (auth()->user()->has_access_to_route('customer.activate'))

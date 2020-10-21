@@ -98,5 +98,13 @@ class SalesFrontController extends Controller
 
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.globalpay-success',compact('page','sales'));
     }
+
+    public function globalpay_failed($orderno)
+    {
+        $page = new Page();
+        $page->name = 'Payment Failed';
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.globalpay-error',compact('page'));
+    }
   
 }
