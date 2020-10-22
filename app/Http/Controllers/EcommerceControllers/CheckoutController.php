@@ -44,7 +44,9 @@ class CheckoutController extends Controller
         $customer  = User::find(Auth::id());
 
 
-        $products  = Cart::where('user_id',Auth::id())->get();   
+        $qry      = Cart::where('user_id',Auth::id());
+        $totalproducts = $qry->count();
+        $products = $qry->get();   
         $amount = 0;
         $weight = 0;
         foreach($products as $product){
@@ -62,8 +64,6 @@ class CheckoutController extends Controller
         ## Loyalty ##
         $qry_loyalty = LoyalCustomer::where('customer_id',Auth::id());
 
-        
-
         if($qry_loyalty->exists()){
             $data_loyalty = $qry_loyalty->first();
 
@@ -78,15 +78,15 @@ class CheckoutController extends Controller
             $loyalty_discount = 0;
         }
         ## Loyalty ##
-    
-        if ($products->count() == 0) {
-            return redirect()->route('product.front.list');
+        $forPickupCounter = 0;
+        foreach($products as $product){
+            if($product->product->for_pickup == 1){
+                $forPickupCounter += 1;
+            }
         }
 
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','weight','page','cod','stp','sdd','dtd','loyalty_discount','payment_method'));
-
-        // return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','user','locations','provinces','cities','page','cod','stp','sdd','dtd','branches','loyalty_discount','settings','payment_method'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','weight','page','cod','stp','sdd','dtd','loyalty_discount','payment_method','forPickupCounter','totalproducts'));
     }
 
     public function ajax_city_rates(Request $request)

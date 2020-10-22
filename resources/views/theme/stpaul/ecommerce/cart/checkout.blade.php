@@ -227,43 +227,44 @@
                                                     @endif
                                                 @endif
                                                 
-                                                
-                                                @if($customer->details->country == 259 || $customer->details->country == '')
-                                                <input type="radio" id="tab2" name="shipOption" value="2" class="tab">
-                                                <label id="stp_label" for="tab2">Store Pick-up <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                <div class="tab__content">
-                                                    <h3>Store Pick-up</h3>
-                                                    <div class="alert alert-info" role="alert">
-                                                        <h4 class="alert-heading">Reminder!</h4>
-                                                        <p>{{ $stp->reminder }}</p>
-                                                    </div>
-                                                    <div class="form-row form-style fs-sm">
-                                                        <div class="col">
-                                                            <label>Select Branch*</label>
-                                                            <select class="form-control form-input" name="branch" id="selbranch">
-                                                                <option selected value="0">-- Select Branch --</option>
-                                                                @foreach(Setting::branches() as $branch)
-                                                                <option value="{{$branch->name}}">{{ $branch->name }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                            <p id="stp_branch" class="text-danger" style="display: none;"><small>The branch field is required.</small></p>
+                                                @if($forPickupCounter == $totalproducts)
+                                                    @if($customer->details->country == 259 || $customer->details->country == '')
+                                                    <input type="radio" id="tab2" name="shipOption" value="2" class="tab">
+                                                    <label id="stp_label" for="tab2">Store Pick-up <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                    <div class="tab__content">
+                                                        <h3>Store Pick-up</h3>
+                                                        <div class="alert alert-info" role="alert">
+                                                            <h4 class="alert-heading">Reminder!</h4>
+                                                            <p>{{ $stp->reminder }}</p>
+                                                        </div>
+                                                        <div class="form-row form-style fs-sm">
+                                                            <div class="col">
+                                                                <label>Select Branch*</label>
+                                                                <select class="form-control form-input" name="branch" id="selbranch">
+                                                                    <option selected value="0">-- Select Branch --</option>
+                                                                    @foreach(Setting::branches() as $branch)
+                                                                    <option value="{{$branch->name}}">{{ $branch->name }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <p id="stp_branch" class="text-danger" style="display: none;"><small>The branch field is required.</small></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="gap-10"></div>
+                                                        <div class="form-row form-style fs-sm">
+                                                            <div class="col-lg-6 mb-sm-2">
+                                                                <label>Date *</label>
+                                                                <input type="date" name="pickup_date" onchange="pickupDate()" id="pickup_date" class="form-control form-input"
+                                                                    min="{{date('Y-m-d',strtotime(today()))}}">
+                                                                <p id="stp_date" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <label>Time *</label>
+                                                                <input type="time" name="pickup_time" onchange="pickupTime()" id="pickup_time" class="form-control form-input">
+                                                                <p id="stp_time" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="gap-10"></div>
-                                                    <div class="form-row form-style fs-sm">
-                                                        <div class="col-lg-6 mb-sm-2">
-                                                            <label>Date *</label>
-                                                            <input type="date" name="pickup_date" onchange="pickupDate()" id="pickup_date" class="form-control form-input"
-                                                                min="{{date('Y-m-d',strtotime(today()))}}">
-                                                            <p id="stp_date" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <label>Time *</label>
-                                                            <input type="time" name="pickup_time" onchange="pickupTime()" id="pickup_time" class="form-control form-input">
-                                                            <p id="stp_time" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    @endif
                                                 @endif
                                                 
                                                 @if($customer->details->country == 259 || $customer->details->country == '')
