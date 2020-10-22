@@ -102,7 +102,7 @@
                     </div>
                     <div class="form-group">
                         <label class="d-block">Add Inventory</label>
-                        <input name="add_inv" id="add_inv" value="{{ old('add_inv') }}" type="number" min="1" class="form-control">
+                        <input name="add_inv" id="add_inv" value="{{ old('add_inv',0) }}" type="number" min="1" class="form-control">
                         <span>Current Available Stock : {{ $product->inventory }}</span>
                     </div>
                     <div class="form-group">
