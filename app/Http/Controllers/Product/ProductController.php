@@ -21,6 +21,10 @@ use App\EcommerceModel\ProductPhoto;
 use App\EcommerceModel\ProductTag;
 use App\EcommerceModel\Product;
 
+use App\StPaulModel\OnSaleProducts;
+use App\InventoryReceiverHeader;
+use App\InventoryReceiverDetail;
+
 use Illuminate\Support\Facades\Input;
 class ProductController extends Controller
 {
@@ -129,13 +133,18 @@ class ProductController extends Controller
             'status' => ($request->has('status') ? 'PUBLISHED' : 'PRIVATE'),
             'is_featured' => $request->has('is_featured'),
             'uom' => Input::get('uom'),
+            'discount' => $request->discount,
+            'qty' => $request->qty,
+            'is_recommended' => ($request->has('is_recommended') ? 1 : 0),
+            'isfront' => ($request->has('isfront') ? 1 : 0),
+            'for_pickup' => ($request->has('for_pickup') ? 1 : 0),
             'meta_title' => $request->seo_title,
             'meta_keyword' => $request->seo_keywords,
             'meta_description' => $request->seo_description,
             'created_by' => Auth::id(),
         ]);
 
-
+        $this->store_inventory($product->id,$request->qty);
         $this->store_product_additional_info($product->id,$request);
         $this->tags($product->id, $request->tags);
 
@@ -233,7 +242,8 @@ class ProductController extends Controller
             'meta_description' => 'max:250',
             'price' => 'required',
             'weight' => 'required',
-            'size' => 'max:30'
+            'size' => 'max:30',
+            'qty' => 'required'
         ])->validate();
 
         $product = Product::findOrFail($id);
@@ -260,12 +270,18 @@ class ProductController extends Controller
             'status' => ($request->has('status') ? 'PUBLISHED' : 'PRIVATE'),
             'is_featured' => $request->has('is_featured'),
             'uom' => $request->uom,
+            'discount' => $request->discount,
+            'qty' => $request->qty,
+            'is_recommended' => ($request->has('is_recommended') ? 1 : 0),
+            'isfront' => ($request->has('isfront') ? 1 : 0),
+            'for_pickup' => ($request->has('for_pickup') ? 1 : 0),
             'meta_title' => $request->seo_title,
             'meta_keyword' => $request->seo_keywords,
             'meta_description' => $request->seo_description,
             'created_by' => Auth::id()
         ]);
 
+        $this->store_inventory($id,$request->add_inv);
         $this->update_product_additional_info($product->id,$request);
         $this->update_tags($product->id,$request->tags);
 
@@ -290,6 +306,22 @@ class ProductController extends Controller
         }
 
         return back()->with('success', __('standard.products.product.update_success'));
+    }
+
+    public function store_inventory($productid,$qty)
+    {
+        $header= InventoryReceiverHeader::create([
+            'user_id' => Auth::id(),
+            'posted_at' => now(),
+            'posted_by' => Auth::id(),
+            'status' => 'POSTED'
+        ]);
+
+        InventoryReceiverDetail::create([
+            'product_id' => $productid,
+            'inventory' => $qty,
+            'header_id' => $header->id
+        ]);
     }
 
     public function update_product_additional_info($prodID,$request)
@@ -373,6 +405,8 @@ class ProductController extends Controller
         $product->update([ 'created_by' => Auth::id() ]);
         $product->delete();
 
+        OnSaleProducts::where('product_id',$request->products)->forceDelete();
+
         return back()->with('success', __('standard.products.product.single_delete_success'));
 
     }
@@ -398,6 +432,8 @@ class ProductController extends Controller
         foreach($products as $product){
             Product::whereId($product)->update(['created_by' => Auth::id() ]);
             Product::whereId($product)->delete();
+
+            OnSaleProducts::where('product_id',$request->products)->forceDelete();
         }
 
         return back()->with('success', __('standard.products.product.multiple_delete_success'));

@@ -18,7 +18,7 @@ class Product extends Model
     use SoftDeletes;
 
     public $table = 'products';
-    protected $fillable = [ 'code', 'category_id', 'name', 'slug', 'short_description', 'description', 'currency', 'price', 'size','weight', 'status', 'is_featured', 'uom', 'created_by', 'meta_title', 'meta_keyword', 'meta_description','zoom_image','reorder_point','beta_id'];
+    protected $fillable = [ 'code', 'category_id', 'name', 'slug', 'short_description', 'description', 'currency', 'price', 'size','weight', 'status', 'is_featured', 'uom', 'created_by', 'meta_title', 'meta_keyword', 'meta_description','zoom_image','reorder_point','discount','qty','is_pickup','is_recommended','isfront','beta_id'];
 
     public function get_url()
     {
@@ -207,16 +207,52 @@ class Product extends Model
         return $this->belongsTo('\App\StPaulModel\OnSaleProducts','id','product_id');
     }
 
-    public function getDiscountedAmountAttribute()
-    {
-        $discount = ($this->on_sale->promo_details->discount/100);
+    // public function getDiscountedAmountAttribute()
+    // {
+    //     $saleChecker = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$this->id)->count();
 
-        return ($this->price * $discount);
-    }
+    //     if($saleChecker > 0){
+
+    //         $discount = ($this->on_sale->promo_details->discount/100);
+    //         $discountedAmount = ($this->price * $discount);
+
+    //     } else {
+
+
+
+    //     }
+
+
+
+
+    //     $discount = ($this->on_sale->promo_details->discount/100);
+
+    //     return ($this->price * $discount);
+    // }
+
+    // public function getDiscountedPriceAttribute()
+    // {
+    //     return ($this->price - $this->DiscountedAmount);
+    // }
 
     public function getDiscountedPriceAttribute()
     {
-        return ($this->price - $this->DiscountedAmount);
+        $saleChecker = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$this->id)->count();
+
+        if($saleChecker > 0){
+            $discount = ($this->on_sale->promo_details->discount/100);
+            $discountedAmount = ($this->price * $discount);
+
+            $price = ($this->price - $discountedAmount);
+        } else {
+            if($this->discount > 0){
+                $price = ($this->price - $this->discount);
+            } else {
+                $price = $this->price;
+            }
+        }
+
+        return $price;
     }
 
     public static function onsale_checker($id)
@@ -224,6 +260,19 @@ class Product extends Model
         $checkproduct = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$id)->count();
 
         return $checkproduct;
+    }
+
+    public static function products_cat($categoryid)
+    {
+        $products = 
+            Product::whereNotIn('id',function($query){
+                $query->select('product_id')->from('onsale_products')
+                ->join('promos','onsale_products.promo_id','=','promos.id')
+                ->where('promos.status','ACTIVE')
+                ->where('promos.is_expire',0);
+            })->where('isfront',1)->where('category_id',$categoryid)->where('status', 'PUBLISHED')->where('is_recommended',0)->orderBy('name','asc')->get();
+
+        return $products;
     }
 
 

@@ -42,16 +42,22 @@
                     <!-- Our Products Books Tab Content -->
                     <div class="tab-pane fade show active" id="pills-book" role="tabpanel" aria-labelledby="pills-book-tab">
                         <div id="book" class="slick-slider">
-                            @php
-                                $books = \App\EcommerceModel\Product::where('category_id',1)->where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
-                            @endphp
-
-                            @foreach($books as $book)
+                            @foreach(\App\EcommerceModel\Product::products_cat(3) as $book)
                             <div class="product-link">
                                 <div class="product-card">
+                                    @if($book->discount > 0)
+                                        <div class="product-discount">₱ {{ $book->discount }} LESS</div>
+                                    @endif
                                     <a href="{{ route('product.front.show',$book->slug)}}">
                                         <img src="{{ asset('storage/products/'.$book->photoPrimary) }}" alt="" />
-                                        <h3 class="product-price"><br>Php {{ $book->getPriceWithCurrencyAttribute() }}</h3>
+                                        @if($book->discount > 0)
+                                        <h3 class="product-price">
+                                            <div class="old" style="font-size:15px;">Php {{ number_format($book->price,2) }}</div>
+                                            Php {{ number_format($book->price-$book->discount,2) }}
+                                        </h3>
+                                        @else
+                                        <h3 class="product-price"><br>Php {{ number_format($book->price,2) }}</h3>
+                                        @endif
                                     </a>
                                     <p class="product-title">{{ $book->name }}</p> 
                                     @if($book->inventory > 0)
@@ -73,16 +79,22 @@
                     <!-- Our Products Bibles Tab Content -->
                     <div class="tab-pane fade" id="pills-bible" role="tabpanel" aria-labelledby="pills-bible-tab">
                         <div id="bible" class="slick-slider">
-                            @php
-                                $bibles = \App\EcommerceModel\Product::where('category_id',2)->where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
-                            @endphp
-
-                            @foreach($bibles as $bible)
+                            @foreach(\App\EcommerceModel\Product::products_cat(4) as $bible)
                             <div class="product-link">
                                 <div class="product-card">
+                                    @if($bible->discount > 0)
+                                        <div class="product-discount">₱ {{ $bible->discount }} LESS</div>
+                                    @endif
                                     <a href="p{{ route('product.front.show',$bible->slug)}}">
                                         <img src="{{ asset('storage/products/'.$bible->photoPrimary) }}" alt="" />
-                                        <h3 class="product-price"><br>Php {{ $bible->getPriceWithCurrencyAttribute() }}</h3>
+                                        @if($bible->discount > 0)
+                                        <h3 class="product-price">
+                                            <div class="old" style="font-size:15px;">Php {{ number_format($bible->price,2) }}</div>
+                                            Php {{ number_format($bible->price-$bible->discount,2) }}
+                                        </h3>
+                                        @else
+                                        <h3 class="product-price"><br>Php {{ number_format($bible->price,2) }}</h3>
+                                        @endif
                                     </a>
                                     <p class="product-title">{{ $bible->name }}</p>
                                     @if($bible->inventory > 0)
@@ -104,16 +116,22 @@
                     <!-- Our Products Devotional Tab Content -->
                     <div class="tab-pane fade" id="pills-devotional" role="tabpanel" aria-labelledby="pills-devotional-tab">
                         <div id="devotional" class="slick-slider">
-                            @php
-                                $devotionals = \App\EcommerceModel\Product::where('category_id',4)->where('status', 'PUBLISHED')->orderBy('name','asc')->get(); 
-                            @endphp
-
-                            @foreach($devotionals as $devo)
+                            @foreach(\App\EcommerceModel\Product::products_cat(6) as $devo)
                             <div class="product-link">
                                 <div class="product-card">
+                                    @if($devo->discount > 0)
+                                        <div class="product-discount">₱ {{ $devo->discount }} LESS</div>
+                                    @endif
                                     <a href="{{ route('product.front.show',$devo->slug)}}">
                                         <img src="{{ asset('storage/products/'.$devo->photoPrimary) }}" alt="" />
-                                        <h3 class="product-price"><br>Php {{ $devo->getPriceWithCurrencyAttribute() }}</h3>
+                                        @if($devo->discount > 0)
+                                        <h3 class="product-price">
+                                            <div class="old" style="font-size:15px;">Php {{ number_format($devo->price,2) }}</div>
+                                            Php {{ number_format($devo->price-$devo->discount,2) }}
+                                        </h3>
+                                        @else
+                                        <h3 class="product-price"><br>Php {{ number_format($devo->price,2) }}</h3>
+                                        @endif
                                     </a>
                                     <p class="product-title">{{ $devo->name }}</p>
                                     <form>
@@ -167,16 +185,26 @@
                 <!-- Recommended Titles Content -->
                 <div id="reco-title" class="slick-slider">
                     @php
-                        $recommended_titles = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->where('is_featured',1)->orderBy('name','asc')->get(); 
+                        $recommended_titles = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->where('is_recommended',1)->orderBy('name','asc')->get(); 
                     @endphp
 
                     @foreach($recommended_titles->chunk(2) as $title)
                         <div class="product-link">
                             @foreach($title as $b)
                                 <div class="product-card mb-4">
+                                    @if($b['discount'] > 0)
+                                    <div class="product-discount">₱ {{ $b['discount'] }} LESS</div>
+                                    @endif
                                     <a href="{{ route('product.front.show',$b['slug'])}}">
                                         <img src="{{ asset('storage/products/'.$b->photoPrimary) }}" alt="" />
+                                        @if($b['discount'] > 0)
+                                        <h3 class="product-price">
+                                            <div class="old" style="font-size:15px;">Php {{ number_format($b['price'],2) }}</div>
+                                            Php {{ number_format($b['price']-$b['discount'],2) }}
+                                        </h3>
+                                        @else
                                         <h3 class="product-price"><br>Php {{ number_format($b['price'],2) }}</h3>
+                                        @endif
                                     </a>
                                     <p class="product-title">{{ $b['name'] }}</p>
                                     <form id="addToCart{{$b['id']}}" data-source="">
@@ -231,7 +259,7 @@
                                     <img src="{{ asset('storage/products/'.$product->details->photoPrimary) }}" alt="" />
                                     <h3 class="product-price">
                                         @if($product['discount'] > 0)
-                                            <div class="old">Php {{ number_format($product->details->price,2) }}</div>
+                                            <div class="old" style="font-size:15px;">Php {{ number_format($product->details->price,2) }}</div>
                                         @else
                                             <br>
                                         @endif

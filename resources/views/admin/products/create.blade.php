@@ -58,7 +58,7 @@
                     <div class="form-group">
                         <label class="d-block">Category *</label>
                         <select required name="category_id" id="category_id" class="selectpicker mg-b-5 @error('category_id') is-invalid @enderror" value="{{ old('category_id') }}" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
-                            <option value="0">-- Select Category --</option>
+                            <option value="">-- Select Category --</option>
                             @foreach($categories as $category)
                                 <option value="{{$category->id}}">{{strtoupper($category->name)}}</option>
                             @endforeach
@@ -70,6 +70,12 @@
                         <label>Price (in Php) *</label>
                         <input required class="form-control @error('price') is-invalid @enderror" type="number" step="0.01" min="0.00" value="0.00" name="price" id="price">
                         @hasError(['inputName' => 'price'])
+                        @endhasError
+                    </div>
+                    <div class="form-group">
+                        <label>Discount (in Php) </label>
+                        <input class="form-control @error('discount') is-invalid @enderror" type="number" step="0.01" min="0.00" value="0.00" name="discount" id="discount">
+                        @hasError(['inputName' => 'discount'])
                         @endhasError
                     </div>
                     <div class="form-group">
@@ -91,6 +97,13 @@
                 </div>
 
                 <div class="col-lg-6 mg-t-20">
+                    <div class="form-group">
+                        <label class="d-block">Inventory *</label>
+                        <input required name="qty" id="qty" value="{{ old('qty') }}" type="number" min="1" class="form-control @error('qty') is-invalid @enderror">
+                        @hasError(['inputName' => 'qty'])
+                        @endhasError
+                    </div>
+
                     <div class="form-group">
                         <label class="d-block">Reorder Point</label>
                         <input name="reorder_point" id="reorder_point" value="{{ old('reorder_point',0) }}" type="number" min="0" class="form-control @error('reorder_point') is-invalid @enderror" maxlength="250">
@@ -201,13 +214,40 @@
                             @endhasError
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="d-block">Display</label>
+                        <div class="custom-control custom-switch @error('isfront') is-invalid @enderror">
+                            <input type="checkbox" class="custom-control-input" name="isfront" {{ (old("isfront") ? "checked":"") }} id="customSwitch2">
+                            <label class="custom-control-label" for="customSwitch2">Front Page</label>
+                        </div>
+                        @hasError(['inputName' => 'isfront'])
+                        @endhasError
+                    </div>
+
+                    <div class="form-group">
                         <div class="custom-control custom-switch @error('is_featured') is-invalid @enderror">
-                            <input type="checkbox" class="custom-control-input" name="is_featured" {{ (old("is_featured") ? "checked":"") }} id="customSwitch2">
-                            <label class="custom-control-label" for="customSwitch2">Featured</label>
+                            <input type="checkbox" class="custom-control-input" name="is_featured" {{ (old("is_featured") ? "checked":"") }} id="customSwitch3">
+                            <label class="custom-control-label" for="customSwitch3">Featured</label>
                         </div>
                         @hasError(['inputName' => 'is_featured'])
+                        @endhasError
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="custom-control custom-switch @error('is_recommended') is-invalid @enderror">
+                            <input type="checkbox" class="custom-control-input" name="is_recommended" {{ (old("is_recommended") ? "checked":"") }} id="customSwitch4">
+                            <label class="custom-control-label" for="customSwitch4">Recommended</label>
+                        </div>
+                        @hasError(['inputName' => 'is_recommended'])
+                        @endhasError
+                    </div>
+                    <div class="form-group">
+                        <div class="custom-control custom-switch @error('for_pickup') is-invalid @enderror">
+                            <input type="checkbox" class="custom-control-input" name="for_pickup" {{ (old("for_pickup") ? "checked":"") }} id="customSwitch5">
+                            <label class="custom-control-label" for="customSwitch5">For Pick-up</label>
+                        </div>
+                        @hasError(['inputName' => 'for_pickup'])
                         @endhasError
                     </div>
                 </div>

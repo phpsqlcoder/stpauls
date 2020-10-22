@@ -40,6 +40,22 @@ class CartController extends Controller
         $product = Product::whereId($request->product_id)->first();
         $qty = isset($request->qty) ? $request->qty : 1;
         
+        $saleChecker = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$product->id)->count();
+
+        if($saleChecker > 0){
+            $discount = ($product->on_sale->promo_details->discount/100);
+            $discountedAmount = ($product->price * $discount);
+
+            $price = ($product->price - $discountedAmount);
+        } else {
+            if($product->discount > 0){
+                $price = $product->price-$product->discount;
+            } else {
+                $price = $product->price;
+            }  
+        }
+        
+
         if (auth()->check()) {
             
             $cart = Cart::where('product_id', $request->product_id)
@@ -48,17 +64,18 @@ class CartController extends Controller
 
             if (!empty($cart)) {
 
+
                 $newQty = $cart->qty + $qty;
                 $save = $cart->update([
                     'qty' => $newQty,
-                    'price' => (isset($request->price)) ? $request->price : $product->price
+                    'price' => (isset($request->price)) ? $request->price : $price
                 ]);
             } else {
                 $save = Cart::create([
                     'product_id' => $request->product_id,
                     'user_id' => Auth::id(),
                     'qty' => $qty,
-                    'price' => (isset($request->price)) ? $request->price : $product->price
+                    'price' => (isset($request->price)) ? $request->price : $price
                 ]);
             }
 
@@ -69,7 +86,7 @@ class CartController extends Controller
             foreach ($cart as $key => $order) {
                 if ($order->product_id == $request->product_id) {
                     $cart[$key]->qty = $qty;
-                    $cart[$key]->price = (isset($request->price)) ? $request->price : $product->price;
+                    $cart[$key]->price = (isset($request->price)) ? $request->price : $price;
                     $not_exist = false;
                     break;
                 }
@@ -79,7 +96,7 @@ class CartController extends Controller
                 $order = new Cart();
                 $order->product_id = $request->product_id;
                 $order->qty = $qty;
-                $order->price = (isset($request->price)) ? $request->price : $product->price;
+                $order->price = (isset($request->price)) ? $request->price : $price;
 
                 array_push($cart, $order);
             }
@@ -107,6 +124,21 @@ class CartController extends Controller
     {   
         $product = Product::whereId($request->product_id)->first();
 
+        $saleChecker = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$product->id)->count();
+
+        if($saleChecker > 0){
+            $discount = ($product->on_sale->promo_details->discount/100);
+            $discountedAmount = ($product->price * $discount);
+
+            $price = ($product->price - $discountedAmount);
+        } else {
+            if($product->discount > 0){
+                $price = $product->price-$product->discount;
+            } else {
+                $price = $product->price;
+            }  
+        }
+
         if (auth()->check()) {
             
             $cart = Cart::where('product_id', $request->product_id)
@@ -118,14 +150,14 @@ class CartController extends Controller
                 $newQty = $cart->qty + $request->quantity;
                 $save = $cart->update([
                     'qty' => $newQty,
-                    'price' => $product->price
+                    'price' => $price
                 ]);
             } else {
                 $save = Cart::create([
                     'product_id' => $request->product_id,
                     'user_id' => Auth::id(),
                     'qty' => $request->quantity,
-                    'price' => $product->price
+                    'price' => $price
                 ]);
             }
 
@@ -136,7 +168,7 @@ class CartController extends Controller
             foreach ($cart as $key => $order){
                 if ($order->product_id == $request->product_id) {
                     $cart[$key]->qty = $request->quantity;
-                    $cart[$key]->price = $product->price;
+                    $cart[$key]->price = $price;
                     $not_exist = false;
                     break;
                 }
@@ -146,7 +178,7 @@ class CartController extends Controller
                 $order = new Cart();
                 $order->product_id = $request->product_id;
                 $order->qty = $request->quantity;
-                $order->price = $product->price;
+                $order->price = $price;
 
                 array_push($cart, $order);
             }

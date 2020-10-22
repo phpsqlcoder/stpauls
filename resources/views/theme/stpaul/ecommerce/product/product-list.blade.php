@@ -159,9 +159,19 @@
                                 <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-xs-1 pr-xs-1 item">
                                     <div class="product-link p-0">
                                         <div class="product-card">
+                                            @if($product->discount > 0)
+                                            <div class="product-discount">₱ {{ $product->discount }} LESS</div>
+                                            @endif
                                             <a href="{{ route('product.front.show',$product->slug)}}">
                                                 <div class="prodImg"><img src="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="" /></div>
+                                                @if($product->discount > 0)
+                                                <h3 class="product-price">
+                                                    <div class="old" style="font-size: 15px;">Php {{ number_format($product->price,2) }}</div>
+                                                    Php {{ number_format($product->price-$product->discount,2) }}
+                                                </h3>
+                                                @else
                                                 <h3 class="product-price">Php {{ number_format($product->price,2) }}</h3>
+                                                @endif 
                                             </a>
                                             <p class="product-title">{{ $product->name }}</p>
                                             <form id="addToCart" data-source="addToCart">

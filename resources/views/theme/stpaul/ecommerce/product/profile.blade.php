@@ -155,21 +155,32 @@
                                                 </span>
                                             </div>
                                             
-                                            <p>{{ $product->additional_info->authors }} | Product Name: {{ $product->name }}</p>
+                                            <p>{{ $product->additional_info->authors }} | Product Code: {{ $product->code }}</p>
                                             @if(\App\EcommerceModel\Product::onsale_checker($product->id) > 0)
                                                 <div class="product-price">
-                                                    <input type="hidden" id="product_price" value="{{ $product->DiscountedPrice }}">
-                                                    <span class="price-after">₱ {{ $product->DiscountedPrice }} </span>
+                                                    <input type="hidden" id="product_price" value="{{ $product->discountedprice }}">
+                                                    <span class="price-after">₱ {{ $product->discountedprice }} </span>
                                                     <span class="price-before">
                                                       <div class="price-less">{{ $product->on_sale->promo_details->discount }}% Off</div>
                                                       <div class="price-original">₱ {{ number_format($product->price,2) }}</div>
                                                     </span>
                                                 </div>
                                             @else
+                                                @if($product->discount > 0)
+                                                <div class="product-price">
+                                                    <input type="hidden" id="product_price" value="{{ $product->price-$product->discount }}">
+                                                    <span class="price-after">₱ {{ number_format($product->price-$product->discount,2) }}</span>
+                                                    <span class="price-before">
+                                                      <div class="price-less">₱ {{$product->discount }} LESS</div>
+                                                      <div class="price-original">₱ {{ number_format($product->price,2) }}</div>
+                                                    </span>
+                                                </div>
+                                                @else
                                                 <div class="product-price">
                                                     <input type="hidden" id="product_price" value="{{ $product->price }}">
                                                     <span class="price-after">₱ {{ $product->PriceWithCurrency }} </span>
                                                 </div>
+                                                @endif
                                             @endif
                                         </div>
 
