@@ -281,7 +281,10 @@ class ProductController extends Controller
             'created_by' => Auth::id()
         ]);
 
-        $this->store_inventory($id,$request->add_inv);
+        if($request->add_inv > 0){
+            $this->store_inventory($id,$request->add_inv);
+        }
+        
         $this->update_product_additional_info($product->id,$request);
         $this->update_tags($product->id,$request->tags);
 
