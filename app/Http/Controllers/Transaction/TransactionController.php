@@ -54,7 +54,7 @@ class TransactionController extends Controller
     {
         $this->validate(
             $request,[
-                'name' => 'required|max:150|unique:transactions,name',
+                'name' => 'required|max:150|unique:transactions,name,deleted_at,NULL',
             ]  
         );
 
