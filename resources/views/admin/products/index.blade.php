@@ -187,6 +187,7 @@
                                                         <i data-feather="settings"></i>
                                                     </a>
                                                     <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="#" onclick="add_inventory('{{$product->id}}','{{$product->inventory}}')"> Add Inventory</a>
                                                         @if($product->status == 'PUBLISHED')
                                                             <a class="dropdown-item" href="{{route('product.single-change-status',[$product->id,'PRIVATE'])}}" > Private</a>
                                                         @else
@@ -406,20 +407,6 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <div class="modal effect-scale" id="prompt-upload-main" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <form action="{{ route('products.upload.main') }}" method="post" enctype="multipart/form-data">
             @csrf
@@ -515,6 +502,37 @@
             </div>
         </form>
     </div>
+
+    <div class="modal effect-scale" id="prompt-add-inventory" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Add Inventory</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form autocomplete="off" action="{{ route('products.add-inventory') }}" method="post">
+                @csrf
+                    <div class="modal-body">
+                        <div class="modal-body">
+                            <input type="hidden" name="productid" id="productid">
+                            <h3 class="text-success">Available Stock : <span id="available_stock"></span></h3>
+                            <div class="form-group">
+
+                                <label class="d-block">Quantity *</label>
+                                <input required type="number" name="qty" class="form-control" autofocus>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('pagejs')
@@ -542,6 +560,13 @@
         $("#checkbox_all").click(function(){
             $('.cb').not(this).prop('checked', this.checked);
         });
+
+        function add_inventory(id,inventory){
+            $('#productid').val(id);
+            $('#available_stock').html(inventory);
+            $('#prompt-add-inventory').modal('show');
+
+        }
 
         /*** handles the changing of status of multiple pages ***/
         function change_status(status){

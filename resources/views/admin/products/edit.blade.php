@@ -95,17 +95,6 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="d-block">Inventory *</label>
-                        <input required name="qty" id="qty" value="{{ old('qty', number_format($product->qty,0)) }}" type="number" min="1" class="form-control @error('qty') is-invalid @enderror">
-                        @hasError(['inputName' => 'qty'])
-                        @endhasError
-                    </div>
-                    <div class="form-group">
-                        <label class="d-block">Add Inventory</label>
-                        <input name="add_inv" id="add_inv" value="{{ old('add_inv',0) }}" type="number" class="form-control">
-                        <span>Current Available Stock : {{ $product->inventory }}</span>
-                    </div>
-                    <div class="form-group">
                         <label class="d-block">Reorder Point</label>
                         <input name="reorder_point" id="reorder_point" value="{{ old('reorder_point',$product->reorder_point) }}" type="number" min="0" class="form-control @error('reorder_point') is-invalid @enderror" maxlength="250">
                         @hasError(['inputName' => 'reorder_point'])

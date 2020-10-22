@@ -134,7 +134,6 @@ class ProductController extends Controller
             'is_featured' => $request->has('is_featured'),
             'uom' => Input::get('uom'),
             'discount' => $request->discount,
-            'qty' => $request->qty,
             'is_recommended' => ($request->has('is_recommended') ? 1 : 0),
             'isfront' => ($request->has('isfront') ? 1 : 0),
             'for_pickup' => ($request->has('for_pickup') ? 1 : 0),
@@ -168,6 +167,29 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', __('standard.products.product.create_success'));
     }
 
+    public function add_inventory(Request $request)
+    {
+        $this->store_inventory($request->productid,$request->qty);
+
+        return back()->with('success','Inventory has been added.');
+    }
+
+    public function store_inventory($productid,$qty)
+    {
+        $header= InventoryReceiverHeader::create([
+            'user_id' => Auth::id(),
+            'posted_at' => now(),
+            'posted_by' => Auth::id(),
+            'status' => 'POSTED'
+        ]);
+
+        InventoryReceiverDetail::create([
+            'product_id' => $productid,
+            'inventory' => $qty,
+            'header_id' => $header->id
+        ]);
+    }
+    
     public function store_product_additional_info($prodID,$request)
     {
         ProductAdditionalInfo::create([
@@ -242,8 +264,7 @@ class ProductController extends Controller
             'meta_description' => 'max:250',
             'price' => 'required',
             'weight' => 'required',
-            'size' => 'max:30',
-            'qty' => 'required'
+            'size' => 'max:30'
         ])->validate();
 
         $product = Product::findOrFail($id);
@@ -271,7 +292,6 @@ class ProductController extends Controller
             'is_featured' => $request->has('is_featured'),
             'uom' => $request->uom,
             'discount' => $request->discount,
-            'qty' => $request->qty,
             'is_recommended' => ($request->has('is_recommended') ? 1 : 0),
             'isfront' => ($request->has('isfront') ? 1 : 0),
             'for_pickup' => ($request->has('for_pickup') ? 1 : 0),
@@ -280,10 +300,6 @@ class ProductController extends Controller
             'meta_description' => $request->seo_description,
             'created_by' => Auth::id()
         ]);
-
-        if($request->add_inv > 0){
-            $this->store_inventory($id,$request->add_inv);
-        }
         
         $this->update_product_additional_info($product->id,$request);
         $this->update_tags($product->id,$request->tags);
@@ -309,22 +325,6 @@ class ProductController extends Controller
         }
 
         return back()->with('success', __('standard.products.product.update_success'));
-    }
-
-    public function store_inventory($productid,$qty)
-    {
-        $header= InventoryReceiverHeader::create([
-            'user_id' => Auth::id(),
-            'posted_at' => now(),
-            'posted_by' => Auth::id(),
-            'status' => 'POSTED'
-        ]);
-
-        InventoryReceiverDetail::create([
-            'product_id' => $productid,
-            'inventory' => $qty,
-            'header_id' => $header->id
-        ]);
     }
 
     public function update_product_additional_info($prodID,$request)

@@ -286,6 +286,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/admin/product/restore/{id}', 'Product\ProductController@restore')->name('product.restore');
             Route::post('/admin/product-multiple-change-status','Product\ProductController@multiple_change_status')->name('product.multiple.change.status');
             Route::post('/admin/product-multiple-delete','Product\ProductController@multiple_delete')->name('products.multiple.delete');
+            Route::post('/product-add-inventory','Product\ProductController@add_inventory')->name('products.add-inventory');
         //
 
         //Inventory

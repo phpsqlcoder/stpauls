@@ -102,8 +102,9 @@
                         <input required name="qty" id="qty" value="{{ old('qty') }}" type="number" min="1" class="form-control @error('qty') is-invalid @enderror">
                         @hasError(['inputName' => 'qty'])
                         @endhasError
+                        <small class="text-danger">Note: Please make sure that inventory value is final. For it will be posted automatically.</small>
                     </div>
-
+ 
                     <div class="form-group">
                         <label class="d-block">Reorder Point</label>
                         <input name="reorder_point" id="reorder_point" value="{{ old('reorder_point',0) }}" type="number" min="0" class="form-control @error('reorder_point') is-invalid @enderror" maxlength="250">
