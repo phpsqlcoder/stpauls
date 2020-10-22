@@ -35,12 +35,11 @@
                         <label class="d-block">Transaction type</label>
                         <select name="type" id="type" class="form-control">
                             <option value="">-- None --</option>
-                            <option @if($transaction->type == 'Customer') selected @endif value="Customer">Customer</option>
+                            <option @if($transaction->type == 'Customer Management') selected @endif value="Customer Management">Customer Management</option>
                             <option @if($transaction->type == 'Payment') selected @endif value="Payment">Payment</option>
                             <option @if($transaction->type == 'Order') selected @endif value="Order">Order</option>
                             <option @if($transaction->type == 'Shipping Fee') selected @endif value="Shipping Fee">Shipping Fee</option>
                             <option @if($transaction->type == 'Delivery Status') selected @endif value="Delivery Status">Delivery Status</option>
-                            <option @if($transaction->type == 'Reactivation Request') selected @endif value="Reactivation Request">Reactivation Request</option>
                         </select>
                     </div>
 

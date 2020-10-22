@@ -32,12 +32,11 @@
                         <label class="d-block">Transaction type</label>
                         <select name="type" id="type" class="form-control">
                             <option value="">-- None --</option>
-                            <option value="Customer">Customer</option>
+                            <option value="Customer">Customer Management</option>
                             <option value="Payment">Payment</option>
                             <option value="Order">Order</option>
                             <option value="Shipping Fee">Shipping Fee</option>
                             <option value="Delivery Status">Delivery Status</option>
-                            <option value="Reactivation Request">Reactivation Request</option>
                         </select>
                     </div>
 
