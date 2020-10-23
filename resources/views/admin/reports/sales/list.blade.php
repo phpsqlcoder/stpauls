@@ -59,10 +59,10 @@
                     <select name="customer" id="customer" class="form-control input-sm">
                         <option value="">Select</option>
                         @php
-                            $customers = \App\EcommerceModel\SalesHeader::distinct()->orderBy('customer_name')->get(['customer_name']);
+                            $customers = \App\User::where('role_id',3)->orderBy('firstname')->get();
                         @endphp
                         @forelse($customers as $cu)
-                            <option value="{{$cu->customer_name}}">{{$cu->customer_name}}</option>
+                            <option value="{{$cu->id}}">{{$cu->fullname}}</option>
                         @empty
                         @endforelse
                     </select>
