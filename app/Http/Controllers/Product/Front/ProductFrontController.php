@@ -138,6 +138,7 @@ class ProductFrontController extends Controller
                 $searchtxt = $request->searchtxt;      
                 $products = $products->where(function($query) use ($searchtxt){
                     $query->where('products.name','like','%'.$searchtxt.'%')
+                        ->orWhere('products.code','like','%'.$searchtxt.'%')
                         ->orWhere('products.description','like','%'.$searchtxt.'%')
                         ->orWhere('authors','like','%'.$searchtxt.'%');
                     });

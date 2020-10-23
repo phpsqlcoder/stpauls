@@ -214,7 +214,7 @@ class ReportsController extends Controller
         $sales = \DB::table('ecommerce_sales_details')
                 ->leftJoin('ecommerce_sales_headers', 'ecommerce_sales_details.sales_header_id', '=', 'ecommerce_sales_headers.id')
                 ->where('ecommerce_sales_details.product_id','=',$id->id)
-                ->where('ecommerce_sales_headers.payment_status','=','PAID')
+                ->where('ecommerce_sales_headers.delivery_status','=','Scheduled for Processing')
                 ->where('ecommerce_sales_headers.status','=','active')
                 ->select('ecommerce_sales_headers.created_at as created', 'ecommerce_sales_details.qty as qty','ecommerce_sales_headers.order_number as ref',
                     \DB::raw('"sales" as type'))

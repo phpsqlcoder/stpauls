@@ -93,7 +93,10 @@
                 {
                     extend: 'print',
                     exportOptions: {
-                        columns: ':visible'
+                        columns: ':visible',
+                        modifier: {
+                            page: 'all'
+                        }
                     }
                 },
                 {
@@ -103,35 +106,30 @@
                     }
                 },
                 {
-                    extend: 'csv',
-                    exportOptions: {
-                        columns: ':visible'
-                    }
-                },
-                {
                     extend: 'excel',
                     exportOptions: {
                         columns: ':visible'
-                    }
+                    },
+                    customizeData: function(data) {
+                        for(var i = 0; i < data.body.length; i++) {
+                            for(var j = 0; j < data.body[i].length; j++) {
+                                data.body[i][j] = '\u200C' + data.body[i][j];
+                            }
+                        }
+                    },      
                 },
-                 // {
-                //     extend: 'pdf',
-                //     exportOptions: {
-                //         columns: ':visible'
-                //     }
-                // },
                 {   
                     extend: 'pdfHtml5',
                     text: 'PDF',
                     exportOptions: {
+                        columns: ':visible',
                         modifier: {
-                            page: 'current'
+                            page: 'all'
                         }
                     },
                     orientation : 'landscape',
                     pageSize : 'LEGAL'
-                },
-                'colvis'
+                }
             ],
             columnDefs: [ {
                 targets: [],

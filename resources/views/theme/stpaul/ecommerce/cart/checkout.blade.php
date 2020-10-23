@@ -273,7 +273,7 @@
                                                     <label id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                     <div class="tab__content">
                                                         <div class="alert alert-info" role="alert">
-                                                            <h4 class="alert-heading">Reminder!</h4>zipcode
+                                                            <h4 class="alert-heading">Reminder!</h4>
                                                             <p>{{ $sdd->reminder }}</p>
                                                         </div>
                                                     </div>

@@ -173,7 +173,7 @@ Manage Customer
                             </tr>
                             @empty
                             <tr>
-                                <th colspan="6" style="text-align: center;"> <p class="text-danger">No categories found.</p></th>
+                                <th colspan="6" style="text-align: center;"> <p class="text-danger">No Transaction Status Found.</p></th>
                             </tr>
                             @endforelse
                             </tbody>

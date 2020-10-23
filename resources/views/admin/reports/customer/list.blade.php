@@ -98,7 +98,10 @@
                 {
                     extend: 'print',
                     exportOptions: {
-                        columns: ':visible'
+                        columns: ':visible',
+                        modifier: {
+                            page: 'all'
+                        }
                     }
                 },
                 {
@@ -123,8 +126,9 @@
                     extend: 'pdfHtml5',
                     text: 'PDF',
                     exportOptions: {
+                        columns: ':visible',
                         modifier: {
-                            page: 'current'
+                            page: 'all'
                         }
                     },
                     orientation : 'landscape',
