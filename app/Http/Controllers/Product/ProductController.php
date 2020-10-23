@@ -769,5 +769,70 @@ class ProductController extends Controller
 
     }
 
+    public function upload_photos(Request $request)
+    {
+
+        $csv = array();
+
+        if(($handle = fopen($request->csv, 'r')) !== FALSE) {
+            // necessary if a large csv file
+            set_time_limit(0);
+
+            $row = 0;
+            while(($data = fgetcsv($handle, 5000, ',')) !== FALSE) {
+                $row++;
+                // number of fields in the csv
+                $col_count = count($data);
+                if($row > 1){
+
+                    $qry = Product::where('beta_id',$data[0]);
+
+                    if($qry->count() > 0){
+                        $product = $qry->update(['photo' => $data[1]]);
+                    }
+                    
+                }
+
+
+            }
+            fclose($handle);
+        }
+
+        return back()->with('success','Product photo has been updated.');
+
+    }
+
+    public function upload_images(Request $request)
+    {   
+
+        foreach($request->file('images') as $file)
+        {
+            $qry = Product::where('photo',$file->getClientOriginalName());
+
+            if($qry->count() > 0){
+                $product = $qry->first();
+
+                ProductPhoto::create([
+                    'product_id' => $product->id,
+                    'name' => $file->getClientOriginalName(),
+                    'description' => 'product photo',
+                    'path' => $product->id.'/'.$file->getClientOriginalName(),
+                    'status' => 'PUBLISHED',
+                    'is_primary' => 1,
+                    'created_by' => Auth::id()
+                ]);
+
+                Storage::makeDirectory('/public/products/'.$product->id);
+                Storage::putFileAs('/public/products/'.$product->id, $file, $file->getClientOriginalName());
+            }
+
+
+
+        }
+
+        return back()->with('success','Product images has been uploaded.');
+
+    }
+
     
 }
