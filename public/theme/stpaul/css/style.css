@@ -568,7 +568,7 @@ p {
   position: absolute;
   top: 35%;
   right: 30px;
-  font: 600 14px 'Linearicon';
+  font: 600 14px 'Linearicons-Free';
   border: none;
 }
 
@@ -3728,10 +3728,15 @@ p {
   width: 30px;
 }
 
-#salesTransaction_wrapper .dataTables_scroll,
-  #salesTransaction_wrapper .dataTables_info {
-    font-size: 0.95rem;
-  }
+#salesTransaction_wrapper .dataTables_scroll, #salesTransaction_wrapper .dataTables_info {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+#salesTransaction_wrapper .dataTables_scroll .lnr {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
 
 @font-face {
   font-family: 'FontAwesome';
