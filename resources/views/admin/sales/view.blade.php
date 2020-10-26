@@ -82,7 +82,14 @@
             <p class="mg-b-3">{{$sales->customer_contact_number}}</p>
             <p class="mg-b-3"><a href="mailto:{{ $sales->customer_main_details->email }}">{{ $sales->customer_main_details->email }}</a></p>
             <p>&nbsp;</p>
-            <p>Remarks : {{ $sales->remarks }}</p>
+            <p class="mg-b-10">Remarks : {{ $sales->remarks }}</p>
+            @if($sales->sdd_booking_type == 1)
+            <p class="mg-b-3">Courier Name : {{ $sales->courier_name }}</p>
+            <p class="mg-b-3">Rider Name : {{ $sales->rider_name }}</p>
+            <p class="mg-b-3">Contact # : {{ $sales->rider_contact_no }}</p>
+            <p class="mg-b-3">Plate # : {{ $sales->rider_plate_no }}</p>
+            <p class="mg-b-3">Rider Tracker Link : {{ $sales->rider_link_tracker }}</p>
+            @endif
         </div>
         <!-- col -->
 

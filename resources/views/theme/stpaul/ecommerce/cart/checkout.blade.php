@@ -276,6 +276,10 @@
                                                             <h4 class="alert-heading">Reminder!</h4>
                                                             <p>{{ $sdd->reminder }}</p>
                                                         </div>
+                                                        <div class="form-check">
+                                                            <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
+                                                            <label class="form-check-label" for="exampleCheck1">Book your own rider</label>
+                                                        </div>
                                                     </div>
                                                     @endif
                                                 @endif
@@ -944,16 +948,26 @@
 
             if(option == 1 || option == 3 || option == 4){
 
-                if(option == 1){
-                    $('#input_servicefee').val(codServiceFee);
-                    $('#span_servicefee').html(FormatAmount(codServiceFee,2));
-                } else {
+                if($('#exampleCheck1').is(":checked") && option == 4){
                     $('#input_servicefee').val(0);
                     $('#span_servicefee').html('0.00');
-                }
 
-                $('#input_shippingfee').val(shippingfee);
-                $('#span_shippingfee').html(FormatAmount(shippingfee,2));
+                    $('#input_shippingfee').val(0);
+                    $('#span_shippingfee').html('0.00');
+
+                } else {
+                    if(option == 1){
+                        $('#input_servicefee').val(codServiceFee);
+                        $('#span_servicefee').html(FormatAmount(codServiceFee,2));
+                    } else {
+                        $('#input_servicefee').val(0);
+                        $('#span_servicefee').html('0.00');
+                    }
+
+                    $('#input_shippingfee').val(shippingfee);
+                    $('#span_shippingfee').html(FormatAmount(shippingfee,2));
+                }
+                
 
             } else {
                 $('#input_servicefee').val(0);

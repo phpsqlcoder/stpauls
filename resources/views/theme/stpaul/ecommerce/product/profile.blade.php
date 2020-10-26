@@ -221,17 +221,17 @@
                     <div class="product-additional">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Details about the product</a>
+                                <a class="nav-link @if($tab == 'details') active @endif" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Details about the product {{ $tab }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="synopsis-tab" data-toggle="tab" href="#synopsis" role="tab" aria-controls="synopsis" aria-selected="true">{{ ($product->category->name == 'Books') ? 'Synopsis' : 'Prayer' }}</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false">Reviews</a>
+                                <a class="nav-link @if($tab == 'reviews') active @endif" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review" aria-selected="false">Reviews</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="detail" role="tabpanel" aria-labelledby="detail-tab">
+                            <div class="tab-pane fade @if($tab == 'details') show active @endif" id="detail" role="tabpanel" aria-labelledby="detail-tab">
                                 <table>
                                     <tr>
                                         <td><p><b>Weight (grams):</b> {{ $product->weight }}</p></td>
@@ -265,7 +265,7 @@
                             <div class="tab-pane fade" id="synopsis" role="tabpanel" aria-labelledby="synopsis-tab">
                                 {!! $product->additional_info->synopsis !!}
                             </div>
-                            <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
+                            <div class="tab-pane fade @if($tab == 'reviews') show active @endif" id="review" role="tabpanel" aria-labelledby="review-tab">
                                 @if($reviews_count > 0)
                                     <!-- START REVIEW WRAP -->
                                     <div class="review-wrap">
@@ -291,27 +291,7 @@
                                         @endforeach
                                         
                                         <div class="gap-20"></div>
-
-                                        <!-- <ul class="pagination">
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" title="Back"><i class="lnr lnr-chevron-left"></i></a>
-                                            </li>
-                                            <li class="page-item active">
-                                                <a class="page-link" href="#">1</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">2</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">3 <span class="sr-only">(current)</span></a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#">4</a>
-                                            </li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" title="Next"><i class="lnr lnr-chevron-right"></i></a>
-                                            </li>
-                                        </ul> -->
+                                        {!! $reviews->links() !!}
                                     </div>
                                     <!-- END REVIEW WRAP -->
                                 @else

@@ -74,6 +74,10 @@
                                             @endif
                                         @endif
 
+                                        @if($sale->sdd_booking_type == 1 && $sale->rider_name == '' && $sale->delivery_status == 'Scheduled for Processing')
+                                        <a href="{{ route('transaction.add-rider',$sale->id) }}" title="Add Rider"><span class="lnr lnr-bicycle mr-2"></span></a>
+                                        @endif
+
                                         <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
                                         <a href="{{ route('account-order-info',$sale->id) }}" title="View Order Summary">
                                             <span class="lnr lnr-eye"></span>
@@ -143,13 +147,12 @@
                     <div class="form-group">
                         <label for="attachment" class="col-form-label">Attach proof of payment *</label>
                         <input required type="file" name="attachment" id="attachment" class="form-control">
-                        <br>
                         <span id="file_type" style="display: none;" class="text-danger"></span>
                         <span id="file_size" style="display: none;" class="text-danger"></span>
 
-                        <small>Maximum file size: 1MB</small><br>
-                        <small>File extension: JPEG, JPG, PNG</small>
-                    </div>                              
+                        <small style="font-size: 12px;">Maximum file size: 1MB</small><br>
+                        <small style="font-size: 12px;">File extension: JPEG, JPG, PNG</small>
+                    </div>                          
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -195,49 +198,6 @@
         </div>
     </div>
 </div>
-
-<!-- <div class="modal fade" id="items_modal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="transaction-status">
-                    <p>Date: <span id="order_date"></span></p>
-                    <p>Payment Status: <span id="payment_status"></span></p>
-                    <p>Delivery Type: <span id="delivery_type"></span></p>
-                    <p id="branch" style="display: none;">Branch: <span id="span_branch"></span></p>
-                </div>
-                <div class="gap-20"></div>
-                <div class="table-modal-wrap">
-                    <table class="table table-md table-modal" style="font-size:12px !important;">
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th>Description</th>
-                                <th>Qty</th>
-                                <th>Price</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tr_items">
-                            
-                        </tbody>
-                    </table>
-                </div>
-                <div class="gap-20"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 @endsection
 
 @section('pagejs')
@@ -301,7 +261,7 @@
             }
 
         });
-
+        
         function view_delivery_details(orderid,orderNo){
             $.ajax({
                 type: "GET",

@@ -66,7 +66,10 @@
                 {
                     extend: 'print',
                     exportOptions: {
-                        columns: ':visible'
+                        columns: ':visible',
+                        modifier: {
+                            page: 'all'
+                        }
                     }
                 },
                 {
@@ -87,18 +90,12 @@
                         columns: ':visible'
                     }
                 },
-                // {
-                //     extend: 'pdf',
-                //     exportOptions: {
-                //         columns: ':visible'
-                //     }
-                // },
                 {   
                     extend: 'pdfHtml5',
                     text: 'PDF',
                     exportOptions: {
                         modifier: {
-                            page: 'current'
+                            page: 'all'
                         }
                     },
                     orientation : 'landscape',

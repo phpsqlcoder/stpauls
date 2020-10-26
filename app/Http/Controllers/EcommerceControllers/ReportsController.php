@@ -117,15 +117,6 @@ class ReportsController extends Controller
         return view('admin.reports.inventory.inventory_reorder_point',compact('rs'));
     }
 
-    public function delivery_report($id)
-    {
-        $rs = SalesHeader::find($id);
-        
-        return view('admin.reports.delivery_report',compact('rs'));
-
-    }
-
-
 
 
 
@@ -168,43 +159,17 @@ class ReportsController extends Controller
 
     public function delivery_status(Request $request)
     {
-        $rs = '';
-       // if(isset($_GET['act'])){
 
-            $rs = DB::select("SELECT h.*,d.*,h.created_at as hcreated           
-                    FROM `ecommerce_sales_details` d 
-                    left join ecommerce_sales_headers h on h.id=d.sales_header_id 
-                    where h.payment_status='PAID'
-                     ");
-
-        //}
+        $rs = DB::select("SELECT h.*,d.*,h.created_at as hcreated           
+                FROM `ecommerce_sales_details` d 
+                left join ecommerce_sales_headers h on h.id=d.sales_header_id 
+                where h.payment_status='PAID'
+                 ");
 
         return view('admin.reports.delivery_status',compact('rs'));
 
     }
 
-
-    public function sales_per_customer(Request $request)
-    {   
-        $qry = "SELECT h.*,d.*,h.created_at as hcreated           
-                FROM `ecommerce_sales_details` d 
-                left join ecommerce_sales_headers h on h.id=d.sales_header_id 
-                where h.payment_status='PAID'";
-
-        if(isset($_GET['agent']) && strlen($_GET['agent'])>=1){
-            $qry.= " and h.customer_name='".$_GET['agent']."'";
-        }
-
-        if(isset($_GET['startdate']) && strlen($_GET['startdate'])>=1){
-            $qry.= " and h.created_at >='".$_GET['startdate']." 00:00:00.000' and h.created_at <='".$_GET['enddate']." 23:59:59.999'";
-        }
-
-        $rs = DB::select($qry);
-
-        $customers = SalesHeader::distinct()->get(['customer_name']);
-
-        return view('admin.reports.sales_per_customer',compact('rs','customers'));
-    }
 
     public function stock_card(Product $id)
     {
