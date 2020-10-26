@@ -5,13 +5,13 @@
             @if ($paginator->onFirstPage())
                 <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
                     <a class="page-link page-link-icon" href="#">
-                        <span class="lnr lnr-chevron-left"></span>
+                        <span class="fa fa-chevron-left lnr lnr-chevron-left"></span>
                     </a>
                 </li>
             @else
                 <li class="page-item">
                     <a class="page-link page-link-icon" href="{{ $paginator->previousPageUrl() }}" rel="prev" aria-label="@lang('pagination.previous')" >
-                        <span class="lnr lnr-chevron-left"></span>
+                        <span class="fa fa-chevron-left lnr lnr-chevron-left"></span>
                     </a>
                 </li>
             @endif
@@ -51,13 +51,13 @@
             @if ($paginator->hasMorePages())
                 <li class="page-item">
                     <a class="page-link page-link-icon" href="{{ $paginator->nextPageUrl() }}" rel="next" aria-label="@lang('pagination.next')">
-                        <span class="lnr lnr-chevron-right"></span>
+                        <span class="fa fa-chevron-right lnr lnr-chevron-right"></span>
                     </a>
                 </li>
             @else
                 <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.next')">
                     <a class="page-link page-link-icon" href="#">
-                        <span class="lnr lnr-chevron-right"></span>
+                        <span class="fa fa-chevron-right lnr lnr-chevron-right"></span>
                     </a>
                 </li>
             @endif
