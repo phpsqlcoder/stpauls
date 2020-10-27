@@ -279,15 +279,20 @@ class CartController extends Controller
             $address = $request->billing_address;
         }
 
-        if($request->shipOption != 2 && $request->shippingfee == 0){
-            $deliveryStatus = 'Shipping Fee Validation';
+        if($request->has('bookingType')){
+            $deliveryStatus = 'Waiting for Payment';
         } else {
-            if($request->shipOption == 1){
-                $deliveryStatus = 'Waiting for Approval';
+           if($request->shipOption != 2 && $request->shippingfee == 0){
+            $deliveryStatus = 'Shipping Fee Validation';
             } else {
-                $deliveryStatus = 'Waiting for Payment';
-            }
+                if($request->shipOption == 1){
+                    $deliveryStatus = 'Waiting for Approval';
+                } else {
+                    $deliveryStatus = 'Waiting for Payment';
+                }
+            } 
         }
+        
 
         $pickupdate = $request->input('pickup_date_2');
         $pickuptime = $request->input('pickup_time_2');
@@ -322,7 +327,8 @@ class CartController extends Controller
             'pickup_time' => ($request->shipOption == 2) ? $pickuptime : NULL,
             'service_fee' => $request->servicefee,
             'is_approve' => 0,
-            'is_other' => ($request->shipOption != 2 && $request->shippingfee == 0) ? 1 : 0
+            'is_other' => ($request->shipOption != 2 && $request->shippingfee == 0) ? 1 : 0,
+            'sdd_booking_type' => ($request->has('bookingType') ? 1 : 0),
         ]);
 
         Customer::where('customer_id',Auth::id())->update([

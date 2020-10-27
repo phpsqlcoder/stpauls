@@ -128,7 +128,14 @@
                         {{$sales->customer_delivery_adress}}<br/>
                         {{$sales->customer_contact_number}}<br/>
                         <a href="mailto:{{ $sales->customer_main_details->email }}">{{ $sales->customer_main_details->email }}</a><br/><br/>
-                        Remarks : {{ $sales->remarks }}
+                        <p>Remarks : {{ $sales->remarks }}</p>
+                        @if($sales->sdd_booking_type == 1)
+                        <p>Courier Name : {{ $sales->courier_name }}</p>
+                        <p>Rider Name : {{ $sales->rider_name }}</p>
+                        <p>Contact # : {{ $sales->rider_contact_no }}</p>
+                        <p>Plate # : {{ $sales->rider_plate_no }}</p>
+                        <p>Rider Tracker Link : {{ $sales->rider_link_tracker }}</p>
+                        @endif
                     </div>
 
                     <div id="invoice" style="flex: 0 0 60%;max-width: 100%;">

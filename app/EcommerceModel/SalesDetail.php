@@ -28,7 +28,7 @@ class SalesDetail extends Model
 
     public function product()
     {
-        return $this->belongsTo('\App\EcommerceModel\Product');
+        return $this->belongsTo('\App\EcommerceModel\Product')->withTrashed();
     }
 
     public function header()
@@ -38,7 +38,7 @@ class SalesDetail extends Model
 
     public function category()
     {
-        return $this->belongsTo('\App\ProductCategory','product_category');
+        return $this->belongsTo('\App\ProductCategory','product_category')->withTrashed();
     }
 
     public static function rate_product($productid)

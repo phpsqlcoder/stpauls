@@ -39,6 +39,7 @@
 
     // Products
         Route::get('/product-info/{slug}', 'Product\Front\ProductFrontController@show')->name('product.front.show');
+
         Route::post('/product-buy-now','EcommerceControllers\CartController@buynow')->name('product-buy-now');
         Route::any('/products/{category}','Product\Front\ProductFrontController@product_list')->name('product.front.list');
         Route::any('/search-product', 'Product\Front\ProductFrontController@search_product')->name('product.front.search');
@@ -69,6 +70,11 @@
             Route::get('/account/order-info/{id}', 'EcommerceControllers\SalesFrontController@order_info')->name('account-order-info');
 
             Route::post('/pay-order-globalpay','EcommerceControllers\CartController@globalpay')->name('globalpay-paynow');
+            Route::post('/transactions/pay-order','EcommerceControllers\SalesFrontController@pay_order')->name('pay-order');
+
+            Route::get('/transactions/add-rider/{id}','EcommerceControllers\SalesFrontController@add_rider')->name('transaction.add-rider');
+            Route::post('/transactions/post-rider','EcommerceControllers\SalesFrontController@post_rider')->name('transaction.post-rider');
+
             Route::get('/transaction/cancel-order','EcommerceControllers\SalesFrontController@cancel_order')->name('transaction.cancel-order');
             Route::get('/transaction-deliveries','EcommerceControllers\SalesFrontController@display_delivery_history')->name('display-delivery-history');
             Route::any('/transaction-items','EcommerceControllers\SalesFrontController@display_items')->name('display-items');
@@ -89,12 +95,13 @@
 
             Route::get('/ajax-province-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
 
-            Route::post('/transactions/pay-order','EcommerceControllers\SalesFrontController@pay_order')->name('pay-order');
+            
 
             // Route::post('/account/cancel/order', 'EcommerceControllers\SalesFrontController@cancel_order')->name('my-account.cancel-order');
             // Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
 
             Route::post('product/review/store', 'EcommerceControllers\ProductReviewController@store')->name('product.review.store');
+
 
     });
 
@@ -223,8 +230,6 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
 
             // to remove
-            // Report
-            Route::get('/admin/report/delivery_report/{id}', 'EcommerceControllers\ReportsController@delivery_report')->name('admin.report.delivery_report');
 
             
 

@@ -56,6 +56,29 @@ class SalesFrontController extends Controller
         return back()->with('success',' Payment has been submitted.');
     }
 
+    public function add_rider($id)
+    {   
+        $sales = SalesHeader::find($id);   
+
+        $page = new Page();
+        $page->name = 'Order #: '.$sales->order_number;    
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.add-rider', compact('sales','page'));
+    }
+
+    public function post_rider(Request $request)
+    {
+        SalesHeader::find($request->orderid)->update([
+            'courier_name' => $request->courier_name,
+            'rider_name' => $request->rider_name,
+            'rider_contact_no' => $request->contact_no,
+            'rider_plate_no' => $request->plate_no,
+            'rider_link_tracker' => $request->link
+        ]);
+
+        return redirect(route('account-my-orders'))->with('success','Rider details has been submitted.');
+    }
+
 
     public function cancel_order(Request $request)
     {

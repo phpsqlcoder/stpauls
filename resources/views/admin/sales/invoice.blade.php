@@ -174,7 +174,7 @@
         </div>
     </div>
 
-    <div id="details" style="margin-bottom: 250px;">
+    <div id="details" style="margin-bottom: 370px;">
         <div id="customer" class="col-sm-6 col-lg-6" >
             <label class="tx-sans tx-medium tx-spacing-1 tx-color-03">Billing Details</label>
             <ul class="list-unstyled lh-7">
@@ -192,6 +192,13 @@
                 </li>
                 <li>&nbsp;</li>
                 <li>Remarks : {{ $sales->remarks }} </li>
+                @if($sales->sdd_booking_type == 1)
+                <li><span>Courier Name : {{ $sales->courier_name }}</span></li>
+                <li><span>Rider Name : {{ $sales->rider_name }}</span></li>
+                <li><span>Contact # : {{ $sales->rider_contact_no }}</span></li>
+                <li><span>Plate # : {{ $sales->rider_plate_no }}</span></li>
+                <li><span>Rider Tracker Link : {{ $sales->rider_link_tracker }}</span></li>
+                @endif
             </ul>
         </div>
 
@@ -223,6 +230,11 @@
                     <span>Delivery Status</span>
                     <span class="tx-success tx-semibold tx-uppercase">{{ $sales->delivery_status }}</span>
                 </li>
+                <li>&nbsp;</li>
+                <li>&nbsp;</li>
+                <li>&nbsp;</li>
+                <li>&nbsp;</li>
+                <li>&nbsp;</li>
             </ul>
         </div>
     </div>

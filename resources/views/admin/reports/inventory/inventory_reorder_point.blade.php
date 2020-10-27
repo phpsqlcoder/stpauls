@@ -68,7 +68,10 @@
                 {
                     extend: 'print',
                     exportOptions: {
-                        columns: ':visible'
+                        columns: ':visible',
+                        modifier: {
+                            page: 'all'
+                        }
                     }
                 },
                 {
@@ -92,7 +95,10 @@
                 {
                     extend: 'pdf',
                     exportOptions: {
-                        columns: ':visible'
+                        columns: ':visible',
+                        modifier: {
+                            page: 'all'
+                        }
                     }
                 },
                 'colvis'

@@ -19,14 +19,7 @@ class ProductFrontController extends Controller
 {
     public function show($slug)
     {
-        //$sales_history = 0;
-        if(Auth::guest()) {
-            $product = Product::whereSlug($slug)->where('status', 'PUBLISHED')->first();
-        } else {
-            $product = Product::whereSlug($slug)->where('status', '!=', 'UNEDITABLE')->first(); 
-            //$sales_history = $this->checkIfUserPurchasedTheItem($product->id);      
-          
-        }
+        $product = Product::whereSlug($slug)->where('status', 'PUBLISHED')->first();
 
         $categories = 
             ProductCategory::where('parent_id',0)
@@ -34,21 +27,21 @@ class ProductFrontController extends Controller
             ->where('id','<>',$product->category_id)
             ->get();
 
-        $qry_reviews = 
-            ProductReview::where('product_id',$product->id)
-            ->where('is_approved',1);
+        $reviews_count = ProductReview::where('product_id',$product->id)->where('is_approved',1)->count();
+        $reviews = ProductReview::where('product_id',$product->id)->where('is_approved',1)->paginate(10);
 
-        $reviews = $qry_reviews->get();
-        $reviews_count = $qry_reviews->count();
-        //
-        
         $page = $product;
         if (empty($product)) {
             abort(404);
         }
 
+        if(isset($_GET['page'])){
+            $tab = 'reviews';
+        } else {
+            $tab = 'details';
+        }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.profile',compact('product', 'page','categories','reviews','reviews_count'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.profile',compact('product', 'page','categories','reviews','reviews_count','tab'));
     }
     
     public function product_list(Request $request, $slug)
