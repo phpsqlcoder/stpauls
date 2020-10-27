@@ -179,6 +179,14 @@
         </div>
     </div>
 
+    <div>
+        <form style="display: none;" id="payment_form" method="post" action="{{route('sales.validate-payment')}}">
+            @csrf
+            <input type="text" name="payment_id" id="payment_id" value="">
+            <input type="text" name="status" id="status" value="">
+        </form>
+    </div>
+
     <div class="modal effect-scale" id="prompt-show-payment-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
