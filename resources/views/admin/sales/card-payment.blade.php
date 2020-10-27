@@ -242,27 +242,35 @@
             });
         }
 
-        function approve_payment(){
+        function approve_payment(id,status){
+            if(status == 'APPROVE'){
+                var text = 'approve';
+                var btnColor = '#8CD4F5';
+            } else {
+                var text = 'reject'
+                var btnColor = '#d33';
+            }
+
             swal({
                 title: '',
-                text: "You are about to approve this payment. Do you want to continue?",
+                text: "You are about to "+text+" this payment. Do you want to continue?",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#8CD4F5',
+                confirmButtonColor: btnColor,
                 cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, approve it!'            
+                confirmButtonText: 'Yes, '+text+' it!'            
             },
             function(isConfirm) {
                 if (isConfirm) {
-                    $('#order_id').val(id);
-                    $('#remove_order_form').submit();
+                    $('#payment_id').val(id);
+                    $('#status').val(status);
+                    $('#payment_form').submit();
                 } 
                 else {                    
                     swal.close();                   
                 }
             });
         }
-
 
         function change_delivery_status(id){
             $('#prompt-change-delivery-status').modal('show');

@@ -92,7 +92,7 @@
                     @if ($customers->firstItem() == null)
                         <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
                     @else
-                        <p class="tx-gray-400 tx-12 d-inline">Showing {{$customers->firstItem()}} to {{$customers->lastItem()}} of {{$customers->total()}} customers</p>
+                        <p class="tx-gray-400 tx-12 d-inline">Showing {{$customers->firstItem()}} to {{$customers->lastItem()}} of {{$customers->total()}} items</p>
                     @endif
 
                 </div>
