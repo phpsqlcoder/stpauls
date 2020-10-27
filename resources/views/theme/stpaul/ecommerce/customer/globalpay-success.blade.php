@@ -13,7 +13,15 @@
                     <div id="order-detail">
                         <div class="row align-items-center">
                             <div class="col-lg-12">
+                                @php
+                                    $payment = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sales->id)->count();
+                                @endphp
+
+                                @if($sales->payment_method == 1 || $payment > 0)
+                                <h2 class="text-center"><strong>Thank you for your payment.<br>ST PAULS personnel will contact you once the order is "Ready for Delivery".</strong></h2>
+                                @else
                                 <h2 class="text-center"><strong>Thank you for your order</strong></h2>
+                                @endif
                             </div>
                         </div>
                         <div class="gap-20"></div>
@@ -24,8 +32,11 @@
                                     <div class="success-icon">
                                         <span class="lnr lnr-check"></span>
                                     </div>
+                                    @if($sales->payment_method == 1 || $payment > 0)
+                                    <h5 class="success-msg">Payment for Verification</h5>
+                                    @else
                                     <h5 class="success-msg">Order Received</h5>
-
+                                    @endif
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="gap-40"></div>
@@ -35,10 +46,14 @@
                                     <div class="gap-40"></div>
                                 </div>
                                 <div class="col-md-7 mb-4">
-                                    <p>For more details, track your delivery status under <strong>My Account > My Orders</strong></p>
+                                    @if($sales->sdd_booking_type == 1 && $payment > 0)
+                                    <p class="text-bold"><b>To book a rider, click on the &nbsp;<span class="lnr lnr-bicycle mr-2"></span> and enter the Rider's Information.</b></p>
+                                    @else
+                                    <p class="text-bold"><b>To view the status of your order, please click &nbsp;<span class="lnr lnr-eye"></span>&nbsp;or&nbsp;<span class="lnr lnr-car mr-2"></span>.</b></p>
+                                    @endif
                                 </div>
                                 <div class="col-md-5 mb-4 align-self-center">
-                                    <a href="{{ route('account-order-info',$sales->id) }}" class="btn btn-md primary-btn btn-block text-white">View Order</a>
+                                    <a href="{{ route('account-my-orders') }}" class="btn btn-md primary-btn btn-block text-white">My Order</a>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="gap-20"></div>

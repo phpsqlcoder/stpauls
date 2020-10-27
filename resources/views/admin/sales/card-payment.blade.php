@@ -110,7 +110,9 @@
 
                             @forelse($sales as $sale)
                                 @php
-                                    $payment = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->first();
+                                    $qry = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id);
+                                    $count = $qry->count();
+                                    $payment = $qry->first();
                                 @endphp
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
@@ -119,7 +121,15 @@
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
-                                        <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
+                                        @if($count > 0 && $sale->status != 'CANCELLED')
+                                            @if($payment->is_verify == 0)
+                                            <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
+                                            @else
+                                            {{ $sale->delivery_status }}
+                                            @endif
+                                        @else
+                                            <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
+                                        @endif   
                                     </td>
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
@@ -179,25 +189,19 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
-                        <form method="post" action="{{route('sales.validate-payment')}}">
-                            @csrf
-                            <table class="table table-bordered payment_details">
-                                <thead>
-                                    <th>Reference #</th>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Attachment</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </thead>
-                                <tbody id="payment_details_tbl">
+                    <table class="table table-bordered payment_details" style="word-break: break-all;">
+                        <thead>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Attachment</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody id="payment_details_tbl">
 
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>

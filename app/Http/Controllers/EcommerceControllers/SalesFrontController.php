@@ -36,13 +36,18 @@ class SalesFrontController extends Controller
             'payment_type' => $request->payment_type,
             'payment_date' => today(),
             'amount' => $request->amount,
-            'is_verify' => 0,
+            'is_verify' => NULL,
             'status' => 'PAID',
             'attachment' => $request->attachment->getClientOriginalName(),
             'created_by' => Auth::id()
         ]);
 
-        SalesHeader::find($request->header_id)->update(['delivery_status' => 'WAITING FOR VALIDATION']);
+        $sales = SalesHeader::find($request->header_id);
+
+        $sales->update([
+            'user_id' => Auth::id(),
+            'delivery_status' => 'WAITING FOR VALIDATION'
+        ]);
             
             
         if(isset($request->attachment)){
@@ -52,8 +57,8 @@ class SalesFrontController extends Controller
             Storage::makeDirectory('/public/payments/'.$payment->id);
             Storage::putFileAs('/public/payments/'.$payment->id, $file, $file->getClientOriginalName());
         }
-
-        return back()->with('success',' Payment has been submitted.');
+        
+        return redirect(route('order.received',$sales->order_number));
     }
 
     public function add_rider($id)

@@ -1,11 +1,11 @@
 
 <tr>
-    <td>{{$payment->payment_date}}</td>
-    <td>{{$payment->payment_type}}</td>
-    <td><a target="_blank" href="{{ asset('storage/payments/'.$payment->id.'/'.$payment->attachment) }}">{{ $payment->attachment }}</a></td>
-    <td class="text-right">{{number_format($payment->amount,2)}}</td>
-    <td>{{$payment->status}}</td>
-    <td>
+    <td width="10%">{{$payment->payment_date}}</td>
+    <td width="10%">{{$payment->payment_type}}</td>
+    <td width="35%"><a target="_blank" href="{{ asset('storage/payments/'.$payment->id.'/'.$payment->attachment) }}">{{ $payment->attachment }}</a></td>
+    <td width="10%" class="text-right">{{number_format($payment->amount,2)}}</td>
+    <td width="10%">{{$payment->status}}</td>
+    <td width="25%">
     	<button type="button" class="btn btn-primary btn-xs" onclick="approve_payment('{{$payment->id}}','APPROVE')">Approve</button>
     	<button type="button" class="btn btn-danger btn-xs" onclick="approve_payment('{{$payment->id}}','REJECT')">Reject</button>
     </td>

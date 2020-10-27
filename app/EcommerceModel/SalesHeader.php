@@ -64,7 +64,7 @@ class SalesHeader extends Model
 
     public static function pending_cod()
     {
-        $qry = SalesHeader::where('payment_method',0)->where('is_approve',0)->where('status','<>','CANCELLED')->count();
+        $qry = SalesHeader::where('payment_method',0)->where('is_approve',NULL)->where('status','<>','CANCELLED')->count();
 
         return $qry;
     }

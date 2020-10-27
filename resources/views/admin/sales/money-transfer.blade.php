@@ -122,7 +122,7 @@
                                     <td>{{ \App\EcommerceModel\SalesHeader::payment_type($sale->id) }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
-                                        @if($count > 0)
+                                        @if($count > 0 && $sale->status != 'CANCELLED')
                                             @if($payment->is_verify == 0)
                                             <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
                                             @else
@@ -199,21 +199,19 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered payment_details">
-                            <thead>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Attachment</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </thead>
-                            <tbody id="payment_details_tbl">
+                    <table class="table table-bordered payment_details" style="word-break: break-all;">
+                        <thead>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Attachment</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody id="payment_details_tbl">
 
-                            </tbody>
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>

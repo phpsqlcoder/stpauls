@@ -154,19 +154,19 @@ class CustomerController extends Controller
 
     public function reactivate(Request $request)
     {
-        $customer = Customer::find($request->customer_id);
-        $user     = User::find($customer->customer_id);
-
-        $customer->update([
+        Customer::where('customer_id',$request->customer_id)->update([
             'is_active' => $request->status,
             'reactivate_request' => 0,
             'user_id'   => Auth::id(),
         ]);
 
-        $user->update([
-            'is_active' => $request->status,
-            'user_id' => Auth::id()
-        ]);
+        if($request->status == 1){
+            User::find($request->customer_id)->update([
+                'is_active' => 1,
+                'user_id' => Auth::id()
+            ]);
+        }
+        
 
         $status = ($request->status == 1) ? 'approved' : 'disapproved';
         if($request->status == 1){

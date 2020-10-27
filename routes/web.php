@@ -195,20 +195,6 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/website-settings/remove_media', 'Settings\WebController@remove_media')->name('website-settings.remove-media');
         //
 
-        // Delivery Flat Rate
-            // Route::resource('/locations', 'DeliverablecitiesController');
-            
-            // Route::get('/location-rate/{id}/{status}', 'DeliverablecitiesController@update_status')->name('location-rate.change-status');
-            // Route::post('/location-multiple-change-status','DeliverablecitiesController@multiple_change_status')->name('location-rate.multiple.change.status');
-            // Route::post('/location-rate-single-delete', 'DeliverablecitiesController@single_delete')->name('location.single.delete');
-            // Route::get('/location-rate-restore/{id}', 'DeliverablecitiesController@restore')->name('location-rate.restore');
-            // Route::post('/location-rate-multiple-delete','DeliverablecitiesController@multiple_delete')->name('location-rate.multiple.delete');
-
-            // Route::post('/locations-enable', 'DeliverablecitiesController@enable')->name('locations.enable');
-            // Route::post('/locations-disable', 'DeliverablecitiesController@disable')->name('locations.disable');
-            // Route::post('/locations-delete', 'DeliverablecitiesController@delete')->name('locations.delete');
-        //
-
         // Manage Sales Transactions
             Route::resource('/admin/sales-transaction', 'EcommerceControllers\SalesController');
 

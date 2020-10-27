@@ -196,7 +196,7 @@
                 @if($sales->delivery_status == 'Shipping Fee Validation')
                     <button type="button" class="btn btn-sm btn-primary float-right mg-l-5" onclick="add_shippingfee('{{$sales->id}}','{{$sales->order_number}}');">Add Shipping Fee</button>
                 @else
-                    @if($sales->is_approve == 0 && $sales->delivery_type == 'Cash on Delivery')
+                    @if($sales->is_approve == '' && $sales->delivery_type == 'Cash on Delivery')
                         <button type="button" class="btn btn-sm btn-danger float-right mg-l-5" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','REJECT');">Reject</button>
                         <button type="button" class="btn btn-sm btn-primary float-right" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','APPROVE');">Approve</button>
                     @endif

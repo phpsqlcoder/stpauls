@@ -246,7 +246,7 @@
                     <div class="form-group">
                         <div class="custom-control custom-switch @error('for_pickup') is-invalid @enderror">
                             <input type="checkbox" class="custom-control-input" name="for_pickup" {{ (old("for_pickup") ? "checked":"") }} id="customSwitch5">
-                            <label class="custom-control-label" for="customSwitch5">For Pick-up</label>
+                            <label class="custom-control-label" for="customSwitch5">Store Pick-up</label>
                         </div>
                         @hasError(['inputName' => 'for_pickup'])
                         @endhasError
