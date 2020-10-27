@@ -81,7 +81,7 @@ class SalesController extends Controller
             ]
         ];
 
-        $listing = new ListingHelper('desc', 10, 'created_at', $customConditions);
+        $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
 
         $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
 
@@ -111,7 +111,7 @@ class SalesController extends Controller
             ]
         ];
 
-        $listing = new ListingHelper('desc', 10, 'created_at', $customConditions);
+        $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
 
         $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
 
@@ -134,7 +134,7 @@ class SalesController extends Controller
             ]
         ];
 
-        $listing = new ListingHelper('desc', 10, 'created_at', $customConditions);
+        $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
 
         $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
 
