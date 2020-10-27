@@ -18,7 +18,11 @@
                                 @endphp
 
                                 @if($sales->payment_method == 1 || $payment > 0)
-                                <h2 class="text-center"><strong>Thank you for your payment.<br>ST PAULS personnel will contact you once the order is "Ready for Delivery".</strong></h2>
+                                    @if($sales->sdd_booking_type == 1)
+                                    <h2 class="text-center"><strong>Thank you for your payment.<br>Please wait for the payment confirmation before booking your rider.</strong></h2>
+                                    @else
+                                    <h2 class="text-center"><strong>Thank you for your payment.<br>ST PAULS personnel will contact you once the order is "Ready for Delivery".</strong></h2>
+                                    @endif
                                 @else
                                 <h2 class="text-center"><strong>Thank you for your order</strong></h2>
                                 @endif
