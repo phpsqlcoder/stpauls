@@ -135,7 +135,7 @@
                     @if ($sales->firstItem() == null)
                         <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
                     @else
-                        <p class="tx-gray-400 tx-12 d-inline">Showing {{$sales->firstItem()}} to {{$sales->lastItem()}} of {{$sales->total()}} customers</p>
+                        <p class="tx-gray-400 tx-12 d-inline">Showing {{$sales->firstItem()}} to {{$sales->lastItem()}} of {{$sales->total()}} items</p>
                     @endif
 
                 </div>
