@@ -48,9 +48,7 @@
 
                     <div class="form-group">
                         <label class="d-block">Description</label>
-                        <textarea rows="3" class="form-control @error('description') is-invalid @enderror" name="description" maxlength="250">
-                            {{ old('description',$category->description) }}
-                        </textarea>
+                        <textarea rows="3" class="form-control @error('description') is-invalid @enderror" name="description" maxlength="250">{{ old('description',$category->description) }}</textarea>
                         @hasError(['inputName' => 'description' ])
                         @endhasError
                     </div>

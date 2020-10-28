@@ -117,7 +117,8 @@ class LoyaltyController extends Controller
     public function disapproved(Request $request)
     {
        LoyalCustomer::find($request->id)->update([
-        'status' => 'DISAPPROVED'
+            'status' => 'DISAPPROVED',
+            'user_id' => Auth::id()
        ]); 
 
        return redirect()->route('loyalty.index')->with('success', __('standard.loyalty.disapproved_loyalty_success'));

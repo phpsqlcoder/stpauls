@@ -51,9 +51,9 @@
                                
                                 </div>
                                 <div class="col-lg-12">
-                                    <label>Rider Link *</label>
+                                    <label>Tracking Code/Link</label>
                                     <div class="form-group">
-                                        <input required type="text" class="form-control" name="link" value="{{ old('link') }}">
+                                        <input type="text" class="form-control" name="link" value="{{ old('link') }}">
                                     </div>
                                 </div>                                          
                                 <div class="col-lg-6">

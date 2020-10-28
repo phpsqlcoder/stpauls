@@ -142,18 +142,29 @@ class ShippingfeeController extends Controller
 
     public function weight_update(Request $request)
     {
-        $update = ShippingfeeWeight::where('id',$request->weight_id)->update([
-            'weight' => $request->weight,
-            'rate' => $request->rate,
-            'user_id' => Auth::id()            
-        ]);
+        $counter = ShippingfeeWeight::where('weight',$request->weight)->count();
 
-        return back()->with('success','Successfully updated rate');
+        if($counter > 0){
+
+            return back()->with('error','Shipping weight: '.$request->weight.'kg is already in the list.');
+
+        } else {
+            ShippingfeeWeight::find($request->weight_id)->update([
+                'weight' => $request->weight,
+                'rate' => $request->rate,
+                'user_id' => Auth::id()            
+            ]);
+
+            return back()->with('success','Successfully updated rate');
+        }
+ 
     }
 
     public function weight_single_delete(Request $request)
     {
-        ShippingfeeWeight::find($request->rates)->delete();
+        $sfee = ShippingfeeWeight::find($request->rates);
+        $sfee->update(['user_id' => Auth::id()]);
+        $sfee->delete();
 
         return back()->with('success','Selected rate has been deleted.');
     }
@@ -164,7 +175,9 @@ class ShippingfeeController extends Controller
         $rates = explode("|",$string);
 
         foreach($rates as $rate){
-            ShippingfeeWeight::find($rate)->delete();
+            $sfee = ShippingfeeWeight::find($rate);
+            $sfee->update(['user_id' => Auth::id()]);
+            $sfee->delete();
         }
 
         return back()->with('success','Selected rates has been deleted.');
@@ -254,8 +267,11 @@ class ShippingfeeController extends Controller
     }
 
     public function single_delete(Request $request)
-    {
-        Shippingfee::findOrFail($request->rates)->forceDelete();
+    {   
+        $rate = Shippingfee::findOrFail($request->rates);
+        $rate->update(['user_id' => Auth::id()]);
+        $rate->forceDelete();
+
         ShippingfeeLocations::where('shippingfee_id',$request->rates)->delete();
         ShippingfeeWeight::where('shippingfee_id',$request->rates)->delete();
 
@@ -268,7 +284,9 @@ class ShippingfeeController extends Controller
         $rates = explode("|",$string);
 
         foreach($rates as $rate){
-            Shippingfee::findOrFail($rate)->delete();
+            $sfee = Shippingfee::findOrFail($rate);
+            $sfee->update(['user_id' => Auth::id()]);
+            $sfee->delete();
         }
 
         return back()->with('success', 'Selected shipping fee has been deleted');

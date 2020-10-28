@@ -388,6 +388,22 @@
                 }
             });
 
+            $('#customSwitch2').change(function () {
+                if($('#customSwitch2').is(":checked")) {
+                    $('#customSwitch4').attr('disabled', true);
+                } else {
+                    $('#customSwitch4').attr('disabled', false);
+                }
+            });
+
+            $('#customSwitch4').change(function () {
+                if($('#customSwitch4').is(":checked")) {
+                    $('#customSwitch2').attr('disabled', true);
+                } else {
+                    $('#customSwitch2').attr('disabled', false);
+                }
+            });
+
             
 
             $(document).on('click', '.upload', function() {
