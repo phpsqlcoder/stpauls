@@ -201,7 +201,8 @@ class ProductController extends Controller
             'isbn' => $request->isbn,
             'editorial_reviews' => $request->editorial_review,
             'about_author' => $request->about_author,
-            'additional_info' => $request->add_info
+            'additional_info' => $request->add_info,
+            'user_id' => Auth::id()
         ]);
     }
 
@@ -337,7 +338,8 @@ class ProductController extends Controller
             'isbn' => $request->isbn,
             'editorial_reviews' => $request->editorial_review,
             'about_author' => $request->about_author,
-            'additional_info' => $request->add_info
+            'additional_info' => $request->add_info,
+            'user_id' => Auth::id()
         ]);
     }
 
