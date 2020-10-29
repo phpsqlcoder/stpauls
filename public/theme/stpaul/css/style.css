@@ -374,6 +374,8 @@ p {
   -webkit-box-shadow: none !important;
           box-shadow: none !important;
   margin-right: 5px !important;
+  width: auto !important;
+  height: auto !important;
 }
 
 .add-cart-btn:hover {
@@ -564,11 +566,11 @@ p {
 }
 
 .dropdown-filter-btn:after {
-  content: "\e874";
+  content: "\ec3a";
   position: absolute;
   top: 35%;
-  right: 30px;
-  font: 600 14px 'Linearicons-Free';
+  right: 25px;
+  font: 600 14px 'Linearicons';
   border: none;
 }
 
@@ -1098,14 +1100,16 @@ p {
   -webkit-transition: all 0.5s ease-out;
   transition: all 0.5s ease-out;
   position: relative;
-  background-color: #efefef;
 }
 
-.product-card img {
+.product-card .product-img {
   max-width: 100%;
   width: auto !important;
-  height: auto !important;
+  height: 14vw;
   margin: 15px auto;
+  min-height: 250px;
+  -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .product-card .product-discount {
@@ -1127,6 +1131,7 @@ p {
 }
 
 .product-card .product-price .old {
+  font-size: 15px;
   font-weight: 400;
   color: #888;
   text-decoration: line-through;
@@ -3600,7 +3605,7 @@ p {
   margin-top: 10px;
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
-  padding: 20px;
+  padding: 7px 20px;
 }
 
 .out-of-stock:hover {
@@ -3729,7 +3734,8 @@ p {
   width: 30px;
 }
 
-#salesTransaction_wrapper .dataTables_scroll, #salesTransaction_wrapper .dataTables_info {
+#salesTransaction_wrapper .dataTables_scroll,
+#salesTransaction_wrapper .dataTables_info {
   font-size: 0.95rem;
   font-weight: 500;
 }
@@ -4065,6 +4071,9 @@ p {
   .tbl-responsive {
     width: 1000px !important;
   }
+  .product-card .product-img {
+    min-height: 200px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -4197,7 +4206,7 @@ p {
   }
   .out-of-stock {
     font-size: .95rem !important;
-    padding: 22px;
+    padding: 9px 22px;
   }
   .add-cart-btn,
   .add-cart-alt1-btn {
@@ -4348,7 +4357,7 @@ p {
   }
   .out-of-stock {
     font-size: .75rem !important;
-    padding: 0px 7px;
+    padding: 4px 14px;
   }
   .add-cart-btn,
   .add-cart-alt1-btn {
@@ -4363,9 +4372,9 @@ p {
   .product-card {
     margin-bottom: 10px !important;
   }
-  .product-card a img {
-    padding: 0 15px;
+  .product-card a .product-img {
     margin: 5px auto 0 !important;
+    min-height: 165px;
   }
 }
 
