@@ -73,7 +73,8 @@
         </nav>
     </div>
 
-    <!-- <div class="privacy-policy">
+    <!-- PRIVACY POLICY WIDGET -->
+    <div class="privacy-policy dark">
       <div class="privacy-policy-desc">
         <p class="title">Privacy-Policy</p>
         <p>
@@ -81,10 +82,10 @@
         </p>
       </div>
       <div class="privacy-policy-btn">
-        <a class="primary-btn" href="#">Accept</a>
-        <a class="default-btn" href="#">Learn More</a>
+        <a class="btn btn-lg primary-btn" href="#">Accept</a>
+        <a class="btn btn-lg default-btn" href="#">Learn More</a>
       </div>
-    </div> -->
+    </div>
 
     <div id="top">
         <img src="{{ asset('theme/stpaul/images/misc/top.png') }}" />

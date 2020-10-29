@@ -313,6 +313,10 @@ p {
   transition: all 0.2s ease-in-out;
 }
 
+.primary-btn:focus {
+  color: white;
+}
+
 .secondary-btn {
   font-family: "IBM Plex Sans", sans-serif;
   font-size: 1em;
@@ -3004,7 +3008,7 @@ p {
 }
 
 .post-footer {
-  background: black;
+  background: #252525;
   padding: 2rem 1rem;
   font-size: 0.9em;
   text-align: center;
@@ -3110,7 +3114,7 @@ p {
 }
 
 .privacy-policy.dark {
-  background: #8d8d8d;
+  background: #252525;
 }
 
 .privacy-policy.dark p {
@@ -4217,9 +4221,6 @@ p {
   .add-cart-alt1-btn img {
     width: 24px !important;
   }
-}
-
-@media (max-width: 640px) {
   .privacy-policy {
     bottom: 0px;
     left: 0px;
@@ -4247,6 +4248,9 @@ p {
   .privacy-policy-btn .default-btn {
     margin-left: 0px;
   }
+}
+
+@media (max-width: 640px) {
   .mb-xs-4 {
     margin-bottom: 0.5rem !important;
   }
