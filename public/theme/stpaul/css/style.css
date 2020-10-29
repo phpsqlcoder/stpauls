@@ -1924,7 +1924,7 @@ p {
 .list-product .product-card,
 .product-related .product-card {
   background: #f3f3f3;
-  padding: 30px 30px 100px;
+  padding: 30px 30px 80px;
   text-align: center;
   width: 100%;
   border: 1px solid #dfdfdf;
@@ -1941,7 +1941,7 @@ p {
   left: 0;
   top: 0px;
   padding: 5px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: bold;
 }
 
