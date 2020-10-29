@@ -185,7 +185,7 @@
                 <!-- Recommended Titles Content -->
                 <div id="reco-title" class="slick-slider">
                     @php
-                        $recommended_titles = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->where('is_recommended',1)->orderBy('name','asc')->get(); 
+                        $recommended_titles = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->where('is_recommended',1)->orderBy('id','desc')->get(); 
                     @endphp
 
                     @foreach($recommended_titles->chunk(2) as $title)

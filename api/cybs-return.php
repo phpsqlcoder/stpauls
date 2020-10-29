@@ -23,7 +23,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
     $transaction = $sqlTra->fetch();
 
 
-    $sql = $pdo->prepare("UPDATE ecommerce_sales_headers SET response_code=:responsecode, payment_status='PAID', delivery_status='Scheduled for Processing', is_approve=1 WHERE order_number=:order_number");
+    $sql = $pdo->prepare("UPDATE ecommerce_sales_headers SET response_code=:responsecode, payment_status='UNPAID', delivery_status='WAITING FOR VALIDATION', is_approve=NULL WHERE order_number=:order_number");
     $sql->execute(array(':order_number' => $tn, ':responsecode' => $apiRespone['reason_code']));
 
     $payment = $pdo->prepare("INSERT INTO ecommerce_sales_payments (sales_header_id, payment_type, amount, status, payment_date, receipt_number, created_by, created_at, is_verify) VALUES (:header_id, :payment_type, :amount, :status, :payment_date, :receipt_number, :created_by, :created_at, :isverify)");
@@ -36,7 +36,7 @@ if(isset($apiRespone['decision']) && $apiRespone['decision'] == 'ACCEPT') {
         'receipt_number' => $apiRespone['transaction_id'],
         'created_by' => $transaction['customer_id'],
         'created_at' => date('Y-m-d H:i:s'),
-        'isverify' => 1
+        'isverify' => NULL
     ]);
 
     header('location:'.$livesitePath.'/order-received/'.$tn);

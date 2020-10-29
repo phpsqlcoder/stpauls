@@ -11,7 +11,7 @@ class SalesPayment extends Model
     protected $fillable = [
         'sales_header_id','payment_type','amount','status', 'payment_date', 'receipt_number','created_by',
         'order_number','remark','trans_id','err_desc','signature','cc_name','cc_no','bank_name','country',
-        'remarks','response_body','response_id','response_code','is_verify','attachment'
+        'remarks','response_body','response_id','response_code','is_verify','attachment', 'user_id'
     ];
 
     public function sales_header()
@@ -24,7 +24,7 @@ class SalesPayment extends Model
 
         $qry1 = \DB::table('ecommerce_sales_payments')
                 ->leftJoin('ecommerce_sales_headers', 'ecommerce_sales_payments.sales_header_id', '=', 'ecommerce_sales_headers.id')
-                ->where('ecommerce_sales_payments.is_verify',0)
+                ->where('ecommerce_sales_payments.is_verify',NULL)
                 ->where('ecommerce_sales_payments.status','PAID')
                 ->where('ecommerce_sales_headers.payment_method','>',1)->count();
 

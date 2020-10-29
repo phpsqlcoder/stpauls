@@ -224,7 +224,7 @@
                         "next": "<i class='nr lnr-chevron-right'></i>"
                     }
                 },
-                "pageLength": 10,
+                "pageLength":10,
                 "dom": 'rtip'
             });
         });

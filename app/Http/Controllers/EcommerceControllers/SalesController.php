@@ -81,7 +81,7 @@ class SalesController extends Controller
             ]
         ];
 
-        $listing = new ListingHelper('desc', 10, 'created_at', $customConditions);
+        $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
 
         $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
 
@@ -111,7 +111,7 @@ class SalesController extends Controller
             ]
         ];
 
-        $listing = new ListingHelper('desc', 10, 'created_at', $customConditions);
+        $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
 
         $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
 
@@ -134,7 +134,7 @@ class SalesController extends Controller
             ]
         ];
 
-        $listing = new ListingHelper('desc', 10, 'created_at', $customConditions);
+        $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
 
         $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
 
@@ -146,12 +146,6 @@ class SalesController extends Controller
         return view('admin.sales.card-payment',compact('sales','filter','searchType'));
     }
 
-
-
-
-
-
-
     public function display_payment_details($id){
 
         $payment = SalesPayment::where('sales_header_id',$id)->first();
@@ -162,7 +156,9 @@ class SalesController extends Controller
     public function order_response(Request $request)
     {   
         $sales = SalesHeader::find($request->orderid);
-        $user = User::find($sales->customer_id);
+        $user  = User::find($sales->customer_id);
+
+        $netamount = ($sales->net_amount+$request->shippingfee);
 
         if($sales->status == 'CANCELLED'){
             return back()->with('error', 'Order was already cancelled by the customer.');
@@ -172,11 +168,12 @@ class SalesController extends Controller
 
                 $sales->update([
                     'delivery_fee_amount' => ($sales->is_other == 1) ? $request->shippingfee : $sales->delivery_fee_amount,
-                    'net_amount' => ($sales->is_other == 1) ? $sales->net_amount+$request->shippingfee : $sales->net_amount,
-                    'gross_amount' => ($sales->is_other == 1) ? $sales->gross_amount+$request->shippingfee : $sales->gross_amount,
+                    'net_amount' => ($sales->is_other == 1) ? $netamount : $sales->net_amount,
+                    'gross_amount' => ($sales->is_other == 1) ? $netamount : $sales->gross_amount,
                     'delivery_status' => 'Scheduled for Processing',
                     'is_approve' => 1,
-                    'remarks' => $request->remarks
+                    'remarks' => $request->remarks,
+                    'user_id' => Auth::id()
                 ]);
 
                 $this->send_email_notification($sales,'Approve Order');
@@ -188,7 +185,9 @@ class SalesController extends Controller
                 $sales->update([
                     'status' => 'CANCELLED',
                     'delivery_status' => 'CANCELLED',
-                    'remarks' => $request->remarks
+                    'remarks' => $request->remarks,
+                    'is_approve' => 0,
+                    'user_id' => Auth::id()
                 ]);
 
                 $this->send_email_notification($sales,'Reject Order');
@@ -206,7 +205,11 @@ class SalesController extends Controller
 
         if($request->status == 'APPROVE'){
 
-            $payment->update(['is_verify' => 1]);
+            $payment->update([
+                'is_verify' => 1,
+                'user_id' => Auth::id()
+            ]);
+            
             $sales->update([
                 'payment_status' => 'PAID',
                 'delivery_status' => 'Scheduled for Processing',
@@ -218,7 +221,12 @@ class SalesController extends Controller
             return back()->with('success',__('standard.sales.approve_success'));
 
         } else {
-            $payment->update(['status' => 'UNPAID']);
+            $payment->update([
+                'is_verify' => 0, 
+                'status' => 'UNPAID',
+                'user_id' => Auth::id()
+            ]);
+
             $sales->update([
                 'status' => 'CANCELLED',
                 'delivery_status' => 'Cancelled',
@@ -242,6 +250,7 @@ class SalesController extends Controller
             'receipt_number' => '',
             'remarks' => $request->payment_remarks,
             'created_by' => Auth::id(),
+            'user_id' => Auth::id(),
             'is_verify' => 1
         ]);
 
@@ -250,6 +259,7 @@ class SalesController extends Controller
             $sales->update([
                 'delivery_status' => 'Delivered',
                 'payment_status' => 'PAID',
+                'user_id' => Auth::id()
             ]);
 
 
@@ -273,15 +283,10 @@ class SalesController extends Controller
     {
         $qry = SalesHeader::find($request->del_id);
 
-        if($qry->payment_method == 0){
-            $qry->update([
-                'delivery_status' => $request->delivery_status
-            ]);
-        } else {
-            $qry->update([
-                'delivery_status' => $request->delivery_status
-            ]);
-        }
+        $qry->update([
+            'user_id' => Auth::id(),
+            'delivery_status' => $request->delivery_status
+        ]);
         
         $update_delivery_table = DeliveryStatus::create([
             'order_id' => $request->del_id,
@@ -307,7 +312,8 @@ class SalesController extends Controller
             'delivery_fee_amount' => $request->shippingfee,
             'net_amount' => number_format($netamount,2,'.',''),
             'gross_amount' => number_format($netamount,2,'.',''),
-            'is_approve' => 1
+            'is_approve' => 1,
+            'user_id' => Auth::id()
         ]);
 
         $this->send_email_notification($sales,'Add Shipping Fee');

@@ -55,7 +55,7 @@ class PromoController extends Controller
     {
 
         $products = 
-            Product::where('status','PUBLISHED')->whereNotIn('id', function($query){
+            Product::where('status','PUBLISHED')->where('discount',NULL)->whereNotIn('id', function($query){
                 $query->select('product_id')->from('onsale_products')
                 ->join('promos','promos.id','=','onsale_products.promo_id')
                 ->where('promos.status','ACTIVE')
@@ -138,7 +138,7 @@ class PromoController extends Controller
     public function edit($id)
     {
         $unsale_products = 
-            Product::where('status','PUBLISHED')->whereNotIn('id', function($query){
+            Product::where('status','PUBLISHED')->where('discount',NULL)->whereNotIn('id', function($query){
                 $query->select('product_id')->from('onsale_products')
                 ->join('promos','promos.id','=','onsale_products.promo_id')
                 ->where('promos.status','ACTIVE')

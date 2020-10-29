@@ -197,6 +197,7 @@
         /*** Handles the Select All Checkbox ***/
         $("#checkbox_all").click(function(){
             $('.cb').not(this).prop('checked', this.checked);
+            $('.category').not(this).prop('checked', this.checked);
         });
 
         $('.category').on('click', function() {

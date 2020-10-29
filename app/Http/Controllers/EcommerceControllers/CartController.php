@@ -326,7 +326,7 @@ class CartController extends Controller
             'pickup_date' => ($request->shipOption == 2) ? $pickupdate : NULL,
             'pickup_time' => ($request->shipOption == 2) ? $pickuptime : NULL,
             'service_fee' => $request->servicefee,
-            'is_approve' => 0,
+            'is_approve' => NULL,
             'is_other' => ($request->shipOption != 2 && $request->shippingfee == 0) ? 1 : 0,
             'sdd_booking_type' => ($request->has('bookingType') ? 1 : 0),
         ]);

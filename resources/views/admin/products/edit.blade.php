@@ -236,7 +236,7 @@
                     <div class="form-group">
                         <label class="d-block">Display</label>
                         <div class="custom-control custom-switch @error('isfront') is-invalid @enderror">
-                            <input type="checkbox" class="custom-control-input" name="isfront" {{ (old("visibility") || $product->isfront ? "checked":"") }} id="customSwitch2">
+                            <input @if($product->is_recommended == 1) disabled @endif type="checkbox" class="custom-control-input" name="isfront" {{ (old("visibility") || $product->isfront ? "checked":"") }} id="customSwitch2">
                             <label class="custom-control-label" for="customSwitch2">Front Page</label>
                         </div>
                         @hasError(['inputName' => 'isfront'])
@@ -252,7 +252,7 @@
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-switch @error('is_recommended') is-invalid @enderror">
-                            <input type="checkbox" class="custom-control-input" name="is_recommended" {{ (old("visibility") || $product->is_recommended ? "checked":"") }} id="customSwitch4">
+                            <input @if($product->isfront == 1) disabled @endif type="checkbox" class="custom-control-input" name="is_recommended" {{ (old("visibility") || $product->is_recommended ? "checked":"") }} id="customSwitch4">
                             <label class="custom-control-label" for="customSwitch4">Recommended</label>
                         </div>
                         @hasError(['inputName' => 'is_recommended'])
@@ -261,7 +261,7 @@
                     <div class="form-group">
                         <div class="custom-control custom-switch @error('for_pickup') is-invalid @enderror">
                             <input type="checkbox" class="custom-control-input" name="for_pickup" {{ (old("visibility") || $product->for_pickup ? "checked":"") }} id="customSwitch5">
-                            <label class="custom-control-label" for="customSwitch5">For Pick-up</label>
+                            <label class="custom-control-label" for="customSwitch5">Store Pick-up</label>
                         </div>
                         @hasError(['inputName' => 'for_pickup'])
                         @endhasError
@@ -430,6 +430,22 @@
                 }
                 else{
                     $('#label_visibility3').html('No');
+                }
+            });
+
+            $('#customSwitch2').change(function () {
+                if($('#customSwitch2').is(":checked")) {
+                    $('#customSwitch4').attr('disabled', true);
+                } else {
+                    $('#customSwitch4').attr('disabled', false);
+                }
+            });
+
+            $('#customSwitch4').change(function () {
+                if($('#customSwitch4').is(":checked")) {
+                    $('#customSwitch2').attr('disabled', true);
+                } else {
+                    $('#customSwitch2').attr('disabled', false);
                 }
             });
 

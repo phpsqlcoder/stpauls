@@ -47,7 +47,7 @@
                 @endphp
                 <div class="form-group">
                     <label>@if($sp->is_international == 0) Cities* @else Countries* @endif</label>
-                    <select class="form-control" id='custom-headers' multiple='multiple' name="selected_locations[]">
+                    <select class="form-control selected_locations" id='custom-headers' multiple='multiple' name="selected_locations[]">
                         @if($sp->is_international == 0)
                             @foreach($cities as $city)
                                 @php
@@ -139,7 +139,7 @@
                 @if ($weights->firstItem() == null)
                     <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
                 @else
-                    <p class="tx-gray-400 tx-12 d-inline">Showing {{$weights->firstItem()}} to {{$weights->lastItem()}} of {{$weights->total()}} weights</p>
+                    <p class="tx-gray-400 tx-12 d-inline">Showing {{$weights->firstItem()}} to {{$weights->lastItem()}} of {{$weights->total()}} items</p>
                 @endif
             </div>
         </div>
@@ -329,6 +329,25 @@
         </div>
     </div>
 </div>
+
+<div class="modal effect-scale" id="prompt-no-location" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{{__('common.no_selected_title')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Please select at least one (1) country or city.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('pagejs')
@@ -409,10 +428,14 @@
         $('#btnUpdateRate').click(function(){
             var count = $('#weight_counter').val();
 
-            if(count >= 1){
-                $('#manageRateForm').submit();
+            if (!$(".selected_locations option:selected").length) {
+                $('#prompt-no-location').modal('show');
             } else {
-                $('#prompt-no-weight').modal('show');
+                if(count >= 1){
+                    $('#manageRateForm').submit();
+                } else {
+                    $('#prompt-no-weight').modal('show');
+                }
             }
         });
 
