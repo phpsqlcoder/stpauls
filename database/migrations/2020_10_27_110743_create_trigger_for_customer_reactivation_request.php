@@ -23,7 +23,7 @@ class CreateTriggerForCustomerReactivationRequest extends Migration
                         INSERT INTO cms_activity_logs 
                         (created_by, activity_type, dashboard_activity, activity_desc, activity_date, db_table, reference) 
 
-                        VALUES(NEW.user_id, 'update', CASE WHEN NEW.is_active = 1 THEN 'approved an account reactivation request' WHEN OLD.is_active = 0 THEN 'disapproved an account reactivation request' END, CASE WHEN NEW.is_active = 1 THEN concat('approved an account reactivation request of customer name ',OLD.firstname,' ',OLD.lastname) WHEN OLD.is_active = 0 THEN concat('disapproved an account reactivation request of customer name ', OLD.firstname,' ',OLD.lastname) END, NOW(), 'customers', OLD.id);
+                        VALUES(NEW.user_id, 'update', CASE WHEN NEW.is_active = 1 THEN 'approved an account reactivation request' ELSE 'disapproved an account reactivation request' END, CASE WHEN NEW.is_active = 1 THEN concat('approved an account reactivation request of customer name ',OLD.firstname,' ',OLD.lastname) ELSE concat('disapproved an account reactivation request of customer name ', OLD.firstname,' ',OLD.lastname) END, NOW(), 'customers', OLD.id);
                     END IF;
                 END IF;            
 
