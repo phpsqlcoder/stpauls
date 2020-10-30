@@ -157,14 +157,14 @@
                                         <div class="product-discount">₱ {{ $product->discount }} LESS</div>
                                         @endif
                                         <a href="{{ route('product.front.show',$product->slug)}}">
-                                            <div class="prodImg"><img src="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="" /></div>
+                                            <div class="prodImg"><img class="product-img" src="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="" /></div>
                                             @if($product->discount > 0)
                                             <h3 class="product-price">
-                                                <div class="old" style="font-size: 15px;">Php {{ number_format($product->price,2) }}</div>
+                                                <div class="old">Php {{ number_format($product->price,2) }}</div>
                                                 Php {{ number_format($product->price-$product->discount,2) }}
                                             </h3>
                                             @else
-                                            <h3 class="product-price">Php {{ number_format($product->price,2) }}</h3>
+                                            <h3 class="product-price"><div class="old"><br></div>Php {{ number_format($product->price,2) }}</h3>
                                             @endif 
                                         </a>
                                         <p class="product-title">{{ $product->name }}</p>
