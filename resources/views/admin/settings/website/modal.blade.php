@@ -188,22 +188,28 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('ecommerce-setting.add-remittance')}}" method="post" enctype="multipart/form-data">
+            <form autocomplete="off" action="{{route('ecommerce-setting.add-remittance')}}" method="post" enctype="multipart/form-data">
                 @method('POST')
                 @csrf
                 <div class="modal-body">
                     <label class="d-block">Name *</label>
                     <input required type="text" name="name" class="form-control" maxlength="150">
-
+                    <br>
                     <label class="d-block">Recepient Name *</label>
                     <input required type="text" name="recipient" class="form-control" maxlength="150">
-
+                    <br>
                     <label class="d-block">Number *</label>
                     <input required type="text" name="account_no" class="form-control" maxlength="50">
-
-                    <label class="d-block">Upload QR</label>
-                    <input type="file" id="qrfile_create" name="qrcode" class="form-control" accept="image/*">
                     <br>
+                    <div class="file-upload">
+                      <div class="file-select">
+                        <div class="file-select-button" id="fileName">Choose QR File</div>
+                        <div class="file-select-name" id="noFileCreate"></div>
+                        <input type="file" name="qrcode" id="qrfile_create">
+                      </div>
+                    </div>
+                    <br>
+
                     <span id="span_file_type_create" style="display: none;" class="text-danger"></span>
                     <span id="span_file_size_create" style="display: none;" class="text-danger"></span>
                     <span id="span_file_dimension_create" style="display: none;" class="text-danger"></span>
@@ -213,7 +219,7 @@
                     <small>File extension: JPEG, JPG, PNG</small>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnAddRemittance">Submit</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -230,23 +236,30 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('ecommerce-setting.edit-remittance')}}" method="post" enctype="multipart/form-data">
+            <form autocomplete="off" action="{{route('ecommerce-setting.edit-remittance')}}" method="post" enctype="multipart/form-data">
                 @method('POST')
                 @csrf
                 <div class="modal-body">
                     <label class="d-block">Name *</label>
                     <input type="hidden" name="id" id="remittance_id">
                     <input required type="text" name="name" id="remittance_name" class="form-control">
-
+                    <br>
                     <label class="d-block">Recepient Name *</label>
                     <input required type="text" name="recipient" id="recipient" class="form-control" maxlength="150">
-
+                    <br>
                     <label class="d-block">Number *</label>
                     <input required type="text" name="account_no" id="remittance_account_no" class="form-control" maxlength="50">
 
-                    <label class="d-block">Upload QR</label>
-                    <input type="file" name="qrcode" id="qrfile_update" class="form-control">
                     <br>
+                    <div class="file-upload">
+                      <div class="file-select">
+                        <div class="file-select-button" id="fileName">Choose QR File</div>
+                        <div class="file-select-name" id="noFile"></div>
+                        <input type="file" name="qrcode" id="qrfile_update">
+                      </div>
+                    </div>
+                    <br>
+
                     <span id="span_file_type_update" style="display: none;" class="text-danger"></span>
                     <span id="span_file_size_update" style="display: none;" class="text-danger"></span>
                     <span id="span_file_dimension_update" style="display: none;" class="text-danger"></span>
@@ -257,7 +270,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-primary">Save Changes</button>
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnEditRemittance">Save Changes</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>

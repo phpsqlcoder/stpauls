@@ -386,7 +386,7 @@ class WebController extends Controller
             'name' => $request->name,
             'recipient' => $request->recipient,
             'account_no' => $request->account_no,
-            'qrcode' => isset($request->qrcode) ? $request->qrcode->getClientOriginalName() : '',
+            'qrcode' => isset($request->qrcode) ? $request->qrcode->getClientOriginalName() : $qry->qrcode,
             'user_id' => Auth::id()
         ]);
 
