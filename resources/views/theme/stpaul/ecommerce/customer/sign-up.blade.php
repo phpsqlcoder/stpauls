@@ -189,14 +189,14 @@
 
 @section('customjs')
     <script>
-        // $('#signUpForm').submit(function (evt) {
-        //     let recaptcha = $("#g-recaptcha-response").val();
-        //     if (recaptcha === "") {
-        //         evt.preventDefault();
-        //         $('#catpchaError').show();
-        //         return false;
-        //     }
-        // });
+        $('#signUpForm').submit(function (evt) {
+            let recaptcha = $("#g-recaptcha-response").val();
+            if (recaptcha === "") {
+                evt.preventDefault();
+                $('#catpchaError').show();
+                return false;
+            }
+        });
 
         $(document).ready(function() {
             $('select[name="country"]').on('change', function() {
