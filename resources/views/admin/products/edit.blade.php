@@ -140,27 +140,21 @@
 
                     <div class="form-group">
                         <label>Editorial Reviews</label>
-                        <textarea rows="3" name="editorial_review" class="form-control">
-                            {{ old('editorial_review',$product->additional_info->editorial_reviews) }}
-                        </textarea>
+                        <textarea rows="3" name="editorial_review" class="form-control">{{ old('editorial_review',$product->additional_info->editorial_reviews) }}</textarea>
                     </div>
                 </div>
 
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label class="d-block" id="synopsisLabel">Synopsis</label>
-                        <textarea name="synopsis" rows="10" cols="80">
-                            {!! old('synopsis',$product->additional_info->synopsis) !!}
-                        </textarea>
+                        <textarea name="synopsis" rows="10" cols="80">{!! old('synopsis',$product->additional_info->synopsis) !!}</textarea>
                     </div>
                 </div>
 
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label class="d-block" id="about_authorLabel">About Author</label>
-                        <textarea name="about_author" rows="10" cols="80">
-                            {!! old('about_author',$product->additional_info->about_author) !!}
-                        </textarea>
+                        <textarea name="about_author" rows="10" cols="80">{!! old('about_author',$product->additional_info->about_author) !!}</textarea>
                     </div>
                 </div>
 
