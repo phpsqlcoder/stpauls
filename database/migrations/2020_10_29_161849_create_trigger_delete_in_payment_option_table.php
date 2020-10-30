@@ -13,10 +13,14 @@ class CreateTriggerDeleteInPaymentOptionTable extends Migration
      */
     public function up()
     {
-        Schema::create('trigger_delete_in_payment_option', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
-        });
+        DB::unprepared(
+            "CREATE TRIGGER trigger_delete_in_payment_option AFTER DELETE ON `payment_options` FOR EACH ROW 
+            BEGIN
+
+                INSERT INTO cms_activity_logs (created_by, activity_type, dashboard_activity, activity_desc, activity_date, db_table, reference)
+                VALUES (OLD.user_id, 'delete', 'deleted a payment option', concat('deleted the payment option name ',OLD.name), NOW(), 'payment_options',OLD.id);
+            END"
+        );
     }
 
     /**
@@ -26,6 +30,6 @@ class CreateTriggerDeleteInPaymentOptionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trigger_delete_in_payment_option');
+        DB::unprepared('DROP TRIGGER `trigger_delete_in_payment_option`');
     }
 }
