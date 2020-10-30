@@ -111,7 +111,7 @@ class CreateTriggerUpdateInProductsTable extends Migration
 
                     IF(NEW.for_pickup = 1) THEN
                         SET dashActivityPickup  = 'set the product as allowed for store pickup';
-                        SET actDescPickup       = concat('set the product name ',OLD.name,' as allowed for store pickup');;
+                        SET actDescPickup       = concat('set the product name ',OLD.name,' as allowed for store pickup');
                     END IF;
 
                     IF(NEW.for_pickup = '') THEN
@@ -127,7 +127,7 @@ class CreateTriggerUpdateInProductsTable extends Migration
 
                     IF(NEW.is_recommended = 1) THEN
                         SET dashActivityRecommended  = 'set the product as recommended product';
-                        SET actDescRecommended       = concat('set the product name ',OLD.name,' as recommended product');;
+                        SET actDescRecommended       = concat('set the product name ',OLD.name,' as recommended product');
                     END IF;
 
                     IF(NEW.is_recommended = '') THEN
