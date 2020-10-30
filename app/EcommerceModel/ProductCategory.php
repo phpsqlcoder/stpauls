@@ -71,13 +71,6 @@ class ProductCategory extends Model
         return $count;
     }
 
-    public static function check_product_in_promo($promoId,$productId)
-    {
-        $qry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('onsale_products.promo_id',$promoId)->where('onsale_products.product_id',$productId)->count();
-        
-        return $qry; 
-    }
-
     public static function categoryName($catId)
     {
         $qry = ProductCategory::find($catId);

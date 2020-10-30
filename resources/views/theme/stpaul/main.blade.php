@@ -82,7 +82,7 @@
         </p>
       </div>
       <div class="privacy-policy-btn">
-        <a class="btn btn-lg primary-btn" href="#" id="popup-close">Accept</a>
+        <button type="button" class="btn btn-lg primary-btn" id="popup-close">Accept</button>
         <!-- <a class="btn btn-lg default-btn" href="#">Learn More</a> -->
       </div>
     </div>
@@ -123,13 +123,13 @@
         $(document).ready(function() {
             if(localStorage.getItem('popState') != 'shown'){
                 $('#popupPrivacy').delay(1000).fadeIn();
-                localStorage.setItem('popState','shown')
             }
+        });
 
-            $('#popup-close, #popupPrivacy').click(function() // You are clicking the close button
-            {
-                $('#popupPrivacy').fadeOut(); // Now the pop up is hidden.
-            });
+        $('#popup-close').click(function() // You are clicking the close button
+        {
+            $('#popupPrivacy').fadeOut(); // Now the pop up is hidden.
+            localStorage.setItem('popState','shown');
         });
 
         $(function () {
