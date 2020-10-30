@@ -7,9 +7,9 @@
 
     <link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
     <style>
-    	.table td {
-		    padding: 0 0px;
-		}
+        .table td {
+            padding: 0 0px;
+        }
     </style>
 
 @endsection
@@ -33,19 +33,19 @@
         @method('PUT')
         <div class="row row-sm">
             <div class="col-lg-6">
-            	<div class="form-group">
-            		<label class="d-block">Name*</label>
-            		<input required type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name',$promo->name) }}" maxlength="150">
-            		@hasError(['inputName' => 'name'])
+                <div class="form-group">
+                    <label class="d-block">Name*</label>
+                    <input required type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name',$promo->name) }}" maxlength="150">
+                    @hasError(['inputName' => 'name'])
                     @endhasError
-            	</div>
-            	<div class="form-row">
+                </div>
+                <div class="form-row">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label class="d-block">Promotion Date & Time*</label>
                             <input required type="text" name="promotion_dt" class="form-control wd-100p @error('promotion_dt') is-invalid @enderror" placeholder="Choose date range" id="date1" value="{{ date('Y-m-d H:i',strtotime($promo->promo_start)) }} - {{ date('Y-m-d H:i',strtotime($promo->promo_end)) }}">
                             @hasError(['inputName' => 'promotion_dt'])
-                    		@endhasError
+                            @endhasError
                         </div>
                     </div>
                 </div>
@@ -66,13 +66,67 @@
                     @hasError(['inputName' => 'status'])
                     @endhasError
                 </div>
+
+
+                <div class="access-table-head">
+                    <div class="table-responsive-lg text-nowrap">
+                        <table class="table table-borderless" style="width:100%;">
+                            <thead>
+                            <tr>
+                                <td width="50%" class="text-success"><b>On-sale Products</b></td>
+                                <td class="text-right">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="checkbox_onsale">
+                                        <label class="custom-control-label" for="checkbox_onsale"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+
+                <table class="table table-hover" style="width:100%;">
+                    <thead>
+                        
+                    </thead>
+                    <tbody>
+                    @foreach(\App\EcommerceModel\Product::promo_product_categories($promo->id) as $category)
+                        <tr>
+                            <td width="50%"><p class="mg-0 pd-t-5 pd-b-5 tx-uppercase tx-semibold tx-primary">{{ \App\EcommerceModel\ProductCategory::categoryName($category->category_id) }}</p></td>
+                            <td class="text-right">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input category_onsale onsale_{{$category->category_id}}" data-category_onsale="{{$category->category_id}}" id="onsale_cat{{$category->category_id}}">
+                                    <label class="custom-control-label" for="onsale_cat{{$category->category_id}}"></label>
+                                </div>
+                            </td>
+                        </tr>
+                        @forelse($onsale_products as $product)
+                            @if($product->category_id == $category->category_id)
+                            <tr>
+                                <td>{{ $product->name }}</td>
+                                <td class="text-right">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" name="productid[]" value="{{$product->id}}" checked class="custom-control-input cb_onsale onsale_{{$product->category_id}}" id="pcategory{{$product->id}}">
+                                        <label class="custom-control-label" for="pcategory{{$product->id}}"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endif
+                        @empty
+                            <tr><td>No Products</td></tr>
+                        @endforelse
+                    @endforeach
+                    </tbody>
+                </table>
+
                 
                 <div class="access-table-head">
                     <div class="table-responsive-lg text-nowrap">
                         <table class="table table-borderless" style="width:100%;">
                             <thead>
                             <tr>
-                                <td width="50%">Select Products</td>
+                                <td width="50%" class="text-danger"><b>Products</b></td>
                                 <td class="text-right">
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="checkbox_all">
@@ -91,6 +145,7 @@
                     </thead>
                     <tbody>
                     @foreach($categories as $category)
+                        @if(\App\EcommerceModel\ProductCategory::count_unsale_products($category->id) > 0)
                             <tr>
                                 <td width="50%"><p class="mg-0 pd-t-5 pd-b-5 tx-uppercase tx-semibold tx-primary">{{ $category->name }}</p></td>
                                 <td class="text-right">
@@ -100,21 +155,24 @@
                                     </div>
                                 </td>
                             </tr>
-                            @forelse($products as $product)
-                                @if($product->category_id == $category->id)
-                                <tr>
-                                    <td>{{ $product->name }}</td>
-                                    <td class="text-right">
-                                        <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" name="productid[]" value="{{$product->id}}" @if(\App\EcommerceModel\ProductCategory::check_product_in_promo($promo->id,$product->id) > 0) checked @endif class="custom-control-input cb category_{{$product->category_id}}" id="pcategory{{$product->id}}">
-                                            <label class="custom-control-label" for="pcategory{{$product->id}}"></label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endif
-                            @empty
-                                <tr><td>No Products</td></tr>
-                            @endforelse
+                            <tr>
+                                @forelse($unsale_products as $product)
+                                    @if($product->category_id == $category->id)
+                                    <tr>
+                                        <td>{{ $product->name }}</td>
+                                        <td class="text-right">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" name="productid[]" value="{{$product->id}}" class="custom-control-input cb category_{{$product->category_id}}" id="pcategory{{$product->id}}">
+                                                <label class="custom-control-label" for="pcategory{{$product->id}}"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endif
+                                @empty
+                                    <tr><td>No Products</td></tr>
+                                @endforelse
+                            </tr>
+                        @endif
                     @endforeach
                     </tbody>
                 </table>
@@ -149,7 +207,7 @@
 @endsection
 
 @section('pagejs')
-	<script src="{{ asset('lib/jqueryui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('lib/jqueryui/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('lib/bselect/dist/js/bootstrap-select.js') }}"></script>
 
     <script src="{{ asset('lib/datextime/moment.min.js') }}"></script>
@@ -163,22 +221,22 @@
             'use strict'
 
             $('#date1').daterangepicker({
-            	autoUpdateInput: false,
-            	timePicker: true,
-            	locale: {
-		          	format: 'MM/DD/YYYY h:mm A',
-		          	cancelLabel: 'Clear'
-		        },
+                autoUpdateInput: false,
+                timePicker: true,
+                locale: {
+                    format: 'MM/DD/YYYY h:mm A',
+                    cancelLabel: 'Clear'
+                },
                 minDate: dateToday,
             });
 
             $('input[name="promotion_dt"]').on('apply.daterangepicker', function(ev, picker) {
-			    $(this).val(picker.startDate.format('YYYY-MM-DD H:mm') + ' - ' + picker.endDate.format('YYYY-MM-DD H:mm'));
-			});
+                $(this).val(picker.startDate.format('YYYY-MM-DD H:mm') + ' - ' + picker.endDate.format('YYYY-MM-DD H:mm'));
+            });
 
-			$('input[name="promotion_dt"]').on('cancel.daterangepicker', function(ev, picker) {
-			    $(this).val('');
-			});
+            $('input[name="promotion_dt"]').on('cancel.daterangepicker', function(ev, picker) {
+                $(this).val('');
+            });
         });
 
         $("#customSwitch1").change(function() {
@@ -193,7 +251,7 @@
 @endsection
 
 @section('customjs')
-	<script>
+    <script>
         /*** Handles the Select All Checkbox ***/
         $("#checkbox_all").click(function(){
             $('.cb').not(this).prop('checked', this.checked);
@@ -207,10 +265,29 @@
             $(objectName).each(function() {
                 this.checked = checked;
             });
+        });
 
+        $("#checkbox_onsale").click(function(){
+            $('.cb_onsale').not(this).prop('checked', this.checked);
+            $('.category_onsale').not(this).prop('checked', this.checked);
+        });
+
+        $('.category_onsale').on('click', function() {
+            let category = $(this).data('category_onsale');
+            let checked = $(this).is(':checked');
+            let objectName = '.onsale_'+category;
             $(objectName).each(function() {
                 this.checked = checked;
             });
+        });
+
+        $('#promo_form').submit(function(){
+            if(!$("input[name='productid[]']:checked").val()) {        
+                $('#prompt-no-selected').modal('show');
+                return false;
+            } else {
+                return true;
+            }
         });
 
         /** form validations **/

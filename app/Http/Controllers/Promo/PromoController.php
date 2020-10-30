@@ -153,10 +153,9 @@ class PromoController extends Controller
             })->get();
 
         $categories = ProductCategory::where('status','PUBLISHED')->orderBy('name','asc')->get();
-        $products = $unsale_products->merge($onsale_products);
         $promo = Promo::find($id);
 
-        return view('admin.promos.edit',compact('products','categories','promo'));
+        return view('admin.promos.edit',compact('unsale_products','onsale_products','categories','promo'));
     }
 
     /**
@@ -218,7 +217,7 @@ class PromoController extends Controller
 
         }
 
-        return redirect(route('promos.index'))->with('success', __('standard.promos.promo_update_details_success'));
+        return back()->with('success', __('standard.promos.promo_update_details_success'));
 
     }
 

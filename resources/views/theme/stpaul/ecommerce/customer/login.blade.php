@@ -46,6 +46,7 @@
                                         <input type="password" name="password" class="form-control form-input" placeholder="Please enter your Password">
                                         <div class="gap-10"></div>
                                         <p class="text-right"><a href="{{ route('ecommerce.forgot_password') }}">Forgot Password?</a></p>
+                                        <p class="text-right"><a href="{{ route('ecommerce.reactivate-account') }}">Re-activate Account?</a></p>
                                     </div>
                                     <div class="form-group col-md-5">
                                         <div class="gap-20"></div>

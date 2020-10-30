@@ -77,4 +77,11 @@ class ProductCategory extends Model
         
         return $qry; 
     }
+
+    public static function categoryName($catId)
+    {
+        $qry = ProductCategory::find($catId);
+
+        return $qry->name;
+    }
 }

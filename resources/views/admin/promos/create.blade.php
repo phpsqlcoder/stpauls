@@ -103,15 +103,15 @@
                             <tr>
                                 @forelse($products as $product)
                                     @if($product->category_id == $category->id)
-                                        <tr>
-                                            <td>{{ $product->name }}</td>
-                                            <td class="text-right">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" name="productid[]" value="{{$product->id}}" class="custom-control-input cb category_{{$product->category_id}}" id="pcategory{{$product->id}}">
-                                                    <label class="custom-control-label" for="pcategory{{$product->id}}"></label>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td>{{ $product->name }}</td>
+                                        <td class="text-right">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" name="productid[]" value="{{$product->id}}" class="custom-control-input cb category_{{$product->category_id}}" id="pcategory{{$product->id}}">
+                                                <label class="custom-control-label" for="pcategory{{$product->id}}"></label>
+                                            </div>
+                                        </td>
+                                    </tr>
                                     @endif
                                 @empty
                                     <tr><td>No Products</td></tr>
@@ -207,10 +207,6 @@
             let category = $(this).data('category');
             let checked = $(this).is(':checked');
             let objectName = '.category_'+category;
-            $(objectName).each(function() {
-                this.checked = checked;
-            });
-
             $(objectName).each(function() {
                 this.checked = checked;
             });

@@ -17,16 +17,18 @@ class CreateTriggerUpdateInProductReviewsTable extends Migration
             "CREATE TRIGGER trigger_update_in_product_reviews AFTER UPDATE ON `ecommerce_product_review` FOR EACH ROW 
             BEGIN
 
-                DECLARE customer VARCHAR(200);
+                DECLARE fname VARCHAR(200);
+                DECLARE lname VARCHAR(200);
                 DECLARE product VARCHAR(2000);
 
                 IF ((OLD.is_approved <=> NEW.is_approved) = 0) THEN
 
-                    SET customer = (SELECT firstname, lastname FROM users WHERE id = OLD.customer_id);
-                    SET product  = (SELECT name FROM products WHERE id = OLD.product_id);
+                    SET fname = (SELECT firstname FROM users WHERE id = OLD.customer_id);
+                    SET lname  = (SELECT lastname FROM users WHERE id = OLD.customer_id);
+                    SET product   = (SELECT name FROM products WHERE id = OLD.product_id);
 
                     INSERT INTO cms_activity_logs (created_by, activity_type, dashboard_activity, activity_desc, activity_date, db_table, reference) 
-                    VALUES(NEW.approver, 'approve', 'approved a product review', concat('approved the review of ',customer,' for the product ',product), NOW(), 'ecommerce_product_review', OLD.id);
+                    VALUES(NEW.approver, 'approve', 'approved a product review', concat('approved the review of ',fname,' ',lname,' for the product ',product), NOW(), 'ecommerce_product_review', OLD.id);
                 END IF;
 
                 IF ((OLD.deleted_at <=> NEW.deleted_at) = 0) THEN 

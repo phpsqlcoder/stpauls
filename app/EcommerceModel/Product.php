@@ -275,6 +275,13 @@ class Product extends Model
         return $products;
     }
 
+    public static function promo_product_categories($promoId)
+    {
+        $data = DB::table('onsale_products')->join('products','onsale_products.product_id','=','products.id')->select('products.category_id')->where('onsale_products.promo_id',$promoId)->groupBy('category_id')->get();
+
+        return $data;
+    }
+
 
 
 
