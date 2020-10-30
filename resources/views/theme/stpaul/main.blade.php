@@ -74,16 +74,16 @@
     </div>
 
     <!-- PRIVACY POLICY WIDGET -->
-    <div class="privacy-policy dark">
+    <div class="privacy-policy dark" style="display: none;" id="popupPrivacy">
       <div class="privacy-policy-desc">
         <p class="title">Privacy-Policy</p>
         <p>
-          This website uses cookies to ensure you get the best experience.
+          {!! \Setting::info()->data_privacy_popup_content !!}
         </p>
       </div>
       <div class="privacy-policy-btn">
-        <a class="btn btn-lg primary-btn" href="#">Accept</a>
-        <a class="btn btn-lg default-btn" href="#">Learn More</a>
+        <a class="btn btn-lg primary-btn" href="#" id="popup-close">Accept</a>
+        <!-- <a class="btn btn-lg default-btn" href="#">Learn More</a> -->
       </div>
     </div>
 
@@ -120,6 +120,18 @@
     <script src="{{ asset('theme/stpaul/plugins/flexmenu/flexmenu.min.js') }}"></script>
     <script src="{{ asset('theme/stpaul/js/script.js') }}"></script>
     <script type="text/javascript">
+        $(document).ready(function() {
+            if(localStorage.getItem('popState') != 'shown'){
+                $('#popupPrivacy').delay(1000).fadeIn();
+                localStorage.setItem('popState','shown')
+            }
+
+            $('#popup-close, #popupPrivacy').click(function() // You are clicking the close button
+            {
+                $('#popupPrivacy').fadeOut(); // Now the pop up is hidden.
+            });
+        });
+
         $(function () {
             $('header nav .rd-navbar-nav-wrap .rd-navbar-nav').flexMenu({
                 linkTitle: "",
