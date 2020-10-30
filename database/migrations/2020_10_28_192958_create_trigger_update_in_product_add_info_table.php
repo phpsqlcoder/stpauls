@@ -50,12 +50,6 @@ class CreateTriggerUpdateInProductAddInfoTable extends Migration
                     VALUES(NEW.user_id, 'update', 'updated the product isbn', concat('updated the isbn of product name ',productName,' from ',OLD.isbn,' to ',NEW.isbn), NOW(), 'product_additional_info', OLD.isbn, NEW.isbn, OLD.id);
                 END IF;
 
-                IF ((OLD.isbn <=> NEW.isbn) = 0) THEN
-
-                    INSERT INTO cms_activity_logs (created_by, activity_type, dashboard_activity, activity_desc, activity_date, db_table, old_value, new_value, reference) 
-                    VALUES(NEW.user_id, 'update', 'updated the product isbn', concat('updated the isbn of product name ',productName,' from ',OLD.isbn,' to ',NEW.isbn), NOW(), 'product_additional_info', OLD.isbn, NEW.isbn, OLD.id);
-                END IF;
-
                 IF ((OLD.editorial_reviews <=> NEW.editorial_reviews) = 0) THEN
 
                     INSERT INTO cms_activity_logs (created_by, activity_type, dashboard_activity, activity_desc, activity_date, db_table, old_value, new_value, reference) 
