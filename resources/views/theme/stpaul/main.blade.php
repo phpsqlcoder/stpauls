@@ -68,7 +68,15 @@
                             <div class="gap-20"></div>
                         </li>
                     @endforeach
-                        <li></li>
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>
+                            <div class="unit flex-row align-items-center unit-spacing-xs">
+                                <div class="unit__left"><i style="font-size: 22px;width: 30px;text-align: center;" class="fab fa-viber"></i></div>
+                                <div class="unit__body"><a href="#">{{ \Setting::info()->viber_no }}</a></div>
+                            </div>
+                            <div class="gap-20"></div>
+                        </li>
                         <li>
                             <div class="unit flex-row align-items-center unit-spacing-xs">
                                 <div class="unit__left"><i style="font-size: 22px;width: 30px;text-align: center;" class="fas fa-mobile-alt"></i></div>
