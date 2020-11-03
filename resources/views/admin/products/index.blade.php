@@ -413,6 +413,21 @@
         </div>
     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <div class="modal effect-scale" id="prompt-upload-main" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <form action="{{ route('products.upload.main') }}" method="post" enctype="multipart/form-data">
             @csrf

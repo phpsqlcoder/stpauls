@@ -27,9 +27,6 @@ class MediaAccounts extends Model
 		    case "youtube":
 		        return "fa-youtube";
 		        break;
-		    case "viber":
-		        return "fa-viber";
-		        break;
 		    case "whatsapp":
 		        return "fa-whatsapp";
 		        break;

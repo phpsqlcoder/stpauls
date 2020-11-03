@@ -132,6 +132,7 @@ class WebController extends Controller
         $contacts->fax_no = $request->fax_no;
         $contacts->tel_no = $request->tel_no;
         $contacts->email = $request->email;
+        $contacts->viber_no = $request->viber_no;
         $contacts->user_id = Auth::id();
         $contacts->save();
 

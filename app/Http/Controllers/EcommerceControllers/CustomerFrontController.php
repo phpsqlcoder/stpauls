@@ -122,56 +122,72 @@ class CustomerFrontController extends Controller
 
     public function customer_login(Request $request)
     {
-        $userCredentials = [
-            'email'    => $request->email,
-            'password' => $request->password
-        ];
+        $checkVerified = User::where('email',$request->email);
 
-        $cart = session('cart', []);
-        
-        if (Auth::attempt($userCredentials)) {
+        if($checkVerified->exists()){
+            $customer = $checkVerified->first();
 
-            if(auth::user()->role_id != 3){ // block admin from using this login form
-                Auth::logout();
-                return back()->with('error', 'Administrative account are not allowed to login in this portal.'); 
-            }
+            if($customer->email_verified_at == NULL && $customer->fromMigration == 1){
 
-            if(Auth()->user()->is_active == 0){
-                Auth::logout();
-                return back()->with('warning','account inactive');
-            }
+                $token = app('auth.password.broker')->createToken($customer);
+                return redirect(route('ecommerce.reset_password',$token.'?email='.$request->email));
 
-            foreach ($cart as $order) {
-                $product = Product::find($order['product_id']);
-                $cart = Cart::where('product_id', $order['product_id'])
-                    ->where('user_id', Auth::id())
-                    ->first();
+            } else {
 
-                if (!empty($cart)) {
-                    $newQty = $cart->qty + $order['qty'];
-                    $cart->update([
-                        'qty' => $newQty,
-                        'price' => $product->price,
-                    ]);
+                $userCredentials = [
+                    'email'    => $request->email,
+                    'password' => $request->password
+                ];
+
+                $cart = session('cart', []);
+                
+                if (Auth::attempt($userCredentials)) {
+
+                    if(auth::user()->role_id != 3){ // block admin from using this login form
+                        Auth::logout();
+                        return back()->with('error', 'Administrative account are not allowed to login in this portal.'); 
+                    }
+
+                    if(Auth()->user()->is_active == 0){
+                        Auth::logout();
+                        return back()->with('warning','account inactive');
+                    }
+
+                    foreach ($cart as $order) {
+                        $product = Product::find($order['product_id']);
+                        $cart = Cart::where('product_id', $order['product_id'])
+                            ->where('user_id', Auth::id())
+                            ->first();
+
+                        if (!empty($cart)) {
+                            $newQty = $cart->qty + $order['qty'];
+                            $cart->update([
+                                'qty' => $newQty,
+                                'price' => $product->price,
+                            ]);
+                        } else {
+                            Cart::create([
+                                'product_id' => $order['product_id'],
+                                'user_id' => Auth::id(),
+                                'qty' => $order['qty'],
+                                'price' => $product->price,
+                            ]);
+                        }
+                    }
+
+                    session()->forget('cart');
+                    $cnt = Cart::where('user_id',Auth::id())->count();
+                    if($cnt > 0)
+                        return redirect(route('cart.front.show'));
+                    else
+                        return redirect(route('home'));
                 } else {
-                    Cart::create([
-                        'product_id' => $order['product_id'],
-                        'user_id' => Auth::id(),
-                        'qty' => $order['qty'],
-                        'price' => $product->price,
-                    ]);
+                    Auth::logout();
+                    return back()->with('error', __('auth.login.incorrect_input'));    
                 }
             }
-
-            session()->forget('cart');
-            $cnt = Cart::where('user_id',Auth::id())->count();
-            if($cnt > 0)
-                return redirect(route('cart.front.show'));
-            else
-                return redirect(route('home'));
         } else {
-            Auth::logout();
-            return back()->with('error', __('auth.login.incorrect_input'));    
+            return back()->with('error', __('auth.login.incorrect_input')); 
         }
 
     }

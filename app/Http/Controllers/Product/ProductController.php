@@ -25,6 +25,9 @@ use App\StPaulModel\OnSaleProducts;
 use App\InventoryReceiverHeader;
 use App\InventoryReceiverDetail;
 
+use App\EcommerceModel\Customer;
+use App\User;
+
 use Illuminate\Support\Facades\Input;
 class ProductController extends Controller
 {
@@ -836,5 +839,64 @@ class ProductController extends Controller
 
     }
 
-    
+    public function upload_customers(Request $request)
+    {
+        $csv = array();
+
+        if(($handle = fopen($request->csv, 'r')) !== FALSE) {
+            // necessary if a large csv file
+            set_time_limit(0);
+
+            $row = 0;
+            while(($data = fgetcsv($handle, 5000, ',')) !== FALSE) {
+                $row++;
+                // number of fields in the csv
+                $col_count = count($data);
+                if($row > 1){
+
+                    $qry = User::where('email',$data[1]);
+
+                    if($qry->count() == 0){
+                        $customer = User::create([
+                            'name' => $data[3].' '.$data[4],
+                            'email' => $data[1],
+                            'firstname' => $data[3],
+                            'lastname' => $data[4],
+                            'email_verified_at' => now(),
+                            'password' => $data[2],
+                            'role_id' => 3,
+                            'is_active' => $data[9],
+                            'user_id' => 1,
+                            'remember_token' => str_random(60),
+                            'fromMigration' => 1
+                        ]);
+
+                        if($customer){
+                            Customer::create([
+                                'firstname' => $data[3],
+                                'lastname' => $data[4],
+                                'email' => $data[1],
+                                'address' => $data[5],
+                                'city' => $data[6],
+                                'province' => $data[7],
+                                'is_active' => $data[9],
+                                'user_id' => 1,
+                                'customer_id' => $customer->id,
+                                'country' => $data[8]
+
+                            ]);
+                        }
+                        
+                    }
+                    
+                }
+
+
+            }
+            fclose($handle);
+        }
+
+        return back()->with('success','Product photo has been updated.');
+
+    }
 }

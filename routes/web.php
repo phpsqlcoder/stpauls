@@ -342,6 +342,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/product-upload-category','Product\ProductController@upload_category')->name('products.upload.category');
             Route::post('/product-upload-photos','Product\ProductController@upload_photos')->name('products.upload.photos');
             Route::post('/product-upload-images','Product\ProductController@upload_images')->name('products.upload.images');
+            Route::post('/customer-upload','Product\ProductController@upload_customers')->name('customers.upload');
 
 
 

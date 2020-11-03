@@ -278,6 +278,9 @@ class ShippingfeeController extends Controller
             $sfee = Shippingfee::findOrFail($rate);
             $sfee->update(['user_id' => Auth::id()]);
             $sfee->delete();
+
+            ShippingfeeLocations::where('shippingfee_id',$request->rate)->delete();
+            ShippingfeeWeight::where('shippingfee_id',$request->rate)->delete();
         }
 
         return back()->with('success', 'Selected shipping fee has been deleted');

@@ -30,7 +30,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'email_verified_at', 'password', 'role_id', 'is_active', 'remember_token', 'firstname', 'lastname', 'avatar', 'user_id', 'isDeleted','mobile','phone','address_street','address_city','address_municipality','address_zip'
+        'name', 'email', 'email_verified_at', 'password', 'role_id', 'is_active', 'remember_token', 'firstname', 'lastname', 'avatar', 'user_id', 'isDeleted','mobile','phone','address_street','address_city','address_municipality','address_zip','fromMigration'
     ];
 
     /**
@@ -127,6 +127,12 @@ class User extends Authenticatable
 
 
 
+    public function customer_send_reset_password_email()
+    {
+        $token = app('auth.password.broker')->createToken($this);
+
+        $this->notify(new CustomerResetPasswordNotification($token));
+    }
 
     public function send_email_notification($sales,$template)
     {

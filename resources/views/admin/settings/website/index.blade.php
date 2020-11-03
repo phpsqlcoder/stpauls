@@ -180,8 +180,14 @@
                                 </div>
                                 <div class="form-group">
                                     <div id="mob_no" class="parsley-input">
-                                        <label>Mobile Number/s <span class="tx-danger">*</span></label>
+                                        <label>Mobile Number <span class="tx-danger">*</span></label>
                                         <input type="text" id="mobile_no" name="mobile_no" class="form-control" value="{{ $web->mobile_no }}" data-parsley-class-handler="#mob_no" required @htmlValidationMessage({{__('standard.empty_all_field')}})>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div id="viberNo" class="parsley-input">
+                                        <label>Viber Number <span class="tx-danger">*</span></label>
+                                        <input type="text" id="viber_no" name="viber_no" class="form-control" value="{{ $web->viber_no}}" data-parsley-class-handler="#viberNo" required @htmlValidationMessage({{__('standard.empty_all_field')}})>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -225,7 +231,6 @@
                                                     <option @if($media->name == 'messenger') selected @endif value="messenger">Messenger</option>
                                                     <option @if($media->name == 'twitter') selected @endif value="twitter">Twitter</option>
                                                     <option @if($media->name == 'youtube') selected @endif value="youtube">Youtube</option>
-                                                    <option @if($media->name == 'viber') selected @endif value="viber">Viber</option>
                                                     <option @if($media->name == 'whatsapp') selected @endif value="whatsapp">Whatsapp</option>
                                                     <option @if($media->name == 'instagram') selected @endif value="instagram">Instagram</option>
                                                 </select>
@@ -244,7 +249,6 @@
                                                 <option value="messenger">Messenger</option>
                                                 <option value="twitter">Twitter</option>
                                                 <option value="youtube">Youtube</option>
-                                                <option value="viber">Viber</option>
                                                 <option value="whatsapp">Whatsapp</option>
                                                 <option value="instagram">Instagram</option>
                                             </select>
@@ -329,7 +333,7 @@
                     <!-- Ecommerce Tab -->
                     <div class="tab-pane fade @if(session()->has('tabname') && session('tabname') == 'ecommerce') show active @endif" id="ecommerce" role="tabpanel" aria-labelledby="ecommerce-tab">
                         <div class="col-lg-12 mg-t-15">
-                            <div class="col-md-9">
+                            <div class="col-md-12">
                                 <h4>Payment Options</h4>
                                 <div class="form-group">
                                     <div class="parsley-input">                                            
