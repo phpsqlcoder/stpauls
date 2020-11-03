@@ -105,7 +105,7 @@
       </div>
       <div class="privacy-policy-btn">
         <button type="button" class="btn btn-lg primary-btn" id="popup-close">Accept</button>
-        <!-- <a class="btn btn-lg default-btn" href="#">Learn More</a> -->
+        <a class="btn btn-lg default-btn" href="{{route('privacy-policy')}}">Learn More</a>
       </div>
     </div>
 

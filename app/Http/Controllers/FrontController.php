@@ -57,4 +57,12 @@ class FrontController extends Controller
             $page->name => url('/').'/'.$page->slug
         ];
     }
+
+    public function privacy_policy()
+    {   
+        $page = new Page;
+        $page->name = 'Privacy-Policy';
+        
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.privacy-policy', compact('page'));
+    }
 }

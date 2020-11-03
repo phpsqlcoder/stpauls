@@ -206,7 +206,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="d-block">Weight (Kg) *</label>
-                        <input type="number" name="weight" id="weight_edit" class="form-control" step="0.01">                       
+                        <input readonly type="number" name="weight" id="weight_edit" class="form-control" step="0.01">                       
                     </div>
                     <div class="form-group">
                         <label class="d-block">Rate *</label>

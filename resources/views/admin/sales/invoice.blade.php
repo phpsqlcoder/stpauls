@@ -191,7 +191,27 @@
                     <span><a style="text-decoration: none;" href="mailto:{{ $sales->customer_main_details->email }}">{{ $sales->customer_main_details->email }}</a></span>
                 </li>
                 <li>&nbsp;</li>
-                <li>Remarks : {{ $sales->remarks }} </li>
+                <p class="mg-b-10">Remarks :</p>
+                <ul class="list-unstyled">
+                    @if($sales->remarks != '')
+                        <li>* {{ $sales->remarks }}</li>
+                    @endif
+                    
+                    @php
+                        $paymentQry = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sales->id);
+                        $paymentCount = $paymentQry->count();
+                    @endphp
+
+                    @if($paymentQry->count() > 0)
+                        @php
+                            $paymentRemarks = $paymentQry->first();
+                        @endphp
+
+                        @if($paymentRemarks->remarks != '')
+                            <li>* {{ $paymentRemarks->remarks }}</li>
+                        @endif
+                    @endif
+                </ul>
                 @if($sales->sdd_booking_type == 1)
                 <li><span>Courier Name : {{ $sales->courier_name }}</span></li>
                 <li><span>Rider Name : {{ $sales->rider_name }}</span></li>

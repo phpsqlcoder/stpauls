@@ -155,7 +155,7 @@
                                                 <div class="gap-10"></div>
                                                 <button type="submit" class="btn btn-md primary-btn btn-block">Sign Up</button>
                                                 <div class="gap-10"></div>
-                                                {{--<p class="sign-notice">By clicking "SIGN UP", I agree to St. Pauls Privacy Policy</p>--}}
+                                                <p class="sign-notice">By clicking "SIGN UP", I agree to St. Pauls <a style="color:blue;" href="{{route('privacy-policy')}}">Privacy Policy</a></p>
                                             </div>
                                         </div>
                                     </div>

@@ -142,22 +142,13 @@ class ShippingfeeController extends Controller
 
     public function weight_update(Request $request)
     {
-        $counter = ShippingfeeWeight::where('weight',$request->weight)->count();
+        ShippingfeeWeight::find($request->weight_id)->update([
+            'weight' => $request->weight,
+            'rate' => $request->rate,
+            'user_id' => Auth::id()            
+        ]);
 
-        if($counter > 0){
-
-            return back()->with('error','Shipping weight: '.$request->weight.'kg is already in the list.');
-
-        } else {
-            ShippingfeeWeight::find($request->weight_id)->update([
-                'weight' => $request->weight,
-                'rate' => $request->rate,
-                'user_id' => Auth::id()            
-            ]);
-
-            return back()->with('success','Successfully updated rate');
-        }
- 
+        return back()->with('success','Successfully updated rate');
     }
 
     public function weight_single_delete(Request $request)

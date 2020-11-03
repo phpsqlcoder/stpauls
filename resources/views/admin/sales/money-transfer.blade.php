@@ -184,6 +184,7 @@
         <form style="display: none;" id="payment_form" method="post" action="{{route('sales.validate-payment')}}">
             @csrf
             <input type="text" name="payment_id" id="payment_id" value="">
+            <input type="text" name="remarks" id="remarks" value="">
             <input type="text" name="status" id="status" value="">
         </form>
     </div>
@@ -249,38 +250,77 @@
                 success: function( response ) {
                     $('#payment_details_tbl').html(response);
                     $('#prompt-show-payment-details').modal('show');
+                    $(document).off('focusin.modal');
                 }
             });
         }
 
         function approve_payment(id,status){
             if(status == 'APPROVE'){
-                var text = 'approve';
-                var btnColor = '#8CD4F5';
-            } else {
-                var text = 'reject'
-                var btnColor = '#d33';
-            }
+                swal({
+                    title: '',
+                    text: "You are about to approve this payment. Do you want to continue?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#8CD4F5',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, approve it!'            
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        $('#payment_id').val(id);
+                        $('#status').val(status);
+                        $('#payment_form').submit();
+                    } 
+                    else {                    
+                        swal.close();                   
+                    }
+                });
 
-            swal({
-                title: '',
-                text: "You are about to "+text+" this payment. Do you want to continue?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: btnColor,
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, '+text+' it!'            
-            },
-            function(isConfirm) {
-                if (isConfirm) {
+            } else {
+                swal({
+                    title: '',
+                    text: "You are about to reject this payment. Do you want to continue?",
+                    icon: 'warning',
+                    type: 'input',
+                    inputPlaceholder: "Enter your remarks",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, reject it!',
+
+                },
+                function(inputValue){
+                    if (inputValue === false){
+                        return false;
+                    }
+                  
+                    if (inputValue === "") {
+                        swal.showInputError("You need to enter a remark!");
+                        return false
+                    }
+
                     $('#payment_id').val(id);
+                    $('#remarks').val(inputValue);
                     $('#status').val(status);
                     $('#payment_form').submit();
-                } 
-                else {                    
-                    swal.close();                   
-                }
-            });
+
+                });
+
+                // function(isConfirm,inputValue) {
+                //     if (isConfirm) {
+                //         console.log(inputValue.value);
+                //         // $('#payment_id').val(id);
+                //         // $('#status').val(status);
+                //         // $('#payment_form').submit();
+                //     } 
+                //     else {                    
+                //         swal.close();                   
+                //     }
+                // });
+            }
+            
         }
 
 

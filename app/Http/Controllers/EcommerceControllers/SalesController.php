@@ -224,6 +224,7 @@ class SalesController extends Controller
             $payment->update([
                 'is_verify' => 0, 
                 'status' => 'UNPAID',
+                'remarks' => $request->remarks,
                 'user_id' => Auth::id()
             ]);
 

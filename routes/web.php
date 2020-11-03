@@ -45,10 +45,10 @@
         Route::any('/search-product', 'Product\Front\ProductFrontController@search_product')->name('product.front.search');
     //
 
+    // Ecommerce Pages
+        Route::get('/privacy-policy', 'FrontController@privacy_policy')->name('privacy-policy');
     //
-        
-        Route::get('/privacy-policy/', 'FrontController@privacy_policy')->name('privacy-policy');
-        //Route::post('/payment-notification', 'EcommerceControllers\CartController@receive_data_from_payment_gateway')->name('cart.payment-notification');
+
     ########## ECOMMERCE ROUTES #############
 
 
