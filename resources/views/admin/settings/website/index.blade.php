@@ -352,12 +352,12 @@
 
                                             <table class="table table-borderless">
                                                 <thead>
-                                                    <th></th>
-                                                    <th>Bank Name</th>
-                                                    <th>Account Name</th>
-                                                    <th>Account #</th>
-                                                    <th>Branch</th>
-                                                    <th></th>
+                                                    <th width="5%"></th>
+                                                    <th width="20%">Bank Name</th>
+                                                    <th width="20%">Account Name</th>
+                                                    <th width="15%">Account #</th>
+                                                    <th width="30%">Branch</th>
+                                                    <th width="10%"></th>
                                                 </thead>
                                                 <tbody>
                                                     @foreach($banks as $bank)
@@ -393,12 +393,12 @@
 
                                             <table class="table table-borderless">
                                                 <thead>
-                                                    <th></th>
-                                                    <th>Name</th>
-                                                    <th>Account #</th>
-                                                    <th>Recipient</th>
-                                                    <th>QR Code</th>
-                                                    <th></th>
+                                                    <th width="5%"></th>
+                                                    <th width="20%">Name</th>
+                                                    <th width="15%">Account #</th>
+                                                    <th width="20%">Recipient</th>
+                                                    <th width="30">QR Code</th>
+                                                    <th width="10%"></th>
                                                 </thead>
                                                 <tbody>
                                                     @foreach($remittances as $remittance)
