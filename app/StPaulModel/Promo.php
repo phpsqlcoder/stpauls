@@ -16,4 +16,15 @@ class Promo extends Model
     {
     	return $this->hasMany('\App\StPaulModel\OnSaleProducts','promo_id');
     }
+
+    public static function update_promo_xpiration()
+    {
+    	$promos = Promo::where('status','ACTIVE')->where('is_expire',0)->get();
+
+    	foreach($promos as $promo){
+    		if($promo->promo_end <= now()){
+    			Promo::find($promo->id)->update(['is_expire' => 1]);
+    		}
+    	}
+    }
 }

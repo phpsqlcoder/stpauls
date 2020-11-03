@@ -26,6 +26,7 @@
     @yield('pagecss')
 
     {!! \Setting::info()->google_analytics !!}
+    {{ \App\StPaulModel\Promo::update_promo_xpiration() }}
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>

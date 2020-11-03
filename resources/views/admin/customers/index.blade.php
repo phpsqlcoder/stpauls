@@ -84,7 +84,6 @@
                                 </div>
                             </form>
                         </div>
-                        <a class="btn btn-secondary btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-main').modal('show');">Upload Products (Main Info)</a>
                     </div>
                 </div>
 
