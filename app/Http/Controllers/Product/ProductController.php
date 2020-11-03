@@ -862,7 +862,7 @@ class ProductController extends Controller
                             'email' => $data[1],
                             'firstname' => $data[3],
                             'lastname' => $data[4],
-                            'email_verified_at' => now(),
+                            'email_verified_at' => NULL,
                             'password' => $data[2],
                             'role_id' => 3,
                             'is_active' => $data[9],
