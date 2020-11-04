@@ -94,6 +94,11 @@ class SocialiteController extends Controller
                         return redirect(route('customer-front.login'))->with('warning','account inactive');
                     }
                     
+                    if($user->role_id != 3){ // block admin from using this login form
+                        Auth::logout();
+                        return back()->with('error', 'Administrative account are not allowed to login in this portal.'); 
+                    }
+
                     Auth::login($user);
 
                     $cart = session('cart', []);
