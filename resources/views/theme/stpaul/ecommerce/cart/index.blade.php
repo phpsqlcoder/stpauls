@@ -164,7 +164,11 @@
                             <div class="cart-btn">
                                 <div class="row">
                                     <div class="col-12">
+                                        @if(Auth::check())
                                         <input type="hidden" id="roleid" value="{{ auth()->user()->role_id }}">
+                                        @else
+                                        <input type="hidden" id="roleid" value="3">
+                                        @endif
                                         <button @if($totalproducts > 0) @else disabled @endif type="button" id="btnCheckout" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
                                     </div>
                                 </div>
