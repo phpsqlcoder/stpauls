@@ -26,7 +26,7 @@
                     @endif
                 </div>
             </div>
-            <form method="post" action="{{route('cart.front.proceed_checkout')}}">
+            <form id="checkoutForm" method="post" action="{{route('cart.front.proceed_checkout')}}">
                 @csrf
                 <div class="row">
                     <div class="col-lg-9">
@@ -164,7 +164,8 @@
                             <div class="cart-btn">
                                 <div class="row">
                                     <div class="col-12">
-                                        <button @if($totalproducts > 0) @else disabled @endif type="submit" id="btnCheckout" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
+                                        <input type="hidden" id="roleid" value="{{ auth()->user()->role_id }}">
+                                        <button @if($totalproducts > 0) @else disabled @endif type="button" id="btnCheckout" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
                                     </div>
                                 </div>
                             </div>
@@ -190,6 +191,19 @@
 
 @section('customjs')
     <script>
+        $('#btnCheckout').click(function(){
+            var roleid = $('#roleid').val();
+
+            if(roleid != 3){
+                swal({
+                    title: '',
+                    text: "You are logged in as CMS user. Please use a customer account to proceed this transaction.",         
+                });
+            } else {
+                $('#checkoutForm').submit();
+            }
+        });
+
         function FormatAmount(number, numberOfDigits) {
 
             var amount = parseFloat(number).toFixed(numberOfDigits);
