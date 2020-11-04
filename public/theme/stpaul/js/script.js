@@ -221,3 +221,27 @@ $(".rd-navbar-listing-close-toggle").on("click", function () {
 $(".rd-navbar-sl-close-toggle").on("click", function () {
     $(".sl-filter-wrap").removeClass("active");
 });
+
+// reCaptcha responsive
+
+$(function () {
+    var width = $('.g-recaptcha').parent().width();
+    if (width < 302) {
+        var scale = width / 302;
+        $('.g-recaptcha').css('transform', 'scale(' + scale + ')');
+        $('.g-recaptcha').css('-webkit-transform', 'scale(' + scale + ')');
+        $('.g-recaptcha').css('transform-origin', '0 0');
+        $('.g-recaptcha').css('-webkit-transform-origin', '0 0');
+    }
+});
+
+$(window).on("resize", function () {
+    var width = $('.g-recaptcha').parent().width();
+    if (width < 302) {
+        var scale = width / 302;
+        $('.g-recaptcha').css('transform', 'scale(' + scale + ')');
+        $('.g-recaptcha').css('-webkit-transform', 'scale(' + scale + ')');
+        $('.g-recaptcha').css('transform-origin', '0 0');
+        $('.g-recaptcha').css('-webkit-transform-origin', '0 0');
+    }
+});
