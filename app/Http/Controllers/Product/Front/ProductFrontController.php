@@ -96,13 +96,13 @@ class ProductFrontController extends Controller
             }
 
             $total_product = $products->count();
-            $products = $products->orderBy('id','desc')->paginate($pageLimit);
+            $products = $products->orderBy('updated_at','desc')->paginate($pageLimit);
         }
         else{
             $productMaxPrice = $maxPrice;
             $minPrice = $minPrice;
             $total_product = $products->count();
-            $products = $products->orderBy('id','desc')->paginate($pageLimit);
+            $products = $products->orderBy('updated_at','desc')->paginate($pageLimit);
         }
 
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-list',compact('products','page','categories','total_product','maxPrice','minPrice','productMaxPrice','category','request'));

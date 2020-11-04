@@ -270,7 +270,7 @@ class Product extends Model
                 ->join('promos','onsale_products.promo_id','=','promos.id')
                 ->where('promos.status','ACTIVE')
                 ->where('promos.is_expire',0);
-            })->where('isfront',1)->where('category_id',$categoryid)->where('status', 'PUBLISHED')->where('is_recommended',0)->orderBy('id','desc')->get();
+            })->where('isfront',1)->where('category_id',$categoryid)->where('status', 'PUBLISHED')->where('is_recommended',0)->orderBy('updated_at','desc')->get();
 
         return $products;
     }
