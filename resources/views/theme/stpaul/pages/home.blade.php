@@ -185,7 +185,7 @@
                 <!-- Recommended Titles Content -->
                 <div id="reco-title" class="slick-slider">
                     @php
-                        $recommended_titles = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->where('is_recommended',1)->orderBy('id','desc')->get(); 
+                        $recommended_titles = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->where('is_recommended',1)->orderBy('updated_at','desc')->get(); 
                     @endphp
 
                     @foreach($recommended_titles->chunk(2) as $title)
@@ -294,7 +294,7 @@
         <!-- END Home Partners Logo Area -->
 
         <!-- Home Payments Logo Area -->
-        @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.home-payments')
+        {{--@include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.home-payments')--}}
         <!-- END Home Payments Logo Area -->
     </main>
 @endsection
