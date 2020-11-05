@@ -3220,6 +3220,39 @@ p {
   margin: 40px 0;
 }
 
+.tab-wrap.custom {
+  border: none;
+}
+
+.tab-wrap.custom .tab + label {
+  border-radius: 5px !important;
+  background-color: #b82e24;
+  color: white;
+  margin-bottom: 10px;
+  border: 2px solid #b82e24;
+}
+
+.tab-wrap.custom .tab + label:hover {
+  background: #8d231c;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+.tab-wrap.custom .tab:checked + label {
+  background-color: #fff;
+  -webkit-box-shadow: 0 -1px 0 #fff inset;
+          box-shadow: 0 -1px 0 #fff inset;
+  cursor: default;
+  border-color: #b82e24;
+  border-width: 2px;
+  color: #333;
+}
+
+.tab-wrap.custom .tab__content {
+  border: 1px solid #ced4da;
+  margin-bottom: 10px;
+}
+
 .tab-wrap.horizontal label {
   width: 25%;
 }
@@ -3749,6 +3782,15 @@ p {
   font-weight: 700;
 }
 
+.sub1, .sub2 {
+  display: none;
+}
+
+:checked ~ .sub1, :checked ~ .sub2 {
+  display: block;
+  margin-left: 40px;
+}
+
 @font-face {
   font-family: 'FontAwesome';
   font-style: normal;
@@ -4247,6 +4289,12 @@ p {
   }
   .privacy-policy-btn .default-btn {
     margin-left: 0px;
+  }
+  div[id^="payment_method"] {
+    font-size: 0.9rem;
+  }
+  div[id^="payment_method"] :checked ~ .sub1, div[id^="payment_method"] :checked ~ .sub2 {
+    margin-left: 15px;
   }
 }
 

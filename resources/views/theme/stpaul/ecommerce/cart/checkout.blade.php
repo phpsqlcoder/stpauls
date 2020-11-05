@@ -176,7 +176,7 @@
                                             <input type="hidden" id="time_to" value="{{ $stp->allowed_time_to }}">
                                             <input type="hidden" id="array_days" value="{{ rtrim($stp_allowed_days,',') }}">
                                             
-                                            <div class="tab-wrap vertical">
+                                            <div class="tab-wrap custom vertical">
                                                 @if($customer->details->country == '')
                                                     <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
                                                     <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
