@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css?family=Hind:300,400,700|IBM+Plex+Sans:300,400,500,700&display=swap');
 
 body {
-    overflow: hidden;
+    overflow-y: scroll;
     font-family: "Segoe UI", "Hind", "IBM Plex Sans", sans-serif;
 }
 
