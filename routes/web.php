@@ -42,7 +42,7 @@
 
         Route::post('/product-buy-now','EcommerceControllers\CartController@buynow')->name('product-buy-now');
         Route::any('/products/{category}','Product\Front\ProductFrontController@product_list')->name('product.front.list');
-        Route::any('/search-product', 'Product\Front\ProductFrontController@search_product')->name('product.front.search');
+        Route::get('/search-product', 'Product\Front\ProductFrontController@search_product')->name('product.front.search');
     //
 
     // Ecommerce Pages

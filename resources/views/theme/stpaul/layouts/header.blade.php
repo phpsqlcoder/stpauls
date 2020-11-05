@@ -45,13 +45,12 @@
                     </div>
                     <div class="rd-navbar-panel__center">
                         <div class="rd-navbar-n-search rd-navbar-search_not-collapsable">
-                            <form class="rd-n-search" action="{{ route('product.front.search') }}" method="POST" data-search-live="rd-search-results-live">
-                                @csrf
-                                <input type="hidden" name="_method" value="POST">
-                                <input type="hidden" name="search" value="on">
+                            <form id="productSearchForm" class="rd-n-search" data-search-live="rd-search-results-live">
                                 <div class="form-wrap">
-                                    <input required class="form-input" id="rd-navbar-n-search-form-input" type="text" name="searchtxt" autocomplete="off" placeholder="Search a product">
+                                    <input required class="form-input" id="rd-navbar-n-search-form-input" type="search" name="keyword" autocomplete="off" placeholder="Search a product">
                                     <div class="rd-n-search-results-live" id="rd-n-search-results-live"></div>
+                                    <div style="display: none;" class="dropdown-menu" id="productSearchResult">
+                                    </div>
                                 </div>
                                 <button class="rd-n-search__submit" type="submit"></button>
                             </form>
