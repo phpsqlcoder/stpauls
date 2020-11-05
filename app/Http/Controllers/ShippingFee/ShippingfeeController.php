@@ -40,9 +40,7 @@ class ShippingfeeController extends Controller
      */
     public function create()
     {
-        $provinces = Provinces::orderBy('province','asc')->get();
-
-        return view('admin.shippingfee.create',compact('provinces'));
+        return view('admin.shippingfee.create');
     }
 
     /**
@@ -59,12 +57,26 @@ class ShippingfeeController extends Controller
             'type' => 'required'
         ])->validate();
 
+        if($request->areas == 'metro manila'){
+            $provinceId = 49;
+        }
+        if($request->areas == 'rizal'){
+            $provinceId = 65;
+        }
+        if($request->areas == 'cavite'){
+            $provinceId = 24;
+        }
+        if($request->areas == 'laguna'){
+            $provinceId = 42;
+        }
+
         Shippingfee::create([
             'name' => $request->name,
             'is_international' => $request->type,
-            'province' => ($request->type == 1) ? 0 : $request->province,
+            'province' => in_array($request->areas,['luzon','visayas','mindanao']) ? 0 : $provinceId,
             'rate' => $request->rate,
-            'is_outside_manila' => ($request->province == 49) ? 0 : 1,
+            'is_outside_manila' => ($request->areas == 'metro manila') ? 0 : 1,
+            'area' => $request->areas,
             'user_id' => Auth::id()
         ]);
         
@@ -89,7 +101,7 @@ class ShippingfeeController extends Controller
             'rate' => ($fee->is_international == 0) ? $request->rate : 0
         ]);
 
-        if($fee){
+        if(in_array($fee->area,['metro manila','rizal','cavite','laguna'])){
 
             $arr_locations = [];
             $saved_locations = ShippingfeeLocations::where('shippingfee_id',$request->shippingfee_id)->get();
@@ -106,6 +118,7 @@ class ShippingfeeController extends Controller
                     ShippingfeeLocations::create([
                         'shippingfee_id' => $request->shippingfee_id,
                         'name' => $location,
+                        'province_id' => $fee->province,
                         'user_id' => Auth::id()
                     ]);
                 }
@@ -123,6 +136,45 @@ class ShippingfeeController extends Controller
                 }
             }
 
+        } else {
+
+            $arr_selected_provinces = [];
+            $saved_provinces = ShippingfeeLocations::where('shippingfee_id',$request->shippingfee_id)->get();
+
+            foreach($saved_provinces as $sprovinces){
+                array_push($arr_selected_provinces,$sprovinces->province_id);
+            }
+
+            // save new locations
+            $selected_location = $data['selected_locations'];
+            foreach($selected_location as $key => $location){
+                if(!in_array($location,$arr_selected_provinces)){
+
+                    $cities = Cities::where('province',$location)->get();
+
+                    foreach($cities as $city){
+                        ShippingfeeLocations::create([
+                            'shippingfee_id' => $request->shippingfee_id,
+                            'name' => $city->city,
+                            'province_id' => $city->province,
+                            'user_id' => Auth::id()
+                        ]); 
+                    }
+                    
+                }
+            }
+
+            // delete existing location that is not selected
+            $arr_selectedlocations = [];
+            foreach($selected_location as $key => $slocation){
+                array_push($arr_selectedlocations,$slocation);
+            }
+
+            foreach($saved_provinces as $province){
+                if(!in_array($province->province_id,$arr_selectedlocations)){
+                    ShippingfeeLocations::where('province_id',$province->province_id)->delete();
+                }
+            }
         }
 
         return back()->with('success','Successfully added new locations for this zone');
@@ -277,10 +329,10 @@ class ShippingfeeController extends Controller
         foreach($rates as $rate){
             $sfee = Shippingfee::findOrFail($rate);
             $sfee->update(['user_id' => Auth::id()]);
-            $sfee->delete();
+            $sfee->forceDelete();
 
-            ShippingfeeLocations::where('shippingfee_id',$request->rate)->delete();
-            ShippingfeeWeight::where('shippingfee_id',$request->rate)->delete();
+            ShippingfeeLocations::where('shippingfee_id',$rate)->delete();
+            ShippingfeeWeight::where('shippingfee_id',$rate)->delete();
         }
 
         return back()->with('success', 'Selected shipping fee has been deleted');

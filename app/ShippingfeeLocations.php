@@ -10,10 +10,12 @@ use App\Shippingfee;
 use App\Countries;
 use App\Cities;
 
+use DB;
+
 class ShippingfeeLocations extends Model
 {
     protected $table = 'shippingfee_locations';
-    protected $fillable = ['name', 'shippingfee_id', 'user_id'];
+    protected $fillable = ['name', 'shippingfee_id', 'user_id','province_id'];
 
     public function user()
     {
@@ -66,6 +68,67 @@ class ShippingfeeLocations extends Model
                 }
             }
             
+        }
+    }
+
+    public static function provinces($feeId)
+    {
+        $fee = Shippingfee::find($feeId);
+
+        if(in_array($fee->area,['luzon','visayas','mindanao'])){
+            if($fee->area == 'luzon'){
+                $provinces = Provinces::where('island',$fee->area)->whereNotIn('id',[49,65,24,42])->orderBy('province','asc')->get();
+            } else {
+                $provinces = Provinces::where('island',$fee->area)->orderBy('province','asc')->get();
+            }
+        }
+
+        return $provinces;
+    }
+
+    public static function cities($feeId)
+    {
+        $fee = Shippingfee::find($feeId);
+        $cities = Cities::where('province',$fee->province)->orderBy('city','asc')->get();
+            
+        return $cities;
+    }
+
+    public static function checkIfSelected($sId,$provId)
+    {
+        // selected province that is in the selected shipping rate
+        $count = ShippingfeeLocations::where('shippingfee_id',$sId)->where('province_id',$provId)->count();
+
+        if($count > 0){
+            return 'selected';
+        } else {
+            // selected province that is not in the selected shipping rate
+            $row = ShippingfeeLocations::where('province_id',$provId)->count();
+
+            if($row > 0){
+                return 'disabled';
+            } else {
+                return '';
+            }
+        }
+    }
+
+    public static function checkIfCitySelected($sId,$city,$provId)
+    {
+        // selected city that is in the selected shipping rate
+        $count = ShippingfeeLocations::where('shippingfee_id',$sId)->where('name',$city)->where('province_id',$provId)->count();
+
+        if($count > 0){
+            return 'selected';
+        } else {
+            // selected city that is not in the selected shipping rate
+            $row = ShippingfeeLocations::where('name',$city)->where('province_id',$provId)->count();
+
+            if($row > 0){
+                return 'disabled';
+            } else {
+                return '';
+            }
         }
     }
 }

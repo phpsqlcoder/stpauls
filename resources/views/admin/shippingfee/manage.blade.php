@@ -23,7 +23,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4 mg-t-45">
+        <div class="col-md-7 mg-t-45">
             <form id="manageRateForm" action="{{ route('shippingfee_location.store') }}" method="post">
                 @csrf
                 @method('POST')
@@ -40,37 +40,35 @@
                 </div>
                 @endif
 
-                @php 
-                    if($sp->province > 0){
-                        $cities = \App\Cities::where('province',$sp->province)->orderBy('city','asc')->get();
-                    }
-                @endphp
                 <div class="form-group">
-                    <label>@if($sp->is_international == 0) Cities* @else Countries* @endif</label>
+                    <label>@if($sp->is_international == 0) Provinces* @else Countries* @endif</label>
                     <select class="form-control selected_locations" id='custom-headers' multiple='multiple' name="selected_locations[]">
                         @if($sp->is_international == 0)
-                            @foreach($cities as $city)
+                            @if(in_array($sp->area,['luzon','visayas','mindanao']))
+
                                 @php
-                                    $unselected_location = \App\ShippingfeeLocations::where('shippingfee_id',$sp->id)->where('name',$city->city)->count();
-                                    $selected_location = \App\ShippingfeeLocations::where('name',$city->city)->count();
+                                    $provinces = \App\ShippingfeeLocations::provinces($sp->id);
                                 @endphp
+                                @foreach($provinces as $province)
+                                    <option {{ \App\ShippingfeeLocations::checkIfSelected($sp->id,$province->id) }} value="{{ $province->id }}">{{ $province->province }}</option>
+                                @endforeach
 
-                                @if($unselected_location == 0 && $selected_location == 1)
-                                    <option disabled value="{{ $city->city }}">{{ $city->city }}</option>
-                                @endif
+                            @else
 
-                                @if($unselected_location == 0 && $selected_location == 0)
-                                    <option value="{{ $city->city }}">{{ $city->city }}</option>
-                                @endif
+                                @php
+                                    $cities = \App\ShippingfeeLocations::cities($sp->id);
+                                @endphp
+                                @foreach($cities as $city)
+                                    <option {{ \App\ShippingfeeLocations::checkIfCitySelected($sp->id,$city->city,$sp->province) }} value="{{ $city->city }}">{{ $city->city }}</option>
+                                @endforeach
 
-                                @if($unselected_location == 1 && $selected_location == 1)
-                                    <option selected value="{{ $city->city }}">{{ $city->city }}</option>
-                                @endif
-                            @endforeach
+                            @endif
                         @else
+
                             @foreach(Setting::countries() as $country)                            
                                 <option value="{{$country->name}}" @if($sp->locations->contains('name',$country->name)) selected="selected" @endif>{{$country->name}}</option>
                             @endforeach
+
                         @endif
                     </select>
                 </div>                
@@ -78,7 +76,7 @@
                 <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('shippingfee.index') }}">Cancel</a>
             </form> 
         </div>
-        <div class="col-md-8">
+        <div class="col-md-5">
             <table width="100%" class="table table-borderless">
                 <tr>
                     <td align="right"><a class="btn btn-xs btn-primary" href="#" onclick="$('#modal-new-weight').modal('show');">Add New</a>
@@ -133,8 +131,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
+        <div class="col-sm-7"></div>
+        <div class="col-sm-2">
             <div>
                 @if ($weights->firstItem() == null)
                     <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
@@ -143,7 +141,7 @@
                 @endif
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <div class="text-md-right float-md-right">
                 <div>
                     {!! $weights->links() !!}

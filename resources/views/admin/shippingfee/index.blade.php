@@ -156,7 +156,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" style="text-align: center;"> <p class="text-danger">No rates found.</p></td>
+                                    <td colspan="6" style="text-align: center;"> <p class="text-danger">No rates found.</p></td>
                                 </tr>
                             @endforelse
                             </tbody>
