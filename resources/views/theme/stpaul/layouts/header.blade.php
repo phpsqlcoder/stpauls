@@ -50,6 +50,7 @@
                                     <input required class="form-input" id="rd-navbar-n-search-form-input" type="search" name="keyword" autocomplete="off" placeholder="Search a product">
                                     <div class="rd-n-search-results-live" id="rd-n-search-results-live"></div>
                                     <div style="display: none;" class="dropdown-menu" id="productSearchResult">
+                                        <a style="display: none;" class="dropdown-item" href="#" id="searching">Searching..</a>
                                     </div>
                                 </div>
                                 <button class="rd-n-search__submit" type="submit"></button>
