@@ -37,11 +37,18 @@
             font-weight: normal;
         }
 
-        table tbody tr:last-child td {
-            border: none;
+        table tfoot tr:first-child td {
+            border-top: none; 
         }
 
-        table tfoot tr td:second-child {
+        table tfoot tr:last-child td {
+            color: #57B223;
+            font-size: 1.4em;
+            border-top: 1px solid #57B223; 
+
+        }
+
+        table tfoot tr td:first-child {
             border: none;
         }
     </style>
@@ -103,6 +110,7 @@
                     @endif
                 @endif
             </ul>
+            <p>Other Instructions : {{ $sales->other_instruction ?? 'N/A' }}</p>
             @if($sales->sdd_booking_type == 1)
             <p class="mg-b-3">Courier Name : {{ $sales->courier_name }}</p>
             <p class="mg-b-3">Rider Name : {{ $sales->rider_name }}</p>
@@ -176,36 +184,37 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" rowspan="3"></td>
+                    <td colspan="4"></td>
                     <td>Total Weight</td>
                     <td class="text-right">{{ ($totalweight/1000) }} kg</td>
                 </tr>
                 <tr>
+                    <td colspan="4"></td>
                     <td>Sub-Total</td>
                     <td class="text-right">{{ number_format($subtotal,2) }}</td>
                 </tr>
+                @if($sales->discount_percentage > 0)
                 <tr>
+                    <td colspan="4"></td>
                     <td class="text-danger">LESS: Loyalty Discount({{$sales->discount_percentage}}%)</td>
                     <td class="text-right text-danger">{{ number_format($sales->discount_amount,2) }}</td>
-                    
                 </tr>
+                @endif
                 <tr>
-                    <td colspan="4" rowspan="3">
-                        <div class="col-sm-12 col-lg-8 order-2 order-sm-0 mg-t-40 mg-sm-t-0">
-                            <div class="gap-30"></div>
-                            <label class="tx-sans tx-10 tx-medium tx-spacing-1 tx-color-03">Other Instructions</label>
-                            <p>{{ $sales->other_instruction ?? 'N/A' }}</p>
-                        </div>
-                    </td>
+                    <td colspan="4"></td>
                     <td>ADD: Shipping Fee</td>
                     <td class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
                 </tr>
+                @if($sales->service_fee > 0)
                 <tr>
+                    <td colspan="4"></td>
                     <td>ADD: Service Fee</td>
                     <td class="text-right">{{ number_format($sales->service_fee,2) }}</td>
                 </tr>
+                @endif
                 <tr>
-                    <td><h5 class="tx-success">TOTAL DUE</h5></td>
+                    <td colspan="4"></td>
+                    <td><h5 class="text-success"><b>TOTAL DUE</b></h5></td>
                     <td class="text-right"><h5>{{ number_format($sales->net_amount,2)}}</h5></td>
                 </tr>
             </tfoot>

@@ -83,7 +83,8 @@
                                                 <select name="country" id="country" class="form-control form-input">
                                                     <option value="">-- Select Country --</option>
                                                     @foreach(Setting::countries() as $country)
-                                                    <option @if($customer->details->country == $country->id) selected @endif value="{{$country->id}}">{{ $country->name }}</option>
+                                                    <option @if($customer->details->country == "" && $country->id == 259) selected 
+                                                    @elseif($customer->details->country == $country->id) selected @endif value="{{$country->id}}">{{ $country->name }}</option>
                                                     @endforeach
                                                 </select>
                                                 <p id="alert_countryrate" style="display: none;" class="text-danger"><small>The country selected has no shipping rate in the system. Please expect an updated invoice once the order is confirmed.</small></p>
@@ -95,11 +96,11 @@
                                                 <div class="form-group form-wrap">
                                                     <p>Billing Address *</p>
                                                     <textarea name="billing_address" class="form-control form-input" rows="3" id="billing_address">{{ $customer->details->intl_address }}</textarea>
-                                                    <p id="p_otheradd" class="text-danger" style="display: none;"><small>The address field is required.</small></p>
+                                                    <p id="p_otheradd" class="text-danger" style="display: none;"><small>The billing address field is required.</small></p>
                                                 </div>
                                             </div>
 
-                                            <div id="divLocalAddress" style="display: @if($customer->details->country == 259) block; @else none; @endif">
+                                            <div id="divLocalAddress" style="display: @if($customer->details->country == '' || $customer->details->country == 259) block; @else none; @endif">
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>Province *</p>
@@ -132,24 +133,22 @@
 
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
-                                                    <p>Address Line 1 *</p>
+                                                    <p>Main Address *</p>
                                                     <input required type="text" class="form-control form-input" name="address" id="input_address" value="{{ $customer->details->address }}">
-                                                    <p id="p_address" class="text-danger" style="display: none;"><small>The address line 1 field is required.</small></p>
+                                                    <p id="p_address" class="text-danger" style="display: none;"><small>The main address field is required.</small></p>
                                                 </div>
 
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
-                                                    <p>Address Line 2 *</p>
-                                                    <input required type="text" class="form-control form-input" name="barangay" id="input_barangay" value="{{ $customer->details->barangay }}">
-                                                    <p id="p_barangay" class="text-danger" style="display: none;"><small>The address line 2 field is required.</small></p>
+                                                    <p>Alternative Address</p>
+                                                    <input type="text" class="form-control form-input" name="barangay" id="input_barangay" value="{{ $customer->details->barangay }}">
                                                 </div>
                                             </div>
 
                                             <div class="gap-10"></div>
                                             <div class="form-group form-wrap">
-                                                <p>Zip Code *</p>
-                                                <input required type="text" class="form-control form-input" name="zipcode" id="input_zipcode" value="{{ $customer->details->zipcode }}">
-                                                <p id="p_zipcode" class="text-danger" style="display: none;"><small>The zip code field is required.</small></p>
+                                                <p>Zip Code</p>
+                                                <input type="text" class="form-control form-input" name="zipcode" id="input_zipcode" value="{{ $customer->details->zipcode }}">
                                             </div>
 
                                             <div class="gap-10"></div>
@@ -286,9 +285,9 @@
 
                                                 <input type="radio" id="tab4" name="shipOption" value="3" class="tab">
                                                 <label for="tab4">Door-to-door (D2D) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                <div class="tab__content">
+                                                {{--<div class="tab__content">
                                                     <h3>Door-to-door</h3>
-                                                </div>
+                                                </div>--}}
                                             </div>
 
                                             <ul class="list-unstyled lh-7 pd-r-10" style="display: none;">
@@ -457,6 +456,7 @@
                                                     ₱ <span id="sub-total">{{ number_format($subTotal,2) }}</span>
                                                 </span>
                                             </li>
+                                            @if($loyalty_discount > 0)
                                             <li class="d-flex justify-content-between">
                                                 <span class="text-danger">LESS: Loyalty Discount ({{number_format($loyalty_discount,0)}}%)</span>
                                                 <span>
@@ -465,6 +465,10 @@
                                                     <span class="text-danger" id="span_discount"> </span>
                                                 </span>
                                             </li>
+                                            @else
+                                                <input type="hidden" id="input_loyalty_discount" name="loyaltydiscount" value="0">
+                                                <input type="hidden" id="input_discount_amount" name="discount_amount">
+                                            @endif
                                             <li class="d-flex justify-content-between">
                                                 <span>ADD: Shipping Fee</span>
                                                 <span>
@@ -473,10 +477,10 @@
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
-                                                <span>ADD: Service Fee</span>
+                                                <span id="lispan_servicefee">ADD: Service Fee</span>
                                                 <span>
                                                     <input name="servicefee" type="hidden" id="input_servicefee" name="servicefee">
-                                                    ₱ <span id="span_servicefee">0.00</span>
+                                                    <span id="span_servicefee">0.00</span>
                                                 </span>
                                             </li>
                                             
@@ -617,6 +621,8 @@
 
                         $('#divLocalAddress').css('display','block');
                         $('#divIntlAddress').css('display','none');
+
+                        $('#alert_countryrate').css('display','none');
 
                         $('#shipping_fee').val(0);
 
@@ -800,9 +806,7 @@
                 lname    = $('#input_lname').val(),
                 email    = $('#input_email').val(), 
                 mobile   = $('#input_mobile').val(), 
-                address  = $('#input_address').val(), 
-                barangay = $('#input_barangay').val(),
-                zipcode  = $('#input_zipcode').val(),
+                address  = $('#input_address').val(),
                 province = $('#province').val(),
                 city     = $('#city').val(),
                 country  = $('#country').val(),
@@ -811,7 +815,7 @@
 
                 if(country == 259){
                     // Philippines
-                    if(fname.length === 0 || lname.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0 || province === "" || city === "" || address.length === 0 || barangay.length === 0 || zipcode.length === 0){
+                    if(fname.length === 0 || lname.length === 0 || email.length === 0 || IsEmail(email) == false || mobile.length === 0 || province === "" || city === "" || address.length === 0){
                         $(this).removeClass('checkout-next-btn');
                     } else {
                         select_shipping_method();
@@ -845,9 +849,7 @@
                 if(country == 259){
                     if(province === ""){ $('#p_province').show(); } else { $('#p_province').hide(); }
                     if(city === ""){ $('#p_city').show(); } else { $('#p_city').hide(); }
-                    if(barangay.length === 0){ $('#p_barangay').show(); } else { $('#p_barangay').hide(); }
                     if(address.length === 0){ $('#p_address').show(); } else { $('#p_address').hide(); }
-                    if(zipcode.length === 0){ $('#p_zipcode').show(); } else { $('#p_zipcode').hide(); }
                 } else {
                     if(intl_add.length === 0){ $('#p_otheradd').show(); } else { $('#p_otheradd').hide(); }
                 }
@@ -951,8 +953,9 @@
             if(option == 1 || option == 3 || option == 4){
 
                 if($('#exampleCheck1').is(":checked") && option == 4){
+                    $('#lispan_servicefee').hide();
+                    $('#span_servicefee').hide();
                     $('#input_servicefee').val(0);
-                    $('#span_servicefee').html('0.00');
 
                     $('#input_shippingfee').val(0);
                     $('#span_shippingfee').html('0.00');
@@ -960,10 +963,13 @@
                 } else {
                     if(option == 1){
                         $('#input_servicefee').val(codServiceFee);
-                        $('#span_servicefee').html(FormatAmount(codServiceFee,2));
+                        $('#span_servicefee').html('₱ '+FormatAmount(codServiceFee,2));
+                        $('#lispan_servicefee').show();
+                        $('#span_servicefee').show();
                     } else {
+                        $('#lispan_servicefee').hide();
+                        $('#span_servicefee').hide();
                         $('#input_servicefee').val(0);
-                        $('#span_servicefee').html('0.00');
                     }
 
                     $('#input_shippingfee').val(shippingfee);
@@ -972,8 +978,9 @@
                 
 
             } else {
+                $('#lispan_servicefee').hide();
+                $('#span_servicefee').hide();
                 $('#input_servicefee').val(0);
-                $('#span_servicefee').html('0.00');
 
                 $('#input_shippingfee').val(0);
                 $('#span_shippingfee').html('0.00');

@@ -64,7 +64,7 @@
                         <li>
                             <div class="unit flex-row align-items-center unit-spacing-xs">
                                 <div class="unit__left"><span class="icon icon-md icon-primary fab {{ \App\MediaAccounts::icons($media->name) }}"></span></div>
-                                <div class="unit__body"><a href="{{$media->media_account}}" target="_blank">{{ ucwords($media->name) }}</a></div>
+                                <div class="unit__body"><a href="{{$media->media_account}}" target="_blank">{{ ucwords($media->account_name) }}</a></div>
                             </div>
                             <div class="gap-20"></div>
                         </li>

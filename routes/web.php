@@ -167,7 +167,6 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         //
 
         // Website
-            // Route::post('/website-settings/update-ecommerce', 'Settings\WebController@update_ecommerce')->name('website-settings.update-ecommerce');
             Route::post('/website-settings/ecommerce-payment-add-bank','Settings\WebController@add_bank')->name('ecommerce-setting.add-bank');
             Route::post('/website-settings/ecommerce-payment-update-bank','Settings\WebController@update_bank')->name('ecommerce-setting.update-bank');
             Route::post('/website-settings/ecommerce-payment-delete-bank','Settings\WebController@delete_bank')->name('ecommerce-setting.delete-bank');

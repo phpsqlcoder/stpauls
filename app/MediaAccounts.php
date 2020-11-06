@@ -8,7 +8,7 @@ class MediaAccounts extends Model
 {
     public $table = 'social_media';
 
-    protected $fillable = [ 'name', 'media_account', 'user_id',];
+    protected $fillable = [ 'name', 'media_account', 'user_id','account_name'];
 
     public $timestamps = false;
 

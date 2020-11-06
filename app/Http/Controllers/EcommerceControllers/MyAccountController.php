@@ -91,15 +91,11 @@ class MyAccountController extends Controller
                 $localAddressInfo, 
                 [
                     'address' => 'required',
-                    'barangay' => 'required',
                     'province' => 'required',
-                    'city' => 'required',
-                    'zipcode' => 'required'
+                    'city' => 'required'
                 ],
                 [
-                    'address.required' => 'The address line 1 field is required.',
-                    'barangay.required' => 'The address line 2 field is required.',
-                    'zipcode.required' => 'The zip code field is required.'
+                    'address.required' => 'The main address field is required.'
                 ]
             );
          } else {
@@ -108,12 +104,10 @@ class MyAccountController extends Controller
                 [
                     'country' => 'required',
                     'intl_address' => 'required',
-                    'zipcode' => 'required'
                 ],
                 [   
                     'country.required' => 'The country field is required.',
-                    'intl_address.required' => 'The billing address field is required.',
-                    'zipcode.required' => 'The zip code field is required.'
+                    'intl_address.required' => 'The billing address field is required.'
                 ]
             );
          }
