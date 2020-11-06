@@ -217,7 +217,7 @@
                     <!-- Social Tab -->
                     <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="profile-tab">
                         <div class="col-lg-12 mg-t-15">
-                            <div class="col-md-6">
+                            <div class="col-md-10">
                                 <div class="form-group multiple-form-group">
                                     <label>Social Media Accounts</label>
                                     <form method="post" action="{{route('website-settings.update-media-accounts')}}">
@@ -234,6 +234,8 @@
                                                     <option @if($media->name == 'whatsapp') selected @endif value="whatsapp">Whatsapp</option>
                                                     <option @if($media->name == 'instagram') selected @endif value="instagram">Instagram</option>
                                                 </select>
+                                                &nbsp;
+                                                <input type="text" class="form-control" name="account_name[]" value="{{ $media->account_name }}">
                                                 &nbsp;
                                                 <input type="text" class="form-control" name="url[]" value="{{ $media->media_account }}">
                                                 <span class="input-group-btn">&nbsp;<button type="button" data-mid="{{$media->id}}" class="btn btn-danger remove-media">x</button></span>
@@ -252,6 +254,8 @@
                                                 <option value="whatsapp">Whatsapp</option>
                                                 <option value="instagram">Instagram</option>
                                             </select>
+                                            &nbsp;
+                                            <input type="text" class="form-control" name="account_name[]" placeholder="Account Name">
                                             &nbsp;
                                             <input type="text" class="form-control" name="url[]" placeholder="URL">
                                             <span class="input-group-btn">&nbsp;<button type="button" class="btn btn-sm btn-primary btn-add"><i>+</i>

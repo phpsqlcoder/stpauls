@@ -285,9 +285,9 @@
 
                                                 <input type="radio" id="tab4" name="shipOption" value="3" class="tab">
                                                 <label for="tab4">Door-to-door (D2D) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                <div class="tab__content">
+                                                {{--<div class="tab__content">
                                                     <h3>Door-to-door</h3>
-                                                </div>
+                                                </div>--}}
                                             </div>
 
                                             <ul class="list-unstyled lh-7 pd-r-10" style="display: none;">

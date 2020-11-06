@@ -143,52 +143,6 @@ class WebController extends Controller
         }
     }
 
-    // public function update_ecommerce(Request $request)
-    // {
-    //     $ecommerce = Setting::first();
-    //     $ecommerce->min_order = $request->min_order;
-    //     $ecommerce->promo_is_displayed = (isset($_POST['promo_is_displayed']) == '1' ? '1' : '0');
-    //     $ecommerce->review_is_allowed = (isset($_POST['review_is_allowed']) == '1' ? '1' : '0');
-    //     $ecommerce->pickup_is_allowed = (isset($_POST['pickup_is_allowed']) == '1' ? '1' : '0');
-
-    //     $ecommerce->min_order_is_allowed = (isset($_POST['min_order_is_allowed']) == '1' ? '1' : '0');
-    //     $ecommerce->flatrate_is_allowed = (isset($_POST['flatrate_is_allowed']) == '1' ? '1' : '0');
-    //     $ecommerce->delivery_collect_is_allowed = (isset($_POST['delivery_collect_is_allowed']) == '1' ? '1' : '0');
-
-    //     $ecommerce->delivery_note = $request->delivery_note;
-    //     $ecommerce->save();
-
-    //     if($ecommerce){
-    //         return back()->with([
-    //             'tabname' => 'ecommerce',
-    //             'success' =>  'Successfully updated the ecommerce settings.'
-    //         ]);
-    //     } else {
-    //         return back()->with([
-    //             'tabname' => 'ecommerce',
-    //             'error' =>  'Error occur while updating Ecommerce Settings.'
-    //         ]);
-    //     }
-    // }
-
-    // public function update_paynamics(Request $request)
-    // {
-    //     $ecommerce = Setting::first();
-    //     $accepted_payments = '';
-    //     if( isset($request->accepted_payments) && is_array($request->accepted_payments) ) {
-    //         $accepted_payments = implode(',', $request->accepted_payments);
-    //     }
-    //     $ecommerce->accepted_payments = $accepted_payments;
-
-    //     $ecommerce->save();
-
-    //     if($ecommerce){
-    //         return back()->with('success','Successfully Updated Paynamics Settings');
-    //     } else {
-    //         return back()->with('error', __('standard.settings.website.contact_update_failed'));
-    //     }
-    // }
-
     public function update_media_accounts(Request $request)
     {
         $data   = $request->all();
@@ -196,18 +150,21 @@ class WebController extends Controller
         $mid   = $data['mid'];
         $urls   = $data['url'];
         $medias = $data['social_media'];
+        $account_name = $data['account_name'];
 
         foreach($medias as $key => $i){
             if($urls[$key] <> null){
                 if($mid[$key] == null){
                     MediaAccounts::create([
                         'name' => $i,
+                        'account_name' => $account_name[$key],
                         'media_account' => $urls[$key],
                         'user_id' => Auth::id()
                     ]);
                 } else {
                     MediaAccounts::where('id',$mid[$key])->update([
                         'name' => $i,
+                        'account_name' => $account_name[$key],
                         'media_account' => $urls[$key],
                         'user_id' => Auth::id()
                     ]);
