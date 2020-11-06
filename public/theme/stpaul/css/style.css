@@ -3791,6 +3791,18 @@ p {
   margin-left: 40px;
 }
 
+#password-field {
+  padding-right: 50px;
+}
+
+.field-icon {
+  position: absolute;
+  top: 55%;
+  right: 35px;
+  z-index: 2;
+  color: #777;
+}
+
 @font-face {
   font-family: 'FontAwesome';
   font-style: normal;

@@ -43,7 +43,9 @@
                                         <input type="email" name="email" class="form-control form-input" placeholder="Please enter your Email">
                                         <div class="gap-10"></div>
                                         <p>Password*</p>
-                                        <input type="password" name="password" class="form-control form-input" placeholder="Please enter your Password">
+                                        <div class="form-group">
+                                            <input type="password" name="password" class="form-control form-input" id="password-field" placeholder="Please enter your Password">
+                                        </div>
                                         <div class="gap-10"></div>
                                         <p class="text-right"><a href="{{ route('ecommerce.forgot_password') }}">Forgot Password?</a></p>
                                         <p class="text-right"><a href="{{ route('ecommerce.reactivate-account') }}">Re-activate Account?</a></p>
