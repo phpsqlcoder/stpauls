@@ -99,12 +99,12 @@
                                             </div>
 
                                             <div class="col-md-12" id="addressdiv" style="display: none;">
-                                                <p>Address 1</p>
+                                                <p>Main Address</p>
                                                 <input type="text" name="address" id="address" class="form-control form-input" placeholder="Unit No./Building/House No./Street" value="{{ old('address') }}">
                                                 <div class="gap-10"></div>    
                                             </div>
                                             <div class="col-md-12" id="brgydiv" style="display: none;">
-                                                <p>Address 2</p>
+                                                <p>Alternative Address</p>
                                                 <input type="text" name="brgy" id="brgy" class="form-control form-input" placeholder="Name of Subdivision/Barangay" value="{{ old('brgy') }}">
                                                 <div class="gap-10"></div>    
                                             </div>

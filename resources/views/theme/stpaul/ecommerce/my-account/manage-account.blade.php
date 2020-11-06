@@ -134,12 +134,12 @@
 
                                         <div id="local_address" style="display: @if($customer->details->country == 259) block @else none @endif">
                                             <div class="form-group form-wrap">
-                                                <label>Address Line 1 *</label>
+                                                <label>Main Address *</label>
                                                 <input @if($customer->details->country == 259) required @endif type="text" class="form-control" id="address" name="address" placeholder="Unit No./Building/House No./Street" value="{{ old('address', $customer->details->address) }}"/>
                                             </div>
                                        
                                             <div class="form-group form-wrap">
-                                                <label>Address Line 2 *</label>
+                                                <label>Alternative Address</label>
                                                 <input @if($customer->details->country == 259) required @endif type="text" class="form-control" id="barangay" name="barangay" placeholder="Subd/Brgy" value="{{ old('barangay', $customer->details->barangay) }}"/>      
                                                 @hasError(['inputName' => 'barangay'])
                                                 @endhasError
@@ -170,7 +170,7 @@
                                             </div>    
                                         </div>
                                         <div class="form-group form-wrap">
-                                            <label>Zip Code *</label>
+                                            <label>Zip Code</label>
                                             <input type="text" class="form-control @error('zipcode') is-invalid @enderror" id="zipcode" name="zipcode" value="{{ old('zipcode', $customer->details->zipcode) }}"/>
                                             @hasError(['inputName' => 'zipcode'])
                                             @endhasError
@@ -219,14 +219,12 @@
                     $('#intl_address').css('display','none');
 
                     $('#address').attr('required',true);
-                    $('#barangay').attr('required',true);
                     $('#province').attr('required',true);
                     $('#city').attr('required',true);
                     $('#intlAddress').attr('required',false);
                 } else {
                     $('#intlAddress').attr('required',true);
                     $('#address').attr('required',false);
-                    $('#barangay').attr('required',false);
                     $('#province').attr('required',false);
                     $('#city').attr('required',false);
 
