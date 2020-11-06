@@ -4300,7 +4300,7 @@ p {
 
 @media (max-width: 640px) {
   .mb-xs-4 {
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 1.5rem !important;
   }
   .product-card {
     padding: 7px;
