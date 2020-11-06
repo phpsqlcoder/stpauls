@@ -46,7 +46,7 @@
                         <div id="tab-1">
                             <div class="checkout-content">
                                 <div class="row">
-                                    <div class="col-lg-6 mb-xs-4">
+                                    <div class="col-lg-6 mb-sm-4 mb-xs-4">
                                         <div class="checkout-card form-style fs-sm">
                                             <div class="form-row form-wrap">
                                                 <div class="col-md-6">
