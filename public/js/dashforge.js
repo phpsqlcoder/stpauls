@@ -127,4 +127,22 @@ $(function(){
     }
   });
 
-})
+});
+
+// Show/Hide Password input field
+
+$("#password-field")
+  .after("<span></span>")
+  .next()
+  .addClass("fa fa-fw fa-eye field-icon toggle-password").attr("toggle", "#password-field");
+
+
+$(".toggle-password").on("click", function () {
+  $(this).toggleClass("fa-eye fa-eye-slash");
+  var input = $($(this).attr("toggle"));
+  if (input.attr("type") == "password") {
+    input.attr("type", "text");
+  } else {
+    input.attr("type", "password");
+  }
+});

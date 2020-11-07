@@ -476,3 +476,15 @@ table th {
 .custom-link:hover {
     color: #851000;
 }
+
+#password-field {
+    padding-right: 50px;
+}
+
+.field-icon {
+    position: absolute;
+    top: 35%;
+    right: 15px;
+    z-index: 2;
+    color: #777;
+}

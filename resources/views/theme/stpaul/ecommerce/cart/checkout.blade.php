@@ -507,21 +507,21 @@
                                 <h3>Payment Method</h3>
                                 @foreach($payment_method as $method)
                                 <div id="payment_method_{{$method->id}}">
-                                    <input type="radio" name="payment_method" value="{{ $method->id }}" id="method{{$method->id}}"/>
-                                    <label for="method{{$method->id}}">{{ $method->name }}</label>
-                                    <div class="sub1">
+                                    <label for="method{{$method->id}}">
+                                        <input type="radio" name="payment_method" value="{{ $method->id }}" id="method{{$method->id}}"/> {{ $method->name }}
+                                        <div class="sub1">
                                         @foreach($method->paymentList as $list)
-                                        <div>
-                                            <input type="radio" name="payment_option" value="{{$list->name}}" id="paylist{{$list->id}}"/>
-                                            <label for="paylist{{$list->id}}">{{ $list->name }}</label>
+                                        <div class="mt-1">
+                                            <label for="paylist{{$list->id}}">
+                                            <input type="radio" name="payment_option" value="{{$list->name}}" id="paylist{{$list->id}}"/> {{ $list->name }}
                                             <div class="sub2">
-                                                <div>
+                                                <div class="mt-1">
                                                     @if($list->type == 'bank')
-                                                    <label>Account Name : {{ $list->account_name }}</label><br>
+                                                    <label>Account Name : <span class="text-nowrap">{{ $list->account_name }}</span></label><br>
                                                     @endif
-                                                    <label>Account # : {{ $list->account_no }}</label><br>
+                                                    <label>Account # : <span class="text-nowrap">{{ $list->account_no }}</span></label><br>
                                                     @if($list->type == 'remittance')
-                                                    <label>Recipient : {{ $list->recipient }}</label><br>
+                                                    <label>Recipient : <span class="text-nowrap">{{ $list->recipient }}</span></label><br>
                                                     @if($list->qrcode != '')
                                                     <label>QR Code : </label><br>
                                                     <img style="width: 100%;max-width: 150px;" src="{{ asset('storage/qrcodes/'.$list->id.'/'.$list->qrcode) }}">
@@ -529,9 +529,11 @@
                                                     @endif
                                                 </div>
                                             </div>
+                                        </label>
                                         </div>
                                         @endforeach
                                     </div>
+                                    </label>
                                 </div>   
                                 @endforeach    
                             </div>

@@ -50,12 +50,16 @@
                                                 <input readonly type="email" class="form-control form-input" name="email" id="email" value="{{ request('email') }}">
                                                 <div class="gap-10"></div>
                                                 <p>New Password *</p>
-                                                <input required type="password" class="form-control form-input @error('password') is-invalid @enderror" name="password">
+                                                <div class="form-group">
+                                                    <input required type="password" class="form-control form-input @error('password') is-invalid @enderror" name="password" id="password-field">
+                                                </div>
                                                 @hasError(['inputName' => 'password'])
                                                 @endhasError
                                                 <div class="gap-10"></div>
                                                 <p>Confirm Password *</p>
-                                                <input required type="password" class="form-control form-input @error('password_confirmation') is-invalid @enderror" name="password_confirmation">
+                                                <div class="form-group">
+                                                    <input required type="password" class="form-control form-input @error('password_confirmation') is-invalid @enderror" name="password_confirmation" id="password-field">
+                                                </div>
                                                 @hasError(['inputName' => 'password_confirmation'])
                                                 @endhasError
                                                 <div class="gap-10"></div>
