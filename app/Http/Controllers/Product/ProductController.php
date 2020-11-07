@@ -268,7 +268,6 @@ class ProductController extends Controller
             'meta_description' => 'max:250',
             'price' => 'required',
             'weight' => 'required',
-            'size' => 'max:30'
         ])->validate();
 
         $product = Product::findOrFail($id);

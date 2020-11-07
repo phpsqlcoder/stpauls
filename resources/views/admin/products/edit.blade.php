@@ -108,7 +108,7 @@
                     </div>
                     <div class="form-group">
                         <label class="d-block">Size</label>
-                        <input type="text" class="form-control" name="size" value="{{ old('size', $product->size) }}" min="0" step="1">
+                        <input type="text" class="form-control" name="size" value="{{ old('size', $product->size) }}" maxlength="250">
                     </div>
                     <div class="form-group">
                         <label class="d-block">Unit of Measurement *</label>
