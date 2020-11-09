@@ -722,9 +722,8 @@ class ProductController extends Controller
                     $qry = Product::where('beta_id',$data[1]);
 
                     if($qry->count() > 0){
-                        if($data[0] > 7){
-                            $product = $qry->update(['category_id' => $data[0]]);
-                        }
+
+                        $qry->update(['category_id' => $data[0]]);
                     }
                     
                 }
