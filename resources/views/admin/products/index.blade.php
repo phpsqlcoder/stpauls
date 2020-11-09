@@ -108,7 +108,7 @@
                     {{--<a class="btn btn-info btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-featured').modal('show');">Upload Featured Products</a>--}}
                     {{--<a class="btn btn-danger btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-category').modal('show');">Upload Product Categories</a>--}}
                     {{--<a class="btn btn-primary btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-photos').modal('show');">Assign Product Photos</a>--}}
-                    {{--<a class="btn btn-success btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-images').modal('show');">Upload Product Images</a>--}}
+                    <a class="btn btn-success btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-images').modal('show');">Upload Product Images</a>
                 </div>
             </div>
             <!-- End Filters -->

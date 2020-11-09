@@ -769,7 +769,6 @@ class ProductController extends Controller
 
     public function upload_images(Request $request)
     {   
-
         foreach($request->file('images') as $file)
         {
             $qry = Product::where('photo',$file->getClientOriginalName());
@@ -790,9 +789,6 @@ class ProductController extends Controller
                 Storage::makeDirectory('/public/products/'.$product->id);
                 Storage::putFileAs('/public/products/'.$product->id, $file, $file->getClientOriginalName());
             }
-
-
-
         }
 
         return back()->with('success','Product images has been uploaded.');
