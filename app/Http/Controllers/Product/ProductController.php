@@ -665,7 +665,7 @@ class ProductController extends Controller
                             'description' => $data[14],
                             'category_id' => 0,
                             'currency' => 'PHP',
-                            'status' => 'PUBLISHED',
+                            'status' => ($data[18] == 'TRUE') ? 'PUBLISHED' : 'PRIVATE',
                             'reorder_point' => 0,
                             'for_pickup' => ($data[19] == 1) ? 1 : 0,
                             'is_recommended' => ($data[16] == 'TRUE') ? 1 : 0,
