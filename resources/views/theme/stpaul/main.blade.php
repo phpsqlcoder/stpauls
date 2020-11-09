@@ -186,6 +186,22 @@
                 });
             }
         });
+
+        $('#productSearchForm').submit(function(e){
+            e.preventDefault();
+
+            $('#searching').show();
+            $.ajax({
+                type: "GET",
+                url: "{{ route('product.front.search') }}",
+                data: $('#productSearchForm').serialize(),
+                success: function( response ) {
+                    $('#searching').hide();
+                    $('#productSearchResult').html(response);
+                    $('#productSearchResult').show();
+                }
+            });
+        });
     </script>
 
     @yield('pagejs')

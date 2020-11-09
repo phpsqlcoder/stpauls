@@ -52,7 +52,19 @@ class ProductFrontController extends Controller
         $page = $category;
         $pageLimit = 40;
 
-        $products = Product::where('category_id',$category->id)->where('status','PUBLISHED');
+        $subcategories = [];
+        array_push($subcategories,$category->id);
+
+        foreach($category->child_categories as $child){
+            array_push($subcategories,$child->id);
+
+            foreach($child->child_categories as $sub){
+                array_push($subcategories,$sub->id);
+            }
+        }
+
+        $products = Product::whereIn('category_id',$subcategories)->where('status','PUBLISHED');
+
         $maxPrice = $products->max('price');
         $minPrice = 1;
 

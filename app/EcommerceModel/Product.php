@@ -55,20 +55,6 @@ class Product extends Model
         return $this->belongsTo('\App\EcommerceModel\ProductAdditionalInfo','id','product_id');
     }
 
-    // public static function colors($value){
-
-    //     $colors = \DB::table('products_variations')->select('color')->distinct()->where('product_id',$value)->get();
-    //     return $colors;
-
-    // }
-
-    // public static function sizes($value){
-
-    //     $sizes = \DB::table('products_variations')->select('size')->distinct()->where('product_id',$value)->get();
-    //     return $sizes;
-
-    // }
-
     public function photos()
     {
         return $this->hasMany('App\EcommerceModel\ProductPhoto');
@@ -207,34 +193,6 @@ class Product extends Model
         return $this->belongsTo('\App\StPaulModel\OnSaleProducts','id','product_id');
     }
 
-    // public function getDiscountedAmountAttribute()
-    // {
-    //     $saleChecker = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$this->id)->count();
-
-    //     if($saleChecker > 0){
-
-    //         $discount = ($this->on_sale->promo_details->discount/100);
-    //         $discountedAmount = ($this->price * $discount);
-
-    //     } else {
-
-
-
-    //     }
-
-
-
-
-    //     $discount = ($this->on_sale->promo_details->discount/100);
-
-    //     return ($this->price * $discount);
-    // }
-
-    // public function getDiscountedPriceAttribute()
-    // {
-    //     return ($this->price - $this->DiscountedAmount);
-    // }
-
     public function getDiscountedPriceAttribute()
     {
         $saleChecker = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$this->id)->count();
@@ -285,45 +243,7 @@ class Product extends Model
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-    // public static function totalProduct()
-    // {
-    //     $total = Product::withTrashed()->get()->count();
-
-    //     return $total;
-    // }
-
-    // public function is_editable()
-    // {
-    //     return $this->status != 'UNEDITABLE';
-    // }
-
-    // public static function info($p){
-
-    //     $pd = Product::where('name','=',$p)->first();
-
-    //     return $pd;
-    // }
-
-    // public static function detail($p){
-
-    //     $pd = Product::where('name',$p)->get();
-
-    //     return $pd;
-    // }    
+  
 
     public function get_image_file_name()
     {
@@ -339,27 +259,6 @@ class Product extends Model
     {
         return $this->hasMany('App\EcommerceModel\ProductReview');
     }
-
-    // public function getRatingAttribute()
-    // {
-    //     return $this->reviews->avg('rating');
-    // }
-
-    // public function getRatingStarAttribute(){
-    //     $star = 5 - (integer) $this->rating;
-    //     $front = '';
-    //     for($x = 1; $x<=$this->rating; $x++){
-    //         $front.='<span class="fa fa-star checked"></span>';
-    //     }
-
-    //     for($x = 1; $x<=$star; $x++){
-    //         $front.='<span class="fa fa-star"></span>';
-    //     }
-
-    //     return $front;
-    // }
-
-
     
 
 }

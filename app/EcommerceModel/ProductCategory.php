@@ -20,7 +20,7 @@ class ProductCategory extends Model
     }
 
     public function child_categories() {
-        return  $this->hasMany(ProductCategory::class, 'parent_id');
+        return  $this->hasMany(ProductCategory::class, 'parent_id')->orderBy('name','asc');
     }
 
     public function products()
