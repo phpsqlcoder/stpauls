@@ -12,6 +12,7 @@ use App\InventoryReceiverDetail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\EcommerceModel\ProductCategory;
 
 class Product extends Model
 {
@@ -222,8 +223,20 @@ class Product extends Model
 
     public static function products_cat($categoryid)
     {
-        $products = 
-            Product::whereNotIn('id',function($query){
+        $category = ProductCategory::find($categoryid);
+
+        $subcategories = [];
+        array_push($subcategories,$category->id);
+
+        foreach($category->child_categories as $child){
+            array_push($subcategories,$child->id);
+
+            foreach($child->child_categories as $sub){
+                array_push($subcategories,$sub->id);
+            }
+        }
+
+        $products = Product::whereIn('category_id',$subcategories)->whereNotIn('id',function($query){
                 $query->select('product_id')->from('onsale_products')
                 ->join('promos','onsale_products.promo_id','=','promos.id')
                 ->where('promos.status','ACTIVE')
