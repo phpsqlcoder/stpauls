@@ -141,11 +141,11 @@
                                             @endif
 
                                             @if($user->is_active == 1)
-                                                @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/user/deactivate') == 1)
+                                                @if(auth()->user()->has_access_to_route('users.deactivate'))
                                                     <a class="nav-link deactivate_user" data-user_id="{{ $user->id }}" href="#" title="Deactivate User" data-toggle="modal" data-target="#modalUserDeactivate"><i data-feather="user-x"></i></a>
                                                 @endif
                                             @else
-                                                @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/user/activate') == 1)
+                                                @if(auth()->user()->has_access_to_route('users.activate'))
                                                     <a class="nav-link activate_user" data-user_id="{{ $user->id }}" href="#" title="Activate User" data-toggle="modal" data-target="#modalUserActivate"><i data-feather="user-check"></i></a>
                                                 @endif
 

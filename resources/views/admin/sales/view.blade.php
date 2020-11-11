@@ -223,11 +223,15 @@
         <div class="table-responsive mg-t-20">
             @if($sales->status != 'CANCELLED')
                 @if($sales->delivery_status == 'Shipping Fee Validation')
-                    <button type="button" class="btn btn-sm btn-primary float-right mg-l-5" onclick="add_shippingfee('{{$sales->id}}','{{$sales->order_number}}');">Add Shipping Fee</button>
+                    @if (auth()->user()->has_access_to_route('add-shipping-fee'))
+                        <button type="button" class="btn btn-sm btn-primary float-right mg-l-5" onclick="add_shippingfee('{{$sales->id}}','{{$sales->order_number}}');">Add Shipping Fee</button>
+                    @endif
                 @else
                     @if($sales->is_approve == '' && $sales->delivery_type == 'Cash on Delivery')
-                        <button type="button" class="btn btn-sm btn-danger float-right mg-l-5" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','REJECT');">Reject</button>
-                        <button type="button" class="btn btn-sm btn-primary float-right" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','APPROVE');">Approve</button>
+                        @if (auth()->user()->has_access_to_route('cod-order-response'))
+                            <button type="button" class="btn btn-sm btn-danger float-right mg-l-5" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','REJECT');">Reject</button>
+                            <button type="button" class="btn btn-sm btn-primary float-right" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','APPROVE');">Approve</button>
+                        @endif
                     @endif
                 @endif
             @endif

@@ -123,9 +123,11 @@
                                     <td>
                                         @if($count > 0 && $sale->status != 'CANCELLED')
                                             @if($payment->is_verify == 0)
-                                            <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
+                                                @if (auth()->user()->has_access_to_route('display.payment-details'))
+                                                    <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
+                                                @endif
                                             @else
-                                            {{ $sale->delivery_status }}
+                                                {{ $sale->delivery_status }}
                                             @endif
                                         @else
                                             <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
@@ -136,16 +138,22 @@
                                         <nav class="nav table-options">
                                             <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Details"><i data-feather="eye"></i></a>
 
-                                            @if($sale->payment_status == 'PAID')
-                                            <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i data-feather="settings"></i>
-                                            </a>
-                                            @endif
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+                                            @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status') || auth()->user()->has_access_to_route('display.delivery-history'))
+                                                @if($sale->payment_status == 'PAID')
+                                                <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i data-feather="settings"></i>
+                                                </a>
+                                                @endif
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status'))
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+                                                    @endif
 
-                                                <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history({{$sale->id}})" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
-                                            </div>
+                                                    @if (auth()->user()->has_access_to_route('display.delivery-history'))
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history({{$sale->id}})" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                    @endif
+                                                </div>
+                                            @endif
                                         </nav>
                                     </td>
                                 </tr>

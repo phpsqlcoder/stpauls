@@ -174,18 +174,6 @@ class ProductCategoryController extends Controller
 
     }
 
-    public function multiple_delete(Request $request)
-    {
-        $categories = explode("|",$request->categories);
-
-        foreach($categories as $category){
-            ProductCategory::whereId($category)->update(['created_by' => Auth::id() ]);
-            ProductCategory::whereId($category)->delete();
-        }
-
-        return back()->with('success', __('standard.products.category.multiple_delete_success'));
-    }
-
     public function update_status($id,$status)
     {
         ProductCategory::where('id',$id)->update([

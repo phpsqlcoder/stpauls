@@ -77,7 +77,7 @@ Manage Customer
                                     </form>
                                 </div>
                             </div>
-                            @if (auth()->user()->has_access_to_route('product.category.multiple.change.status') || auth()->user()->has_access_to_route('product.category.multiple.delete'))
+                            @if (auth()->user()->has_access_to_route('product.category.multiple.change.status'))
                                 <div class="list-search d-inline">
                                     <div class="dropdown d-inline mg-r-10">
                                         <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -87,10 +87,6 @@ Manage Customer
                                             @if (auth()->user()->has_access_to_route('product.category.multiple.change.status'))
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('PUBLISHED')">{{__('common.publish')}}</a>
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('PRIVATE')">{{__('common.private')}}</a>
-                                            @endif
-
-                                            @if (auth()->user()->has_access_to_route('product.category.multiple.delete'))
-                                                <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_category()">{{__('common.delete')}}</a>
                                             @endif
                                         </div>
                                     </div>
@@ -131,8 +127,9 @@ Manage Customer
                                         </div>
                                     </th>
                                     <th width="20%">Name</th>
-                                    <th width="10%">Type</th>
-                                    <th width="25%">Description</th>
+                                    <th width="15%">Type</th>
+                                    <th width="10%">Total Sub-categories</th>
+                                    <th width="10%">Total Products</th>
                                     <th width="10%">Status</th>
                                     <th width="15%">Last Date Modified</th>
                                     <th width="10%">Options</th>
@@ -157,7 +154,8 @@ Manage Customer
                                         Sub-Category
                                     @endif
                                 </td>
-                                <td>{{ $category->description }}</td>
+                                <td>{{ $category->totalsub }}</td>
+                                <td>{{ $category->totalproducts }}</td>
                                 <td>{{ $category->status }}</td>
                                 <td>{{ Setting::date_for_listing($category->updated_at) }}</td>
                                 <td>
@@ -177,7 +175,11 @@ Manage Customer
                                             @endif
 
                                             @if (auth()->user()->has_access_to_route('product.category.single.delete'))
-                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_category({{$category->id}},'{{$category->name}}')" title="Delete Category"><i data-feather="trash"></i></a>
+                                                @if($category->totalsub == 0 && $category->totalproducts == 0)
+                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_category('{{$category->id}}','{{$category->name}}')" title="Delete Category"><i data-feather="trash"></i></a>
+                                                @else
+                                                <a class="nav-link" href="javascript:void(0)" onclick="$('#prompt-not-delete').modal('show');"><i data-feather="trash"></i></a>
+                                                @endif
                                             @endif
 
                                             @if (auth()->user()->has_access_to_route('product.category.change-status'))
@@ -252,20 +254,19 @@ Manage Customer
         </div>
     </div>
 
-    <div class="modal effect-scale" id="prompt-multiple-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal effect-scale" id="prompt-not-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">{{__('common.delete_mutiple_confirmation_title')}}</h5>
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Warning</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    {{__('common.delete_mutiple_confirmation')}}
+                    <p>Category with PUBLISHED status and has assigned products or sub-categories cannot be deleted. If you wish to delete, reassign products to other category and delete all the sub-categories.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger" id="btnDeleteMultiple">Yes, Delete</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -371,27 +372,6 @@ Manage Customer
             $('#categories').val(category);
             $('#status').val(status);
             $('#posting_form').submit();
-        }
-
-        function delete_category(){
-            var counter = 0;
-            var selected_videos = '';
-            $(".cb:checked").each(function(){
-                counter++;
-                fid = $(this).attr('id');
-                selected_videos += fid.substring(2, fid.length)+'|';
-            });
-
-            if(parseInt(counter) < 1){
-                $('#prompt-no-selected').modal('show');
-                return false;
-            }
-            else{
-                $('#prompt-multiple-delete').modal('show');
-                $('#btnDeleteMultiple').on('click', function() {
-                    post_form("{{route('product.category.multiple.delete')}}",'',selected_videos);
-                });
-            }
         }
 
         function delete_one_category(id,page){

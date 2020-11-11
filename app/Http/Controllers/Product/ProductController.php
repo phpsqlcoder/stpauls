@@ -57,7 +57,9 @@ class ProductController extends Controller
 
         $listing = new ListingHelper( 'desc', 10, 'updated_at', $customConditions);
 
-        $products = $listing->simple_search(Product::class, $this->searchFields);
+        $products   = $listing->simple_search(Product::class, $this->searchFields);
+        $parentcategories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get(); 
+        $subcategories    = ProductCategory::where('parent_id','>',0)->where('status','PUBLISHED')->get();
 
         // Simple search init data
         $filter = $listing->get_filter($this->searchFields);
@@ -68,7 +70,7 @@ class ProductController extends Controller
 
         $searchType = 'simple_search';
 
-        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByUser','advanceSearchData'));
+        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByUser','advanceSearchData','subcategories','parentcategories'));
 
     }
 
@@ -94,9 +96,12 @@ class ProductController extends Controller
         $uniqueProductByCategory = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'category_id');
         $uniqueProductByUser = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'created_by');
 
+        $parentcategories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get(); 
+        $subcategories    = ProductCategory::where('parent_id','>',0)->where('status','PUBLISHED')->get(); 
+
         $searchType = 'advance_search';
 
-        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByUser','advanceSearchData'));
+        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByUser','advanceSearchData','subcategories','parentcategories'));
     }
 
     /**
@@ -431,6 +436,22 @@ class ProductController extends Controller
 
         return back()->with('success',  __('standard.products.product.change_status_success', ['STATUS' => $request->status]));
     }
+
+    public function multiple_assign_category(Request $request)
+    {
+        $products = explode("|", $request->products);
+
+        foreach ($products as $product) {
+            Product::whereId($product)->update([
+                'category_id'  => $request->categoryid,
+                'created_by' => Auth::id()
+            ]);
+        }
+
+        return back()->with('success', 'Product category of the selected products has been updated.');
+    }
+
+    
 
     public function multiple_delete(Request $request)
     {

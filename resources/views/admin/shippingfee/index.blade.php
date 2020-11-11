@@ -67,6 +67,7 @@
                                     </form>
                                 </div>
                             </div>
+                            @if (auth()->user()->has_access_to_route('shippingfee.multiple.delete'))
                             <div class="list-search d-inline">
                                 <div class="dropdown d-inline mg-r-10">
                                     <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -77,9 +78,8 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         </div>
-
-                        
 
                         <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
                             <form class="form-inline" id="searchForm">
@@ -90,7 +90,9 @@
                             </form>
                         </div>
                         <div class="mg-t-7">
+                            @if (auth()->user()->has_access_to_route('shippingfee.create'))
                             <a class="btn btn-primary btn-sm" href="{{ route('shippingfee.create') }}">Create Shipping Rate</a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -148,9 +150,13 @@
                                     <td><span class="badge badge-primary">{{$shippingfee->locations->count()}}</span></td>
                                     <td>
                                         <nav class="nav table-options">
+                                            @if (auth()->user()->has_access_to_route('shippingfee.manage'))
                                             <a class="nav-link" href="{{ route('shippingfee.manage', $shippingfee->id) }}" title="Manage Rate"><i data-feather="edit"></i></a>
+                                            @endif
 
+                                            @if (auth()->user()->has_access_to_route('shippingfee.single.delete'))
                                             <a class="nav-link" href="javascript:void(0)" onclick="delete_one_rate('{{$shippingfee->id}}');" title="Delete Rate"><i data-feather="trash"></i></a>
+                                            @endif
                                         </nav>
                                     </td>
                                 </tr>

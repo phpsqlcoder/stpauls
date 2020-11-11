@@ -77,4 +77,26 @@ class ProductCategory extends Model
 
         return $qry->name;
     }
+
+    public function getTotalSubAttribute()
+    {
+        $counter = 0;
+        $subcategories = [];
+        foreach($this->child_categories as $child){
+            $counter++;
+            foreach($child->child_categories as $sub){
+                $counter++;
+            }
+        }
+
+        return $counter;
+    }
+
+
+    public function getTotalProductsAttribute()
+    {
+        $products = Product::where('category_id',$this->id)->count();
+
+        return $products;
+    }
 }

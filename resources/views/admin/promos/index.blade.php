@@ -77,24 +77,25 @@ Manage Customer
                                     </form>
                                 </div>
                             </div>
+                            @if (auth()->user()->has_access_to_route('promo.multiple.change.status') || auth()->user()->has_access_to_route('promo.multiple.delete'))
                             <div class="list-search d-inline">
                                 <div class="dropdown d-inline mg-r-10">
                                     <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Actions
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/page/publish') == 1)
+                                        @if (auth()->user()->has_access_to_route('promo.multiple.change.status'))
                                             <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('ACTIVE')">Active</a>
-                                        @endif
-                                        @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/page/private') == 1)
                                             <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('INACTIVE')">Inactive</a>
                                         @endif
-                                        @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/page/delete') == 1)
+
+                                        @if (auth()->user()->has_access_to_route('promo.multiple.delete'))
                                             <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_promos()">{{__('common.delete')}}</a>
                                         @endif
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         </div>
 
                         <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
@@ -106,7 +107,9 @@ Manage Customer
                             </form>
                         </div>
                         <div class="mg-t-10">
+                            @if (auth()->user()->has_access_to_route('promos.create'))
                             <a class="btn btn-primary btn-sm mg-b-20" href="{{route('promos.create')}}">Create a Promo</a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -155,27 +158,34 @@ Manage Customer
                                     <td>{{ Setting::date_for_listing($promo->updated_at) }}</td>
                                     <td>
                                         @if($promo->trashed())
+                                            @if (auth()->user()->has_access_to_route('promo.restore'))
                                             <nav class="nav table-options">
                                                 <a class="nav-link" href="{{route('promo.restore',$promo->id)}}" title="Restore this promo"><i data-feather="rotate-ccw"></i></a>
                                             </nav>
+                                            @endif
                                         @else
                                             <nav class="nav table-options">
                                                 <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#promo-details_{{$promo->id}}" class="accordion-toggle" title="View Items"><i data-feather="eye"></i></a>
 
+                                                @if (auth()->user()->has_access_to_route('promos.edit'))
                                                 <a class="nav-link" href="{{ route('promos.edit',$promo->id) }}" title="Edit Promo"><i data-feather="edit"></i></a>
-
+                                                @endif
+                                                @if (auth()->user()->has_access_to_route('promo.single.delete'))
                                                 <a class="nav-link" href="javascript:void(0)" onclick="delete_one_promo('{{$promo->id}}')" title="Delete Promo"><i data-feather="trash"></i></a>
+                                                @endif
 
-                                                <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i data-feather="settings"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    @if($promo->status == 'ACTIVE')
-                                                        <a class="dropdown-item" href="{{route('promo.change-status',[$promo->id,'INACTIVE'])}}"> Inactive</a>
-                                                    @else
-                                                        <a class="dropdown-item" href="{{route('promo.change-status',[$promo->id,'ACTIVE'])}}"> Active</a>
-                                                    @endif
-                                                </div>
+                                                @if (auth()->user()->has_access_to_route('promo.change-status'))
+                                                    <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i data-feather="settings"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        @if($promo->status == 'ACTIVE')
+                                                            <a class="dropdown-item" href="{{route('promo.change-status',[$promo->id,'INACTIVE'])}}"> Inactive</a>
+                                                        @else
+                                                            <a class="dropdown-item" href="{{route('promo.change-status',[$promo->id,'ACTIVE'])}}"> Active</a>
+                                                        @endif
+                                                    </div>
+                                                @endif
                                             </nav>
                                         @endif
                                     </td>

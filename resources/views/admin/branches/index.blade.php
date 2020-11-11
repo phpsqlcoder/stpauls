@@ -78,18 +78,18 @@
                                     </form>
                                 </div>
                             </div>
+                            @if (auth()->user()->has_access_to_route('branch.multiple.delete'))
                             <div class="list-search d-inline">
                                 <div class="dropdown d-inline mg-r-10">
                                     <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         Actions
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/branch/delete') == 1)
-                                            <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_branches()">{{__('common.delete')}}</a>
-                                        @endif
+                                        <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_branches()">{{__('common.delete')}}</a>
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         </div>
 
                         <div class="ml-auto bd-highlight mg-t-10 mg-r-5">
@@ -101,7 +101,9 @@
                             </form>
                         </div>
                         <div class="mg-t-7">
+                            @if (auth()->user()->has_access_to_route('branch.create'))
                             <a class="btn btn-primary btn-sm mg-b-10" href="{{route('branch.create')}}">Create a Branch</a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -147,13 +149,20 @@
                                     <td>
                                         <nav class="nav table-options">
                                             @if($branch->trashed())
+                                                @if (auth()->user()->has_access_to_route('branch.restore'))
                                                 <nav class="nav table-options">
                                                     <a class="nav-link" href="{{route('branch.restore',$branch->id)}}" title="Restore this branch"><i data-feather="rotate-ccw"></i></a>
                                                 </nav>
+                                                @endif
                                             @else
-                                            <a class="nav-link" href="{{ route('branch.edit',$branch->id) }}" title="Edit Branch"><i data-feather="edit"></i></a>
 
-                                            <a class="nav-link" href="javascript:void(0)" onclick="delete_one_branch('{{$branch->id}}','{{$branch->name}}')" title="Delete Branch"><i data-feather="trash"></i></a>
+                                                @if (auth()->user()->has_access_to_route('branch.edit'))
+                                                <a class="nav-link" href="{{ route('branch.edit',$branch->id) }}" title="Edit Branch"><i data-feather="edit"></i></a>
+                                                @endif
+
+                                                @if (auth()->user()->has_access_to_route('branch.single.delete'))
+                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_branch('{{$branch->id}}','{{$branch->name}}')" title="Delete Branch"><i data-feather="trash"></i></a>
+                                                @endif
                                             @endif
                                         </nav>
                                     </td>

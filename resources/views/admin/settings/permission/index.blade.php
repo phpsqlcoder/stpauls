@@ -79,7 +79,7 @@
                                     <input type="text" name="search" id="search" class="form-control" placeholder="Search Module" @isset($_GET['search']) value="{{$_GET['search']}}" @endisset>
                                     <button class="btn filter" type="button"><i data-feather="search"></i></button>
                                 </div>
-                                @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/permission/create') == 1)
+                                @if (auth()->user()->has_access_to_route('permission.create'))
                                     <a class="btn btn-primary btn-sm mg-b-5" href="{{ route('permission.create') }}">Create a Permission</a>
                                 @endif
                             </form>
@@ -107,15 +107,17 @@
                                     <td>{{ $permission->description }}</td>
                                     <td>
                                         @if($permission->trashed())
+                                            @if (auth()->user()->has_access_to_route('permission.restore'))
                                             <nav class="nav table-options justify-content-end">
                                                 <a class="nav-link" href="{{route('permission.restore',$permission->id)}}" title="Restore this permission"><i data-feather="rotate-ccw"></i></a>
                                             </nav>
+                                            @endif
                                         @else
                                             <nav class="nav table-options justify-content-end">
-                                                @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/permission/edit') == 1)
+                                                @if (auth()->user()->has_access_to_route('permission.edit'))
                                                     <a href="{{ route('permission.edit',$permission->id) }}" class="nav-link"><i data-feather="edit"></i></a>
                                                 @endif
-                                                @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/permission/delete') == 1)
+                                                @if (auth()->user()->has_access_to_route('permission.destroy'))
                                                     <a href="#modalDeletePermission" class="nav-link delete_permission" data-pid="{{ $permission->id }}" data-toggle="modal"><i data-feather="trash"></i></a>
                                                 @endif
                                             </nav>

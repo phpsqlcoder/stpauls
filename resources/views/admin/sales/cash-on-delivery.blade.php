@@ -131,17 +131,26 @@
                                                     <i data-feather="settings"></i>
                                                 </a>
                                                 @endif
+
+                                                @if (auth()->user()->has_access_to_route('payment.add.store') || auth()->user()->has_access_to_route('sales-transaction.delivery_status') || auth()->user()->has_access_to_route('display.delivery-history'))
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     @if($sale->delivery_status != 'Waiting for Approval')
                                                         @if($sale->payment_status == 'UNPAID')
-                                                        <a class="dropdown-item" href="javascript:;" onclick="addPayment('{{$sale->id}}','{{$sale->net_amount}}');">Add Payment</a>
+                                                            @if (auth()->user()->has_access_to_route('payment.add.store'))
+                                                                <a class="dropdown-item" href="javascript:;" onclick="addPayment('{{$sale->id}}','{{$sale->net_amount}}');">Add Payment</a>
+                                                            @endif
                                                         @endif
-                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
 
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                        @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status'))
+                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+                                                        @endif
+
+                                                        @if (auth()->user()->has_access_to_route('display.delivery-history'))
+                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                        @endif
                                                     @endif
-                                                    
                                                 </div>
+                                                @endif
                                             @endif
                                         </nav>
                                     </td>

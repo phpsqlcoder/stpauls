@@ -71,19 +71,19 @@ Manage Customer
                                     </form>
                                 </div>
                             </div>
-                            @if (auth()->user()->has_access_to_route('product.category.multiple.change.status') || auth()->user()->has_access_to_route('product.category.multiple.delete'))
+                            @if (auth()->user()->has_access_to_route('transaction_status.multiple.change.status') || auth()->user()->has_access_to_route('transaction-status.multiple.delete'))
                                 <div class="list-search d-inline">
                                     <div class="dropdown d-inline mg-r-10">
                                         <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Actions
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            @if (auth()->user()->has_access_to_route('product.category.multiple.change.status'))
+                                            @if (auth()->user()->has_access_to_route('transaction_status.multiple.change.status'))
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('ACTIVE')">Active</a>
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('INACTIVE')">Inactive</a>
                                             @endif
 
-                                                @if (auth()->user()->has_access_to_route('product.category.multiple.delete'))
+                                            @if (auth()->user()->has_access_to_route('transaction-status.multiple.delete'))
                                                 <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_transactions()">{{__('common.delete')}}</a>
                                             @endif
                                         </div>
@@ -101,7 +101,7 @@ Manage Customer
                             </form>
                         </div>
                         <div class="mg-t-10">
-                            @if (auth()->user()->has_access_to_route('product-categories.create'))
+                            @if (auth()->user()->has_access_to_route('transaction-status.create'))
                                 @if($counter > 0)
                                 <a class="btn btn-primary btn-sm mg-b-20" href="{{ route('transaction-status.create') }}">Create an Email</a>
                                 @endif
@@ -152,15 +152,15 @@ Manage Customer
                                 <td>{{ Setting::date_for_listing($transaction->updated_at) }}</td>
                                 <td>
                                     <nav class="nav table-options">
-                                        @if (auth()->user()->has_access_to_route('product-categories.edit'))
+                                        @if (auth()->user()->has_access_to_route('transaction-status.edit'))
                                             <a class="nav-link" href="{{ route('transaction-status.edit',$transaction->id) }}" title="Edit Email"><i data-feather="edit"></i></a>
                                         @endif
 
-                                        @if (auth()->user()->has_access_to_route('product.category.single.delete'))
+                                        @if (auth()->user()->has_access_to_route('transaction_status.single-delete'))
                                             <a class="nav-link" href="javascript:void(0)" onclick="delete_one_status('{{$transaction->id}}')" title="Delete Email"><i data-feather="trash"></i></a>
                                         @endif
 
-                                        @if (auth()->user()->has_access_to_route('product.category.change-status'))
+                                        @if (auth()->user()->has_access_to_route('transaction_status.change-status'))
                                             <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i data-feather="settings"></i>
                                             </a>

@@ -79,9 +79,19 @@
         <div class="col-md-5">
             <table width="100%" class="table table-borderless">
                 <tr>
-                    <td align="right"><a class="btn btn-xs btn-primary" href="#" onclick="$('#modal-new-weight').modal('show');">Add New</a>
-                   <a class="btn btn-xs btn-success" href="#" onclick="$('#modal-upload-csv-weight').modal('show');">Upload CSV</a>
-                    <a class="btn btn-xs btn-danger" href="#" onclick="delete_rates();">Delete Selected</a></td>
+                    <td align="right">
+                        @if (auth()->user()->has_access_to_route('shippingfee_weight.store'))
+                        <a class="btn btn-xs btn-primary" href="#" onclick="$('#modal-new-weight').modal('show');">Add New</a>
+                        @endif
+
+                        @if (auth()->user()->has_access_to_route('shippingfee_weight.upload_csv'))
+                        <a class="btn btn-xs btn-success" href="#" onclick="$('#modal-upload-csv-weight').modal('show');">Upload CSV</a>
+                        @endif
+
+                        @if (auth()->user()->has_access_to_route('shippingfee-weight.multiple-delete'))
+                        <a class="btn btn-xs btn-danger" href="#" onclick="delete_rates();">Delete Selected</a>
+                        @endif
+                    </td>
                 </tr>
             </table>
 
@@ -114,10 +124,13 @@
                         <td>{{ number_format($weight->rate,2) }}</td>                                
                         <td style="text-align:center">                                    
                             <nav class="nav table-options">
+                                @if (auth()->user()->has_access_to_route('shippingfee_weight.update'))
                                 <a class="nav-link" href="#" title="Edit Rate" onclick="edit_weight('{{$weight->id}}','{{$weight->weight}}','{{$weight->rate}}')"><i data-feather="edit"></i></a>
+                                @endif
+                                @if (auth()->user()->has_access_to_route('shippingfee-weight.single-delete'))
                                 <a class="nav-link" href="#" title="Delete Rate" onclick="single_delete_weight('{{$weight->id}}')"><i data-feather="trash"></i></a>
+                                @endif
                             </nav>
-                           
                         </td>
                     </tr>
                 @empty
