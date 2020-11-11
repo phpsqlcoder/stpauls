@@ -79,7 +79,7 @@
                     <!-- Our Products Bibles Tab Content -->
                     <div class="tab-pane fade" id="pills-bible" role="tabpanel" aria-labelledby="pills-bible-tab">
                         <div id="bible" class="slick-slider">
-                            @foreach(\App\EcommerceModel\Product::products_cat('bible') as $bible)
+                            @foreach(\App\EcommerceModel\Product::products_cat('bibles') as $bible)
                             <div class="product-link">
                                 <div class="product-card">
                                     @if($bible->discount > 0)
