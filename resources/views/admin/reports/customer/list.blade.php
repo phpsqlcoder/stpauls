@@ -53,7 +53,7 @@
                     </td>
                     <td>{{$r->barangay}}</td>
                     <td>
-                        @if($r->province != '')
+                        @if($r->province > 0)
                             {{$r->provinces->province}}
                         @endif
                     </td>
