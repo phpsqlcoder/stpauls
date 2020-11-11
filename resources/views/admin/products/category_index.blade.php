@@ -89,7 +89,7 @@ Manage Customer
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('PRIVATE')">{{__('common.private')}}</a>
                                             @endif
 
-                                                @if (auth()->user()->has_access_to_route('product.category.multiple.delete'))
+                                            @if (auth()->user()->has_access_to_route('product.category.multiple.delete'))
                                                 <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_category()">{{__('common.delete')}}</a>
                                             @endif
                                         </div>
@@ -131,7 +131,8 @@ Manage Customer
                                         </div>
                                     </th>
                                     <th width="20%">Name</th>
-                                    <th width="35%">Description</th>
+                                    <th width="10%">Type</th>
+                                    <th width="25%">Description</th>
                                     <th width="10%">Status</th>
                                     <th width="15%">Last Date Modified</th>
                                     <th width="10%">Options</th>
@@ -148,6 +149,13 @@ Manage Customer
                                 </th>
                                 <td>
                                     <strong @if($category->trashed()) style="text-decoration:line-through;" @endif> {{ $category->name }}</strong>
+                                </td>
+                                <td>
+                                    @if($category->parent_id == 0)
+                                        Parent Category
+                                    @else
+                                        Sub-Category
+                                    @endif
                                 </td>
                                 <td>{{ $category->description }}</td>
                                 <td>{{ $category->status }}</td>
