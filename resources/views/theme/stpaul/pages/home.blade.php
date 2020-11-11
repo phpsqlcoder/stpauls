@@ -42,7 +42,7 @@
                     <!-- Our Products Books Tab Content -->
                     <div class="tab-pane fade show active" id="pills-book" role="tabpanel" aria-labelledby="pills-book-tab">
                         <div id="book" class="slick-slider">
-                            @foreach(\App\EcommerceModel\Product::products_cat(3) as $book)
+                            @foreach(\App\EcommerceModel\Product::products_cat('books') as $book)
                             <div class="product-link">
                                 <div class="product-card">
                                     @if($book->discount > 0)
@@ -79,7 +79,7 @@
                     <!-- Our Products Bibles Tab Content -->
                     <div class="tab-pane fade" id="pills-bible" role="tabpanel" aria-labelledby="pills-bible-tab">
                         <div id="bible" class="slick-slider">
-                            @foreach(\App\EcommerceModel\Product::products_cat(4) as $bible)
+                            @foreach(\App\EcommerceModel\Product::products_cat('bible') as $bible)
                             <div class="product-link">
                                 <div class="product-card">
                                     @if($bible->discount > 0)
@@ -116,7 +116,7 @@
                     <!-- Our Products Devotional Tab Content -->
                     <div class="tab-pane fade" id="pills-devotional" role="tabpanel" aria-labelledby="pills-devotional-tab">
                         <div id="devotional" class="slick-slider">
-                            @foreach(\App\EcommerceModel\Product::products_cat(6) as $devo)
+                            @foreach(\App\EcommerceModel\Product::products_cat('devotionals') as $devo)
                             <div class="product-link">
                                 <div class="product-card">
                                     @if($devo->discount > 0)

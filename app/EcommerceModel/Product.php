@@ -223,7 +223,7 @@ class Product extends Model
 
     public static function products_cat($categoryid)
     {
-        $category = ProductCategory::find($categoryid);
+        $category = ProductCategory::where('slug',$categoryid)->first();
 
         $subcategories = [];
         array_push($subcategories,$category->id);
