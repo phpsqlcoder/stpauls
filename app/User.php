@@ -95,14 +95,14 @@ class User extends Authenticatable
 
     public static function activeTotalUser()
     {
-        $total = User::where('is_active','=',1)->count();
+        $total = User::where('role_id','<>',3)->where('is_active','=',1)->count();
 
         return $total;
     }
 
     public static function inactiveTotalUser()
     {
-        $total = User::where('is_active','=',0)->count();
+        $total = User::where('role_id','<>',3)->where('is_active','=',0)->count();
 
         return $total;
     }
