@@ -194,8 +194,6 @@
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.front.search') }}",
-                crossDomain: true,
-                dataType: 'jsonp',
                 data: $('#productSearchForm').serialize(),
                 success: function( response ) {
                     $('#searching').hide();
