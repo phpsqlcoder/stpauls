@@ -40,8 +40,11 @@
                         <label class="d-block">Parent Category</label>
                         <select id="parentPage" class="selectpicker mg-b-5 @error('parent_page') is-invalid @enderror" name="parent_page" data-style="btn btn-outline-light btn-md btn-block tx-left" title="- None -" data-width="100%">
                             <option value="0" selected>- None -</option>
-                            @foreach ($productCategories as $productCategory)
-                                <option value="{{ $productCategory->id }}">{{ $productCategory->name }}</option>
+                            @foreach ($parentCategories as $parentCategory)
+                                <option style="font-weight: bold;" value="{{ $parentCategory->id }}">{{ strtoupper($parentCategory->name) }}</option>
+                                @if(count($parentCategory->child_categories))
+                                    @include('admin.products.select-subcategories',['subcategories' => $parentCategory->child_categories])
+                                @endif
                             @endforeach
                         </select>
                     </div>

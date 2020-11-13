@@ -19,6 +19,11 @@ class ProductCategory extends Model
         return env('APP_URL')."/product-categories/".$this->slug;
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(ProductCategory::class, 'parent_id');
+    }
+
     public function child_categories() {
         return  $this->hasMany(ProductCategory::class, 'parent_id')->orderBy('name','asc');
     }
@@ -98,5 +103,18 @@ class ProductCategory extends Model
         $products = Product::where('category_id',$this->id)->count();
 
         return $products;
+    }
+
+    public function getCategoryLevelAttribute()
+    {
+        $parent = $this->parent;
+        $counter = 0;
+
+        while(!is_null($parent)) {
+            $parent = $parent->parent;
+            $counter++;
+        }
+
+        return $counter;
     }
 }

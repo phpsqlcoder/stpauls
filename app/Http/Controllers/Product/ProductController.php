@@ -111,9 +111,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = ProductCategory::get();
+        $parentCategories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get();
 
-        return view('admin.products.create',compact('categories'));
+        return view('admin.products.create',compact('parentCategories'));
     }
 
     /**
@@ -249,9 +249,9 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        $categories = ProductCategory::get();
+        $parentCategories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get();
 
-        return view('admin.products.edit',compact('product','categories'));
+        return view('admin.products.edit',compact('product','parentCategories'));
     }
 
     /**

@@ -126,13 +126,12 @@ Manage Customer
                                             <label class="custom-control-label" for="checkbox_all"></label>
                                         </div>
                                     </th>
-                                    <th width="20%">Name</th>
-                                    <th width="15%">Type</th>
+                                    <th width="30%">Name</th>
                                     <th width="10%">Total Sub-categories</th>
                                     <th width="10%">Total Products</th>
                                     <th width="10%">Status</th>
                                     <th width="15%">Last Date Modified</th>
-                                    <th width="10%">Options</th>
+                                    <th width="15%">Options</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -147,15 +146,8 @@ Manage Customer
                                 <td>
                                     <strong @if($category->trashed()) style="text-decoration:line-through;" @endif> {{ $category->name }}</strong>
                                 </td>
-                                <td>
-                                    @if($category->parent_id == 0)
-                                        Parent Category
-                                    @else
-                                        Sub-Category
-                                    @endif
-                                </td>
-                                <td>{{ $category->totalsub }}</td>
-                                <td>{{ $category->totalproducts }}</td>
+                                <td class="text-center">{{ $category->totalsub }}</td>
+                                <td class="text-center">{{ $category->totalproducts }}</td>
                                 <td>{{ $category->status }}</td>
                                 <td>{{ Setting::date_for_listing($category->updated_at) }}</td>
                                 <td>
@@ -166,7 +158,10 @@ Manage Customer
                                             </nav>
                                         @endif
                                     @else
-                                        <nav class="nav table-options">
+                                        <nav class="nav table-options float-right">
+                                            @if($category->totalsub > 0)
+                                            <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#subcat_{{$category->id}}" class="accordion-toggle" title="View Sub-categories"><i data-feather="list"></i></a>
+                                            @endif
 
                                             <a class="nav-link" target="_blank" href="{{route('product.index.advance-search')}}?name=&category_id={{$category->id}}&user_id=&short_description=&description=&status=&price1=&price2=&updated_at1=&updated_at2=" title="View Products"><i data-feather="eye"></i></a>
 
@@ -198,6 +193,31 @@ Manage Customer
                                     @endif
                                 </td>
                             </tr>
+                            @if(count($category->child_categories))
+                            <tr>
+                                <td colspan="8" class="hiddenRow" style="padding:0px;">
+                                    <div class="collapse" id="subcat_{{$category->id}}">
+                                        <table class="table table-sm table-hover mg-b-20">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%"></th>
+                                                    <th width="30%" class="text-uppercase"><h5>{{ $category->name }}</h5></th>
+                                                    <th width="10%"></th>
+                                                    <th width="10%"></th>
+                                                    <th width="10%"></th>
+                                                    <th width="15%"></th>
+                                                    <th width="15%"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @include('admin.products.subcategories',['subcategories' => $category->child_categories])
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endif
+
                             @empty
                             <tr>
                                 <th colspan="6" style="text-align: center;"> <p class="text-danger">No categories found.</p></th>

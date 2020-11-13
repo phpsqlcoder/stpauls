@@ -58,9 +58,11 @@
                     <div class="form-group">
                         <label class="d-block">Category *</label>
                         <select required name="category_id" id="category_id" class="selectpicker mg-b-5" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
-                            <option value="0" >-- Select Category --</option>
-                            @foreach($categories as $category)
-                                <option value="{{$category->id}}" @if($product->category_id == $category->id) selected @endif>{{strtoupper($category->name)}}</option>
+                            @foreach ($parentCategories as $parentCategory)
+                                <option style="font-weight: bold;" @if($product->category_id == $parentCategory->id) selected @endif value="{{ $parentCategory->id }}">{{ strtoupper($parentCategory->name) }}</option>
+                                @if(count($parentCategory->child_categories))
+                                    @include('admin.products.select-subcategories-edit',['subcategories' => $parentCategory->child_categories])
+                                @endif
                             @endforeach
                         </select>
                         @hasError(['inputName' => 'category_id'])

@@ -53,10 +53,11 @@ body {
 
 h2 {
   font-family: "IBM Plex Sans", sans-serif;
-  font-size: 1.25em;
-  font-weight: 700;
+  font-size: 1.5em;
+  font-weight: 500;
   color: #b82e24;
   line-height: 1.5;
+  margin-bottom: 1.15rem;
 }
 
 h3 {
@@ -175,6 +176,7 @@ p {
   color: white;
   padding: 0;
   margin: 0 auto;
+  margin-bottom: 10px;
 }
 
 .banner-caption hr {
@@ -190,6 +192,7 @@ p {
   color: white;
   padding: 0;
   line-height: 1.5;
+  margin-bottom: 0;
 }
 
 .sub-banner-caption {
@@ -216,18 +219,16 @@ p {
       -ms-flex-direction: row;
           flex-direction: row;
   padding: 0 25px;
-  background: rgba(0, 0, 0, 0.5);
 }
 
 .sub-banner-caption h2 {
-  text-transform: uppercase;
   font-family: "IBM Plex Sans", sans-serif;
-  font-size: 2.35em;
+  font-size: 2.25em;
   line-height: 1.35;
-  font-weight: bold;
-  color: white;
+  font-weight: 400;
+  color: #b82e24;
   padding: 0;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .sub-banner-caption p {
@@ -236,6 +237,22 @@ p {
   color: #8d8d8d;
   padding: 0;
   line-height: 1.35;
+}
+
+.sub-banner-caption .container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.sub-banner-caption + #banner {
+  margin-top: -100px;
 }
 
 .btn:active, .btn:focus {
@@ -1312,9 +1329,8 @@ p {
 }
 
 .breadcrumb-item {
-  color: #a7a7a7;
-  font-size: .75em;
-  text-transform: uppercase;
+  color: #b82e24 !important;
+  font-size: .7em;
 }
 
 .breadcrumb-item + .breadcrumb-item {
@@ -1327,8 +1343,7 @@ p {
 }
 
 .breadcrumb-item a {
-  font-size: 11px;
-  color: #999 !important;
+  color: #6c757d !important;
 }
 
 .breadcrumb-item a:hover {
@@ -1548,12 +1563,12 @@ p {
 
 .side-menu ul li.active > a {
   color: #b82e24 !important;
-  background-color: white !important;
+  background-color: #efefef !important;
 }
 
 .side-menu ul li:hover > a {
-  color: #555555 !important;
-  background-color: white !important;
+  color: #b82e24 !important;
+  background-color: #efefef !important;
 }
 
 .side-menu ul li > ul {
@@ -3803,6 +3818,41 @@ p {
   color: #777;
 }
 
+.sidenav {
+  height: 100%;
+  width: 300px;
+  position: fixed;
+  z-index: 99999;
+  top: 0;
+  left: -300px;
+  background-color: white;
+  overflow-x: hidden;
+  padding-top: 60px;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  padding: 5rem 1.5rem 0 1.5rem !important;
+  border-radius: 0;
+}
+
+.sidenav .close-btn {
+  position: absolute;
+  top: 15px;
+  left: 25px;
+  font-size: 24px;
+}
+
+.dark-curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 999;
+  display: none;
+  z-index: 99999;
+}
+
 @font-face {
   font-family: 'FontAwesome';
   font-style: normal;
@@ -4006,6 +4056,20 @@ p {
     font-size: 0.85em !important;
     padding: 7px 20px;
   }
+  .sub-banner-caption .container {
+    display: block;
+  }
+  .sub-banner-caption h2 {
+    font-size: 1.5em;
+  }
+  .sub-banner-caption .breadcrumb {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+  .sub-banner-caption + #banner {
+    margin-top: 0px;
+  }
   .listing-filter-wrap {
     position: fixed;
     top: 0;
@@ -4137,16 +4201,6 @@ p {
 @media (max-width: 768px) {
   .banner-caption {
     display: none !important;
-  }
-  .sub-banner-caption {
-    background: transparent;
-    display: block !important;
-    position: relative;
-    padding: 4rem 1rem 0;
-  }
-  .sub-banner-caption h2 {
-    font-size: 1.85em;
-    color: #b82e24;
   }
   .crumbs li:before {
     font-size: 0.7em;

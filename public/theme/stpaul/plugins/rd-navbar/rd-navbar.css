@@ -48,9 +48,9 @@ textarea {
     outline: none;
 }
 
-p {
+/* p {
     margin: 0;
-}
+} */
 
 ul,
 ol {
@@ -5929,10 +5929,55 @@ html.rd-navbar-fixed-linked .page {
 .rd-navbar-n-search .rd-n-search .dropdown-menu {
     display: block;
     width: 100%;
-    height: 340px;
+    height: 385px;
     overflow-y: scroll;
+    overflow-x: hidden;
     margin-top: 0px;
     border-radius: 0;
+}
+
+.rd-navbar-n-search .rd-n-search .dropdown-menu .dropdown-item {
+    padding: 15px 10px;
+}
+
+.rd-navbar-n-search .rd-n-search .dropdown-menu .dropdown-item:hover {
+    background-color: #efefef;
+}
+
+.rd-navbar-n-search .rd-n-search .dropdown-menu .dropdown-item h2 {
+    font-weight: 400;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+    text-overflow: ellipsis;
+    min-height: 28px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.rd-navbar-n-search .rd-n-search .dropdown-menu .dropdown-item .price {
+    font-weight: 400;
+    font-size: 1rem;
+    color: #333333;
+    margin-bottom: 0;
+}
+
+.rd-navbar-n-search .rd-n-search .dropdown-menu .dropdown-item .old-price {
+    font-weight: 400;
+    font-size: 1rem;
+    color: #888888;
+    text-decoration: line-through;
+    margin-bottom: 0;
+}
+
+.rd-navbar-n-search .rd-n-search .dropdown-menu .dropdown-item img {
+    height: 95px;
+    width: auto;
+    margin: auto;
+    display: block;
+    -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .rd-navbar-n-search .rd-n-search .form-input {
@@ -6083,7 +6128,7 @@ html.rd-navbar-fixed-linked .page {
     display: block;
     width: 100%;
     min-height: 60px;
-    padding: 17px 19px;
+    padding: 17px 15px;
     font-size: 14px;
     font-weight: 400;
     line-height: 24px;
