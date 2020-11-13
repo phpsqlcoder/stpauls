@@ -188,6 +188,20 @@
             }
         });
 
+        $('input[name="keyword"]').focusout(function(){
+            $('#productSearchResult').hide();
+        });
+
+        $('input[name="keyword"]').focusin(function(){
+            var value = $(this).val();
+            if ( value.length > 0){
+                $('#productSearchResult').show();
+            } else {
+                $('#productSearchResult').hide();
+            }
+            
+        });
+
         $('#productSearchForm').submit(function(e){
             e.preventDefault();
 
