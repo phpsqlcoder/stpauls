@@ -106,19 +106,30 @@ class CheckoutController extends Controller
             $data = $sp_location->first();
 
             $sp        = Shippingfee::find($data->shippingfee_id);
-            $sp_weight = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$request->weight)->latest('id')->first();
+            $sp_weight = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$weight)->latest('id');
+            if($sp_weight->count() > 0){
+                $data_weight = $sp_weight->first();
+                
+                $weight_rate = $data_weight->rate;
+                
+            } else {
+                $weight_rate = 0;
+            }
+
 
             if($sp->is_outside_manila == 0){ // within manila
-                if($request->weight > 10){
-                    $rate = ($sp->rate+$sp_weight->rate);
+                if($weight > 10){
+                    $rate = $sp->rate+$weight_rate;
                 } else {
                     $rate = $sp->rate;
                 }
             } else {
-                $rate = ($sp->rate+$sp_weight->rate);
+                $rate = $sp->rate+$weight_rate;
             }
+            
+            return $rate;
         } else {
-            $rate = 0;
+            return 0;
         }
 
         return response()->json(['rate' => $rate]);

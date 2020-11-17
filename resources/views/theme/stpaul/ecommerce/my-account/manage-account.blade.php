@@ -148,6 +148,7 @@
                                             <div class="form-group form-wrap">
                                                 <label>Province *</label>
                                                 <select @if($customer->details->country ==259) required @endif name="province" id="province" class="form-control">
+                                                    <option value="">-- Select Province --</option>
                                                     @foreach($provinces as $province)
                                                     <option @if($customer->details->province == $province->id) selected @endif value="{{$province->id}}">{{$province->province}}</option>
                                                     @endforeach
@@ -219,12 +220,14 @@
                     $('#intl_address').css('display','none');
 
                     $('#address').attr('required',true);
+                    $('#barangay').attr('required',true);
                     $('#province').attr('required',true);
                     $('#city').attr('required',true);
                     $('#intlAddress').attr('required',false);
                 } else {
                     $('#intlAddress').attr('required',true);
                     $('#address').attr('required',false);
+                    $('#barangay').attr('required',false);
                     $('#province').attr('required',false);
                     $('#city').attr('required',false);
 

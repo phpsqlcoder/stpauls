@@ -111,7 +111,7 @@
                     {{--<a class="btn btn-info btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-featured').modal('show');">Upload Featured Products</a>--}}
                     {{--<a class="btn btn-danger btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-category').modal('show');">Upload Product Categories</a>--}}
                     {{--<a class="btn btn-primary btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-photos').modal('show');">Assign Product Photos</a>--}}
-                    <a class="btn btn-success btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-images').modal('show');">Upload Product Images</a>
+                    {{--<a class="btn btn-success btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-images').modal('show');">Upload Product Images</a>--}}
                 </div>
             </div>
             <!-- End Filters -->
@@ -188,7 +188,7 @@
                                                 @endif
 
                                                 @if (auth()->user()->has_access_to_route('product.single.delete'))
-                                                    <a class="nav-link" href="javascript:void(0)" onclick="delete_one_category({{$product->id}},'{{$product->name}}')" title="Delete Product"><i data-feather="trash"></i></a>
+                                                    <a class="nav-link" href="javascript:void(0)" onclick="delete_one_category('{{$product->id}}','{{$product->name}}')" title="Delete Product"><i data-feather="trash"></i></a>
                                                 @endif
 
                                                 @if (auth()->user()->has_access_to_route('product.single-change-status'))

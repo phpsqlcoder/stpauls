@@ -427,28 +427,23 @@ class SalesController extends Controller
 
     }
 
-    public function view_payment($id)
-    {
-        $salesPayments = SalesPayment::where('sales_header_id',$id)->get();
-        $totalPayment = SalesPayment::where('sales_header_id',$id)->sum('amount');
-        $totalNet = SalesHeader::where('id',$id)->sum('net_amount');
-        $remainingPayment = $totalNet - $totalPayment;
+    // public function view_payment($id)
+    // {
+    //     $salesPayments = SalesPayment::where('sales_header_id',$id)->get();
+    //     $totalPayment = SalesPayment::where('sales_header_id',$id)->sum('amount');
+    //     $totalNet = SalesHeader::where('id',$id)->sum('net_amount');
+    //     $remainingPayment = $totalNet - $totalPayment;
 
-        return view('admin.sales.payment',compact('salesPayments','totalPayment','totalNet','remainingPayment'));
-    }
+    //     return view('admin.sales.payment',compact('salesPayments','totalPayment','totalNet','remainingPayment'));
+    // }
 
-    public function cancel_product(Request $request)
-    {
-        return $request;
-    }
+    // public function display_payments(Request $request){
+    //     $input = $request->all();
 
-    public function display_payments(Request $request){
-        $input = $request->all();
+    //     $payments = SalesPayment::where('sales_header_id',$request->id)->get();
 
-        $payments = SalesPayment::where('sales_header_id',$request->id)->get();
-
-        return view('admin.sales.added-payments-result',compact('payments'));
-    }
+    //     return view('admin.sales.added-payments-result',compact('payments'));
+    // }
 
     public function display_delivery(Request $request){
 

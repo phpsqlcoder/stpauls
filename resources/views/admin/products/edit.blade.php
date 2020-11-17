@@ -232,7 +232,7 @@
                     <div class="form-group">
                         <label class="d-block">Display</label>
                         <div class="custom-control custom-switch @error('isfront') is-invalid @enderror">
-                            <input @if($product->is_recommended == 1) disabled @endif type="checkbox" class="custom-control-input" name="isfront" {{ (old("visibility") || $product->isfront ? "checked":"") }} id="customSwitch2">
+                            <input @if($product->is_recommended == 1) disabled @endif type="checkbox" class="custom-control-input" name="isfront" {{ (old("visibility") || $product->isfront == 1 ? "checked":"") }} id="customSwitch2">
                             <label class="custom-control-label" for="customSwitch2">Front Page</label>
                         </div>
                         @hasError(['inputName' => 'isfront'])
@@ -240,7 +240,7 @@
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-switch @error('is_featured') is-invalid @enderror">
-                            <input type="checkbox" class="custom-control-input" name="is_featured" {{ (old("visibility") || $product->is_featured ? "checked":"") }} id="customSwitch3">
+                            <input type="checkbox" class="custom-control-input" name="is_featured" {{ (old("is_featured") == "ON" || $product->is_featured == 1 ? "checked":"") }} id="customSwitch3">
                             <label class="custom-control-label" for="customSwitch3">Featured</label>
                         </div>
                         @hasError(['inputName' => 'is_featured'])
@@ -248,7 +248,7 @@
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-switch @error('is_recommended') is-invalid @enderror">
-                            <input @if($product->isfront == 1) disabled @endif type="checkbox" class="custom-control-input" name="is_recommended" {{ (old("visibility") || $product->is_recommended ? "checked":"") }} id="customSwitch4">
+                            <input @if($product->isfront == 1) disabled @endif type="checkbox" class="custom-control-input" name="is_recommended" {{ (old("is_recommended") == "ON" || $product->is_recommended == 1 ? "checked":"") }} id="customSwitch4">
                             <label class="custom-control-label" for="customSwitch4">Recommended</label>
                         </div>
                         @hasError(['inputName' => 'is_recommended'])
@@ -256,7 +256,7 @@
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-switch @error('for_pickup') is-invalid @enderror">
-                            <input type="checkbox" class="custom-control-input" name="for_pickup" {{ (old("visibility") || $product->for_pickup ? "checked":"") }} id="customSwitch5">
+                            <input type="checkbox" class="custom-control-input" name="for_pickup" {{ (old("for_pickup") == "ON" || $product->for_pickup == 1 ? "checked":"") }} id="customSwitch5">
                             <label class="custom-control-label" for="customSwitch5">Store Pick-up</label>
                         </div>
                         @hasError(['inputName' => 'for_pickup'])

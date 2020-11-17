@@ -121,12 +121,12 @@ class MyAccountController extends Controller
 
         Customer::where('customer_id',Auth::id())->update([
             'country' => $request->country,
-            'address' => ($request->country == 259) ? $request->address : '',
-            'barangay' => ($request->country == 259) ? $request->barangay : '',
-            'city' => ($request->country == 259) ? $request->city : NULL,
-            'province' => ($request->country == 259) ? $request->province : NULL,
+            'address' => ($request->country == 259) ? $request->address : NULL,
+            'barangay' => ($request->country == 259) ? $request->barangay : NULL,
+            'city' => ($request->country == 259) ? $request->city : 0,
+            'province' => ($request->country == 259) ? $request->province : 0,
             'zipcode' => $request->zipcode,
-            'intl_address' => ($request->country <> 259) ? $request->intl_address : ''
+            'intl_address' => ($request->country <> 259) ? $request->intl_address : NULL
         ]);
 
         return back()->with([
