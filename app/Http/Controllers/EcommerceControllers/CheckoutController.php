@@ -107,7 +107,7 @@ class CheckoutController extends Controller
             $data = $sp_location->first();
 
             $sp        = Shippingfee::find($data->shippingfee_id);
-            $sp_weight = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$weight)->latest('id');
+            $sp_weight = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$request->weight)->latest('id');
 
             if($sp_weight->count() > 0){
                 $data_weight = $sp_weight->first();
