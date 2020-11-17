@@ -461,7 +461,7 @@ class ProductController extends Controller
             Product::whereId($product)->update(['created_by' => Auth::id() ]);
             Product::whereId($product)->delete();
 
-            OnSaleProducts::where('product_id',$request->products)->forceDelete();
+            OnSaleProducts::where('product_id',$product)->forceDelete();
         }
 
         return back()->with('success', __('standard.products.product.multiple_delete_success'));
