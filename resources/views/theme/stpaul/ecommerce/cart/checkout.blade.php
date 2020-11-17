@@ -1044,8 +1044,8 @@
                     'weight' : weight
                 },
                 success: function(response) {
-                    $('#input_shippingfee').val(response.rate);
-                    $('#span_shippingfee').html(FormatAmount(response.rate,2));
+                    $('#input_shippingfee').val(response);
+                    $('#span_shippingfee').html(FormatAmount(response,2));
 
                     totalDue();
                 }

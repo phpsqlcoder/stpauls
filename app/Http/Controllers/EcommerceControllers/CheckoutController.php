@@ -103,10 +103,12 @@ class CheckoutController extends Controller
         $sp_location = ShippingfeeLocations::where('name',$location);
         
         if($sp_location->count() > 0){
+
             $data = $sp_location->first();
 
             $sp        = Shippingfee::find($data->shippingfee_id);
             $sp_weight = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$weight)->latest('id');
+
             if($sp_weight->count() > 0){
                 $data_weight = $sp_weight->first();
                 
@@ -129,8 +131,10 @@ class CheckoutController extends Controller
             
             return $rate;
         } else {
-            return 0;
+            $rate = 0;
+            return $rate;
         }
+
 
         return response()->json(['rate' => $rate]);
     }
