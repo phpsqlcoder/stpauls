@@ -187,42 +187,54 @@
                                                         </div>
                                                     </div>
                                                 @else
+                                                    <!-- If customer country is Philippines -->
                                                     @if($customer->details->country == 259)
-                                                        @if($cod->outside_metro_manila == 1)
-                                                            @if($amount <= $cod->maximum_purchase)
-                                                            <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
-                                                            <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                            <div class="tab__content">
-                                                                <h3>Cash on Delivery</h3>
-                                                                <div class="alert alert-info" role="alert">
-                                                                    <h4 class="alert-heading">Reminder!</h4>
-                                                                    <p>{{ $cod->reminder }}</p>
-                                                                </div>
-                                                            </div>
+                                                    <!-- If metro manila -->
+                                                        @if($customer->details->province == 49)
+                                                            <!-- If COD for metro manila is allowed-->
+                                                            @if($cod->within_metro_manila == 1)
+                                                                <!-- If purchased amount is less than or equal to COD max purchase -->
+                                                                @if($amount <= $cod->maximum_purchase)
+                                                                    <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
+                                                                    <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                    <div class="tab__content">
+                                                                        <h3>Cash on Delivery</h3>
+                                                                        <div class="alert alert-info" role="alert">
+                                                                            <h4 class="alert-heading">Reminder!</h4>
+                                                                            <p>{{ $cod->reminder }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
                                                             @endif
+                                                        <!-- If not metro manila -->
                                                         @else
-                                                            @if($customer->details->province == 49)
-                                                            <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
-                                                            <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                            <div class="tab__content">
-                                                                <h3>Cash on Delivery</h3>
-                                                                <div class="alert alert-info" role="alert">
-                                                                    <h4 class="alert-heading">Reminder!</h4>
-                                                                    <p>{{ $cod->reminder }}</p>
+                                                            <!-- If COD allowed for outside metro manila -->
+                                                            @if($cod->outside_metro_manila == 1)
+                                                                <!-- If purchased amount is less than or equal to COD max purchase -->
+                                                                @if($amount <= $cod->maximum_purchase)
+                                                                <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
+                                                                <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                <div class="tab__content">
+                                                                    <h3>Cash on Delivery</h3>
+                                                                    <div class="alert alert-info" role="alert">
+                                                                        <h4 class="alert-heading">Reminder!</h4>
+                                                                        <p>{{ $cod->reminder }}</p>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            @else
-                                                            <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
-                                                            <label style="display: none;" id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                            <div class="tab__content">
-                                                                <h3>Cash on Delivery</h3>
-                                                                <div class="alert alert-info" role="alert">
-                                                                    <h4 class="alert-heading">Reminder!</h4>
-                                                                    <p>{{ $cod->reminder }}</p>
-                                                                </div>
-                                                            </div>
+                                                                @endif
                                                             @endif
                                                         @endif
+                                                        <!-- end if metro manila -->
+                                                    @else
+                                                        <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
+                                                        <label style="display: none;" id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                        <div class="tab__content">
+                                                            <h3>Cash on Delivery</h3>
+                                                            <div class="alert alert-info" role="alert">
+                                                                <h4 class="alert-heading">Reminder!</h4>
+                                                                <p>{{ $cod->reminder }}</p>
+                                                            </div>
+                                                        </div>
                                                     @endif
                                                 @endif
                                                 
@@ -266,8 +278,8 @@
                                                     @endif
                                                 @endif
                                                 
-                                                @if($customer->details->country == 259 || $customer->details->country == '')
-                                                    @if($amount <= $sdd->maximum_purchase)
+                                                
+                                                @if($customer->details->country == '')
                                                     <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
                                                     <label id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                     <div class="tab__content">
@@ -280,6 +292,35 @@
                                                             <label class="form-check-label" for="exampleCheck1">Book your own rider</label>
                                                         </div>
                                                     </div>
+                                                @else
+                                                    @if($customer->details->country == 259)
+                                                        @if($amount <= $sdd->maximum_purchase)
+                                                        <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
+                                                        <label id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                        <div class="tab__content">
+                                                            <div class="alert alert-info" role="alert">
+                                                                <h4 class="alert-heading">Reminder!</h4>
+                                                                <p>{{ $sdd->reminder }}</p>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
+                                                                <label class="form-check-label" for="exampleCheck1">Book your own rider</label>
+                                                            </div>
+                                                        </div>
+                                                        @endif
+                                                    @else
+                                                        <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
+                                                        <label style="display: none;" id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                        <div class="tab__content">
+                                                            <div class="alert alert-info" role="alert">
+                                                                <h4 class="alert-heading">Reminder!</h4>
+                                                                <p>{{ $sdd->reminder }}</p>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
+                                                                <label class="form-check-label" for="exampleCheck1">Book your own rider</label>
+                                                            </div>
+                                                        </div>
                                                     @endif
                                                 @endif
 
@@ -611,13 +652,20 @@
                 var country = $(this).val();
                 var weight  = $('#total_weight').val();
                 var city    = 0; 
-                
-                if(country != ""){
 
+                var sddMaxPurchase = $('#sdd_max_purchase').val();
+                var totalPuchasedAmount   = $('#total_purchased_amount').val();
+
+                if(country != ""){
                     if(country == 259){
                         $('#cod_label').css('display','block');
                         $('#stp_label').css('display','block');
-                        $('#sdd_label').css('display','block');
+
+                        if(parseFloat(totalPuchasedAmount) <= parseFloat(sddMaxPurchase)){
+                            $('#sdd_label').css('display','block');
+                        } else {
+                            $('#sdd_label').css('display','none');
+                        }
 
                         $('#divLocalAddress').css('display','block');
                         $('#divIntlAddress').css('display','none');
@@ -634,25 +682,9 @@
                         $('#divLocalAddress').css('display','none');
                         $('#divIntlAddress').css('display','block');
 
-                        $.ajax({
-                            type: "GET",
-                            url: "{{ route('ajax.get-city-rates') }}",
-                            data: {
-                                'city' : city,
-                                'country' : country,
-                                'weight' : weight
-                            },
-                            success: function(response) {
-                                $('#alert_cityrate').css('display','none');
-                                if(response.rate == 0){
-                                    $('#alert_countryrate').css('display','block');
-                                } else {
-                                    $('#alert_countryrate').css('display','none');
-                                }
+                        $('#alert_countryrate').css('display','block');
 
-                                $('#shipping_fee').val(response.rate);
-                            }
-                        });
+                        $('#shipping_fee').val(0);
                     }
    
                 } else {
@@ -660,6 +692,57 @@
                         title: '',
                         text: "Please select a country.",         
                     })
+                }
+            });
+
+            $('select[name="province"]').on('change', function() {
+                var provinceID = $(this).val();
+                var codMaxPurchase = $('#cod_max_purchase').val();
+                var allowCODMetroManila   = $('#within_metro_manila').val();
+                var allowCODOutsideManila = $('#outside_metro_manila').val();
+                var totalPuchasedAmount   = $('#total_purchased_amount').val();
+                
+
+                if(provinceID) {
+
+                    if(provinceID == 49){
+                        if(allowCODMetroManila == 1 ){
+                            if(parseFloat(totalPuchasedAmount) <= parseFloat(codMaxPurchase)){
+                                $('#cod_label').css('display','block');
+                            }
+                        } else {
+                            $('#cod_label').css('display','none');
+                        }
+                    } else {
+                        if(allowCODOutsideManila == 1){
+                            if(parseFloat(totalPuchasedAmount) <= parseFloat(codMaxPurchase)){
+                                $('#cod_label').css('display','block');
+                            }
+                        } else {
+                            $('#cod_label').css('display','none');
+                        }
+                    }
+
+                    var url = "{{ route('ajax.get-cities', ':provinceID') }}";
+                    url = url.replace(':provinceID',provinceID);
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        dataType: "json",
+                        success:function(data) {
+                            $('select[name="city"]').empty();
+                            $('select[name="city"]').append('<option value="">-- Select City --</option>');
+                            $.each(data, function(key, value) {
+                                $('select[name="city"]').append('<option value="'+value.id+'">'+value.city+'</option>');
+                            });
+                        }
+                    });
+                } else {
+                    swal({
+                        title: '',
+                        text: "Please select a province.",         
+                    })
+                    $('select[name="city"]').empty();
                 }
             });
 
@@ -687,40 +770,6 @@
                         $('#shipping_fee').val(response.rate);
                     }
                 });
-            });
-
-
-            $('select[name="province"]').on('change', function() {
-                var provinceID = $(this).val();
-                if(provinceID) {
-
-                    if(provinceID == 49 && $('#within_metro_manila').val() == 1){
-                        $('#cod_label').css('display','block');
-                    } else {
-                        if($('#outside_metro_manila').val() == 1){
-                            $('#cod_label').css('display','block');
-                        } else {
-                            $('#cod_label').css('display','none');
-                        }
-                    }
-
-                    var url = "{{ route('ajax.get-cities', ':provinceID') }}";
-                    url = url.replace(':provinceID',provinceID);
-                    $.ajax({
-                        url: url,
-                        type: "GET",
-                        dataType: "json",
-                        success:function(data) {
-                            $('select[name="city"]').empty();
-                            $('select[name="city"]').append('<option value="">-- Select City --</option>');
-                            $.each(data, function(key, value) {
-                                $('select[name="city"]').append('<option value="'+value.id+'">'+value.city+'</option>');
-                            });
-                        }
-                    });
-                } else {
-                    $('select[name="city"]').empty();
-                }
             });
         });
     </script>
