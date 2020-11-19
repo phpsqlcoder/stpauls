@@ -68,6 +68,8 @@ class PaymentAPIController extends Controller
      */
     public function landing_page(Request $request)
     {
+        $redirectPath = '/';
+
         if($request->has('decision') && $request->decision == 'ACCEPT') {
             $transactionId = $request->has('req_transaction_uuid') ? $request->req_transaction_uuid : '/';
             $redirectPath = '/order-received/'.$transactionId;
