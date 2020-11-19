@@ -341,17 +341,22 @@
                     @endphp
 
                     @if($related_products)
-                    <!-- Home Item on Sale Section -->
-                    <div class="category-nav-2">
-                        <div class="owl-product-nav">
-                            <a href="" class="owl-item-sale-prev"><span class="lnr lnr-arrow-left"></span></a>
-                            <a href="" class="owl-item-sale-next"><span class="lnr lnr-arrow-right"></span></a>
+                    <div id="default-wrapper" class="p-0">
+                                
+                        <div class="category-flex-2">
+                            <h2 class="category-title"><span>Related Products</span></h2>
+                            <div class="category-nav-2">
+                                <div class="product-nav">
+                                    <a href="" class="related-product-prev"><span class="lnr lnr-arrow-left"></span></a>
+                                    <a href="" class="related-product-next"><span class="lnr lnr-arrow-right"></span></a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <h2 class="category-title"><span>Related Products</span></h2>
-                    <div class="gap-40"></div>
 
-                    <div id="owl-product-5" class="owl-carousel owl-theme">
+                        <div class="gap-40"></div>
+
+                        <!-- Recently Viewed Content -->
+                        <div id="related-products" class="slick-slider">
                         @foreach(explode('|',$related_products) as $rproduct)
                             @php
                                 $product_info = \App\EcommerceModel\Product::find($rproduct);
@@ -390,12 +395,8 @@
     <script src="{{ asset('theme/stpaul/plugins/aos/dist/aos.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/jssocials/jssocials.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/ion.rangeslider/js/ion.rangeSlider.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/vanilla-zoom/vanilla-zoom.js') }}"></script>
     <script src="{{ asset('theme/stpaul/js/better-rating.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/easyzoom/src/easyzoom.js') }}"></script>
 
-    <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.extension.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
     <script src="{{ asset('theme/stpaul/js/rater.js') }}"></script>
     <script>
@@ -419,16 +420,6 @@
     <script src="{{ asset('theme/stpaul/plugins/xZoom/src/hammer.js/jquery.hammer.min.js') }}"></script>
 
     <script>
-        function changePhoto(id){
-            var url = $('#photo_path'+id).val();
-            $("#photo_source").attr("href", url);
-            $('#display_product').attr('src',url);
-
-            // Setup thumbnails example
-            var api1 = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
-
-            api1.swap($("#photo_source").data('standard'), $("#photo_source").attr('href'));
-        }
 
         function add_to_cart(productID) {
             $.ajaxSetup({

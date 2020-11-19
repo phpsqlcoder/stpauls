@@ -260,16 +260,89 @@ $(document).ready(function () {
 		$(saleSlick).slick("slickNext");
 	});
 
+	// Customer Recently Viewed Slick
+	var receSlick = "#recently-viewed";
+
+	$(receSlick).slick({
+		infinite: false,
+		slidesToShow: 3,
+		slidesToScroll: 1,
+		arrows: false,
+		responsive: [
+			{
+				breakpoint: 1200,
+				settings: {
+					slidesToShow: 2,
+				},
+			},
+			{
+				breakpoint: 992,
+				settings: {
+					slidesToShow: 2,
+				},
+			},
+			{
+				breakpoint: 640,
+				settings: {
+					slidesToShow: 2,
+				},
+			},
+		],
+	});
+
+	$(".recently-viewed-prev").click(function () {
+		$(receSlick).slick("slickPrev");
+	});
+
+	$(".recently-viewed-next").click(function () {
+		$(receSlick).slick("slickNext");
+	});
+
+	// Related Products Slick
+	var relaSlick = "#related-products";
+
+	$(relaSlick).slick({
+		infinite: false,
+		slidesToShow: 3,
+		slidesToScroll: 1,
+		arrows: false,
+		responsive: [
+			{
+				breakpoint: 1200,
+				settings: {
+					slidesToShow: 2,
+				},
+			},
+			{
+				breakpoint: 992,
+				settings: {
+					slidesToShow: 2,
+				},
+			},
+			{
+				breakpoint: 640,
+				settings: {
+					slidesToShow: 2,
+				},
+			},
+		],
+	});
+
+	$(".related-product-prev").click(function () {
+		$(relaSlick).slick("slickPrev");
+	});
+
+	$(".related-product-next").click(function () {
+		$(relaSlick).slick("slickNext");
+	});
 
 	var productGallerySlick = "#product-gallery-slider";
-	$(productGallerySlick)
-		.parent("div")
-		.prepend('<div id="pre-loader"></div>');
+	$(productGallerySlick).parent("div").prepend('<div id="pre-loader"></div>');
 
 	$(productGallerySlick).slick({
 		infinite: false,
 		slidesToShow: 4,
 		slidesToScroll: 1,
-		arrows: true
+		arrows: true,
 	});
 });

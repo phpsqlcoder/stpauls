@@ -115,7 +115,7 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="filter-product">
-                            <div class="row">
+                            <div class="row align-items-center">
                                 <div id="col2" class="col-6">
                                     <nav class="rd-navbar">
                                         <div class="rd-navbar-listing-toggle rd-navbar-static--hidden toggle-original" data-rd-navbar-toggle=".listing-filter-wrap"><span class="lnr lnr-list"></span> Filter</div>
@@ -139,8 +139,8 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="btn-group">
-                                        <p class="filter-item-count ml-auto">{{$total_product}} Item/s found</p>
+                                    <div class="btn-group align-items-center">
+                                        <p class="filter-item-count ml-auto mt-auto mb-auto">{{$total_product}} Item/s found</p>
                                         <button type="button" class="btn dropdown-filter-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Sort by
                                         </button>
