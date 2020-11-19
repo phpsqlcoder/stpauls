@@ -57,17 +57,33 @@ class ShippingfeeController extends Controller
             'type' => 'required'
         ])->validate();
 
-        if($request->areas == 'metro manila'){
-            $provinceId = 49;
+        if($request->type == 1){
+            $provinceId = 0;
+        } else {
+          if($request->areas == 'metro manila'){
+                $provinceId = 49;
+            }
+            if($request->areas == 'rizal'){
+                $provinceId = 65;
+            }
+            if($request->areas == 'cavite'){
+                $provinceId = 24;
+            }
+            if($request->areas == 'laguna'){
+                $provinceId = 42;
+            }  
         }
-        if($request->areas == 'rizal'){
-            $provinceId = 65;
-        }
-        if($request->areas == 'cavite'){
-            $provinceId = 24;
-        }
-        if($request->areas == 'laguna'){
-            $provinceId = 42;
+        
+        if($request->type == 1){
+            $isOutside = 1;
+            $area = 'international';
+        } else {
+            $area = $request->areas;
+            if($request->areas == 'metro manila'){
+                $isOutside = 0;
+            } else {
+                $isOutside = 1;
+            }
         }
 
         Shippingfee::create([
@@ -75,8 +91,9 @@ class ShippingfeeController extends Controller
             'is_international' => $request->type,
             'province' => in_array($request->areas,['luzon','visayas','mindanao']) ? 0 : $provinceId,
             'rate' => $request->rate,
-            'is_outside_manila' => ($request->areas == 'metro manila') ? 0 : 1,
-            'area' => $request->areas,
+            'is_outside_manila' => $isOutside,
+            'area' => $area,
+            'is_nearby_city' => ($request->has('is_nearby') ? 1 : 0),
             'user_id' => Auth::id()
         ]);
         
@@ -98,86 +115,134 @@ class ShippingfeeController extends Controller
 
         $fee->update([
             'name' => $request->name,
-            'rate' => ($fee->is_international == 0) ? $request->rate : 0
+            'rate' => $request->rate,
+            'is_nearby_city' => ($request->has('is_nearby') ? 1 : 0),
         ]);
 
-        if(in_array($fee->area,['metro manila','rizal','cavite','laguna'])){
+        if($fee->is_international == 1){
 
-            $arr_locations = [];
-            $saved_locations = ShippingfeeLocations::where('shippingfee_id',$request->shippingfee_id)->get();
-
-            foreach($saved_locations as $l){
-                array_push($arr_locations,$l->name);
-            }
-
-            // save new locations
-            $selected_location = $data['selected_locations'];
-            foreach($selected_location as $key => $location){
-                if(!in_array($location,$arr_locations)){
-
-                    ShippingfeeLocations::create([
-                        'shippingfee_id' => $request->shippingfee_id,
-                        'name' => $location,
-                        'province_id' => $fee->province,
-                        'user_id' => Auth::id()
-                    ]);
-                }
-            }
-
-            // delete existing promotional product that is not selected
-            $arr_selectedlocations = [];
-            foreach($selected_location as $key => $slocation){
-                array_push($arr_selectedlocations,$slocation);
-            }
-
-            foreach($saved_locations as $location){
-                if(!in_array($location->name,$arr_selectedlocations)){
-                    ShippingfeeLocations::where('name',$location->name)->delete();
-                }
-            }
+            $this->store_countries($request,$fee->id);
 
         } else {
 
-            $arr_selected_provinces = [];
-            $saved_provinces = ShippingfeeLocations::where('shippingfee_id',$request->shippingfee_id)->get();
+            if(in_array($fee->area,['metro manila','rizal','cavite','laguna'])){
 
-            foreach($saved_provinces as $sprovinces){
-                array_push($arr_selected_provinces,$sprovinces->province_id);
-            }
+                $arr_locations = [];
+                $saved_locations = ShippingfeeLocations::where('shippingfee_id',$request->shippingfee_id)->get();
 
-            // save new locations
-            $selected_location = $data['selected_locations'];
-            foreach($selected_location as $key => $location){
-                if(!in_array($location,$arr_selected_provinces)){
+                foreach($saved_locations as $l){
+                    array_push($arr_locations,$l->name);
+                }
 
-                    $cities = Cities::where('province',$location)->get();
+                // save new locations
+                $selected_location = $data['selected_locations'];
+                foreach($selected_location as $key => $location){
+                    if(!in_array($location,$arr_locations)){
 
-                    foreach($cities as $city){
                         ShippingfeeLocations::create([
                             'shippingfee_id' => $request->shippingfee_id,
-                            'name' => $city->city,
-                            'province_id' => $city->province,
+                            'name' => $location,
+                            'province_id' => $fee->province,
+                            'is_nearby_metro_manila' => ($fee->is_outside_manila == 0) ? 1 : 0, 
                             'user_id' => Auth::id()
-                        ]); 
+                        ]);
                     }
-                    
                 }
-            }
 
-            // delete existing location that is not selected
-            $arr_selectedlocations = [];
-            foreach($selected_location as $key => $slocation){
-                array_push($arr_selectedlocations,$slocation);
-            }
-
-            foreach($saved_provinces as $province){
-                if(!in_array($province->province_id,$arr_selectedlocations)){
-                    ShippingfeeLocations::where('province_id',$province->province_id)->delete();
+                // delete existing promotional product that is not selected
+                $arr_selectedlocations = [];
+                foreach($selected_location as $key => $slocation){
+                    array_push($arr_selectedlocations,$slocation);
                 }
-            }
+
+                foreach($saved_locations as $location){
+                    if(!in_array($location->name,$arr_selectedlocations)){
+                        ShippingfeeLocations::where('name',$location->name)->delete();
+                    }
+                }
+
+            } else {
+
+                $arr_selected_provinces = [];
+                $saved_provinces = ShippingfeeLocations::where('shippingfee_id',$request->shippingfee_id)->get();
+
+                foreach($saved_provinces as $sprovinces){
+                    array_push($arr_selected_provinces,$sprovinces->province_id);
+                }
+
+                // save new locations
+                $selected_location = $data['selected_locations'];
+                foreach($selected_location as $key => $location){
+                    if(!in_array($location,$arr_selected_provinces)){
+
+                        $cities = Cities::where('province',$location)->get();
+
+                        foreach($cities as $city){
+                            ShippingfeeLocations::create([
+                                'shippingfee_id' => $request->shippingfee_id,
+                                'name' => $city->city,
+                                'province_id' => $city->province,
+                                'is_nearby_metro_manila' => ($fee->is_outside_manila == 0) ? 1 : 0, 
+                                'user_id' => Auth::id()
+                            ]); 
+                        }
+                        
+                    }
+                }
+
+                // delete existing location that is not selected
+                $arr_selectedlocations = [];
+                foreach($selected_location as $key => $slocation){
+                    array_push($arr_selectedlocations,$slocation);
+                }
+
+                foreach($saved_provinces as $province){
+                    if(!in_array($province->province_id,$arr_selectedlocations)){
+                        ShippingfeeLocations::where('province_id',$province->province_id)->delete();
+                    }
+                }
+            } 
         }
 
         return back()->with('success','Successfully added new locations for this zone');
+    }
+
+    public function store_countries($req,$sfeeId)
+    {
+        $arr_countries = [];
+        $saved_countries = ShippingfeeLocations::where('shippingfee_id',$sfeeId)->get();
+
+        foreach($saved_countries as $country){
+            array_push($arr_countries,$country->name);
+        }
+
+        $data = $req->all();
+
+        // save new countries
+        $selected_countries = $data['selected_locations'];
+        foreach($selected_countries as $key => $country){
+            if(!in_array($country,$arr_countries)){
+
+                ShippingfeeLocations::create([
+                    'shippingfee_id' => $sfeeId,
+                    'name' => $country,
+                    'province_id' => 0,
+                    'user_id' => Auth::id()
+                ]);
+            }
+        }
+
+        // delete existing countries
+        $arr_selectedCountries = [];
+        foreach($selected_countries as $key => $scountries){
+            array_push($arr_selectedCountries,$scountries);
+        }
+
+        foreach($saved_countries as $country){
+            if(!in_array($country->name,$selected_countries)){
+                ShippingfeeLocations::where('name',$country->name)->delete();
+            }
+        }
     }
 
     public function weight_store(Request $request)

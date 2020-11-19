@@ -139,4 +139,34 @@ class ShippingfeeLocations extends Model
             }
         }
     }
+
+    // check if nearby provinces of metro manila
+    public static function checkNearbyProvinces($city)
+    {
+        $cities = ShippingfeeLocations::join('shippingfees','shippingfee_locations.shippingfee_id','=','shippingfees.id')->select('shippingfee_locations.*')->where('shippingfees.is_nearby_city',1)->get();
+
+        $arr_cities = [];
+        foreach($cities as $city){
+            array_push($arr_cities,$city->name);
+        }
+
+        if(in_array($city, $arr_cities)){
+            $isNearby = 1;
+        } else {
+            $isNearby = 0;
+        }
+        
+        return $isNearby;
+    }
+
+    public static function nearby_provinces()
+    {
+        $cities = ShippingfeeLocations::join('shippingfees','shippingfee_locations.shippingfee_id','=','shippingfees.id')->select('shippingfee_locations.*')->where('shippingfees.is_nearby_city',1)->get();
+        
+        $lists = "";
+        foreach($cities as $city){
+            $lists .= $city->name.'|';
+        }
+        return $lists;
+    }
 }

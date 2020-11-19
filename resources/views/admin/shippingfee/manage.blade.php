@@ -33,10 +33,21 @@
                     <input type="text" class="form-control" name="name" value="{{$sp->name}}">
                 </div>
 
+                <div class="form-group">
+                    @if($sp->is_international == 0)
+                    <label>Flat Rate*</label>
+                    @endif
+                    <input required @if($sp->is_international == 0) type="text" @else type="hidden" @endif class="form-control" name="rate" value="{{$sp->rate}}">
+                </div>
+
                 @if($sp->is_international == 0)
                 <div class="form-group">
-                    <label>Flat Rate*</label>
-                    <input required type="text" class="form-control" name="rate" value="{{$sp->rate}}">
+                    <div class="custom-control custom-switch @error('is_nearby') is-invalid @enderror">
+                        <input type="checkbox" class="custom-control-input" name="is_nearby" {{ ($sp->is_nearby_city == 1 ? "checked":"") }}  id="customSwitch1">
+                        <label class="custom-control-label" id="label_visibility" for="customSwitch1">
+                            Nearby City/Metro Manila
+                        </label>
+                    </div>
                 </div>
                 @endif
 

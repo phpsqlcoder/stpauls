@@ -146,11 +146,11 @@
                                                 @endif
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status'))
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
                                                     @endif
 
                                                     @if (auth()->user()->has_access_to_route('display.delivery-history'))
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history({{$sale->id}})" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
                                                     @endif
                                                 </div>
                                             @endif

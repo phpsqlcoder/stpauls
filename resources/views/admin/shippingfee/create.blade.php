@@ -57,8 +57,17 @@
                         </div>
 
                         <div class="form-group">
+                            <div class="custom-control custom-switch @error('is_nearby') is-invalid @enderror">
+                                <input type="checkbox" class="custom-control-input" name="is_nearby" {{ (old("is_nearby") ? "checked":"") }} id="customSwitch1">
+                                <label class="custom-control-label" id="label_visibility" for="customSwitch1">
+                                    Nearby City/Metro Manila
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="d-block">Rate*</label>
-                            <input type="number" name="rate" id="rate" value="{{ old('rate')}}" class="form-control @error('rate') is-invalid @enderror" min="1" required>
+                            <input type="number" name="rate" id="rate" value="0" class="form-control @error('rate') is-invalid @enderror" min="1" required>
                             @hasError(['inputName' => 'rate'])
                             @endhasError
                         </div>
@@ -81,6 +90,16 @@
     <script>
         $(function() {
             $('.selectpicker').selectpicker();
+        });
+
+        $('#areas').change(function(){
+            var area = $(this).val();
+
+            if(area == 'metro manila'){
+                $( "#customSwitch1" ).prop( "checked", true );
+            } else {
+                $( "#customSwitch1" ).prop( "checked", false );
+            }
         });
 
         $('#type').change(function(){
