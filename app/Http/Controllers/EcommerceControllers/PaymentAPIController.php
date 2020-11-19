@@ -27,7 +27,7 @@ class PaymentAPIController extends Controller
         $apiLogs['response_data'] = json_encode($request->all());
 
         if($request->has('req_transaction_uuid')) {
-            $salesHeader = SalesHeader::where('order_number', $request->req_transaction_uuid);
+            $salesHeader = SalesHeader::where('order_number', $request->req_transaction_uuid)->first();
             $apiLogs['website_transaction_id_exists'] = !empty($salesHeader);
 
             if($request->has('decision') && $request->decision == 'ACCEPT') {
