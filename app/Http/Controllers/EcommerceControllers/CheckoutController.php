@@ -120,7 +120,7 @@ class CheckoutController extends Controller
 
 
             if($sp->is_outside_manila == 0){ // within manila
-                if($weight > 10){
+                if($request->weight > 10){
                     $rate = $sp->rate+$weight_rate;
                 } else {
                     $rate = $sp->rate;
