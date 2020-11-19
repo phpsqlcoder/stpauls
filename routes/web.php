@@ -1,4 +1,8 @@
 <?php
+    // EBC CyberSource API
+    Route::post('merchant-post', 'PaymentAPIController@merchant_post');
+    Route::get('processing', 'PaymentAPIController@landing_page');
+    //
 
     ########## ECOMMERCE ROUTES #############
     // Home
@@ -64,7 +68,7 @@
             Route::get('/checkout/remove-product','EcommerceControllers\CheckoutController@remove_product')->name('checkout.remove-product');
             Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
         //
-        
+
         // Account Transactions
             Route::get('/account/my-orders', 'EcommerceControllers\SalesFrontController@orders')->name('account-my-orders');
             Route::get('/account/order-info/{id}', 'EcommerceControllers\SalesFrontController@order_info')->name('account-order-info');
@@ -95,7 +99,7 @@
 
             Route::get('/ajax-province-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
 
-            
+
 
             // Route::post('/account/cancel/order', 'EcommerceControllers\SalesFrontController@cancel_order')->name('my-account.cancel-order');
             // Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
@@ -111,9 +115,9 @@
         Route::get('/ajax-get-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_cities')->name('ajax.get-cities');
         Route::get('myform/ajax/{id}','EcommerceControllers\CheckoutController@ajax_deliverable_cities')->name('ajax.get-deliverable-cities');
     ########## GLOBAL ROUTE ##########
- 
 
-        
+
+
 
 
 
@@ -126,7 +130,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
     //Route::group(['middleware' => 'admin'], function () {
     Route::group(['middleware' => ['admin','authenticated']], function () {
-    
+
 
 
         // Customers
@@ -156,7 +160,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/product-review/single-delete', 'EcommerceControllers\ProductReviewController@single_delete')->name('product-review.single-delete');
             Route::get('/product-review/restore/{id}', 'EcommerceControllers\ProductReviewController@restore')->name('product-review.restore');
             Route::post('/product-review-multiple-delete','EcommerceControllers\ProductReviewController@multiple_delete')->name('product-review.multiple.delete');
-            Route::post('/product-review-multiple-approve','EcommerceControllers\ProductReviewController@multiple_approve')->name('product-review.multiple-approve');      
+            Route::post('/product-review-multiple-approve','EcommerceControllers\ProductReviewController@multiple_approve')->name('product-review.multiple-approve');
         //
 
         //Branches
@@ -216,10 +220,10 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
             // to remove
 
-            
 
 
-            
+
+
 
 
             Route::post('/admin/sales-transaction/change-status', 'EcommerceControllers\SalesController@change_status')->name('sales-transaction.change.status');
@@ -262,7 +266,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/report/stock-card/{id}', 'EcommerceControllers\ReportsController@stock_card')->name('report.product.stockcard');
             Route::get('/admin/report/sales', 'EcommerceControllers\ReportsController@sales')->name('admin.report.sales');
             Route::get('/admin/report/delivery_status', 'EcommerceControllers\ReportsController@delivery_status')->name('admin.report.delivery_status');
-            
+
         //
 
         // Products
@@ -279,7 +283,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/product-add-inventory','Product\ProductController@add_inventory')->name('products.add-inventory');
             Route::post('/products-multiple-assign-category','Product\ProductController@multiple_assign_category')->name('products.multiple.assign.category');
 
-            
+
         //
 
         //Inventory
@@ -335,7 +339,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/transactions-restore/{id}', 'Transaction\TransactionController@restore')->name('transactions.restore');
 
 
-            
+
             // Migrate products
             Route::post('/product-upload-main','Product\ProductController@upload_main')->name('products.upload.main');
             Route::post('/product-upload-additional','Product\ProductController@upload_additional')->name('products.upload.additional');
@@ -373,7 +377,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         //
 
 
-            
+
 
             Route::get('/admin/sales-transaction/view-payment/{sales}', 'EcommerceControllers\SalesController@view_payment')->name('sales-transaction.view_payment');
             Route::post('/admin/sales-transaction/cancel-product', 'EcommerceControllers\SalesController@cancel_product')->name('sales-transaction.cancel_product');
@@ -382,7 +386,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/admin/sales-transaction/view-payment/{sales}', 'EcommerceControllers\SalesController@view_payment')->name('sales-transaction.view_payment');
             Route::post('/admin/sales-transaction/cancel-product', 'EcommerceControllers\SalesController@cancel_product')->name('sales-transaction.cancel_product');
 
-            
+
             Route::get('/display-added-payments', 'EcommerceControllers\SalesController@display_payments')->name('display.added-payments');
             Route::get('/display-delivery-history', 'EcommerceControllers\SalesController@display_delivery')->name('display.delivery-history');
 
@@ -393,13 +397,13 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
 
-           
+
             Route::resource('/admin/sales-transaction', 'EcommerceControllers\SalesController');
             Route::resource('/admin/deliveryrate', 'EcommerceControllers\DeliveryRateController');
 
-        
 
-        
+
+
 
         // Albums
             Route::resource('/albums', 'Banner\AlbumController');
@@ -459,7 +463,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         Route::get('/user-search/', 'Settings\UserController@search')->name('user.search');
         Route::get('/profile-log-search/', 'Settings\UserController@filter')->name('user.activity.search');
 
-        
+
 
         // Roles
         Route::resource('/role', 'Settings\RoleController');
@@ -468,7 +472,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         // Access
         Route::resource('/access', 'Settings\AccessController');
         Route::post('/roles_and_permissions/update', 'Settings\AccessController@update_roles_and_permissions')->name('role-permission.update');
-        
+
         //if (env('APP_DEBUG') == "true") {
             // Permission Routes
             Route::resource('/permission', 'Settings\PermissionController');
