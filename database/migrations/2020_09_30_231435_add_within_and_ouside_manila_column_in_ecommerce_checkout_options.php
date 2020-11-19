@@ -14,9 +14,9 @@ class AddWithinAndOusideManilaColumnInEcommerceCheckoutOptions extends Migration
     public function up()
     {
         Schema::table('ecommerce_checkout_options', function (Blueprint $table) {
-            $table->integer('within_metro_manila');
-            $table->integer('outside_metro_manila');
-            $table->decimal('maximum_purchase',16,2);
+            $table->integer('within_metro_manila')->default(0);
+            $table->integer('outside_metro_manila')->default(0);
+            $table->decimal('maximum_purchase',16,2)->default(0);
         });
     }
 
