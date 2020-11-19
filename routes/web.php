@@ -1,7 +1,7 @@
 <?php
     // EBC CyberSource API
     Route::post('merchant-post', 'EcommerceControllers\PaymentAPIController@merchant_post');
-    Route::get('payment-processing', 'EcommerceControllers\PaymentAPIController@landing_page');
+    Route::post('payment-processing', 'EcommerceControllers\PaymentAPIController@landing_page');
     //
 
     ########## ECOMMERCE ROUTES #############
