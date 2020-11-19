@@ -48,6 +48,7 @@
                             Nearby City/Metro Manila
                         </label>
                     </div>
+                    <small>Check to allow Same Day Delivery shipping option for these zone/area.</small>
                 </div>
                 @endif
 
