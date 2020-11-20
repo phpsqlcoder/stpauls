@@ -12,15 +12,16 @@
 
         Route::get('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@sign_up')->name('customer-front.sign-up');
         Route::post('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@customer_sign_up')->name('customer-front.customer-sign-up');
-        Route::get('auth/social', 'Auth\SocialiteController@show')->name('social.login');
+
         Route::get('oauth/{driver}', 'Auth\SocialiteController@redirectToProvider')->name('social.oauth');
         Route::get('oauth/{driver}/callback', 'Auth\SocialiteController@handleProviderCallback')->name('social.callback');
+        Route::get('oauth/login/{driver}', 'Auth\SocialiteController@loginRedirectToProvider')->name('social.oauth-login');
+        Route::get('oauth/login/{driver}/callback', 'Auth\SocialiteController@loginHandleProviderCallback')->name('social.callback-login');
 
         Route::get('/ajax/deliverable-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_deliverable_cities')->name('ajax.deliverable-cities');
 
         Route::get('/login', 'EcommerceControllers\CustomerFrontController@login')->name('customer-front.login');
-        Route::get('oauth/login/{driver}', 'Auth\SocialiteController@loginRedirectToProvider')->name('social.oauth-login');
-        Route::get('oauth/login/{driver}/callback', 'Auth\SocialiteController@loginHandleProviderCallback')->name('social.callback-login');
+        
 
         Route::post('/login', 'EcommerceControllers\CustomerFrontController@customer_login')->name('customer-front.customer_login');
         Route::get('/customer-logout', 'EcommerceControllers\CustomerFrontController@logout')->name('customer.logout');
@@ -130,9 +131,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
     //Route::group(['middleware' => 'admin'], function () {
     Route::group(['middleware' => ['admin','authenticated']], function () {
-
-
-
+    
         // Customers
             Route::resource('/admin/customers', 'Settings\CustomerController');
             Route::get('/customer-orders/{id}','Settings\CustomerController@orders')->name('customer.orders');
@@ -213,17 +212,6 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             // Card Payment
             Route::get('/admin/sales/card-payment','EcommerceControllers\SalesController@sales_card_payment')->name('sales-transaction.card-payment');
             Route::post('/admin/add-shippingfee','EcommerceControllers\SalesController@add_shippingfee')->name('add-shipping-fee');
-
-
-
-
-
-            // to remove
-
-
-
-
-
 
 
             Route::post('/admin/sales-transaction/change-status', 'EcommerceControllers\SalesController@change_status')->name('sales-transaction.change.status');
@@ -328,8 +316,9 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/admin/transaction-status/{id}/{status}', 'Transaction\TransactionStatusController@update_status')->name('transaction_status.change-status');
             Route::post('/admin/transaction-status-multiple-change-status','Transaction\TransactionStatusController@multiple_change_status')->name('transaction_status.multiple.change.status');
             Route::post('/admin/transaction-status-multiple-delete','Transaction\TransactionStatusController@multiple_delete')->name('transaction-status.multiple.delete');
-
-            // Transaction
+        //
+        
+        // Transactions
             Route::resource('/admin/transactions','Transaction\TransactionController');
 
             Route::get('/transactions/{id}/{status}', 'Transaction\TransactionController@update_status')->name('transactions.change-status');
@@ -337,10 +326,10 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/transactions-single-delete', 'Transaction\TransactionController@single_delete')->name('transactions.single.delete');
             Route::post('/transactions-multiple-delete','Transaction\TransactionController@multiple_delete')->name('transactions.multiple.delete');
             Route::get('/transactions-restore/{id}', 'Transaction\TransactionController@restore')->name('transactions.restore');
+        //
 
-
-
-            // Migrate products
+            
+        // Migrate products
             Route::post('/product-upload-main','Product\ProductController@upload_main')->name('products.upload.main');
             Route::post('/product-upload-additional','Product\ProductController@upload_additional')->name('products.upload.additional');
             Route::post('/product-upload-featured','Product\ProductController@upload_featured')->name('products.upload.featured');
@@ -348,10 +337,13 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/product-upload-photos','Product\ProductController@upload_photos')->name('products.upload.photos');
             Route::post('/product-upload-images','Product\ProductController@upload_images')->name('products.upload.images');
             Route::post('/customer-upload','Product\ProductController@upload_customers')->name('customers.upload');
+        //
 
 
-
-
+        // Route::get('/sales-advance-search/', 'EcommerceControllers\SalesController@advance_index')->name('admin.sales.list.advance-search');
+        // Route::get('/admin/sales-transaction/view-payment/{sales}', 'EcommerceControllers\SalesController@view_payment')->name('sales-transaction.view_payment');
+        //Route::get('/display-added-payments', 'EcommerceControllers\SalesController@display_payments')->name('display.added-payments');
+        Route::get('/display-delivery-history', 'EcommerceControllers\SalesController@display_delivery')->name('display.delivery-history');
 
 
 
@@ -359,51 +351,17 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
 
     ####### CMS Standards #######
-        //News Frontend
-            Route::get('/new-development/', 'News\ArticleFrontController@news_list')->name('news.front.index');
-            Route::get('/new-development/{slug}', 'News\ArticleFrontController@news_view')->name('news.front.show');
-            Route::get('/new-development/{slug}/print', 'News\ArticleFrontController@news_print')->name('news.front.print');
-            Route::post('/new-development/{slug}/share', 'News\ArticleFrontController@news_share')->name('news.front.share');
-        //
-
         //Pages
             Route::resource('/pages', 'PageController');
             Route::get('/pages-advance-search', 'PageController@advance_index')->name('pages.index.advance-search');
             Route::post('/pages/get-slug', 'PageController@get_slug')->name('pages.get_slug');
+            Route::put('/pages/{page}/default', 'PageController@update_default')->name('pages.update-default');
             Route::put('/pages/{page}/customize', 'PageController@update_customize')->name('pages.update-customize');
+            Route::put('/pages/{page}/contact-us', 'PageController@update_contact_us')->name('pages.update-contact-us');
             Route::post('/pages-change-status', 'PageController@change_status')->name('pages.change.status');
             Route::post('/pages-delete', 'PageController@delete')->name('pages.delete');
             Route::get('/page-restore/{page}', 'PageController@restore')->name('pages.restore');
         //
-
-
-
-
-            Route::get('/admin/sales-transaction/view-payment/{sales}', 'EcommerceControllers\SalesController@view_payment')->name('sales-transaction.view_payment');
-            Route::post('/admin/sales-transaction/cancel-product', 'EcommerceControllers\SalesController@cancel_product')->name('sales-transaction.cancel_product');
-            Route::get('/sales-advance-search/', 'EcommerceControllers\SalesController@advance_index')->name('admin.sales.list.advance-search');
-
-            Route::get('/admin/sales-transaction/view-payment/{sales}', 'EcommerceControllers\SalesController@view_payment')->name('sales-transaction.view_payment');
-            Route::post('/admin/sales-transaction/cancel-product', 'EcommerceControllers\SalesController@cancel_product')->name('sales-transaction.cancel_product');
-
-
-            Route::get('/display-added-payments', 'EcommerceControllers\SalesController@display_payments')->name('display.added-payments');
-            Route::get('/display-delivery-history', 'EcommerceControllers\SalesController@display_delivery')->name('display.delivery-history');
-
-            Route::get('/sales/update-payment/{id}','EcommerceControllers\JoborderController@staff_edit_payment')->name('staff-edit-payment');
-            Route::post('/sales/update-payment','EcommerceControllers\JoborderController@staff_update_payment')->name('staff-update-payment');
-
-
-            Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
-
-
-
-            Route::resource('/admin/sales-transaction', 'EcommerceControllers\SalesController');
-            Route::resource('/admin/deliveryrate', 'EcommerceControllers\DeliveryRateController');
-
-
-
-
 
         // Albums
             Route::resource('/albums', 'Banner\AlbumController');
@@ -414,65 +372,70 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/albums/banners/{album}', 'Banner\AlbumController@get_album_details')->name('albums.banners');
         //
 
+        // News
+            Route::resource('/news', 'News\ArticleController')->except(['show', 'destroy']);
+            Route::get('/news-advance-search', 'News\ArticleController@advance_index')->name('news.index.advance-search');
+            Route::post('/news-get-slug', 'News\ArticleController@get_slug')->name('news.get-slug');
+            Route::post('/news-change-status', 'News\ArticleController@change_status')->name('news.change.status');
+            Route::post('/news-delete', 'News\ArticleController@delete')->name('news.delete');
+            Route::get('/news-restore/{news}', 'News\ArticleController@restore')->name('news.restore');
+            // News Category
+            Route::resource('/news-categories', 'News\ArticleCategoryController')->except(['show']);;
+            Route::post('/news-categories/get-slug', 'News\ArticleCategoryController@get_slug')->name('news-categories.get-slug');
+            Route::post('/news-categories/delete', 'News\ArticleCategoryController@delete')->name('news-categories.delete');
+            Route::get('/news-categories/restore/{id}', 'News\ArticleCategoryController@restore')->name('news-categories.restore');
+        //
 
         // Files
-        Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('file-manager.show');
-        Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload')->name('file-manager.upload');
-        Route::get('/file-manager', 'FileManagerController@index')->name('file-manager.index');
-
+            Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('file-manager.show');
+            Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload')->name('file-manager.upload');
+            Route::get('/file-manager', 'FileManagerController@index')->name('file-manager.index');
+        //
 
         // Menu
-        Route::resource('/menus', 'Menu\MenuController');
-        Route::delete('/many/menu', 'Menu\MenuController@destroy_many')->name('menus.destroy_many');
-        Route::put('/menus/quick1/{menu}', 'Menu\MenuController@quick_update')->name('menus.quick_update');
-        Route::get('/menu-restore/{menu}', 'Menu\MenuController@restore')->name('menus.restore');
+            Route::resource('/menus', 'Menu\MenuController');
+            Route::delete('/many/menu', 'Menu\MenuController@destroy_many')->name('menus.destroy_many');
+            Route::put('/menus/quick1/{menu}', 'Menu\MenuController@quick_update')->name('menus.quick_update');
+            Route::get('/menu-restore/{menu}', 'Menu\MenuController@restore')->name('menus.restore');
+        //
 
-
-
-
-        // News
-        Route::resource('/news', 'News\ArticleController');
-        Route::get('/news-advance-search', 'News\ArticleController@advance_index')->name('news.index.advance-search');
-        Route::post('/news-get-slug', 'News\ArticleController@get_slug')->name('news.get-slug');
-        Route::post('/news-change-status', 'News\ArticleController@change_status')->name('news.change.status');
-        Route::post('/news-delete', 'News\ArticleController@delete')->name('news.delete');
-        Route::get('/news-restore/{news}', 'News\ArticleController@restore')->name('news.restore');
-        // News Category
-        Route::resource('/news-categories', 'News\ArticleCategoryController');
-        Route::post('/news-categories/get-slug', 'News\ArticleCategoryController@get_slug')->name('news-categories.get-slug');
-        Route::post('/news-categories/delete', 'News\ArticleCategoryController@delete')->name('news-categories.delete');
-        Route::get('/news-categories/restore/{id}', 'News\ArticleCategoryController@restore')->name('news-categories.restore');
-
-
+        // Dashboard
+            Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+        //
 
         // Account
-        Route::get('/account/edit', 'Settings\AccountController@edit')->name('account.edit');
-        Route::put('/account/update', 'Settings\AccountController@update')->name('account.update');
-        Route::put('/account/update_email', 'Settings\AccountController@update_email')->name('account.update-email');
-        Route::put('/account/update_password', 'Settings\AccountController@update_password')->name('admin-account.update-password');
-        // Audit
-        Route::get('/audit-logs', 'Settings\LogsController@index')->name('audit-logs.index');
-        // CMS
-        //Route::view('/settings/cms/index', 'admin.settings.cms.index')->name('settings.cms')->middleware('checkPermission:admin/settings');
+            Route::get('/account/edit', 'Settings\AccountController@edit')->name('account.edit');
+            Route::put('/account/update', 'Settings\AccountController@update')->name('account.update');
+            Route::put('/account/update_email', 'Settings\AccountController@update_email')->name('account.update-email');
+            Route::put('/account/update_password', 'Settings\AccountController@update_password')->name('admin-account.update-password');
+        //
 
+        // Audit
+            Route::get('/audit-logs', 'Settings\LogsController@index')->name('audit-logs.index');
+
+        // CMS
+            //Route::view('/settings/cms/index', 'admin.settings.cms.index')->name('settings.cms')->middleware('checkPermission:admin/settings');
+        //
 
         // Users
-        Route::resource('/users', 'Settings\UserController');
-        Route::post('/users/deactivate', 'Settings\UserController@deactivate')->name('users.deactivate');
-        Route::post('/users/activate', 'Settings\UserController@activate')->name('users.activate');
-        Route::get('/user-search/', 'Settings\UserController@search')->name('user.search');
-        Route::get('/profile-log-search/', 'Settings\UserController@filter')->name('user.activity.search');
-
-
+            Route::resource('/users', 'Settings\UserController');
+            Route::post('/users/deactivate', 'Settings\UserController@deactivate')->name('users.deactivate');
+            Route::post('/users/activate', 'Settings\UserController@activate')->name('users.activate');
+            Route::get('/user-search/', 'Settings\UserController@search')->name('user.search');
+            Route::get('/profile-log-search/', 'Settings\UserController@filter')->name('user.activity.search');
+        //
 
         // Roles
-        Route::resource('/role', 'Settings\RoleController');
-        Route::post('/role/delete','Settings\RoleController@destroy')->name('role.delete');
-        Route::get('/role/restore/{id}','Settings\RoleController@restore')->name('role.restore');
-        // Access
-        Route::resource('/access', 'Settings\AccessController');
-        Route::post('/roles_and_permissions/update', 'Settings\AccessController@update_roles_and_permissions')->name('role-permission.update');
+            Route::resource('/role', 'Settings\RoleController');
+            Route::post('/role/delete','Settings\RoleController@destroy')->name('role.delete');
+            Route::get('/role/restore/{id}','Settings\RoleController@restore')->name('role.restore');
+        //
 
+        // Access
+            Route::resource('/access', 'Settings\AccessController');
+            Route::post('/roles_and_permissions/update', 'Settings\AccessController@update_roles_and_permissions')->name('role-permission.update');
+        //
+            
         //if (env('APP_DEBUG') == "true") {
             // Permission Routes
             Route::resource('/permission', 'Settings\PermissionController');
@@ -481,6 +444,12 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/permission/restore/{id}', 'Settings\PermissionController@restore')->name('permission.restore');
         //}
 
+        //News Frontend
+            Route::get('/new-development/', 'News\ArticleFrontController@news_list')->name('news.front.index');
+            Route::get('/new-development/{slug}', 'News\ArticleFrontController@news_view')->name('news.front.show');
+            Route::get('/new-development/{slug}/print', 'News\ArticleFrontController@news_print')->name('news.front.print');
+            Route::post('/new-development/{slug}/share', 'News\ArticleFrontController@news_share')->name('news.front.share');
+        //
     });
 });
 
