@@ -221,7 +221,7 @@
                     <div class="product-additional">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link @if($tab == 'details') active @endif" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Details about the product {{ $tab }}</a>
+                                <a class="nav-link @if($tab == 'details') active @endif" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Details about the product</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="synopsis-tab" data-toggle="tab" href="#synopsis" role="tab" aria-controls="synopsis" aria-selected="true">{{ ($product->category->name == 'Books') ? 'Synopsis' : 'Prayer' }}</a>
