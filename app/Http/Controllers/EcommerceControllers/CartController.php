@@ -231,7 +231,7 @@ class CartController extends Controller
         if (auth()->check()) {        
 
             if (Cart::where('user_id', auth()->id())->count() == 0) {
-                return redirect()->route('product.front.list');
+                return redirect()->route('home');
             }
 
             foreach($cartId as $key => $cart){
