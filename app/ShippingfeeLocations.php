@@ -141,7 +141,7 @@ class ShippingfeeLocations extends Model
     }
 
     // check if nearby provinces of metro manila
-    public static function checkNearbyProvinces($city)
+    public static function checkNearbyProvinces($location)
     {
         $cities = ShippingfeeLocations::join('shippingfees','shippingfee_locations.shippingfee_id','=','shippingfees.id')->select('shippingfee_locations.*')->where('shippingfees.is_nearby_city',1)->get();
 
@@ -150,7 +150,7 @@ class ShippingfeeLocations extends Model
             array_push($arr_cities,$city->name);
         }
 
-        if(in_array($city, $arr_cities)){
+        if(in_array($location, $arr_cities)){
             $isNearby = 1;
         } else {
             $isNearby = 0;

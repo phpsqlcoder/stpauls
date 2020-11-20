@@ -673,7 +673,7 @@
             $('select[name="country"]').on('change', function() {
                 var country = $(this).val();
                 var weight  = $('#total_weight').val();
-                var city    = 0; 
+                var city    = $('#city').val(); 
 
                 var sddMaxPurchase = $('#sdd_max_purchase').val();
                 var totalPuchasedAmount   = $('#total_purchased_amount').val();
@@ -691,6 +691,7 @@
                         $('#shipping_fee').val(0);
 
                     } else {
+
                         $('#cod_label').css('display','none');
                         $('#stp_label').css('display','none');
                         $('#sdd_label').css('display','none');
@@ -698,9 +699,26 @@
                         $('#divLocalAddress').css('display','none');
                         $('#divIntlAddress').css('display','block');
 
-                        $('#alert_countryrate').css('display','block');
+                        $.ajax({
+                            dataType: "json",
+                            type: "GET",
+                            url: "{{ route('ajax.get-city-rates') }}",
+                            data: {
+                                'city' : city,
+                                'country' : country,
+                                'weight' : weight
+                            },
+                            success: function(response) {
+                                
+                                if(response.rate == 0){
+                                   $('#alert_countryrate').css('display','block');
+                                } else {
+                                    $('#alert_countryrate').css('display','none');
+                                }
 
-                        $('#shipping_fee').val(0);
+                                $('#shipping_fee').val(response.rate);
+                            }
+                        });
                     }
    
                 } else {
@@ -800,14 +818,13 @@
                             $('#sdd_label').css('display','none');
                         }
                         
-                        $('#alert_countryrate').css('display','none');
-                        if(response == 0){
+                        if(response.rate == 0){
                             $('#alert_cityrate').css('display','block');
                         } else {
                             $('#alert_cityrate').css('display','none');
                         }
 
-                        $('#shipping_fee').val(response);
+                        $('#shipping_fee').val(response.rate);
                     }
                 });
             });
@@ -1133,8 +1150,8 @@
                     'weight' : weight
                 },
                 success: function(response) {
-                    $('#input_shippingfee').val(response);
-                    $('#span_shippingfee').html(FormatAmount(response,2));
+                    $('#input_shippingfee').val(response.rate);
+                    $('#span_shippingfee').html(FormatAmount(response.rate,2));
 
                     totalDue();
                 }
