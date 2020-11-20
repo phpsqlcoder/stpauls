@@ -300,7 +300,7 @@
                                                     </div>
                                                 @else
                                                     @if($customer->details->country == 259)
-                                                        @if($customer->details->city == '')
+                                                        @if($customer->details->city != '')
                                                             @if(\App\ShippingfeeLocations::checkNearbyProvinces($customer->details->cities->city) > 0)
                                                                 @if($amount <= $sdd->maximum_purchase)
                                                                     <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
