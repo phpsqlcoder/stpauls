@@ -135,7 +135,7 @@ class SocialiteController extends Controller
 
                 } else {
 
-                    return redirect(route('customer-front.login'))->with('error',"Sorry, we can't find this account. Please make sure that you have an existing social account.");
+                    return redirect(route('customer-front.login'))->with('error',"Sorry, we can't find this account. Please make sure that you have an existing social media account.");
                 }
             } else {
                 switch($driver){

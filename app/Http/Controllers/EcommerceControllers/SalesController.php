@@ -179,7 +179,7 @@ class SalesController extends Controller
                 $this->send_email_notification($sales,'Approve Order');
 
                 $admin = User::find(Auth::id());
-                $admin->send_order_approved_email($sales);
+                $admin->send_order_approved_email($sales,now());
 
                 return back()->with('success', 'Order has been approved.');
 

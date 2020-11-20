@@ -127,9 +127,9 @@ class User extends Authenticatable
     }
 
 
-    public function send_order_approved_email($sales)
+    public function send_order_approved_email($sales,$date)
     {
-        $this->notify(new SendOrderApprovedEmailNotification($sales));
+        $this->notify(new SendOrderApprovedEmailNotification($sales,$date));
     }
 
     public function customer_send_reset_password_email()

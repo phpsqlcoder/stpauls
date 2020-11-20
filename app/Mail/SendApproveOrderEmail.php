@@ -13,6 +13,7 @@ class SendApproveOrderEmail extends Mailable
 
     public $setting;
     public $sales;
+    public $date;
 
     /**
      * Create a new message instance.
@@ -21,10 +22,11 @@ class SendApproveOrderEmail extends Mailable
      * @param $customer
      * @param $token
      */
-    public function __construct($setting,$sales)
+    public function __construct($setting,$sales,$date)
     {
         $this->setting  = $setting;
         $this->sales    = $sales;
+        $this->date     = $date;
     }
 
     /**

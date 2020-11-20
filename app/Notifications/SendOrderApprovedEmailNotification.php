@@ -21,9 +21,10 @@ class SendOrderApprovedEmailNotification extends Notification
      * @param $token
      * @param $customer
      */
-    public function __construct($sales)
+    public function __construct($sales,$dt)
     {
         $this->sales = $sales;
+        $this->dt    = $dt;
     }
 
     /**
@@ -45,7 +46,7 @@ class SendOrderApprovedEmailNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new SendApproveOrderEmail(Setting::info(), $this->sales))->to('ryanolasco@gmail.com');
+        return (new SendApproveOrderEmail(Setting::info(), $this->sales, $this->dt))->to('wsiprod.demo@gmail.com');
     }
 
     /**
