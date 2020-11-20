@@ -6,9 +6,18 @@
 
 @section('pagecss')
     <link href="{{ asset('lib/bselect/dist/css/bootstrap-select.css') }}" rel="stylesheet">
+    <link href="{{ asset('lib/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet">
     <script src="{{ asset('lib/ckeditor/ckeditor.js') }}"></script>
-    <link href="{{ asset('lib/owl.carousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('lib/owl.carousel/assets/owl.theme.default.min.css') }}" rel="stylesheet">
+
+    <style>
+        .bootstrap-tagsinput .tag {
+            border-radius: 3px;
+        }
+
+        .bootstrap-tagsinput .tag [data-role="remove"]::after {
+            content: '\f406';
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -29,19 +38,19 @@
                 <a class="btn btn-outline-primary btn-sm" href="{{$page->get_url()}}" target="_blank">Preview Page</a>
             </div>
         </div>
-        <form id="editForm" action="{{ route('pages.update-customize',$page->id) }}" method="post" enctype="multipart/form-data">
+        <form id="editForm" action="{{ route('pages.update-contact-us', $page->id) }}" method="post" enctype="multipart/form-data">
             <div class="row row-sm">
                 <div class="col-lg-6">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
                         <label class="d-block">Page Title *</label>
-                        <label class="d-block">{{ $page->name }}</label>
-                        <label>
-                            <small id="page_slug">
-                                <a target="_blank" href="{{ $page->get_url() }}">{{ $page->get_url() }}</a>
-                            </small>
-                        </label>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{ old('name', $page->name) }}" required>
+                        @hasError(['inputName' => 'name'])
+                        @endhasError
+                        <small id="page_slug"><a target="_blank" href="{{env('APP_URL')}}/{{$page->slug}}">{{env('APP_URL')}}/{{$page->slug}}</a></small>
+                        @hasError(['inputName' => 'slug'])
+                        @endhasError
                     </div>
                     <div class="form-group">
                         <label class="d-block">Page Label *</label>
@@ -61,12 +70,13 @@
                     @endphp
                     <div class="form-group">
                         <label class="d-block">Page Banner</label>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" id="banner_slider" class="btn page_banner_btn btn-secondary {{ $album_active }}">Slider</button>
-                            <button type="button" id="banner_image" class="btn page_banner_btn btn-secondary {{ $image_active }}">Image</button>
+                        @if ($page->page_type != "default")
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" id="banner_slider" class="btn page_banner_btn btn-secondary {{ $album_active }}">Slider</button>
+                                <button type="button" id="banner_image" class="btn page_banner_btn btn-secondary {{ $image_active }}">Image</button>
 
-                            <input type="hidden" name="banner_type" id="banner_type" value="{{ $banner_type }}">
-                        </div>
+                                <input type="hidden" name="banner_type" id="banner_type" value="{{ $banner_type }}">
+                            </div>
                     </div>
 
                     <div class="form-group banner-image" style="{{($banner_type == 'banner_slider' ? 'display:none;':'')}}">
@@ -78,36 +88,68 @@
                             Required image dimension: {{ env('SUB_BANNER_WIDTH') }}px by {{ env('SUB_BANNER_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png
                         </p>
                         @error('image_url')
-                            <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                         <div id="image_div" @if($page->has_slider()) style="display:none;" @endif>
                             <img src="{{ old('image_url', $page->image_url) }}" height="100" width="300" id="img_temp" alt="">  <br /><br />
                             <a href="javascript:void(0)" class="btn btn-sm btn-danger remove-upload" >Remove Image</a>
                         </div>
+                        @endif
                     </div>
 
                     <div class="form-group banner-slider" style="{{($banner_type == 'banner_image' ? 'display:none;':'')}}">
                         <div class="row">
                             <div class="col-md-10">
                                 <select class="selectpicker mg-b-5 @error('album_id') is-invalid @enderror" id="album_id" name="album_id" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select album" data-width="100%">
-                                    <option value @if (empty($page->album_id)) selected @endif>- None -</option>
+                                    <option value="0" @if (empty($page->album_id)) selected @endif>- None -</option>
                                     @forelse($albums as $album)
                                         <option value="{{$album->id}}" {{ (old("album_id",$page->album_id) == $album->id ? "selected":"") }}> {{$album->name}} </option>
                                     @empty
                                     @endforelse
                                 </select>
                             </div>
-                            {{-- <div class="col-md-2">
-                                <div class="col-md-2" id="preview_btn_div" @if(!$page->has_slider() || empty($page->album_id)) style="display:none;" @endif>
-                                    <a href="#" data-toggle="modal" data-target="#preview-banner" id="preview_btn" class="btn btn-xs btn-success" data-id="{{$page->album_id}}">Preview</a>
-                                </div>
-                            </div> --}}
+                            {{--						<div class="col-md-2">--}}
+                            {{--							<div class="col-md-2" id="preview_btn_div" @if(!$page->has_slider() || empty($page->album_id)) style="display:none;" @endif>--}}
+                            {{--                                <a href="#" data-toggle="modal" data-target="#preview-banner" id="preview_btn" class="btn btn-xs btn-success" data-id="{{$page->album_id}}">Preview</a>--}}
+                            {{--						    </div>--}}
+                            {{--						</div>--}}
                         </div>
                         @hasError(['inputName' => 'album_id'])
                         @endhasError
                     </div>
                 </div>
                 <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="d-block">Content</label>
+                        <textarea name="contents" id="editor1" rows="10" cols="80">
+                            {{ old('contents',$page->contents) }}
+                        </textarea>
+                        @hasError(['inputName' => 'contents'])
+                        @endhasError
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="d-block">Email Recipients *</label>
+                        <input type="text" class="form-control @error('emails') is-invalid @enderror" data-role="tagsinput" name="emails" id="tags" value="{{ old('emails', $emails) }}">
+                        @hasError(['inputName' => 'emails'])
+                        @endhasError
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        <label class="d-block">Email Content *</label>
+                        <textarea name="content2" id="editor2" rows="10" cols="80" required>
+                            {{ old('content2', $settings->contact_us_email_layout) }}
+                        </textarea>
+                        @hasError(['inputName' => 'content2'])
+                        @endhasError
+                        <span class="invalid-feedback" role="alert" id="contentRequired2" style="display: none;">
+                            <strong>The content field is required</strong>
+                        </span>
+                    </div>
+                </div>
+                <div>
                     <div class="form-group">
                         <label class="d-block">Page Visibility</label>
                         @if ($page->page_type == "default")
@@ -116,7 +158,7 @@
                             </label>
                         @else
                             <div class="custom-control custom-switch @error('visibility') is-invalid @enderror">
-                                <input type="checkbox" class="custom-control-input" name="visibility" {{ (old("visibility") == "ON" || $page->status == "PUBLISHED" ? "checked":"") }} id="customSwitch1">
+                                <input type="checkbox" class="custom-control-input" name="visibility" {{ (old("visibility") || $page->status == "PUBLISHED" ? "checked":"") }} id="customSwitch1">
                                 <label class="custom-control-label" id="label_visibility" for="customSwitch1">{{ucfirst(strtolower($page->status))}}</label>
                             </div>
                         @endif
@@ -203,7 +245,7 @@
 @section('pagejs')
     <script src="{{ asset('lib/bselect/dist/js/bootstrap-select.js') }}"></script>
     <script src="{{ asset('lib/bselect/dist/js/i18n/defaults-en_US.js') }}"></script>
-    <script src="{{ asset('lib/owl.carousel/owl.carousel.js') }}"></script>
+    <script src="{{ asset('lib/bootstrap-tagsinput/bootstrap-tagsinput.min.js') }}"></script>
     {{--    Image validation--}}
     <script>
         let BANNER_WIDTH = "{{ env('SUB_BANNER_WIDTH') }}";
@@ -216,6 +258,25 @@
 
 @section('customjs')
     <script>
+        // Replace the <textarea id="editor1"> with a CKEditor
+        // instance, using default configuration.
+        var options = {
+            filebrowserImageBrowseUrl: '{{ env('APP_URL') }}/laravel-filemanager?type=Images',
+            filebrowserImageUpload: '{{ env('APP_URL') }}/laravel-filemanager/upload?type=Images&_token={{ csrf_token() }}',
+            filebrowserBrowseUrl: '{{ env('APP_URL') }}/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '{{ env('APP_URL') }}/laravel-filemanager/upload?type=Files&_token={{ csrf_token() }}',
+            allowedContent: true,
+        };
+        let editor = CKEDITOR.replace('contents', options);
+        let editor2 = CKEDITOR.replace('content2', options);
+        editor2.on('required', function (evt) {
+            if ($('.invalid-feedback').length == 1) {
+                $('#contentRequired2').show();
+            }
+            $('#cke_editor2').addClass('is-invalid');
+            evt.cancel();
+        });
+
         function has_none_option(objectId, currentValue)
         {
             if (currentValue == "0" || currentValue == "" || currentValue == "null") {
@@ -230,6 +291,8 @@
 
         $(function() {
             $('.selectpicker').selectpicker();
+
+            has_none_option("album_id", "{{$page->album_id}}");
         });
 
         /**  START Slider Preview **/
@@ -298,6 +361,40 @@
             }
         });
 
+
+        /** Generation of the page slug **/
+        function get_page_slug() {
+            var url = $('#name').val();
+            var parentPage = $('#parentPage').val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
+                }
+            })
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('pages.get_slug') }}",
+                data: {url: url, parentPage: parentPage}
+            })
+
+                .done(function (response) {
+
+                    slug_url = '{{env('APP_URL')}}/' + response;
+                    $('#page_slug').html("<a target='_blank' href='" + slug_url + "'>" + slug_url + "</a>");
+
+                });
+        }
+
+        $('#parentPage').change(function(){
+            get_page_slug();
+        });
+
+        $('#name').change(function(){
+            get_page_slug();
+        });
+
+
         /** Handles the page banner functions **/
         $('.page_banner_btn').click(function(){
 
@@ -342,6 +439,8 @@
 
                 }
             }
+
+
         });
 
         function readURL(file) {

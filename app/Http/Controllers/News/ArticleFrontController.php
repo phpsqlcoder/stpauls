@@ -80,14 +80,14 @@ class ArticleFrontController extends Controller
             else{
                 $articles = Article::whereStatus('Published')->get();
             }
-            $articles = $articles->orderBy('updated_at','desc')
-                                ->orderBy('id','desc')
+            $articles = $articles->orderBy('date','desc')
+                                ->orderBy('updated_at','desc')
                                 ->paginate($pageLimit);
         }
         else{
             $articles = Article::whereStatus('Published')
+                                ->orderBy('date','desc')
                                 ->orderBy('updated_at','desc')
-                                ->orderBy('id','desc')
                                 ->paginate($pageLimit);
         }
 
@@ -227,23 +227,34 @@ class ArticleFrontController extends Controller
         }
 
         $latestArticles = Article::whereStatus('Published')->orderBy('date', 'desc')->take(5)->get();
+        $articleCategories = Article::leftJoin('article_categories', 'article_categories.id', 'articles.category_id')
+            ->select([
+                DB::raw('ifnull(article_categories.id, 0) as id'),
+                DB::raw('ifnull(article_categories.name, "Uncategorized") as name'),
+                DB::raw('count(ifnull(article_categories.id, 0)) as total_articles')
+            ])->where('articles.status', 'PUBLISHED')
+            ->groupBy(DB::raw('article_categories.name, article_categories.id'))
+            ->orderBy(DB::raw('article_categories.name'))
+            ->get();
         $breadcrumb = $this->breadcrumb($news->id);
 
         $footer = Page::where('slug', 'footer')->where('name', 'footer')->first();
         $page = $news;
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.news',compact('footer', 'news', 'latestArticles', 'breadcrumb', 'page'))->withShortcodes();
+
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.news',compact('footer', 'news', 'latestArticles', 'breadcrumb', 'page', 'articleCategories'));
 
     }
 
     public function news_print($slug){
 
         $news = Article::where('slug',$slug)->whereStatus('Published')->first();
-
+        $page = $news;
         if (!$news) {
             abort(404);
         }
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.news-print',compact('news'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.news-print',compact('news', 'page'));
 
     }
 

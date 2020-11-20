@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-    	if(Auth::user()->role_id == '6'){
+    	if(Auth::user()->role_id == '3'){
     		Auth::logout();
     		return back()->with('error','Restricted access');
     	}

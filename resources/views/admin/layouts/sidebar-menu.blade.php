@@ -9,8 +9,8 @@
     <li class="nav-item @if (url()->current() == route('dashboard')) active @endif">
         <a href="{{ route('dashboard') }}" class="nav-link"><i data-feather="home"></i><span>Dashboard</span></a>
     </li>
-    <!--
-    @if (auth()->user()->has_access_to_pages_module())
+    
+    <!-- @if (auth()->user()->has_access_to_pages_module())
         <li class="nav-item with-sub @if (request()->routeIs('pages*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="layers"></i> <span>Pages</span></a>
             <ul>
@@ -62,8 +62,8 @@
                 @endif
             </ul>
         </li>
-    @endif
-    --->
+    @endif -->
+    
     <li class="nav-item with-sub @if (request()->routeIs('account*') || request()->routeIs('website-settings*') || request()->routeIs('audit*')) active show @endif">
         <a href="" class="nav-link"><i data-feather="settings"></i> <span>Settings</span></a>
         <ul>

@@ -178,6 +178,9 @@ class SalesController extends Controller
 
                 $this->send_email_notification($sales,'Approve Order');
 
+                $admin = User::find(Auth::id());
+                $admin->send_order_approved_email($sales);
+
                 return back()->with('success', 'Order has been approved.');
 
             } else {
@@ -218,6 +221,10 @@ class SalesController extends Controller
             ]);
 
             $this->send_email_notification($sales,'Approve Payment');
+
+            $admin = User::find(Auth::id());
+            $admin->send_order_approved_email($sales);
+
             return back()->with('success',__('standard.sales.approve_success'));
 
         } else {
@@ -318,6 +325,8 @@ class SalesController extends Controller
         ]);
 
         $this->send_email_notification($sales,'Add Shipping Fee');
+        $admin = User::find(Auth::id());
+        $admin->send_order_approved_email($sales);
 
         return back()->with('success', 'Shipping fee has been added.');
     }

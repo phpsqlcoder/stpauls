@@ -15,7 +15,7 @@ class CreateArticleTable extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('category_id')->nullable();
+            $table->integer('category_id')->default(0);
             $table->string('slug', 150)->unique();
             $table->date('date')->default(date('Y-m-d'));
             $table->string('name', 150);

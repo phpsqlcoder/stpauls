@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Menu;
 
-use App\Helpers\ListingHelper;
+use Facades\App\Helpers\ListingHelper;
 use App\Http\Controllers\Controller;
 use App\Menu;
+use App\Permission;
 use Illuminate\Http\Request;
 use App\Page;
 use App\MenusHasPages;
 
 class MenuController extends Controller
 {
-    private $searchFields = ['name'];
 
     /**
      * Display a listing of the resource.
@@ -20,39 +20,21 @@ class MenuController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('checkPermission:admin/menu', ['only' => ['index']]);
-        $this->middleware('checkPermission:admin/menu/create', ['only' => ['create','store']]);
-        $this->middleware('checkPermission:admin/menu/edit', ['only' => ['show','edit','update']]);
+        Permission::module_init($this, 'menu');
     }
 
     public function index()
     {
-        $listing = new ListingHelper($sortBy = 'desc', $perPage = 10, $defaultSearchField = 'is_active');
+        $searchFields = ['name'];
+        $filterFields = ['updated_at', 'name', 'is_active'];
 
-        $menus = $listing->simple_search(Menu::class, $this->searchFields);
+        $menus = ListingHelper::sort_by('is_active')
+            ->filter_fields($filterFields)
+            ->simple_search(Menu::class, $searchFields);
 
-        // Simple search init data
-        $filter = $listing->get_filter($this->searchFields);
+        $filter = ListingHelper::filter_fields($filterFields)->get_filter($searchFields);
 
         $searchType = 'simple_search';
-
-//        $orderBys = ['name', 'created_at', 'is_active'];
-//        $orderDefault = 'is_active';
-//
-//        $perPage = request('perPage') ?? 10;
-//        $orderBy = request('orderBy') && in_array(request('orderBy'), $orderBys) ? request('orderBy') : $orderDefault;
-//        $sortBy = request('sortBy') ?? 'DESC';
-//        $sortBy = $sortBy == 'ASC' ? 'ASC' : 'DESC';
-//        $search = request('search') ?? '';
-//        $filter = [
-//            'perPage' => $perPage,
-//            'orderBy' => $orderBy,
-//            'sortBy' => $sortBy,
-//            'search' => $search
-//        ];
-//
-//        $menus = Menu::where('name', 'like', '%'.$search.'%')->orderBy($orderBy, $sortBy)->paginate($perPage);
-
 
         return view('admin.menu.index', compact('menus','filter', 'searchType'));
     }

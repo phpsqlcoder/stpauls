@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\News;
 
-use App\Helpers\ListingHelper;
+use Facades\App\Helpers\ListingHelper;
 use App\Helpers\ModelHelper;
 use App\Http\Controllers\Controller;
 use App\ArticleCategory;
+use App\Permission;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use App\Http\Requests\ArticleCategoryRequest;
 
 class ArticleCategoryController extends Controller
 {
     private $searchFields = ['name'];
+
+    public function __construct()
+    {
+        Permission::module_init($this, 'news_category');
+    }
 
     /**
      * Display a listing of the resource.
@@ -22,16 +26,13 @@ class ArticleCategoryController extends Controller
 
     public function index()
     {
-        $listing = new ListingHelper();
+        $categories = ListingHelper::simple_search(ArticleCategory::class, $this->searchFields);
 
-        $categories = $listing->simple_search(ArticleCategory::class, $this->searchFields);
-
-        // Simple search init data
-        $filter = $listing->get_filter($this->searchFields);
+        $filter = ListingHelper::get_filter($this->searchFields);
 
         $searchType = 'simple_search';
 
-        return view('admin.maintenance.article.index',compact('categories','filter', 'searchType'));
+        return view('admin.news.category_index',compact('categories','filter', 'searchType'));
     }
 
     /**
@@ -41,7 +42,7 @@ class ArticleCategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.maintenance.article.create');
+        return view('admin.news.category_create');
     }
 
     /**
@@ -50,64 +51,45 @@ class ArticleCategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ArticleCategoryRequest $request)
+    public function store(Request $request)
     {
-        $category = ArticleCategory::create([
-            'name' => $request->category_name,
-            'slug' => \App\Page::convert_to_slug($request->category_name),
-            'user_id'  => auth()->user()->id
-        ]);
+        $newData = $this->validate_data($request);
+        $newData['slug'] = ModelHelper::convert_to_slug(ArticleCategory::class, $newData['name']);
+        $newData['user_id'] = auth()->id();
+
+        ArticleCategory::create($newData);
 
         return redirect()->route('news-categories.index')->with('success', __('standard.news.category.create_success'));
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\ArticleCategory  $articleCategory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ArticleCategory $articleCategory)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param ArticleCategory $articleCategory
+     * @param Request $request
+     * @param ArticleCategory $newsCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, ArticleCategory $newsCategory)
     {
-        $articleCategory = ArticleCategory::findOrFail($id);
-
-        return view('admin.maintenance.article.edit',compact('articleCategory'));
+        return view('admin.news.category_edit',compact('newsCategory'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ArticleCategory  $articleCategory
+     * @param \Illuminate\Http\Request $request
+     * @param ArticleCategory $newsCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(ArticleCategoryRequest $request, $id)
+    public function update(Request $request, ArticleCategory $newsCategory)
     {
-        $articleCategory = ArticleCategory::findOrFail($id);
-
-        if($articleCategory->name == $request->category_name){
-            $slug = $articleCategory->slug;
+        $updateData = $this->validate_data($request);
+        if (strtolower($updateData['name']) != strtolower($newsCategory->name)) {
+            $updateData['slug'] = ModelHelper::convert_to_slug(ArticleCategory::class, $updateData['name']);
         }
-        else{
-            $slug = \App\Page::convert_to_slug($request->category_name);
-        }
+        $updateData['user_id'] = auth()->id();
 
-        $articleCategory->update([
-            'name' => $request->category_name,
-            'slug' => $slug,
-            'user_id' => auth()->user()->id
-        ]);
+        $newsCategory->update($updateData);
 
         return back()->with('success', __('standard.news.category.update_success'));
     }
@@ -115,15 +97,15 @@ class ArticleCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\ArticleCategory $articleCategory
+     * @param Request $request
+     * @param ArticleCategory $newsCategory
      * @return \Illuminate\Http\Response
      * @throws \Exception
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, ArticleCategory $newsCategory)
     {
-        $articleCategory = ArticleCategory::findOrFail($request->id);
-        $articleCategory->update([ 'user_id' => auth()->user()->id ]);
-        $articleCategory->delete();
+        $newsCategory->update([ 'user_id' => auth()->user()->id ]);
+        $newsCategory->delete();
 
         return back()->with('success', __('standard.news.category.delete_success'));
     }
@@ -152,5 +134,12 @@ class ArticleCategoryController extends Controller
     public function get_slug(Request $request)
     {
         return ModelHelper::convert_to_slug(ArticleCategory::class, $request->url);
+    }
+
+    public function validate_data(Request $request)
+    {
+        return $request->validate([
+            'name' => 'required|max:150',
+        ]);
     }
 }
