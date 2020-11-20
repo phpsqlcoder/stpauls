@@ -300,20 +300,22 @@
                                                     </div>
                                                 @else
                                                     @if($customer->details->country == 259)
-                                                        @if(\App\ShippingfeeLocations::checkNearbyProvinces($customer->details->cities->city) > 0)
-                                                            @if($amount <= $sdd->maximum_purchase)
-                                                            <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                            <label id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                            <div class="tab__content">
-                                                                <div class="alert alert-info" role="alert">
-                                                                    <h4 class="alert-heading">Reminder!</h4>
-                                                                    <p>{{ $sdd->reminder }}</p>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
-                                                                    <label class="form-check-label" for="exampleCheck1">Book your own rider</label>
-                                                                </div>
-                                                            </div>
+                                                        @if($customer->details->city == '')
+                                                            @if(\App\ShippingfeeLocations::checkNearbyProvinces($customer->details->cities->city) > 0)
+                                                                @if($amount <= $sdd->maximum_purchase)
+                                                                    <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
+                                                                    <label id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                    <div class="tab__content">
+                                                                        <div class="alert alert-info" role="alert">
+                                                                            <h4 class="alert-heading">Reminder!</h4>
+                                                                            <p>{{ $sdd->reminder }}</p>
+                                                                        </div>
+                                                                        <div class="form-check">
+                                                                            <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
+                                                                            <label class="form-check-label" for="exampleCheck1">Book your own rider</label>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
                                                             @endif
                                                         @else
                                                             <input type="radio" id="tab3" name="shipOption" value="4" class="tab">

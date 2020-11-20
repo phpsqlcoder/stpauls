@@ -175,8 +175,8 @@ class SocialiteController extends Controller
 
     protected function sendFailedResponse($msg = null)
     {
-        return redirect()->route('social.login')
-            ->withErrors(['msg' => $msg ?: 'Unable to login, try with another provider to login.']);
+        return redirect()->route('customer-front.login')
+            ->withErrors(['msg' => $msgUnable ?: ' to login, try with another provider to login.']);
     }
 
     private function isProviderAllowed($driver)
