@@ -30,21 +30,27 @@
                                 @endif
                                 <div class="form-group">
                                     <label for="inputPasswordOld">Current Password</label>
-                                    <input type="password" class="form-control form-input col-md-6" name="current_password" required id="inputPasswordOld" >
+                                    <div class="form-group position-relative w-auto col-md-6 p-0">
+                                        <input type="password" class="form-control form-input password-field" name="current_password" required id="inputPasswordOld" >
+                                    </div>
                                     @if(Session::has('error-change-password'))
                                     <p class="text-danger"><small><strong>The password is incorrect.</strong></small></p>
                                     @endif
                                 </div>
                                 <div class="form-group">
                                     <label for="inputPasswordNew">New Password</label>
-                                    <input type="password" class="form-control form-input col-md-6 @error('password') is-invalid @enderror" name="password" required id="inputPasswordNew" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password should have a minimum of 8 alphanumeric characters and has at least 1 upper case and 1 special character.">
+                                    <div class="form-group position-relative w-auto col-md-6 p-0">
+                                        <input type="password" class="form-control form-input password-field @error('password') is-invalid @enderror" name="password" required id="inputPasswordNew" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Password should have a minimum of 8 alphanumeric characters and has at least 1 upper case and 1 special character.">
+                                    </div>
                                     @hasError(['inputName' => 'password'])
                                     @endhasError
 
                                 </div>
                                 <div class="form-group">
                                     <label for="inputPasswordNewVerify">Verify Password</label>
-                                    <input type="password" class="form-control form-input col-md-6 @error('confirm_password') is-invalid @enderror" name="confirm_password" required id="inputPasswordNewVerify">
+                                    <div class="form-group position-relative w-auto col-md-6 p-0">
+                                        <input type="password" class="form-control form-input password-field @error('confirm_password') is-invalid @enderror" name="confirm_password" required id="inputPasswordNewVerify">
+                                    </div>
                                     @hasError(['inputName' => 'confirm_password'])
                                     @endhasError
                                 </div>

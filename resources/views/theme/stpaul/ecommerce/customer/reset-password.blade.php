@@ -50,15 +50,15 @@
                                                 <input readonly type="email" class="form-control form-input" name="email" id="email" value="{{ request('email') }}">
                                                 <div class="gap-10"></div>
                                                 <p>New Password *</p>
-                                                <div class="form-group">
-                                                    <input required type="password" class="form-control form-input @error('password') is-invalid @enderror" name="password" id="password-field">
+                                                <div class="form-group position-relative">
+                                                    <input required type="password" class="form-control form-input @error('password') is-invalid @enderror password-field" name="password">
                                                 </div>
                                                 @hasError(['inputName' => 'password'])
                                                 @endhasError
                                                 <div class="gap-10"></div>
                                                 <p>Confirm Password *</p>
-                                                <div class="form-group">
-                                                    <input required type="password" class="form-control form-input @error('password_confirmation') is-invalid @enderror" name="password_confirmation" id="password-field">
+                                                <div class="form-group position-relative">
+                                                    <input required type="password" class="form-control form-input @error('password_confirmation') is-invalid @enderror password-field" name="password_confirmation">
                                                 </div>
                                                 @hasError(['inputName' => 'password_confirmation'])
                                                 @endhasError

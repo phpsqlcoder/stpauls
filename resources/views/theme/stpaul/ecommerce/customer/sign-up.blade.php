@@ -22,11 +22,11 @@
                             </div>
                         @endif
 
-                        <div class="gap-10"></div>
+                        <div class="gap-20"></div>
                         <div id="signup-form">
                             <form id="signUpForm" autocomplete="off" method="post" action="{{ route('customer-front.customer-sign-up') }}">
                                 @csrf
-                                <div class="row">
+                                <div class="row form-style-login">
                                     <div class="col-md-12">
                                         <div class="gap-10"></div>
                                         <p class="text-center "><strong>Sign up with your social media account</strong></p>
@@ -55,33 +55,37 @@
                                                 <input required type="text" name="firstname" class="form-control form-input @error('firstname') is-invalid @enderror" value="{{ old('firstname',$socialData->firstname) }}">
                                                 @hasError(['inputName' => 'firstname'])
                                                 @endhasError
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-20"></div>    
                                             </div>
                                             <div class="col-md-6">
                                                 <p>Last Name *</p>
                                                 <input required type="text" name="lastname" class="form-control form-input @error('lastname') is-invalid @enderror" value="{{ old('lastname',$socialData->lastname) }}">
                                                 @hasError(['inputName' => 'lastname'])
                                                 @endhasError
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-20"></div>    
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Email Address *</p>
                                                 <input required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="email" name="email"  class="form-control form-input  @error('email') is-invalid @enderror" value="{{ old('email',$socialData->email) }}">
                                                 @hasError(['inputName' => 'email'])
                                                 @endhasError
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-20"></div>    
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Password *</p>
-                                                <input required type="password" name="password" class="form-control form-input @error('password') is-invalid @enderror">
+                                                <div class="form-group position-relative">
+                                                    <input required type="password" name="password" class="form-control form-input @error('password') is-invalid @enderror password-field">
+                                                </div>
                                                 <small class=><b>Minimum of eight (8) alphanumeric characters (combination of letters and numbers) with at least one (1) upper case and one (1) special character.</b></small>
                                                 @hasError(['inputName' => 'password'])
                                                 @endhasError
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-20"></div>    
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Confirm Password *</p>
-                                                <input required type="password" name="password_confirmation" class="form-control form-input @error('password_confirmation') is-invalid @enderror">
+                                                <div class="form-group position-relative">
+                                                    <input required type="password" name="password_confirmation" class="form-control form-input @error('password_confirmation') is-invalid @enderror password-field">
+                                                </div>
                                                 @hasError(['inputName' => 'password_confirmation'])
                                                 @endhasError
                                                 <div class="gap-30"></div>    

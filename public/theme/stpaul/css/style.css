@@ -60,6 +60,11 @@ input:-internal-autofill-selected {
   border-radius: 2px;
 }
 
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
 h2 {
   font-family: "IBM Plex Sans", sans-serif;
   font-size: 1.65em;
@@ -105,16 +110,6 @@ p {
   color: #555555;
 }
 
-a {
-  color: #b82e24;
-  cursor: pointer;
-}
-
-a:hover, a:focus {
-  text-decoration: underline;
-  color: #b82e24;
-}
-
 ol {
   list-style-type: decimal;
 }
@@ -128,6 +123,14 @@ ol li {
 
 ol li::marker {
   font-weight: bold;
+  color: #b82e24;
+}
+
+.text-md {
+  font-size: 1.5em;
+}
+
+.text-first-color {
   color: #b82e24;
 }
 
@@ -1448,6 +1451,16 @@ ol li::marker {
   font-family: "IBM Plex Sans", sans-serif;
 }
 
+.contact-details a {
+  color: #b82e24;
+  cursor: pointer;
+}
+
+.contact-details a:hover, .contact-details a:focus {
+  text-decoration: underline;
+  color: #b82e24;
+}
+
 .contact-details p,
 .contact-details label {
   font-size: 1em;
@@ -1556,7 +1569,7 @@ ol li::marker {
 .form-style-login select.form-input {
   -webkit-appearance: none;
   -moz-appearance: none;
-  background: transparent;
+  background: whites;
   background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
   background-repeat: no-repeat;
   background-position-x: 98%;
@@ -1564,7 +1577,7 @@ ol li::marker {
   border: 1px solid #dfdfdf;
   border-radius: 2px;
   margin-right: 2rem;
-  padding: 1rem;
+  padding: 0.8rem;
   padding-right: 2rem;
 }
 
@@ -4553,6 +4566,9 @@ form p {
   }
   .product-card .product-img {
     min-height: 200px;
+  }
+  .contact-details > div:first-child {
+    padding-right: 15px;
   }
 }
 

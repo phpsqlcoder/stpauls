@@ -43,8 +43,8 @@
                                         <input type="email" name="email" class="form-control form-input" placeholder="Please enter your Email">
                                         <div class="gap-10"></div>
                                         <p>Password*</p>
-                                        <div class="form-group">
-                                            <input type="password" name="password" class="form-control form-input" id="password-field" placeholder="Please enter your Password">
+                                        <div class="form-group position-relative">
+                                            <input type="password" name="password" class="form-control form-input password-field" id="password" placeholder="Please enter your Password">
                                         </div>
                                         <div class="gap-10"></div>
                                         <p class="text-right"><a href="{{ route('ecommerce.forgot_password') }}">Forgot Password?</a></p>
@@ -54,7 +54,7 @@
                                         <div class="gap-20"></div>
                                         <button type="submit" type="login" class="btn btn-md primary-btn btn-block">login</button>
                                         <div class="gap-10"></div>
-                                        <p>Or, login with</p>
+                                        <p class="text-center">Or, login with</p>
                                         <div class="gap-10"></div>
                                         <a href="{{ route('social.oauth-login','facebook') }}" class="btn btn-primary btn-block fb text-white"><i class="fab fa-facebook-f pr-3"></i>Facebook</a>
                                         <a href="{{ route('social.oauth-login', 'google') }}" class="btn btn-primary btn-block gl text-white"><i class="fab fa-google-plus-g pr-3"></i>Google</a>
