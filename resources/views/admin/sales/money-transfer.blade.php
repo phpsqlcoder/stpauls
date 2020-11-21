@@ -140,20 +140,26 @@
                                             <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Details"><i data-feather="eye"></i></a>
 
                                             @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status') || auth()->user()->has_access_to_route('display.delivery-history'))
-                                                @if($sale->payment_status == 'PAID')
-                                                <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i data-feather="settings"></i>
-                                                </a>
-                                                @endif
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status'))
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
-                                                    @endif
+                                                @if($sale->status != 'CANCELLED')
+                                                    <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i data-feather="settings"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        @if($sale->payment_status == 'PAID')
+                                                            @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status'))
+                                                            <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+                                                            @endif
 
-                                                    @if (auth()->user()->has_access_to_route('display.delivery-history'))
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
-                                                    @endif
-                                                </div>
+                                                            @if (auth()->user()->has_access_to_route('display.delivery-history'))
+                                                            <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                            @endif
+                                                        @endif
+
+                                                        @if($sale->delivery_status != 'Delivered')
+                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="cancel_order('{{$sale->id}}')" title="Cancel Order">Cancel Order</a>
+                                                        @endif
+                                                    </div>
+                                                @endif
                                             @endif
                                         </nav>
                                     </td>
@@ -247,6 +253,11 @@
 
 @section('customjs')
     <script>
+        function cancel_order(id){
+            $('#orderid').val(id);
+            $('#prompt-delete').modal('show');
+        }
+
         function show_payment_details(id){
             var url = "{{ route('display.payment-details', ':id') }}";
                 url = url.replace(':id',id);

@@ -200,6 +200,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         // Manage Sales Transactions
             Route::resource('/admin/sales-transaction', 'EcommerceControllers\SalesController');
 
+            Route::post('sales-cancel-order','EcommerceControllers\SalesController@cancel_order')->name('sales.cancel-order');
             // Money Transfer
             Route::get('/admin/sales/money-transfer','EcommerceControllers\SalesController@sales_money_transfer')->name('sales-transaction.money-transfer');
             Route::get('/display-payment-details/{id}', 'EcommerceControllers\SalesController@display_payment_details')->name('display.payment-details');

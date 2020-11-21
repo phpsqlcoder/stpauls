@@ -38,37 +38,37 @@ class SalesController extends Controller
         return view('admin.sales.invoice',compact('sales','settings'));
     }
 
-    public function index()
-    {
+    // public function index()
+    // {
 
-        $customConditions = [
-            [
-                'field' => 'status',
-                'operator' => '=',
-                'value' => 'active',
-                'apply_to_deleted_data' => true
-            ],
-        ];
+    //     $customConditions = [
+    //         [
+    //             'field' => 'status',
+    //             'operator' => '=',
+    //             'value' => 'active',
+    //             'apply_to_deleted_data' => true
+    //         ],
+    //     ];
 
-        $listing = new ListingHelper('desc',10,'order_number',$customConditions);
+    //     $listing = new ListingHelper('desc',10,'order_number',$customConditions);
 
-        $sales = SalesHeader::where('id','>','0');
-        if(isset($_GET['startdate']) && $_GET['startdate']<>'')
-            $sales = $sales->where('created_at','>=',$_GET['startdate']);
-        if(isset($_GET['enddate']) && $_GET['enddate']<>'')
-            $sales = $sales->where('created_at','<=',$_GET['enddate'].' 23:59:59');
-        if(isset($_GET['search']) && $_GET['search']<>'')
-            $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
+    //     $sales = SalesHeader::where('id','>','0');
+    //     if(isset($_GET['startdate']) && $_GET['startdate']<>'')
+    //         $sales = $sales->where('created_at','>=',$_GET['startdate']);
+    //     if(isset($_GET['enddate']) && $_GET['enddate']<>'')
+    //         $sales = $sales->where('created_at','<=',$_GET['enddate'].' 23:59:59');
+    //     if(isset($_GET['search']) && $_GET['search']<>'')
+    //         $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
 
-        $sales = $sales->orderBy('id','desc');
-        $sales = $sales->paginate(20);
+    //     $sales = $sales->orderBy('id','desc');
+    //     $sales = $sales->paginate(20);
 
-        $filter = $listing->get_filter($this->searchFields);
-        $searchType = 'simple_search';
+    //     $filter = $listing->get_filter($this->searchFields);
+    //     $searchType = 'simple_search';
 
-        return view('admin.sales.index',compact('sales','filter','searchType'));
+    //     return view('admin.sales.index',compact('sales','filter','searchType'));
 
-    }
+    // }
 
     public function sales_money_transfer()
     {
@@ -187,7 +187,7 @@ class SalesController extends Controller
 
                 $sales->update([
                     'status' => 'CANCELLED',
-                    'delivery_status' => 'CANCELLED',
+                    'delivery_status' => 'Cancelled',
                     'remarks' => $request->remarks,
                     'is_approve' => 0,
                     'user_id' => Auth::id()
@@ -345,6 +345,16 @@ class SalesController extends Controller
         }
     }
 
+    public function cancel_order(Request $request)
+    {
+        SalesHeader::find($request->orderid)->update([
+            'status' => 'CANCELLED',
+            'delivery_status' => 'Cancelled'
+        ]);
+
+        return back()->with('success', 'Order has been cancelled.');
+    }
+
 
 
 
@@ -355,6 +365,10 @@ class SalesController extends Controller
 
 
     
+
+
+
+
 
 
 
