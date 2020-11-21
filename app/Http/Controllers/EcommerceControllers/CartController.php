@@ -231,7 +231,7 @@ class CartController extends Controller
         if (auth()->check()) {        
 
             if (Cart::where('user_id', auth()->id())->count() == 0) {
-                return redirect()->route('product.front.list');
+                return redirect()->route('product.front.list',['new-products']);
             }
 
             foreach($cartId as $key => $cart){
@@ -397,6 +397,8 @@ class CartController extends Controller
             }
         //
 
+        $customer = Customer::where('customer_id',Auth::id())->first();
+
         if($request->payment_method == 1){
             $address_line1 = ($request->country == 259) ? $request->address: $request->billing_address;
             $address_line2 = ($request->country == 259) ? $request->barangay : '';
@@ -406,8 +408,12 @@ class CartController extends Controller
             $order         = $request;
             $uniqID        = $salesHeader->order_number;
 
+            $firstname     = $customer->firstname;
+            $lastname      = $customer->lastname;
+            $email         = $customer->email;
+
             if($request->shippingfee > 0){
-                return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
+                return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode','firstname','lastname','email'));
             } else {
 
                 return redirect(route('order.received',$requestId));
@@ -433,8 +439,12 @@ class CartController extends Controller
         $zipcode       = $customer->zipcode;
         $order         = $sales;
         $uniqID        = $sales->order_number;
+
+        $firstname     = $customer->firstname;
+        $lastname      = $customer->lastname;
+        $email         = $customer->email;
         
-        return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
+        return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode','firstname','lastname','email'));
 
     }
 }

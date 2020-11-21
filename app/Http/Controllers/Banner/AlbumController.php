@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Banner;
 
-use App\Helpers\ListingHelper;
+use Facades\App\Helpers\ListingHelper;
 use App\Http\Controllers\Controller;
 use App\Album;
 use App\Banner;
@@ -18,26 +18,19 @@ class AlbumController extends Controller
     public function __construct()
     {
         Permission::module_init($this, 'banner');
-
-//        dd($permissions);
-//        $this->middleware('checkAccessRights:albums.index,albums.show')->only('index');
-//        $this->middleware('checkPermission:admin/album', ['only' => ['index']]);
-//        $this->middleware('checkPermission:albums.create', ['only' => ['create','store']]);
-//        $this->middleware('checkPermission:admin/banner/edit', ['only' => ['show','edit','update']]);
     }
 
     public function index()
     {
         $animations = Option::where('type', 'animation')->get();
 
-        $listing = new ListingHelper('desc',10,'updated_at');
+        $albums = ListingHelper::simple_search(Album::class, $this->searchFields);
 
-        $albums = $listing->simple_search(Album::class, $this->searchFields);
-
-        // Simple search init data
-        $filter = $listing->get_filter($this->searchFields);
+        $filter = ListingHelper::get_filter($this->searchFields);
 
         $searchType = 'simple_search';
+
+        $this->delete_temporary_banner_folder();
 
         return view('admin.banners.index', compact('albums', 'animations', 'filter', 'searchType'));
     }
@@ -49,8 +42,6 @@ class AlbumController extends Controller
      */
     public function create()
     {
-        $this->delete_temporary_banner_folder();
-
         $animations = Option::where('type', 'animation')->get();
 
         return view('admin.banners.create', compact('animations'));
@@ -107,8 +98,6 @@ class AlbumController extends Controller
      */
     public function edit(Album $album)
     {
-        $this->delete_temporary_banner_folder();
-
         $animations = Option::where('type', 'animation')->get();
 
         if ($album->type == 'main_banner') {
@@ -127,6 +116,7 @@ class AlbumController extends Controller
      */
     public function update(Request $request, Album $album)
     {
+
         if (Album::has_invalid_data() || Banner::has_invalid_data()) {
             $errors = Album::get_error_messages()
                 ->merge(Banner::get_error_messages());
@@ -136,13 +126,25 @@ class AlbumController extends Controller
 
         $banners = $this->set_order(request('banners'));
 
-        $album->update(request()->all());
+        $updateData = request()->all();
+        $updateData['banner_type'] = $request->has('banner_type') ? 'video' : 'image';
+
+        $newBanners = $this->get_new_banners($banners);
+        $removeBanners = [];
+
+        if ($album->banner_type != $updateData['banner_type'] || ($updateData['banner_type'] == 'video' && count($newBanners))) {
+            if ($album->banners()->count()) {
+                $removeBanners = $album->banners()->pluck('id')->toArray();
+            }
+        } else {
+            $removeBanners = request('remove_banners');
+        }
+
+        $album->update($updateData);
 
         $this->update_banners($this->get_album_banners($banners));
 
-        $this->remove_banners_from_album(request('remove_banners'));
-
-        $newBanners = $this->get_new_banners($banners);
+        $this->remove_banners_from_album($removeBanners);
 
         $newBanners = $this->move_banner_to_official_folder($newBanners);
 
@@ -393,6 +395,9 @@ class AlbumController extends Controller
     public function delete_temporary_banner_folder()
     {
         $temporaryFolder = 'temporary_banners'.auth()->id();
-        Storage::disk('public')->deleteDirectory($temporaryFolder);
+        $files = Storage::disk('public')->allFiles($temporaryFolder);
+        $directories = Storage::disk('public')->allDirectories($temporaryFolder);
+        Storage::disk('public')->delete($files);
+        Storage::disk('public')->delete($directories);
     }
 }

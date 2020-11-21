@@ -117,7 +117,12 @@
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
                                     <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
-                                    <td>@if($sale->payment_status == 'PAID') {{ $payment->payment_date }} @endif</td>
+                                    <td>
+                                        @if($sale->payment_status == 'PAID') 
+                                            @if($count > 0)
+                                                {{ $payment->payment_date }}
+                                            @endif 
+                                        @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>

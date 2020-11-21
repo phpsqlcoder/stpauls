@@ -135,7 +135,7 @@ class SocialiteController extends Controller
 
                 } else {
 
-                    return redirect(route('social.oauth-login',[$driver]))->with('error',"Sorry, we can't find this account. Please make sure that you have an existing social account.");
+                    return redirect(route('customer-front.login'))->with('error',"Sorry, we can't find this account. Please make sure that you have an existing social media account.");
                 }
             } else {
                 switch($driver){
@@ -175,8 +175,8 @@ class SocialiteController extends Controller
 
     protected function sendFailedResponse($msg = null)
     {
-        return redirect()->route('social.login')
-            ->withErrors(['msg' => $msg ?: 'Unable to login, try with another provider to login.']);
+        return redirect()->route('customer-front.login')
+            ->withErrors(['msg' => $msgUnable ?: ' to login, try with another provider to login.']);
     }
 
     private function isProviderAllowed($driver)

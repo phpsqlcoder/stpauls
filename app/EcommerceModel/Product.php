@@ -84,21 +84,21 @@ class Product extends Model
         if(empty($in))
             $in=0;
 
-        $cart = \App\EcommerceModel\Cart::where('product_id',$this->id)->sum('qty');
-        if(empty($cart))
-            $cart=0;
+        // $cart = \App\EcommerceModel\Cart::where('product_id',$this->id)->sum('qty');
+        // if(empty($cart))
+        //     $cart=0;
 
         $out = \DB::table('ecommerce_sales_details')
                 ->leftJoin('ecommerce_sales_headers', 'ecommerce_sales_details.sales_header_id', '=', 'ecommerce_sales_headers.id')
                 ->where('ecommerce_sales_details.product_id','=',$this->id)
-                ->where('ecommerce_sales_headers.delivery_status','=','Scheduled for Processing')
                 ->where('ecommerce_sales_headers.status','=','active')
                 ->sum('qty');
 
         if(empty($out))
             $out=0;
         
-        return ($in - ($out + $cart));
+        // return ($in - ($out + $cart));
+        return ($in - $out);
       
     }
 
@@ -116,7 +116,6 @@ class Product extends Model
         $out = \DB::table('ecommerce_sales_details')
                 ->leftJoin('ecommerce_sales_headers', 'ecommerce_sales_details.sales_header_id', '=', 'ecommerce_sales_headers.id')
                 ->where('ecommerce_sales_details.product_id','=',$this->id)
-                ->where('ecommerce_sales_headers.delivery_status','=','Scheduled for Processing')
                 ->where('ecommerce_sales_headers.status','=','active')
                 ->sum('qty');
         if(empty($out))
@@ -138,20 +137,20 @@ class Product extends Model
         if(empty($in))
             $in=0;
 
-        $cart = \App\EcommerceModel\Cart::where('product_id',$this->id)->sum('qty');
-         if(empty($cart))
-            $cart=0;
+        // $cart = \App\EcommerceModel\Cart::where('product_id',$this->id)->sum('qty');
+        //  if(empty($cart))
+        //     $cart=0;
         
         $out = \DB::table('ecommerce_sales_details')
                 ->leftJoin('ecommerce_sales_headers', 'ecommerce_sales_details.sales_header_id', '=', 'ecommerce_sales_headers.id')
                 ->where('ecommerce_sales_details.product_id','=',$this->id)
-                ->where('ecommerce_sales_headers.delivery_status','=','Scheduled for Processing')
                 ->where('ecommerce_sales_headers.status','=','active')
                 ->sum('ecommerce_sales_details.qty');
         if(empty($out))
             $out=0;
         
-        $inventory = $in - ($out + $cart + $this->reorder_point);
+        //$inventory = $in - ($out + $cart + $this->reorder_point);
+        $inventory = $in - ($out + $this->reorder_point);
 
         return $inventory;
       

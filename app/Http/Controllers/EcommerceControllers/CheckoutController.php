@@ -129,10 +129,8 @@ class CheckoutController extends Controller
                 $rate = $sp->rate+$weight_rate;
             }
             
-            return $rate;
         } else {
             $rate = 0;
-            return $rate;
         }
 
 
