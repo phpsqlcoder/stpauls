@@ -80,7 +80,7 @@ class SalesController extends Controller
                 'apply_to_deleted_data' => false
             ]
         ];
-
+        
         $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
 
         $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
@@ -92,6 +92,29 @@ class SalesController extends Controller
 
         return view('admin.sales.money-transfer',compact('sales','filter','searchType'));
 
+    }
+
+    public function sales_card_payment()
+    {
+        $customConditions = [
+            [
+                'field' => 'payment_method',
+                'operator' => '=',
+                'value' => 1,
+                'apply_to_deleted_data' => false
+            ]
+        ];
+
+        $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
+
+        $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
+
+        // Simple search init data
+        $filter = $listing->get_filter($this->searchFields);
+
+        $searchType = 'simple_search';
+
+        return view('admin.sales.card-payment',compact('sales','filter','searchType'));
     }
 
     public function sales_cash_on_delivery()
@@ -121,29 +144,6 @@ class SalesController extends Controller
         $searchType = 'simple_search';
 
         return view('admin.sales.cash-on-delivery',compact('sales','filter','searchType'));
-    }
-
-    public function sales_card_payment()
-    {
-        $customConditions = [
-            [
-                'field' => 'payment_method',
-                'operator' => '=',
-                'value' => 1,
-                'apply_to_deleted_data' => false
-            ]
-        ];
-
-        $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
-
-        $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
-
-        // Simple search init data
-        $filter = $listing->get_filter($this->searchFields);
-
-        $searchType = 'simple_search';
-
-        return view('admin.sales.card-payment',compact('sales','filter','searchType'));
     }
 
     public function display_payment_details($id){

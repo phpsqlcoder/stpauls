@@ -3,28 +3,71 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Arr;
 
 class ListingHelper
 {
-    private $defaultPerPage;
-    private $defaultSortBy;
-    private $defaultSearchField;
-    private $requiredConditions;
+    private $perPage = '10';
+    private $sortBy = 'desc';
+    private $sortByField = 'updated_at';
+    private $filterFields = [];
+    private $requiredConditions = [];
+    private $customQueries = [];
+    private $customQueryFields = [];
+    private $leftJoinTables = [];
 
-    public function __construct($sortBy = 'desc', $perPage = 10, $searchField = 'updated_at', $requiredConditions = [])
+    public function sort_by($sortByField, $sortBy = 'desc')
     {
-        $this->defaultSortBy = $sortBy;
-        $this->defaultPerPage = $perPage;
-        $this->defaultSearchField = $searchField;
-        $this->requiredConditions = $requiredConditions;
+        $this->sortByField = $sortByField;
+        $this->sortBy = $sortBy;
+
+        return $this;
     }
 
-    // $model = Model class of the listing page. Ex. User::class
-    // $searchFields = Fields in the table that wants to be search. The keys should same with sa database column name. Ex. ['id', 'first_name']
-    // $customerQuery = We are using orWhereRaw for the query so you can use Database function. Ex. ["CONCAT(`first_name`, ' ', CONCAT(LEFT(`middle_name`,1),'.'), ' ', `last_name`, ' ', `ext_name`) LIKE ?"]
-    // $customerQueryFields = Fields that in the $searchFields and used in $customQuery. Ex. ['first_name']
-    public function simple_search($model, $searchFields, $customQuery = [], $customQueryFields = [], $joinTables = [], $selectFields = [])
+    public function per_page($perPage)
+    {
+        $this->perPage = $perPage;
+
+        return $this;
+    }
+
+    public function filter_fields(Array $fields)
+    {
+        $this->filterFields = $fields;
+
+        return $this;
+    }
+
+    public function required_condition($field, $operator, $value)
+    {
+        $this->requiredConditions[] = [
+            'field' => $field,
+            'operator' => $operator,
+            'value' => $value
+        ];
+
+        return $this;
+    }
+
+    public function custom_queries($customQueries, $customQueryFields)
+    {
+        $this->customQueries = $customQueries;
+        $this->customQueryFields = $customQueryFields;
+
+        return $this;
+    }
+
+    public function left_join($name, $field1, $field2)
+    {
+        $this->leftJoinTables[] = [
+            'name' => $name,
+            'field1' => $field1,
+            'field2' => $field2
+        ];
+
+        return $this;
+    }
+
+    public function simple_search($model, $searchFields)
     {
         $sortFields =  (empty($this->filterFields)) ? $searchFields : $this->filterFields;
 
@@ -34,11 +77,12 @@ class ListingHelper
         $showDeleted = $this->show_delete_data();
         $search =  $this->get_search_string();
 
-        if (empty($selectFields)) {
-            $models = $model::orderBy($orderBy, $sortBy);
-        } else {
-            $models = $model::select($selectFields)->orderBy($orderBy, $sortBy);
-        }
+        $requiredConditions = $this->requiredConditions;
+        $customQueries = $this->customQueries;
+        $customQueryFields = $this->customQueryFields;
+        $joinTables = $this->leftJoinTables;
+
+        $models = $model::orderBy($orderBy, $sortBy);
 
         foreach ($joinTables as $table) {
             $models->leftJoin($table['name'], $table['field1'], $table['field2']);
@@ -48,22 +92,59 @@ class ListingHelper
             $models->withTrashed();
         }
 
-        foreach ($this->requiredConditions as $condition) {
-            if ($showDeleted && $condition['apply_to_deleted_data'] == false) {
-                continue;
-            }
-
+        foreach ($requiredConditions as $condition) {
             $models->where($condition['field'], $condition['operator'], $condition['value']);
         }
 
-        $models->where(function($models) use ($search, $searchFields, $customQuery, $customQueryFields) {
+        $models->where(function($models) use ($search, $searchFields, $customQueries, $customQueryFields) {
             foreach ($searchFields as $fieldName) {
                 if (in_array($fieldName, $customQueryFields) <= -1) {
                     $models->orWhere($fieldName, 'like', '%' . $search . '%');
                 }
             }
 
-            foreach ($customQuery as $query) {
+            foreach ($customQueries as $query) {
+                $models->orWhereRaw($query, ['%' . $search . '%']);
+            }
+        });
+
+        $this->reset_static_data();
+
+        return $models->paginate($perPage);
+    }
+
+    public function simple_search_trash_only($model, $searchFields)
+    {
+        $sortFields =  (empty($this->filterFields)) ? $searchFields : $this->filterFields;
+
+        $perPage = $this->get_count_per_page();
+        $orderBy = $this->get_selected_order_by($sortFields);
+        $sortBy = $this->get_selected_sort_by();
+        $search =  $this->get_search_string();
+
+        $requiredConditions = $this->requiredConditions;
+        $customQueries = $this->customQueries;
+        $customQueryFields = $this->customQueryFields;
+        $joinTables = $this->leftJoinTables;
+
+        $models = $model::onlyTrashed()->orderBy($orderBy, $sortBy);
+
+        foreach ($joinTables as $table) {
+            $models->leftJoin($table['name'], $table['field1'], $table['field2']);
+        }
+
+        foreach ($requiredConditions as $condition) {
+            $models->where($condition['field'], $condition['operator'], $condition['value']);
+        }
+
+        $models->where(function($models) use ($search, $searchFields, $customQueries, $customQueryFields) {
+            foreach ($searchFields as $fieldName) {
+                if (in_array($fieldName, $customQueryFields) <= -1) {
+                    $models->orWhere($fieldName, 'like', '%' . $search . '%');
+                }
+            }
+
+            foreach ($customQueries as $query) {
                 $models->orWhereRaw($query, ['%' . $search . '%']);
             }
         });
@@ -71,15 +152,13 @@ class ListingHelper
         return $models->paginate($perPage);
     }
 
-    // $model = Model class of the listing page. Ex. User::class
-    // $searchFields = Fields in the advance search form. The keys should same with sa database column name. Ex. ['id', 'first_name']
-    // $equalSearchFields = Fields that use equal in condition
     public function advance_search($model, $searchFields, $equalSearchFields)
     {
         $searchFields = $this->get_search_filtered($searchFields);
+        $sortFields =  (empty($this->filterFields)) ? $searchFields : $this->filterFields;
 
         $perPage = $this->get_count_per_page();
-        $orderBy = $this->get_selected_order_by($searchFields);
+        $orderBy = $this->get_selected_order_by($sortFields);
         $sortBy = $this->get_selected_sort_by();
         $showDeleted = $this->show_delete_data();
 
@@ -106,15 +185,8 @@ class ListingHelper
                 $queryBuilder->where('updated_at', '<=', $searchFields['updated_at2'].' 23:59:59');
 
                 unset($searchFields['updated_at2']);
-             } else if (isset($searchFields['price1'])) {
-                $queryBuilder->where('price', '>=', $searchFields['price1']);
-
-                unset($searchFields['price1']);
-            } elseif (isset($searchFields['price2'])) {
-                $queryBuilder->where('price', '<=', $searchFields['price2']);
-
-                unset($searchFields['price2']);
             } else {
+//                dd($searchFields);
                 if (isset($searchFields[$fieldName])) {
                     $field_value = $searchFields[$fieldName];
 
@@ -125,8 +197,6 @@ class ListingHelper
                         $queryBuilder->where($fieldName, $field_value);
                         unset($searchFields[$fieldName]);
                     }
-
-
                 }
             }
         }
@@ -145,17 +215,19 @@ class ListingHelper
     public function get_unique_item_by_column($model, $columnName)
     {
         if ($this->show_delete_data()) {
-            return $model::withTrashed()->orderBy($columnName, 'ASC')->get()->unique($columnName)->values()->all();
+            return $model::withTrashed()->get()->unique($columnName)->values()->all();
         } else {
-            return $model::orderBy($columnName, 'ASC')->get()->unique($columnName)->values()->all();
+            return $model::get()->unique($columnName)->values()->all();
         }
     }
 
     public function get_filter($searchFields)
     {
+        $sortFields =  (empty($this->filterFields)) ? $searchFields : $this->filterFields;
+
         $parameters = request()->all();
         $parameters['perPage'] = $this->get_count_per_page();
-        $parameters['orderBy'] = $this->get_selected_order_by($searchFields);
+        $parameters['orderBy'] = $this->get_selected_order_by($sortFields);
         $parameters['sortBy'] = $this->get_selected_sort_by();
         $parameters['showDeleted'] = $this->show_delete_data();
         $parameters['search'] = $this->get_search_string();
@@ -195,18 +267,18 @@ class ListingHelper
 
     private function get_count_per_page()
     {
-        $perPage = request()->has('perPage') && is_numeric(request('perPage')) ? request('perPage') : $this->defaultPerPage;
+        $perPage = request()->has('perPage') && is_numeric(request('perPage')) ? request('perPage') : $this->perPage;
         return ($perPage > 100) ? 100 : $perPage;
     }
 
     private function get_selected_order_by($searchFields)
     {
-        return request()->has('orderBy') && in_array(request('orderBy'), $searchFields) ? request('orderBy') : $this->defaultSearchField;
+        return request()->has('orderBy') && in_array(request('orderBy'), $searchFields) ? request('orderBy') : $this->sortByField;
     }
 
     private function get_selected_sort_by()
     {
-        $sortBy = request('sortBy') ?? $this->defaultSortBy;
+        $sortBy = request('sortBy') ?? $this->sortBy;
         return $sortBy == 'asc' ? 'asc' : 'desc';
     }
 
@@ -218,5 +290,17 @@ class ListingHelper
     private function show_delete_data()
     {
         return (request()->has('showDeleted') && (request('showDeleted') == 'on') || request('showDeleted') == 1) ? true : false;
+    }
+
+    private function reset_static_data()
+    {
+        $this->perPage = '10';
+        $this->sortBy = 'desc';
+        $this->sortByField = 'updated_at';
+        $this->filterFields = [];
+        $this->requiredConditions = [];
+        $this->customQueries = [];
+        $this->customQueryFields = [];
+        $this->leftJoinTables = [];
     }
 }
