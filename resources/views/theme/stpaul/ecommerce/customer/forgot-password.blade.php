@@ -16,7 +16,7 @@
                         <div id="form-wrapper">
                             <form autocomplete="off" method="POST" action="{{ route('ecommerce.send_reset_link_email') }}">
                             @csrf
-                                <div class="row">
+                                <div class="row form-style-login">
                                     <div class="col-md-12">
                                         <div class="gap-10"></div>
                                         <p class="text-dark"><strong>Enter your registered email address to receive instructions on how to reset your password.</strong></p>

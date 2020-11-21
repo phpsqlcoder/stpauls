@@ -69,7 +69,7 @@
                             <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
                                 <label for="password"><i class="tx-danger">*</i> Password</label>
                                 <div class="form-group position-relative">
-                                    <input required type="password" id="password-field" name="password" class="form-control" placeholder="********">
+                                    <input required type="password" id="password" name="password" class="form-control password-field" placeholder="********">
                                 </div>
                                 <span class="text-danger">{{ $errors->first('password') }}</span>
                             </div>

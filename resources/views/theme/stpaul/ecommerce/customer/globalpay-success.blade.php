@@ -53,7 +53,7 @@
                                     @if($sales->sdd_booking_type == 1 && $payment > 0)
                                     <p class="text-bold"><b>To book a rider, click on the &nbsp;<span class="lnr lnr-bicycle mr-2"></span> and enter the Rider's Information.</b></p>
                                     @else
-                                    <p class="text-bold"><b>To view the status of your order, please click &nbsp;<span class="lnr lnr-eye"></span>&nbsp;or&nbsp;<span class="lnr lnr-car mr-2"></span>.</b></p>
+                                    <p class="text-bold"><b>To view the status of your order, please click &nbsp;<span class="lnr lnr-eye text-md text-first-color font-weight-bold"></span>&nbsp;or&nbsp;<span class="lnr lnr-car text-md text-first-color font-weight-bold mr-2"></span>.</b></p>
                                     @endif
                                 </div>
                                 <div class="col-md-5 mb-4 align-self-center">
