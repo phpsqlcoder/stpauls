@@ -68,7 +68,7 @@
 
                                 <input required type="text" class="form-control" name="contactname[]" placeholder="Contact name">
                                 &nbsp;
-                                <input required type="number" class="form-control" name="contactnumber[]" placeholder="Contact number">
+                                <input required type="text" class="form-control" name="contactnumber[]" placeholder="Contact number">
                                 <span class="input-group-btn">&nbsp;
                                     <button type="button" class="btn btn-sm btn-primary btn-add"><i>+</i></button>
                                 </span>

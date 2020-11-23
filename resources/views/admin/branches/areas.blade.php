@@ -21,10 +21,10 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-style1 mg-b-5">
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('dashboard')}}">CMS</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Branch</li>
+                        <li class="breadcrumb-item active" aria-current="page">Branches</li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Branch Manager</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Branch Area Manager</h4>
             </div>
         </div>
 
