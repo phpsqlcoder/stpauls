@@ -68,8 +68,10 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
-                            <label class="d-block mg-t-20">Enter a new password</label>                            
-                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                            <label class="d-block mg-t-20">Enter a new password</label>     
+                            <div class="form-group position-relative">
+                                <input id="password" type="password" class="form-control password-field @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                            </div>                       
                             @error('password')
                             <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -77,7 +79,9 @@
                             @enderror
 
                             <label class="d-block mg-t-20">Re-enter new password</label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                            <div class="form-group position-relative">
+                                <input id="password-confirm" type="password" class="form-control password-field" name="password_confirmation" required autocomplete="new-password">
+                            </div>
 
                             <div class="invalid-feedback">Email address should be in the following format: email@domain.com
                             </div>
