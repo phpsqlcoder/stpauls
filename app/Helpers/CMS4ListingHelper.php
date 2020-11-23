@@ -4,7 +4,7 @@
 namespace App\Helpers;
 
 
-class ListingHelper
+class CMS4ListingHelper
 {
     private $perPage = '10';
     private $sortBy = 'desc';

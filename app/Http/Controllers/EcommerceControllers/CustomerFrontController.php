@@ -41,7 +41,7 @@ class CustomerFrontController extends Controller
     public function ajax_cities($id)
     {
 
-        $data = Cities::where('province',$id)->get();
+        $data = Cities::where('province',$id)->orderBy('city','asc')->get();
 
         return response($data);
     }

@@ -9,7 +9,7 @@ use App\Http\Requests\PageDefaultRequest;
 use Facades\App\Helpers\FileHelper;
 use App\Helpers\ModelHelper;
 use App\Http\Requests\PageStandardRequest;
-use Facades\App\Helpers\ListingHelper;
+use Facades\App\Helpers\CMS4ListingHelper;
 use App\Helpers\Webfocus\Setting;
 use App\Permission;
 use App\Menu;
@@ -37,13 +37,13 @@ class PageController extends Controller
 
     public function index(Request $request)
     {
-        $pages = ListingHelper::simple_search(Page::class, $this->searchFields);
+        $pages = CMS4ListingHelper::simple_search(Page::class, $this->searchFields);
 
-        $filter = ListingHelper::get_filter($this->searchFields);
+        $filter = CMS4ListingHelper::get_filter($this->searchFields);
 
-        $advanceSearchData = ListingHelper::get_search_data($this->advanceSearchFields);
-        $uniquePagesByAlbum = ListingHelper::get_unique_item_by_column(Page::class, 'album_id');
-        $uniquePagesByUser = ListingHelper::get_unique_item_by_column(Page::class, 'user_id');
+        $advanceSearchData = CMS4ListingHelper::get_search_data($this->advanceSearchFields);
+        $uniquePagesByAlbum = CMS4ListingHelper::get_unique_item_by_column(Page::class, 'album_id');
+        $uniquePagesByUser = CMS4ListingHelper::get_unique_item_by_column(Page::class, 'user_id');
 
         $searchType = 'simple_search';
 
@@ -54,14 +54,14 @@ class PageController extends Controller
     {
         $equalQueryFields = ['album_id', 'status', 'user_id'];
 
-        $pages = ListingHelper::advance_search(Page::class, $this->advanceSearchFields, $equalQueryFields);
+        $pages = CMS4ListingHelper::advance_search(Page::class, $this->advanceSearchFields, $equalQueryFields);
 
-        $filter = ListingHelper::get_filter($this->searchFields);
+        $filter = CMS4ListingHelper::get_filter($this->searchFields);
 
-        $advanceSearchData = ListingHelper::get_search_data($this->advanceSearchFields);
-        $uniquePagesByParent = ListingHelper::get_unique_item_by_column(Page::class, 'parent_id');
-        $uniquePagesByAlbum = ListingHelper::get_unique_item_by_column(Page::class, 'album_id');
-        $uniquePagesByUser = ListingHelper::get_unique_item_by_column(Page::class, 'parent_page_id');
+        $advanceSearchData = CMS4ListingHelper::get_search_data($this->advanceSearchFields);
+        $uniquePagesByParent = CMS4ListingHelper::get_unique_item_by_column(Page::class, 'parent_id');
+        $uniquePagesByAlbum = CMS4ListingHelper::get_unique_item_by_column(Page::class, 'album_id');
+        $uniquePagesByUser = CMS4ListingHelper::get_unique_item_by_column(Page::class, 'parent_page_id');
 
         $searchType = 'advance_search';
 

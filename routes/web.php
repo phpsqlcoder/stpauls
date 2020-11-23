@@ -52,6 +52,7 @@
 
     // Ecommerce Pages
         Route::get('/privacy-policy', 'FrontController@privacy_policy')->name('privacy-policy');
+        Route::get('/branches','FrontController@branches')->name('front.branches');
     //
 
     ########## ECOMMERCE ROUTES #############
@@ -167,6 +168,18 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/admin/branch/single-delete', 'EcommerceControllers\BranchController@single_delete')->name('branch.single.delete');
             Route::get('/admin/branch/restore/{id}', 'EcommerceControllers\BranchController@restore')->name('branch.restore');
             Route::post('/admin/branch/multiple-delete','EcommerceControllers\BranchController@multiple_delete')->name('branch.multiple.delete');
+            Route::post('branch-remove-contact','EcommerceControllers\BranchController@remove_contact')->name('branch-remove-contact');
+
+            Route::get('/admin/branch-areas','EcommerceControllers\BranchController@areas')->name('branch.areas');
+            Route::get('/admin/branch-area/create','EcommerceControllers\BranchController@area_create')->name('branch.area-create');
+            Route::post('branch-area-store','EcommerceControllers\BranchController@area_store')->name('branch.area-store');
+            Route::get('/admin/branch-area/edit/{id}','EcommerceControllers\BranchController@area_edit')->name('branch.area-edit');
+            Route::post('/branch-area-update','EcommerceControllers\BranchController@area_update')->name('branch.area-update');
+            Route::post('/branch-remove-image','EcommerceControllers\BranchController@remove_image')->name('branch.remove-image');
+            Route::post('/branch-area/single-delete', 'EcommerceControllers\BranchController@area_single_delete')->name('branch-area.single.delete');
+            Route::post('/branch-area/multiple-delete', 'EcommerceControllers\BranchController@area_multiple_delete')->name('branch-area.multiple.delete');
+            
+
         //
 
         // Website

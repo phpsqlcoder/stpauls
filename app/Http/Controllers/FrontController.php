@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use App\Page;
 use Auth;
 
+use App\EcommerceModel\BranchArea;
+use App\EcommerceModel\Branch;
+
 class FrontController extends Controller
 {
-
     public function home()
     {
         return $this->page('home');
@@ -30,7 +32,6 @@ class FrontController extends Controller
         $breadcrumb = $this->breadcrumb($page);
 
         if (!empty($page->template)) {
-
             return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.'.$page->template, compact('page'))->withShortcodes();
         }
 
@@ -64,5 +65,16 @@ class FrontController extends Controller
         $page->name = 'Privacy-Policy';
         
         return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.privacy-policy', compact('page'));
+    }
+
+    public function branches()
+    {
+        $page = new Page;
+        $page->name = 'Branches';
+
+        $areas = BranchArea::all();
+        $featured = Branch::where('isfeatured',1)->first();
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.pages.branches', compact('page','areas','featured'));
     }
 }
