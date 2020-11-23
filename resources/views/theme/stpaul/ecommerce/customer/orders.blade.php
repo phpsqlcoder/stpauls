@@ -27,6 +27,41 @@
                                 {{ session('success') }}
                             </div>
                         @endif
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                    <div class="unit__left"><span class="lnr lnr-cross font-weight-bold text-first-color"></span></div>
+                                    <div class="unit__body"><small><strong>-> Cancel Order</strong></small></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                    <div class="unit__left"><span class="lnr lnr-inbox font-weight-bold text-first-color"></span></div>
+                                    <div class="unit__body"><small><strong>-> Pay Now</strong></small></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                    <div class="unit__left"><span class="lnr lnr-bicycle font-weight-bold text-first-color"></span></div>
+                                    <div class="unit__body"><small><strong>-> Add Rider</strong></small></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                    <div class="unit__left"><span class="lnr lnr-car font-weight-bold text-first-color"></span></div>
+                                    <div class="unit__body"><small><strong>-> Track your order</strong></small></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                    <div class="unit__left"><span class="lnr lnr-eye font-weight-bold text-first-color"></span></div>
+                                    <div class="unit__body"><small><strong>-> View Order Summary</strong></small></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gap-20"></div>
+
                         <table id="salesTransaction" class="table table-md table-hover text-nowrap" style="width:100%">
                             <thead>
                                 <tr>
@@ -75,10 +110,10 @@
                                         @endif
 
                                         @if($sale->sdd_booking_type == 1 && $sale->rider_name == '' && $sale->delivery_status == 'Scheduled for Processing')
-                                        <a href="{{ route('transaction.add-rider',$sale->id) }}" title="Add Rider"><span class="lnr lnr-bicycle mr-2"></span></a>
+                                        <a class="translate-y" href="{{ route('transaction.add-rider',$sale->id) }}" title="Add Rider"><span class="lnr lnr-bicycle mr-2"></span></a>
                                         @endif
 
-                                        <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
+                                        <a class="translate-y" href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
                                         <a href="{{ route('account-order-info',$sale->id) }}" title="View Order Summary">
                                             <span class="lnr lnr-eye"></span>
                                         </a>

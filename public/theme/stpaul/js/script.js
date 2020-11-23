@@ -42,14 +42,18 @@ $(function () {
         if (href.indexOf("storage/products/") > 0) {
             return;
         }
-        if (!href || href[0] === "#") {
+        if (!href) {
             return;
         }
 
         setTimeout(function () {
-            $("html").fadeOut(function () {
+            if (href[0] === "#") {
                 window.location = href;
-            });
+            } else {
+                $("html").fadeOut(function () {
+                    window.location = href;
+                });
+            }
         });
     });
 });
