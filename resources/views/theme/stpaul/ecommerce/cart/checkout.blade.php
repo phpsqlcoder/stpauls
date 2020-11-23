@@ -295,7 +295,7 @@
                                                         </div>
                                                         <div class="form-check">
                                                             <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
-                                                            <label class="form-check-label" for="exampleCheck1">Book your own rider</label>
+                                                            <label class="form-check-label font-weight-bold" for="exampleCheck1">Book your own rider</label>
                                                         </div>
                                                     </div>
                                                 @else
