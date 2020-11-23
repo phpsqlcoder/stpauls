@@ -120,7 +120,7 @@
                                         <label class="custom-control-label" for="checkbox_all"></label>
                                     </div>
                                 </th>
-                                <th width="2%">Name</th>
+                                <th width="20%">Name</th>
                                 <th width="30%">Address</th>
                                 <th width="25%">Contact Number</th>
                                 <th width="10%">Status</th>
