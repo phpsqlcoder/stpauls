@@ -49,7 +49,7 @@
                         <p>&nbsp;</p>
                         @foreach($areas as $area)
                             @if(count($area->branches))
-                                <h2 id="area_{{$area->id}}">{{ $area->name }}</h2>
+                                <h2 id="area_{{$area->id}}">{{ $area->name }} Branches</h2>
                                 <div class="row">
                                 @forelse($area->branches->where('isfeatured',0) as $branch)
                                     <div class="col-lg-6">
