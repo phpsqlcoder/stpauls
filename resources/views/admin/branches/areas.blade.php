@@ -120,7 +120,8 @@
                                         <label class="custom-control-label" for="checkbox_all"></label>
                                     </div>
                                 </th>
-                                <th width="85%">Name</th>
+                                <th width="70%">Name</th>
+                                <th width="15%">Last Date Modified</th>
                                 <th width="10%">Action</th>
                             </tr>
                             </thead>
@@ -134,6 +135,7 @@
                                         </div>
                                     </th>
                                     <td>{{$area->name }}</td>
+                                    <td>{{ Setting::date_for_listing($area->updated_at) }}</td>
                                     <td>
                                         <nav class="nav table-options">
                                             @if (auth()->user()->has_access_to_route('branch.area-edit'))
@@ -153,7 +155,7 @@
 
                             @empty
                                 <tr>
-                                    <th colspan="3" style="text-align: center;"> <p class="text-danger">No areas found.</p></th>
+                                    <th colspan="4" style="text-align: center;"> <p class="text-danger">No areas found.</p></th>
                                 </tr>
                             @endforelse
                             </tbody>
