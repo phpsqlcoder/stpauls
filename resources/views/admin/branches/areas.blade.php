@@ -130,7 +130,7 @@
                                 <tr id="row{{$area->id}}">
                                     <th>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" @if(count($area->branches)) disabled @endif class="custom-control-input cb" id="cb{{ $area->id }}">
+                                            <input type="checkbox" @if(count($area->branches)) disabled @endif class="custom-control-input @if(count($area->branches)) @else cb @endif" id="cb{{ $area->id }}">
                                             <label class="custom-control-label" for="cb{{ $area->id }}"></label>
                                         </div>
                                     </th>
