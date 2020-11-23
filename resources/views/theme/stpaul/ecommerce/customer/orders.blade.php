@@ -37,7 +37,7 @@
                             <div class="col-md-12">
                                 <div class="unit flex-row align-items-center unit-spacing-xs">
                                     <div class="unit__left"><span class="lnr lnr-inbox font-weight-bold text-first-color"></span></div>
-                                    <div class="unit__body"><small><strong>-> Pay Now</strong></small></div>
+                                    <div class="unit__body"><small><strong>-> Pay Now - Used to Submit Payment by Attaching proof of payment and other payment details.</strong></small></div>
                                 </div>
                             </div>
                             <div class="col-md-12">
