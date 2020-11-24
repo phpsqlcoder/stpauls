@@ -15,6 +15,7 @@
 
         Route::get('oauth/{driver}', 'Auth\SocialiteController@redirectToProvider')->name('social.oauth');
         Route::get('oauth/{driver}/callback', 'Auth\SocialiteController@handleProviderCallback')->name('social.callback');
+        
         Route::get('oauth/login/{driver}', 'Auth\SocialiteController@loginRedirectToProvider')->name('social.oauth-login');
         Route::get('oauth/login/{driver}/callback', 'Auth\SocialiteController@loginHandleProviderCallback')->name('social.callback-login');
 
