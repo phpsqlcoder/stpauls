@@ -62,17 +62,19 @@
                 <div class="col-lg-3">
                     @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.account-page-options')
                 </div>
-                <div class="col-lg-9" style="border-bottom: 10px solid #b81600;">
-                    <div class="row row-sm">
-                        <div class="col-sm-6 col-lg-6 mg-b-20">
+                <div class="col-lg-9 order-info" style="border-bottom: 10px solid #b81600;">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 text-lg-left text-md-left text-center mb-4">
                             <img src="{{  asset('storage/logos/'.Setting::getFaviconLogo()->company_logo) }}" alt="StPaul" width="240" />
                         </div>
-                        <div class="col-sm-6 col-lg-6 mg-b-20">
-                            <small class="d-flex justify-content-end">Order Number</small>
-                            <h1 class="d-flex justify-content-end" style="margin-top:-2px;color:#b82e24;">{{ $sales->order_number }}</h1>
+                        <div class="col-lg-6 col-md-6 text-lg-right text-md-right text-left">
+                            <small">Order Number</small>
+                            <h2 class="mb-0" style="margin-top:-2px;color:#b82e24;">{{ $sales->order_number }}</h2>
                         </div>
-                        <div class="col-sm-6 col-lg-8" style="border-left: 6px solid #b82e24;margin-top: 30px;">
-                            <label class="tx-sans tx-medium tx-spacing-1 tx-color-03">Delivery Details</label>
+                    </div>
+                    <div class="row" style="border-left: 6px solid #b82e24;margin-top: 30px;border-right: 6px solid #b82e24;margin-top: 30px;">
+                        <div class="col-lg-7 col-md-7 col-sm-12">
+                            <label class="text-first-color font-weight-bold">Delivery Details</label>
                             <h2 class="name" style="color:#555555;">{{ $sales->customer_name }}</h2>
                             <p class="mg-b-3">{{$sales->customer_address}}</p>
                             <p class="mg-b-3">{{$sales->customer_contact_number}}</p>
@@ -110,16 +112,16 @@
                         </div>
                         <!-- col -->
 
-                        <div class="col-sm-6 col-lg-4" style="border-right: 6px solid #b82e24;margin-top: 30px;">
-                            <label class="tx-sans tx-medium tx-spacing-1 tx-color-03">Order Details</label>
+                        <div class="col-lg-5 col-md-5 col-sm-12">
+                            <label class="text-first-color font-weight-bold">Order Details</label>
                             <ul class="list-unstyled lh-7">
                                 <li class="d-flex justify-content-between">
                                     <span>Order Date</span>
-                                    <span>{{ date('m/d/Y h:i A',strtotime($sales->created_at)) }}</span>
+                                    <span class="text-right">{{ date('m/d/Y h:i A',strtotime($sales->created_at)) }}</span>
                                 </li>
                                 <li class="d-flex justify-content-between">
                                     <span>Payment Method</span>
-                                    <span>{{ \App\EcommerceModel\SalesHeader::payment_type($sales->id) }}</span>
+                                    <span class="text-right">{{ \App\EcommerceModel\SalesHeader::payment_type($sales->id) }}</span>
                                 </li>                            
                                 <li class="d-flex justify-content-between">
                                     <span>Payment Status</span>
@@ -128,7 +130,7 @@
                                 <hr>
                                 <li class="d-flex justify-content-between">
                                     <span>Delivery Type</span>
-                                    <span><b>{{ $sales->delivery_type }}</b></span>
+                                    <span class="text-right"><b>{{ $sales->delivery_type }}</b></span>
                                 </li>
                                 <li class="d-flex justify-content-between">
                                     <span>Branch</span>
@@ -140,8 +142,10 @@
                                 </li>
                             </ul>
                         </div>
+                    </div>
 
-                        <div class="table-responsive">
+                    <div class="row">
+                        <div class="table-responsive mb-4">
                             <table border="0" cellspacing="0" cellpadding="0" style="margin-top: 50px;">
                                 <thead style="background:#b81600;">
                                     <tr style="color:white;">

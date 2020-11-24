@@ -4253,6 +4253,18 @@ form p {
   font-size: 1.5em;
 }
 
+.order-info {
+  font-size: 0.9em;
+}
+
+.order-info h2 {
+  font-size: 2.5rem;
+}
+
+.order-info hr {
+  margin: 10px 0;
+}
+
 @font-face {
   font-family: 'FontAwesome';
   font-style: normal;
@@ -4397,6 +4409,9 @@ form p {
   }
   #salesTransaction_wrapper .dataTables_info {
     text-align: left !important;
+  }
+  .order-info h2 {
+    font-size: 2rem;
   }
 }
 
