@@ -84,9 +84,6 @@
                                     <td>{{ number_format($sale->gross_amount,2) }}</td>
                                     <td class="text-uppercase">{{ $sale->delivery_status }}</td>
                                     <td class="text-right">
-                                        {{--<a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
-                                                            <span class="c-icon c-icon-peso mr-2"></span>
-                                                        </a>--}}
                                         @if($sale->status != 'CANCELLED')
 
                                             @if($sale->delivery_status == 'Shipping Fee Validation')
