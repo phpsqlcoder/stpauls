@@ -27,23 +27,18 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        <div class="row">
+                        <h3>Legends:</h3>
+                        <div class="row legend">
                             <div class="col-md-12">
                                 <div class="unit flex-row align-items-center unit-spacing-xs">
-                                    <div class="unit__left"><span class="lnr lnr-cross font-weight-bold text-first-color"></span></div>
-                                    <div class="unit__body"><small><strong>-> Cancel Order</strong></small></div>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="unit flex-row align-items-center unit-spacing-xs">
-                                    <div class="unit__left"><span class="lnr lnr-inbox font-weight-bold text-first-color"></span></div>
-                                    <div class="unit__body"><small><strong>-> Pay Now - Used to Submit Payment by Attaching proof of payment and other payment details.</strong></small></div>
+                                    <div class="unit__left"><span class="c-icon c-icon-peso-red"></span></div>
+                                    <div class="unit__body"><small><strong>-> PAY NOW - Used to Submit Payment by Attaching proof of payment and other payment details.</strong></small></div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="unit flex-row align-items-center unit-spacing-xs">
                                     <div class="unit__left"><span class="lnr lnr-bicycle font-weight-bold text-first-color"></span></div>
-                                    <div class="unit__body"><small><strong>-> Add Rider</strong></small></div>
+                                    <div class="unit__body"><small><strong>-> Book a rider</strong></small></div>
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -55,7 +50,13 @@
                             <div class="col-md-12">
                                 <div class="unit flex-row align-items-center unit-spacing-xs">
                                     <div class="unit__left"><span class="lnr lnr-eye font-weight-bold text-first-color"></span></div>
-                                    <div class="unit__body"><small><strong>-> View Order Summary</strong></small></div>
+                                    <div class="unit__body"><small><strong>-> View Order Details</strong></small></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                    <div class="unit__left"><span class="lnr lnr-cross font-weight-bold text-first-color"></span></div>
+                                    <div class="unit__body"><small><strong>-> Cancel Order</strong></small></div>
                                 </div>
                             </div>
                         </div>
@@ -83,6 +84,9 @@
                                     <td>{{ number_format($sale->gross_amount,2) }}</td>
                                     <td class="text-uppercase">{{ $sale->delivery_status }}</td>
                                     <td class="text-right">
+                                        <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
+                                                            <span class="c-icon c-icon-peso mr-2"></span>
+                                                        </a>
                                         @if($sale->status != 'CANCELLED')
 
                                             @if($sale->delivery_status == 'Shipping Fee Validation')
@@ -94,11 +98,11 @@
                                                 @if($sale->delivery_status == 'Waiting for Payment' && $payment_status == 0)
                                                     @if($sale->payment_method == 1)
                                                         <a href="" title="Pay now" onclick="globalpay('{{$sale->id}}','{{$sale->net_amount}}')" id="paybtn{{$sale->id}}">
-                                                            <span class="lnr lnr-inbox mr-2"></span>
+                                                            <span class="c-icon c-icon-peso mr-2"></span>
                                                         </a>
                                                     @else
                                                         <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
-                                                            <span class="lnr lnr-inbox mr-2"></span>
+                                                            <span class="c-icon c-icon-peso mr-2"></span>
                                                         </a>
                                                     @endif
                                                 @endif
