@@ -4228,6 +4228,27 @@ form p {
   margin-bottom: 0;
 }
 
+.icon {
+  display: inline-block;
+  width: 31px;
+  height: 24px;
+  background-size: cover;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+
+.icon-peso {
+  background-image: url(../images/misc/cash-peso.svg);
+}
+
+.icon-peso-red {
+  background-image: url(../images/misc/case-peso-red.svg);
+}
+
+.legend .lnr {
+  font-size: 1.5em;
+}
+
 @font-face {
   font-family: 'FontAwesome';
   font-style: normal;
