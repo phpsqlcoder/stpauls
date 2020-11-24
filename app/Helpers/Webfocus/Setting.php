@@ -236,7 +236,7 @@ class Setting {
 
     public static function branches(){
 
-        $branches = Branch::where('is_active',1)->orderBy('name','asc')->get();
+        $branches = Branch::orderBy('name','asc')->get();
 
         return $branches;
     }
