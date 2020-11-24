@@ -969,10 +969,8 @@
 
                 if(option == 1){
                     $('#btnReviewOrder').removeClass('checkout-next-btn');
-                    $('#spanReviewOrder').html('Place Order');
                 } else {
                     $('#btnReviewOrder').addClass('checkout-next-btn');
-                    $('#spanReviewOrder').html('Next');
                 }
 
                 if(option == 2){

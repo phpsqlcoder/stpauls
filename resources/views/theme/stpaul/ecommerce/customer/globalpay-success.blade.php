@@ -23,8 +23,6 @@
                                     @else
                                     <h2 class="text-center"><strong>Thank you for your payment.<br>ST PAULS personnel will contact you once the order is "Ready for Delivery".</strong></h2>
                                     @endif
-                                @else
-                                <h2 class="text-center"><strong>Thank you for your order</strong></h2>
                                 @endif
                             </div>
                         </div>
