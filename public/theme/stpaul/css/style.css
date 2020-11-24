@@ -4228,7 +4228,7 @@ form p {
   margin-bottom: 0;
 }
 
-.icon {
+.c-icon {
   display: inline-block;
   width: 31px;
   height: 24px;
@@ -4237,11 +4237,15 @@ form p {
   transition: all 0.5s ease;
 }
 
-.icon-peso {
+.c-icon-peso {
   background-image: url(../images/misc/cash-peso.svg);
 }
 
-.icon-peso-red {
+.c-icon-peso:hover {
+  background-image: url(../images/misc/case-peso-red.svg);
+}
+
+.c-icon-peso-red {
   background-image: url(../images/misc/case-peso-red.svg);
 }
 

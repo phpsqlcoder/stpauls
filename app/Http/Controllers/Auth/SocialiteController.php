@@ -154,21 +154,71 @@ class SocialiteController extends Controller
                       $last_name = $user->getName();
                 }
 
-                if(User::where('email',$user->email)->exists()){
+                $userQry = User::where('email',$user->email);
 
-                    return redirect(route('customer-front.sign-up'))->with('error','This email address is already existing in the system. You may use other email address or login to your account.');
+                if($userQry->exists()){
 
-                } else {
-
-                    session::forget('ptype');
-                    return redirect(route('customer-front.sign-up',[ 
+                    $customer = $userQry->update([
+                        'name' => $first_name.' '.$last_name,
                         'email' => $user->email,
                         'firstname' => $first_name,
                         'lastname' => $last_name,
-                        'provider' => $driver,
-                        'provider_id' => $user->id
-                    ]));
+                        'email_verified_at' => now(),
+                        'password' => \Hash::make(str_random(8)),
+                        'is_active' => 1,
+                    ]);
+
+                    $customerData = $userQry->first();
+                    if($customer){
+                        Customer::where('customer_id',$customerData->id)->update([
+                            'firstname' => $first_name,
+                            'lastname' => $last_name,
+                            'email' => $user->email,
+                            'is_active' => 1,
+                            'provider' => $driver,
+                            'provider_id' => $user->id,
+                            'user_id' => 1,
+                            'is_subscriber' => 0,
+                            'reactivate_request' => 0,
+                        ]);
+                    }
+
+                    Auth::login($customerData);
+
+                } else {
+
+                    $customer = User::create([
+                        'name' => $first_name.' '.$last_name,
+                        'email' => $user->email,
+                        'firstname' => $first_name,
+                        'lastname' => $last_name,
+                        'email_verified_at' => now(),
+                        'password' => \Hash::make(str_random(8)),
+                        'role_id' => 3,
+                        'is_active' => 1,
+                        'user_id' => 0,
+                        'remember_token' => str_random(60),
+                        'fromMigration' => 0,
+                    ]);
+
+                    if($customer){
+                        Customer::create([
+                            'customer_id' => $customer->id,
+                            'firstname' => $first_name,
+                            'lastname' => $last_name,
+                            'email' => $user->email,
+                            'is_active' => 1,
+                            'provider' => $driver,
+                            'provider_id' => $user->id,
+                            'user_id' => 1,
+                            'is_subscriber' => 0,
+                            'reactivate_request' => 0,
+                        ]);
+                    }
+                    Auth::login($customer);
                 }
+                session::forget('ptype');
+                return redirect(route('my-account.manage-account'));
             }
         }
     }

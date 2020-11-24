@@ -21,10 +21,10 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-style1 mg-b-5">
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('dashboard')}}">CMS</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Branch</li>
+                        <li class="breadcrumb-item active" aria-current="page">Branches</li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Branch Manager</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Branch Area Manager</h4>
             </div>
         </div>
 
@@ -45,7 +45,7 @@
                                             <label for="exampleDropdownFormEmail1">{{__('common.sort_by')}}</label>
                                             <div class="custom-control custom-radio">
                                                 <input type="radio" id="orderBy1" name="orderBy" class="custom-control-input" value="name" @if ($filter->orderBy == 'name') checked @endif>
-                                                <label class="custom-control-label" for="orderBy1">Branch Name</label>
+                                                <label class="custom-control-label" for="orderBy1">Name</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -81,7 +81,7 @@
                                         Actions
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_branches()">{{__('common.delete')}}</a>
+                                        <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_areas()">{{__('common.delete')}}</a>
                                     </div>
                                 </div>
                             </div>
@@ -97,8 +97,8 @@
                             </form>
                         </div>
                         <div class="mg-t-7">
-                            @if (auth()->user()->has_access_to_route('branch.create'))
-                            <a class="btn btn-primary btn-sm mg-b-10" href="{{route('branch.create')}}">Create a Branch</a>
+                            @if (auth()->user()->has_access_to_route('branch.area-create'))
+                            <a class="btn btn-primary btn-sm mg-b-10" href="{{route('branch.area-create')}}">Create New Area</a>
                             @endif
                         </div>
                     </div>
@@ -120,50 +120,33 @@
                                         <label class="custom-control-label" for="checkbox_all"></label>
                                     </div>
                                 </th>
-                                <th width="20%">Name</th>
-                                <th width="30%">Address</th>
-                                <th width="25%">Contact Number</th>
-                                <th width="10%">Status</th>
+                                <th width="70%">Name</th>
+                                <th width="15%">Last Date Modified</th>
                                 <th width="10%">Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse($branches as $branch)
-                                <tr id="row{{$branch->id}}">
+                            @forelse($areas as $area)
+                                <tr id="row{{$area->id}}">
                                     <th>
                                         <div class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input cb" id="cb{{ $branch->id }}">
-                                            <label class="custom-control-label" for="cb{{ $branch->id }}"></label>
+                                            <input type="checkbox" @if(count($area->branches)) disabled @endif class="custom-control-input @if(count($area->branches)) @else cb @endif" id="cb{{ $area->id }}">
+                                            <label class="custom-control-label" for="cb{{ $area->id }}"></label>
                                         </div>
                                     </th>
-                                    <td> <strong @if($branch->trashed()) style="text-decoration:line-through;" @endif> {{$branch->name }}</strong></td>
-                                    <td>{{ $branch->branchaddress }}</td>
-                                    <td>
-                                        <ul class="list-unstyled">
-                                            @foreach($branch->contacts as $contact)
-                                                <li>{{ $contact->contact_name }} - {{ $contact->contact_no }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </td>
-                                    <td>{{ $branch->status }}</td>
+                                    <td>{{$area->name }}</td>
+                                    <td>{{ Setting::date_for_listing($area->updated_at) }}</td>
                                     <td>
                                         <nav class="nav table-options">
-                                            <a class="nav-link" target="_blank" href="" title="View Branch"><i data-feather="eye"></i></a>
+                                            @if (auth()->user()->has_access_to_route('branch.area-edit'))
+                                            <a class="nav-link" href="{{ route('branch.area-edit',$area->id) }}" title="Edit Area"><i data-feather="edit"></i></a>
+                                            @endif
 
-                                            @if($branch->trashed())
-                                                @if (auth()->user()->has_access_to_route('branch.restore'))
-                                                <nav class="nav table-options">
-                                                    <a class="nav-link" href="{{route('branch.restore',$branch->id)}}" title="Restore this branch"><i data-feather="rotate-ccw"></i></a>
-                                                </nav>
-                                                @endif
-                                            @else
+                                            @if (auth()->user()->has_access_to_route('branch.single.delete'))
+                                                @if(count($area->branches))
 
-                                                @if (auth()->user()->has_access_to_route('branch.edit'))
-                                                <a class="nav-link" href="{{ route('branch.edit',$branch->id) }}" title="Edit Branch"><i data-feather="edit"></i></a>
-                                                @endif
-
-                                                @if (auth()->user()->has_access_to_route('branch.single.delete'))
-                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_branch('{{$branch->id}}','{{$branch->name}}')" title="Delete Branch"><i data-feather="trash"></i></a>
+                                                @else
+                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_area('{{$area->id}}','{{$area->name}}')" title="Delete Area"><i data-feather="trash"></i></a>
                                                 @endif
                                             @endif
                                         </nav>
@@ -172,7 +155,7 @@
 
                             @empty
                                 <tr>
-                                    <th colspan="7" style="text-align: center;"> <p class="text-danger">No branch found.</p></th>
+                                    <th colspan="4" style="text-align: center;"> <p class="text-danger">No areas found.</p></th>
                                 </tr>
                             @endforelse
                             </tbody>
@@ -183,17 +166,17 @@
             <!-- End Pages -->
             <div class="col-md-6">
                 <div class="mg-t-5">
-                    @if ($branches->firstItem() == null)
+                    @if ($areas->firstItem() == null)
                         <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
                     @else
-                        <p class="tx-gray-400 tx-12 d-inline">Showing {{ $branches->firstItem() }} to {{ $branches->lastItem() }} of {{ $branches->total() }} items</p>
+                        <p class="tx-gray-400 tx-12 d-inline">Showing {{ $areas->firstItem() }} to {{ $areas->lastItem() }} of {{ $areas->total() }} items</p>
                     @endif
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="text-md-right float-md-right mg-t-5">
                     <div>
-                        {{ $branches->appends((array) $filter)->links() }}
+                        {{ $areas->appends((array) $filter)->links() }}
                     </div>
                 </div>
             </div>
@@ -202,7 +185,7 @@
 
     <form action="" id="posting_form" style="display: none;" method="post">
         @csrf
-        <input type="text" id="branches" name="branches">
+        <input type="text" id="areas" name="areas">
     </form>
 
     <div class="modal effect-scale" id="prompt-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -263,6 +246,45 @@
             </div>
         </div>
     </div>
+
+    <div class="modal effect-scale" id="prompt-multiple-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{{__('common.delete_mutiple_confirmation_title')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{__('common.delete_mutiple_confirmation')}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" id="btnDeleteMultiple">Yes, Delete</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal effect-scale" id="prompt-no-selected" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{{__('common.no_selected_title')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>{{__('common.no_selected')}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('pagejs')
@@ -271,7 +293,7 @@
     <script src="{{ asset('lib/ion-rangeslider/js/ion.rangeSlider.min.js') }}"></script>
 
     <script>
-        let listingUrl = "{{ route('branch.index') }}";
+        let listingUrl = "{{ route('branch.areas') }}";
         let searchType = "{{ $searchType }}";
     </script>
 
@@ -292,27 +314,27 @@
             $('.cb').not(this).prop('checked', this.checked);
         });
 
-        function post_form(id,branches){
+        function post_form(id,areas){
             $('#posting_form').attr('action',id);
-            $('#branches').val(branches);
+            $('#areas').val(areas);
             $('#posting_form').submit();
         }
 
-        function delete_one_branch(id){
+        function delete_one_area(id){
             $('#prompt-delete').modal('show');
             $('#btnDelete').on('click', function() {
-                post_form("{{route('branch.single.delete')}}",id);
+                post_form("{{route('branch-area.single.delete')}}",id);
             });
         }
 
 
-        function delete_branches(){
+        function delete_areas(){
             var counter = 0;
-            var selected_branches = '';
+            var selected_areas = '';
             $(".cb:checked").each(function(){
                 counter++;
                 fid = $(this).attr('id');
-                selected_branches += fid.substring(2, fid.length)+'|';
+                selected_areas += fid.substring(2, fid.length)+'|';
             });
 
             if(parseInt(counter) < 1){
@@ -322,7 +344,7 @@
             else{
                 $('#prompt-multiple-delete').modal('show');
                 $('#btnDeleteMultiple').on('click', function() {
-                    post_form("{{route('branch.multiple.delete')}}",selected_branches);
+                    post_form("{{route('branch-area.multiple.delete')}}",selected_areas);
                 });
             }
         }

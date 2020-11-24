@@ -21,8 +21,8 @@
 
             </ul>
         </li>
-    @endif
-    @if (auth()->user()->has_access_to_albums_module())
+    @endif -->
+    <!-- @if (auth()->user()->has_access_to_albums_module())
         <li class="nav-item with-sub @if (request()->routeIs('albums*')) active show @endif">
             <a href="#" class="nav-link"><i data-feather="image"></i> <span>Banners</span></a>
             <ul>
@@ -38,8 +38,8 @@
         <li class="nav-item @if (\Route::current()->getName() == 'file-manager.index') active @endif">
             <a href="{{ route('file-manager.index') }}" class="nav-link"><i data-feather="folder"></i> <span>Files</span></a>
         </li>
-    @endif
-    @if (auth()->user()->has_access_to_menu_module())
+    @endif -->
+    <!-- @if (auth()->user()->has_access_to_menu_module())
         <li class="nav-item with-sub @if (request()->routeIs('menus*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="menu"></i> <span>Menu</span></a>
             <ul>
@@ -47,8 +47,8 @@
                 <li @if (\Route::current()->getName() == 'menus.create') class="active" @endif><a href="{{ route('menus.create') }}">Create a Menu</a></li>
             </ul>
         </li>
-    @endif
-    @if (auth()->user()->has_access_to_news_module() || auth()->user()->has_access_to_news_categories_module())
+    @endif -->
+    <!-- @if (auth()->user()->has_access_to_news_module() || auth()->user()->has_access_to_news_categories_module())
         <li class="nav-item with-sub @if (request()->routeIs('news*') || request()->routeIs('news-categories*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="edit"></i> <span>News</span></a>
             <ul>
@@ -234,7 +234,15 @@
             <ul>
                 <li @if (\Route::current()->getName() == 'branch.index' || \Route::current()->getName() == 'branch.edit') class="active" @endif><a href="{{ route('branch.index') }}">Manage Branches</a></li>
                 @if (auth()->user()->has_access_to_route('branch.create'))
-                    <li @if (\Route::current()->getName() == 'branch.create') class=" " @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
+                    <li @if (\Route::current()->getName() == 'branch.create') class="active" @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
+                @endif
+
+                @if (auth()->user()->has_access_to_route('branch.areas'))
+                <li @if (\Route::current()->getName() == 'branch.areas' || \Route::current()->getName() == 'branch.area-edit') class="active" @endif><a href="{{ route('branch.areas') }}">Manage Areas</a></li>
+                @endif
+
+                @if (auth()->user()->has_access_to_route('branch.area-create'))
+                    <li @if (\Route::current()->getName() == 'branch.area-create') class="active" @endif><a href="{{ route('branch.area-create') }}">Create New Area</a></li>
                 @endif
             </ul>
         </li>

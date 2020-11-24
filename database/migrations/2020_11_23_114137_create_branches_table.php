@@ -16,12 +16,17 @@ class CreateBranchesTable extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name',250);
-            $table->text('address');
-            $table->string('contact_no',250);
-            $table->string('contact_person',250);
-            $table->string('email');
-            $table->integer('is_active');
+            $table->string('url',250)->nullable();
+            $table->string('area',250);
+            $table->integer('province_id');
+            $table->integer('city_id');
+            $table->string('address',250);
             $table->integer('user_id');
+            $table->string('status');
+            $table->integer('isfeatured');
+            $table->string('email');
+            $table->text('other_details')->nullable();
+            $table->text('img')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

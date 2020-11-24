@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Menu;
 
-use Facades\App\Helpers\ListingHelper;
+use Facades\App\Helpers\CMS4ListingHelper;
 use App\Http\Controllers\Controller;
 use App\Menu;
 use App\Permission;
@@ -28,11 +28,11 @@ class MenuController extends Controller
         $searchFields = ['name'];
         $filterFields = ['updated_at', 'name', 'is_active'];
 
-        $menus = ListingHelper::sort_by('is_active')
+        $menus = CMS4ListingHelper::sort_by('is_active')
             ->filter_fields($filterFields)
             ->simple_search(Menu::class, $searchFields);
 
-        $filter = ListingHelper::filter_fields($filterFields)->get_filter($searchFields);
+        $filter = CMS4ListingHelper::filter_fields($filterFields)->get_filter($searchFields);
 
         $searchType = 'simple_search';
 
