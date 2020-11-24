@@ -101,10 +101,6 @@
                                                             <span class="lnr lnr-inbox mr-2"></span>
                                                         </a>
                                                     @endif
-                                                    
-                                                    <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
-                                                        <span class="lnr lnr-cross mr-2"></span>
-                                                    </a>
                                                 @endif
                                             @endif
                                         @endif
@@ -117,6 +113,16 @@
                                         <a href="{{ route('account-order-info',$sale->id) }}" title="View Order Summary">
                                             <span class="lnr lnr-eye"></span>
                                         </a>
+
+                                         @if($sale->status != 'CANCELLED')
+                                            @if($sale->delivery_status != 'Shipping Fee Validation')
+                                                @if($sale->delivery_status == 'Waiting for Payment' && $payment_status == 0)
+                                                    <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
+                                                        <span class="lnr lnr-cross mr-2"></span>
+                                                    </a>
+                                                @endif
+                                            @endif
+                                        @endif
                                     </td>
                                 </tr>
                                 @empty
