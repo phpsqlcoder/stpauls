@@ -59,10 +59,13 @@
     <section id="default-wrapper">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
+                <div id="col1" class="col-lg-3">
                     @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.account-page-options')
                 </div>
-                <div class="col-lg-9 order-info" style="border-bottom: 10px solid #b81600;">
+                <div id="col2" class="col-lg-9 order-info" style="border-bottom: 10px solid #b81600;">
+                    <nav class="rd-navbar">
+                        <div class="rd-navbar-listing-toggle rd-navbar-static--hidden toggle-original" data-rd-navbar-toggle=".listing-filter-wrap"><span class="lnr lnr-list"></span> Options</div>
+                    </nav>
                     <div class="row">
                         <div class="col-lg-6 col-md-6 text-lg-left text-md-left text-center mb-4">
                             <img src="{{  asset('storage/logos/'.Setting::getFaviconLogo()->company_logo) }}" alt="StPaul" width="240" />

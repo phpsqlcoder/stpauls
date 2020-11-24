@@ -1977,7 +1977,6 @@ ol li::marker {
 #home-body,
 #default-wrapper {
   padding: 70px 1rem;
-  position: relative;
   z-index: 5;
 }
 
@@ -3933,16 +3932,16 @@ ol li::marker {
 
 .success-icon {
   border-radius: 50%;
-  height: 150px;
-  width: 150px;
+  height: 100px;
+  width: 100px;
   background: #c2e7ae;
   margin: 0 auto;
 }
 
 .success-icon .lnr {
   color: #60b033;
-  font-size: 60px;
-  line-height: 150px;
+  font-size: 40px;
+  line-height: 100px;
   text-align: center;
   display: block;
 }
@@ -3955,16 +3954,16 @@ ol li::marker {
 
 .error-icon {
   border-radius: 50%;
-  height: 150px;
-  width: 150px;
+  height: 100px;
+  width: 100px;
   background: #f6a3a3;
   margin: 0 auto;
 }
 
 .error-icon .lnr {
   color: #d21414;
-  font-size: 60px;
-  line-height: 150px;
+  font-size: 40px;
+  line-height: 100px;
   text-align: center;
   display: block;
 }
@@ -4144,12 +4143,6 @@ ol li::marker {
   font-weight: 500;
 }
 
-#salesTransaction_wrapper .dataTables_scroll .translate-y,
-#salesTransaction_wrapper .dataTables_info .translate-y {
-  -webkit-transform: translateY(-3px);
-          transform: translateY(-3px);
-}
-
 #salesTransaction_wrapper .dataTables_scroll .lnr {
   font-size: 1.25rem;
   font-weight: 700;
@@ -4263,6 +4256,11 @@ form p {
 
 .order-info hr {
   margin: 10px 0;
+}
+
+.translate-y {
+  -webkit-transform: translateY(-3px);
+          transform: translateY(-3px);
 }
 
 @font-face {
@@ -4956,6 +4954,9 @@ form p {
   .product-card a .product-img {
     margin: 5px auto 0 !important;
     min-height: 165px;
+  }
+  .order-info h2 {
+    font-size: 1.65rem;
   }
 }
 

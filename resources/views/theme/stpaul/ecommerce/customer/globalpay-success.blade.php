@@ -51,7 +51,7 @@
                                     @if($sales->sdd_booking_type == 1 && $payment > 0)
                                     <p class="font-weight-bold"><b>To book a rider, click on the &nbsp;<span class="lnr lnr-bicycle text-md text-first-color font-weight-bold mr-2"></span> and enter the Rider's Information.</b></p>
                                     @else
-                                    <p class="font-weight-bold">For <b class="text-danger">unpaid orders</b>, click on <b class="text-danger">PAY NOW</b> button to attach your proof of payment.<br><b>To view the status of your order, please click &nbsp;<span class="lnr lnr-eye text-md text-first-color font-weight-bold"></span>&nbsp;or&nbsp;<span class="d-inline-block translate-y ml-1"><span class="lnr lnr-car text-md text-first-color font-weight-bold mr-2"></span></span>.</b></p>
+                                    <p class="font-weight-bold">For <b class="text-danger">unpaid orders</b>, click on <b class="text-danger">PAY NOW</b> button to attach your proof of payment.<br><b>To view the status of your order, please click &nbsp;<span class="d-inline-block mr-1" style="transform:translateY(6.5px)"><span class="lnr lnr-eye text-md text-first-color font-weight-bold"></span></span>&nbsp;or&nbsp;<span class="d-inline-block ml-1" style="transform:translateY(2px)"><span class="lnr lnr-car text-md text-first-color font-weight-bold mr-2"></span></span>.</b></p>
                                     @endif
                                 </div>
                                 <div class="col-md-5 mb-4">
