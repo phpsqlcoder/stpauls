@@ -604,7 +604,7 @@
                             </div>
                             <div class="checkout-nav">
                                 <a class="checkout-back-btn" href=""><span class="lnr lnr-chevron-left"></span> Back</a>
-                                <a class="checkout-finish-btn" href="" id="btnPlaceOrder">Place Order <span class="lnr lnr-chevron-right"></span></a>
+                                <a class="checkout-finish-btn" href="" id="btnPlaceOrder">Next <span class="lnr lnr-chevron-right"></span></a>
                             </div>
                         </div>
                     </div>
