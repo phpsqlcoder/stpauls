@@ -223,7 +223,7 @@ class SalesController extends Controller
             $this->send_email_notification($sales,'Approve Payment');
 
             $admin = User::find(Auth::id());
-            $admin->send_order_approved_email($sales);
+            $admin->send_order_approved_email($sales,now());
 
             return back()->with('success',__('standard.sales.approve_success'));
 
