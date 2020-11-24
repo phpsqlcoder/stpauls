@@ -27,36 +27,36 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        <h3>Legends:</h3>
+                        <h4>Legends:</h4>
                         <div class="row legend">
                             <div class="col-md-12">
                                 <div class="unit flex-row unit-spacing-xs">
                                     <div class="unit__left"><span class="c-icon c-icon-peso-red"></span></div>
-                                    <div class="unit__body"><small><strong>-> PAY NOW - Used to Submit Payment by Attaching proof of payment and other payment details.</strong></small></div>
+                                    <div class="unit__body"><small><strong>- PAY NOW - Used to Submit Payment by Attaching proof of payment and other payment details.</strong></small></div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="unit flex-row align-items-center unit-spacing-xs">
                                     <div class="unit__left"><span class="lnr lnr-bicycle font-weight-bold text-first-color"></span></div>
-                                    <div class="unit__body"><small><strong>-> Book a rider</strong></small></div>
+                                    <div class="unit__body"><small><strong>- Book a rider</strong></small></div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="unit flex-row align-items-center unit-spacing-xs">
                                     <div class="unit__left"><span class="lnr lnr-car font-weight-bold text-first-color"></span></div>
-                                    <div class="unit__body"><small><strong>-> Track your order</strong></small></div>
+                                    <div class="unit__body"><small><strong>- Track your order</strong></small></div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="unit flex-row align-items-center unit-spacing-xs">
                                     <div class="unit__left"><span class="lnr lnr-eye font-weight-bold text-first-color"></span></div>
-                                    <div class="unit__body"><small><strong>-> View Order Details</strong></small></div>
+                                    <div class="unit__body"><small><strong>- View Order Details</strong></small></div>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="unit flex-row align-items-center unit-spacing-xs">
                                     <div class="unit__left"><span class="lnr lnr-cross font-weight-bold text-first-color"></span></div>
-                                    <div class="unit__body"><small><strong>-> Cancel Order</strong></small></div>
+                                    <div class="unit__body"><small><strong>- Cancel Order</strong></small></div>
                                 </div>
                             </div>
                         </div>
