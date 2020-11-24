@@ -30,7 +30,7 @@
                         <h3>Legends:</h3>
                         <div class="row legend">
                             <div class="col-md-12">
-                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                <div class="unit flex-row unit-spacing-xs">
                                     <div class="unit__left"><span class="c-icon c-icon-peso-red"></span></div>
                                     <div class="unit__body"><small><strong>-> PAY NOW - Used to Submit Payment by Attaching proof of payment and other payment details.</strong></small></div>
                                 </div>
