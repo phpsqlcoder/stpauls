@@ -320,11 +320,8 @@
                 },
                 type: "post",
                 url: "{{route('cart.add')}}",
-                // beforeSend: function(){
-                //     $("#loading-overlay").show();
-                // },
+  
                 success: function(returnData) {
-                    //$("#loading-overlay").hide();
                     if (returnData['success']) {
                         $('.cart-counter').html(returnData['totalItems']);
                         $('.counter').html(returnData['totalItems']);
@@ -348,9 +345,7 @@
                                 window.location.href = "{{route('cart.front.show')}}";
                             } 
                             else {
-                                // $('#btn'+product).html('<i class="fa fa-cart-plus bg-warning text-light p-1 rounded" title="Already added on cart"></i>');
                                 swal.close();
-                               
                             }
                         });
                         

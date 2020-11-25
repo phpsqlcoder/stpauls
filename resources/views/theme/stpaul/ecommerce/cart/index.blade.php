@@ -55,7 +55,7 @@
                                     <div class="col-lg-10 col-md-9">
                                         <div class="info-wrap">
                                             <div class="cart-description">
-                                                <input type="hidden" name="cart_id[]" value="{{$order->id}}">
+                                                <input type="hidden" name="cart_id[]" value="{{$order->product_id}}">
                                                 <h3 class="cart-product-title"><a href="{{ route('product.front.show',$order->product->slug)}}">{{ $order->product->name }}</a></h3>
                                                 <ol class="breadcrumb">
                                                     @php 
@@ -70,7 +70,7 @@
                                             <div class="cart-quantity">
                                                 <label for="quantity">Quantity</label>
                                                 <div class="quantity">
-                                                    <input readonly type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="1000000" step="1" data-inc="1" onchange="updateTotalAmount('{{$loop->iteration}}');" id="order{{$loop->iteration}}_qty">
+                                                    <input readonly type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="1000000" step="1" data-inc="1" onchange="updateTotalAmount('{{$loop->iteration}}','{{$order->product_id}}');" id="order{{$loop->iteration}}_qty">
                                                     <div class="quantity-nav">
                                                         <div class="quantity-button quantity-up" id="{{$loop->iteration}}">+</div>
                                                         <div class="quantity-button quantity-down" id="{{$loop->iteration}}">-</div>
@@ -258,8 +258,8 @@
             }
         });
 
-        function updateTotalAmount(id){
-            
+        function updateTotalAmount(id,productid){
+
             var qty = $('#order'+id+'_qty').val();
             var weight = $('#input_order'+id+'_product_weight').val();
             var price = $('#input_order'+id+'_product_price').val();
@@ -270,6 +270,22 @@
             $('#order'+id+'_total_weight').html(FormatAmount(total_weight,2));
             $('#order'+id+'_total_price').html(FormatAmount(total_price,2));
             $('#input_order'+id+'_product_total_price').val(total_price);
+
+            $.ajax({
+                data: {
+                    "product_id": productid,
+                    "qty": qty,
+                    "_token": "{{ csrf_token() }}",
+                },
+                type: "post",
+                url: "{{route('cart.add')}}",
+                success: function(returnData) {
+                    swal({
+                        title: '',
+                        text: "Cart updated successfully.",         
+                    });
+                }
+            });
 
             grandTotal();
         }
