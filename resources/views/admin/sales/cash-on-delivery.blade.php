@@ -117,7 +117,12 @@
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
-                                        <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
+                                        @if($sale->delivery_status == 'Waiting for Approval')
+                                            <a href="{{ route('sales-transaction.view',$sale->id) }}" class="tx-semibold tx-danger">{{$sale->delivery_status}}</a>
+                                        @else
+                                            <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
+                                        @endif
+                                        
                                     </td>
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>

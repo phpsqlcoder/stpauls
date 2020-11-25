@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/pygments.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/easyzoom.css') }}" /> --}}
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.css') }}" />
     <style>
         .product-rating .fa-star.checked {
             color: #ffb800;
@@ -397,7 +397,7 @@
     <script src="{{ asset('theme/stpaul/plugins/ion.rangeslider/js/ion.rangeSlider.js') }}"></script>
     <script src="{{ asset('theme/stpaul/js/better-rating.js') }}"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.js') }}"></script>
     <script src="{{ asset('theme/stpaul/js/rater.js') }}"></script>
     <script>
         $(".product-rating").rate();
@@ -451,7 +451,7 @@
                         swal({
                             toast: true,
                             position: 'center',
-                            title: "Product Added to your cart!",
+                            title: "Product added to your cart!",
                             type: "success",
                             showCancelButton: true,
                             timerProgressBar: true,

@@ -1,7 +1,7 @@
 @extends('theme.'.env('FRONTEND_TEMPLATE').'.main')
 
 @section('pagecss')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.css') }}" />
 @endsection
 
 @section('content')
@@ -300,9 +300,9 @@
 @endsection
 
 @section('pagejs')
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.js') }}"></script>
 @endsection
+
 
 @section('customjs')
     <script>
@@ -329,7 +329,7 @@
                         swal({
                             toast: true,
                             position: 'center',
-                            title: "Product Added to your cart!",
+                            title: "Product added to your cart!",
                             type: "success",
                             showCancelButton: true,
                             timerProgressBar: true,
