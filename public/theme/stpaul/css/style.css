@@ -4137,20 +4137,21 @@ ol li::marker {
   width: 30px;
 }
 
-#salesTransaction_wrapper .dataTables_scroll,
+#salesTransaction_wrapper #salesTransaction,
 #salesTransaction_wrapper .dataTables_info {
-  font-size: 0.95rem;
+  font-size: 0.95rem !important;
   font-weight: 500;
 }
 
-#salesTransaction_wrapper .dataTables_scroll .lnr {
+#salesTransaction_wrapper #salesTransaction .lnr {
   font-size: 1.25rem;
   font-weight: 700;
   -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
+  color: #b82e24;
 }
 
-#salesTransaction_wrapper .dataTables_scroll .lnr:hover {
+#salesTransaction_wrapper #salesTransaction .lnr:hover {
   color: #b82e24;
 }
 
@@ -4261,6 +4262,54 @@ form p {
 .translate-y {
   -webkit-transform: translateY(-3px);
           transform: translateY(-3px);
+}
+
+.dataTable.stripe tbody tr.odd {
+  background-color: #efefef;
+}
+
+.dataTable.stripe tbody tr.odd + tr.child td {
+  background-color: #efefef;
+  width: 100%;
+}
+
+.dataTable.stripe tbody tr.child li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.dataTable.stripe tbody tr.child li[data-dtr-index="4"] span:first-child {
+  margin-bottom: 10px;
+}
+
+.dataTable.stripe tbody tr.child:hover {
+  background: inherit !important;
+}
+
+.dataTable.stripe tbody tr[role="row"] > td:first-child {
+  font-weight: 700;
+}
+
+.dataTable.stripe tbody tr[role="row"] > td:first-child:before {
+  top: 15px !important;
+  left: 10px !important;
+}
+
+.dataTable.stripe tbody tr[role="row"]:hover {
+  background-color: #dceefd !important;
+}
+
+.dataTable.stripe tbody tr[role="row"]:hover + tr.child td {
+  background-color: #dceefd !important;
+}
+
+.dataTable.collapsed tbody tr[role="row"] > td:first-child {
+  padding-left: 40px !important;
 }
 
 @font-face {
@@ -4400,10 +4449,6 @@ form p {
   }
   .list-product .product-card .product-price {
     font-size: 1.1rem;
-  }
-  #salesTransaction_wrapper .dataTables_scroll,
-  #salesTransaction_wrapper .dataTables_info {
-    font-size: 0.8rem;
   }
   #salesTransaction_wrapper .dataTables_info {
     text-align: left !important;
