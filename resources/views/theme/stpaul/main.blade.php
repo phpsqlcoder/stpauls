@@ -22,7 +22,12 @@
     <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/css/animate.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/css/style.css') }}" />
 
-    
+    <style>
+        .rd-navbar-n-search .rd-n-search__submit::before {
+            content: "";
+        }
+        
+    </style>
 
     @yield('pagecss')
 
@@ -188,18 +193,17 @@
             }
         });
 
-        $('input[name="keyword"]').focusout(function(){
-            $('#productSearchResult').hide();
-        });
-
         $('input[name="keyword"]').focusin(function(){
             var value = $(this).val();
             if ( value.length > 0){
                 $('#productSearchResult').show();
+                
+                $('#searchbtn').addClass('closebtn');
+                $('#search-icon').removeClass('fa fa-search');
+                $('#search-icon').addClass('fa fa-times');
             } else {
                 $('#productSearchResult').hide();
             }
-            
         });
 
         $('#productSearchForm').submit(function(e){
@@ -211,11 +215,24 @@
                 url: "{{ route('product.front.search') }}",
                 data: $('#productSearchForm').serialize(),
                 success: function( response ) {
+                    $('#searchbtn').addClass('closebtn');
+                    $('#search-icon').removeClass('fa fa-search');
+                    $('#search-icon').addClass('fa fa-times');
+
                     $('#searching').hide();
                     $('#productSearchResult').html(response);
                     $('#productSearchResult').show();
                 }
             });
+        });
+
+        $(document).on('click','.closebtn',function(){
+
+            $('#searchbtn').removeClass('closebtn');
+            $('#search-icon').removeClass('fa fa-times');
+            $('#search-icon').addClass('fa fa-search');
+
+            $('#productSearchResult').hide();
         });
     </script>
 
