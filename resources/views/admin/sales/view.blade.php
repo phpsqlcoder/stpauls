@@ -114,8 +114,8 @@
 
             @if($sales->delivery_type == 'Store Pick Up')
             <p>
-                Pick-up branch : {{ $sales->branch }}
-                Pick-up date : {{ $sales->pickup_date }}<br>
+                Pick-up branch : {{ $sales->branch }}<br>
+                Pick-up date : {{ $sales->pickup_date }}
             </p>
             @endif
 
