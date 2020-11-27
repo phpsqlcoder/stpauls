@@ -222,7 +222,10 @@
                 <p>Other Instructions : {{ $sales->other_instruction ?? 'N/A' }}</p>
 
                 @if($sales->delivery_type == 'Store Pick Up')
-                <p>Pick-up date : {{ $sales->pickup_date }}</p>
+                <p>
+                    Pick-up branch : {{ $sales->branch }}
+                    Pick-up date : {{ $sales->pickup_date }}<br>
+                </p>
                 @endif
 
                 @if($sales->sdd_booking_type == 1)
@@ -266,6 +269,7 @@
                 <li>&nbsp;</li>
                 <li>&nbsp;</li>
                 @if($sales->delivery_type == 'Store Pick Up')
+                <li>&nbsp;</li>
                 <li>&nbsp;</li>
                 @endif
                 @if($sales->sdd_booking_type == 1)
