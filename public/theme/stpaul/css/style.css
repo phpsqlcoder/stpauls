@@ -4232,15 +4232,15 @@ form p {
 }
 
 .c-icon-peso {
-  background-image: url(../images/misc/cash-peso.svg);
+  background-image: url(../images/misc/cash-peso-red.svg);
 }
 
 .c-icon-peso:hover {
-  background-image: url(../images/misc/case-peso-red.svg);
+  background-image: url(../images/misc/cash-peso-red.svg);
 }
 
 .c-icon-peso-red {
-  background-image: url(../images/misc/case-peso-red.svg);
+  background-image: url(../images/misc/cash-peso-red.svg);
 }
 
 .legend .lnr {
