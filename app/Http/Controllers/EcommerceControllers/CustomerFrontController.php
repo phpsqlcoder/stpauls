@@ -56,8 +56,8 @@ class CustomerFrontController extends Controller
     public function customer_sign_up(Request $request)
     {   
         Validator::make($request->all(),[
-            'firstname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
-            'lastname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
+            'firstname' => 'required|max:150',
+            'lastname' => 'required|max:150',
             'email' => 'required|email|max:191|unique:users,email',
             'password' => [
                 'required',
