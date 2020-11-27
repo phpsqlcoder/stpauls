@@ -4259,6 +4259,10 @@ form p {
   margin: 10px 0;
 }
 
+.order-info-btn-group a {
+  margin-left: 15px;
+}
+
 .translate-y {
   -webkit-transform: translateY(-3px);
           transform: translateY(-3px);
@@ -4283,8 +4287,8 @@ form p {
           flex-direction: column;
 }
 
-.dataTable.stripe tbody tr.child li[data-dtr-index="4"] span:first-child {
-  margin-bottom: 10px;
+.dataTable.stripe tbody tr.child li[data-dtr-index="4"] > span:first-child {
+  margin-bottom: 15px;
 }
 
 .dataTable.stripe tbody tr.child:hover {
@@ -4310,6 +4314,11 @@ form p {
 
 .dataTable.collapsed tbody tr[role="row"] > td:first-child {
   padding-left: 40px !important;
+}
+
+.dataTable.collapsed .child .order-info-btn-group a {
+  margin-right: 15px;
+  margin-left: 0;
 }
 
 @font-face {

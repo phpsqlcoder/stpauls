@@ -85,22 +85,23 @@
                                     <td>{{ number_format($sale->gross_amount,2) }}</td>
                                     <td class="text-uppercase">{{ $sale->delivery_status }}</td>
                                     <td class="text-right">
+                                        <div class="order-info-btn-group">
                                         @if($sale->status != 'CANCELLED')
 
                                             @if($sale->delivery_status == 'Shipping Fee Validation')
                                                 <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
-                                                    <span class="lnr lnr-cross mr-2"></span>
+                                                    <span class="lnr lnr-cross"></span>
                                                 </a>
                                             @else
 
                                                 @if($sale->delivery_status == 'Waiting for Payment' && $payment_status == 0)
                                                     @if($sale->payment_method == 1)
                                                         <a href="" title="Pay now" onclick="globalpay('{{$sale->id}}','{{$sale->net_amount}}')" id="paybtn{{$sale->id}}">
-                                                            <span class="c-icon c-icon-peso mr-2"></span>
+                                                            <span class="c-icon c-icon-peso"></span>
                                                         </a>
                                                     @else
                                                         <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
-                                                            <span class="c-icon c-icon-peso mr-2"></span>
+                                                            <span class="c-icon c-icon-peso"></span>
                                                         </a>
                                                     @endif
                                                 @endif
@@ -108,10 +109,10 @@
                                         @endif
 
                                         @if($sale->sdd_booking_type == 1 && $sale->rider_name == '' && $sale->delivery_status == 'Scheduled for Processing')
-                                        <a class="translate-y" href="{{ route('transaction.add-rider',$sale->id) }}" title="Add Rider"><span class="lnr lnr-bicycle mr-2"></span></a>
+                                        <a class="translate-y" href="{{ route('transaction.add-rider',$sale->id) }}" title="Add Rider"><span class="lnr lnr-bicycle"></span></a>
                                         @endif
 
-                                        <a class="translate-y" href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
+                                        <a class="translate-y" href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car"></span></a>
                                         <a href="{{ route('account-order-info',$sale->id) }}" title="View Order Summary">
                                             <span class="lnr lnr-eye"></span>
                                         </a>
@@ -120,11 +121,12 @@
                                             @if($sale->delivery_status != 'Shipping Fee Validation')
                                                 @if($sale->delivery_status == 'Waiting for Payment' && $payment_status == 0)
                                                     <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
-                                                        <span class="lnr lnr-cross mr-2"></span>
+                                                        <span class="lnr lnr-cross"></span>
                                                     </a>
                                                 @endif
                                             @endif
                                         @endif
+                                        </div>
                                     </td>
                                 </tr>
                                 @empty
