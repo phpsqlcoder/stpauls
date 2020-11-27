@@ -24,19 +24,6 @@ class SalesPayment extends Model
 
         $qry = \DB::table('ecommerce_sales_headers')->where('payment_method','>',1)->where('status','active')->whereIn('delivery_status',['Waiting for Payment','WAITING FOR VALIDATION','Shipping Fee Validation'])->count();
 
-        // $qry1 = \DB::table('ecommerce_sales_payments')
-        //         ->leftJoin('ecommerce_sales_headers', 'ecommerce_sales_payments.sales_header_id', '=', 'ecommerce_sales_headers.id')
-        //         ->where('ecommerce_sales_payments.is_verify',NULL)
-        //         ->where('ecommerce_sales_payments.status','PAID')
-        //         ->where('ecommerce_sales_headers.payment_method','>',1)->count();
-
-
-        // $qry = \DB::table('ecommerce_sales_headers')
-        //         ->leftJoin('ecommerce_sales_payments', 'ecommerce_sales_headers.id', '=', 'ecommerce_sales_payments.sales_header_id')
-        //         ->where('ecommerce_sales_headers.delivery_status','Shipping Fee Validation')->count();
-
-        // return $qry1+$qry;
-
         return $qry;
     }
 
