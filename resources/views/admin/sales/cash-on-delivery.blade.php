@@ -93,7 +93,6 @@
                             <thead>
                                 <th>Order #</th>
                                 <th>Order Date</th>
-                                <th>Date & Time Needed</th>
                                 <th>Payment Date</th>
                                 <th>Customer Name</th>
                                 <th>Total Amount</th>
@@ -107,12 +106,10 @@
                             @forelse($sales as $sale)
                                 @php
                                     $payment = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->first();
-                                    $date_needed = $sale->pickup_date.' '.$sale->pickup_time;
                                 @endphp
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
                                     <td>{{ date('Y-m-d',strtotime($sale->created_at)) }}</td>
-                                    <td>{{ date('Y-m-d h:i A',strtotime($date_needed)) }}</td>
                                     <td>@if($sale->payment_status == 'PAID') {{$payment->payment_date}} @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>

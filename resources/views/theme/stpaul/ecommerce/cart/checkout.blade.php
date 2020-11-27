@@ -269,16 +269,11 @@
                                                         </div>
                                                         <div class="gap-10"></div>
                                                         <div class="form-row form-style fs-sm">
-                                                            <div class="col-lg-6 mb-sm-2">
-                                                                <label>Date *</label>
+                                                            <div class="col-lg-12 mb-sm-2">
+                                                                <label>Pick-up Date *</label>
                                                                 <input type="date" name="pickup_date" onchange="pickupDate()" id="pickup_date" class="form-control form-input"
-                                                                    min="{{date('Y-m-d',strtotime(today()))}}">
+                                                                    min="{{date('Y-m-d',strtotime(today()->addDays(1)))}}">
                                                                 <p id="stp_date" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <label>Time *</label>
-                                                                <input type="time" name="pickup_time" onchange="pickupTime()" id="pickup_time" class="form-control form-input">
-                                                                <p id="stp_time" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -305,16 +300,11 @@
                                                         </div>
                                                         <div class="gap-10"></div>
                                                         <div class="form-row form-style fs-sm">
-                                                            <div class="col-lg-6 mb-sm-2">
-                                                                <label>Date *</label>
+                                                            <div class="col-lg-12 mb-sm-2">
+                                                                <label>Pick-up Date *</label>
                                                                 <input type="date" name="pickup_date" onchange="pickupDate()" id="pickup_date" class="form-control form-input"
-                                                                    min="{{date('Y-m-d',strtotime(today()))}}">
+                                                                    min="{{date('Y-m-d',strtotime(today()->addDays(1)))}}">
                                                                 <p id="stp_date" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <label>Time *</label>
-                                                                <input type="time" name="pickup_time" onchange="pickupTime()" id="pickup_time" class="form-control form-input">
-                                                                <p id="stp_time" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -911,37 +901,6 @@
             }
         }
 
-        function pickupTime(){
-            var inputtime = $('#pickup_time').val()+":00";
-            var time_from = $('#time_from').val()+":00";
-            var time_to   = $('#time_to').val()+":00";
-
-            var fr_time = time_from;
-            var a = fr_time.split(':');
-            // minutes are worth 60 seconds. Hours are worth 60 minutes.
-            var fr_time = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
-
-            var to_time = time_to;
-            var b = to_time.split(':');
-            // minutes are worth 60 seconds. Hours are worth 60 minutes.
-            var to_time = (+b[0]) * 60 * 60 + (+b[1]) * 60 + (+b[2]);
-
-            var sl_time = inputtime;
-            var c = sl_time.split(':');
-            // minutes are worth 60 seconds. Hours are worth 60 minutes.
-            var sl_time = (+c[0]) * 60 * 60 + (+c[1]) * 60 + (+c[2]);
-
-            if(sl_time >= fr_time && sl_time <= to_time ){
-                
-            } else {
-                this.value = '';
-                swal({
-                    title: '',
-                    text: "Sorry! We are not available on that time.",         
-                })
-            }
-        }
-
         $('#billingNxtBtn').click(function(){
             /* BEGIN BILLING VALIDATION */
                 var regex = '/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/';
@@ -1010,7 +969,7 @@
                 }
 
                 if(option == 2){
-                    var stp_branch = $('#selbranch').val(), stp_date = $('#pickup_date').val(), stp_time = $('#pickup_time').val();
+                    var stp_branch = $('#selbranch').val(), stp_date = $('#pickup_date').val();
 
                     if($('#selbranch').val() == 0){ 
                         $('#stp_branch').show(); 
@@ -1024,13 +983,7 @@
                         $('#stp_date').hide(); 
                     }
 
-                    if($('#pickup_time').val() == ''){ 
-                        $('#stp_time').show(); 
-                    } else { 
-                        $('#stp_time').hide(); 
-                    }
-
-                    if(stp_branch == 0 || stp_date.length === 0 || stp_time.length === 0){
+                    if(stp_branch == 0 || stp_date.length === 0){
                         $(this).removeClass('checkout-next-btn');
                     } else {
                        $(this).addClass('checkout-next-btn'); 

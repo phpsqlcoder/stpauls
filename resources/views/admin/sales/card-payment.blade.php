@@ -132,10 +132,10 @@
                                                     <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
                                                 @endif
                                             @else
-                                                {{ $sale->delivery_status }}
+                                                <span class="@if($sale->delivery_status == 'Waiting for Payment') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
                                             @endif
                                         @else
-                                            <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
+                                            <span class="@if($sale->delivery_status == 'Shipping Fee Validation' || $sale->delivery_status == 'Waiting for Payment') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
                                         @endif   
                                     </td>
                                     <td>{{ $sale->delivery_type }}</td>
