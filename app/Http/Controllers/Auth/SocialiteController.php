@@ -217,6 +217,32 @@ class SocialiteController extends Controller
                     }
                     Auth::login($customer);
                 }
+
+                 $cart = session('cart', []);
+
+                foreach ($cart as $order) {
+                    $product = Product::find($order['product_id']);
+                    $cart = Cart::where('product_id', $order['product_id'])
+                        ->where('user_id', Auth::id())
+                        ->first();
+
+                    if (!empty($cart)) {
+                        $newQty = $cart->qty + $order['qty'];
+                        $cart->update([
+                            'qty' => $newQty,
+                            'price' => $product->price,
+                        ]);
+                    } else {
+                        Cart::create([
+                            'product_id' => $order['product_id'],
+                            'user_id' => Auth::id(),
+                            'qty' => $order['qty'],
+                            'price' => $product->price,
+                        ]);
+                    }
+                }
+
+                session()->forget('cart');
                 session::forget('ptype');
                 return redirect(route('my-account.manage-account'));
             }

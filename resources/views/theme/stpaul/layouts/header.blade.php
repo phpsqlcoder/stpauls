@@ -53,7 +53,7 @@
                                         <a style="display: none;" class="dropdown-item" href="#" id="searching">Searching..</a>
                                     </div>
                                 </div>
-                                <button class="rd-n-search__submit" type="submit"></button>
+                                <button class="rd-n-search__submit" type="button" id="searchbtn"><i class="fa fa-search text-white" id="search-icon"></i></button>
                             </form>
                         </div>
                     </div>

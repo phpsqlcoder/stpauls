@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('theme/stpaul/css/better-rating.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/css/animate.min.css') }}" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.css') }}" />
 @endsection
 
 @section('content')
@@ -199,7 +199,7 @@
 
 @section('pagejs')
     <script src="{{ asset('theme/stpaul/plugins/ion.rangeslider/js/ion.rangeSlider.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.js') }}"></script>
     
     <script>
         $(".js-range-slider").ionRangeSlider({
@@ -262,7 +262,7 @@
                         swal({
                             toast: true,
                             position: 'center',
-                            title: "Product Added to your cart!",
+                            title: "Product added to your cart!",
                             type: "success",
                             showCancelButton: true,
                             timerProgressBar: true,
