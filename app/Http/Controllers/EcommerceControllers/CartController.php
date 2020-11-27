@@ -295,7 +295,6 @@ class CartController extends Controller
         
 
         $pickupdate = $request->input('pickup_date_2');
-        $pickuptime = $request->input('pickup_time_2');
 
         $salesHeader = SalesHeader::create([
             'order_number' => $requestId,
@@ -324,7 +323,6 @@ class CartController extends Controller
             'payment_option' => (!isset($request->payment_method)) ? 0 : $request->payment_option,
             'branch' => ($request->shipOption == 2)  ? $request->branch : NULL,
             'pickup_date' => ($request->shipOption == 2) ? $pickupdate : NULL,
-            'pickup_time' => ($request->shipOption == 2) ? $pickuptime : NULL,
             'service_fee' => $request->servicefee,
             'is_approve' => NULL,
             'is_other' => ($request->shipOption != 2 && $request->shippingfee == 0) ? 1 : 0,
