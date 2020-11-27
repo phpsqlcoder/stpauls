@@ -272,7 +272,7 @@
                                                             <div class="col-lg-6 mb-sm-2">
                                                                 <label>Date *</label>
                                                                 <input type="date" name="pickup_date" onchange="pickupDate()" id="pickup_date" class="form-control form-input"
-                                                                    min="{{date('Y-m-d',strtotime(today()))}}">
+                                                                    min="{{date('Y-m-d',strtotime(today()->addDays(1)))}}">
                                                                 <p id="stp_date" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
                                                             </div>
                                                             <div class="col-lg-6">
@@ -308,7 +308,7 @@
                                                             <div class="col-lg-6 mb-sm-2">
                                                                 <label>Date *</label>
                                                                 <input type="date" name="pickup_date" onchange="pickupDate()" id="pickup_date" class="form-control form-input"
-                                                                    min="{{date('Y-m-d',strtotime(today()))}}">
+                                                                    min="{{date('Y-m-d',strtotime(today()->addDays(1)))}}">
                                                                 <p id="stp_date" class="text-danger" style="display: none;"><small>The date field is required.</small></p>
                                                             </div>
                                                             <div class="col-lg-6">
