@@ -39,7 +39,6 @@
                                     @else
                                     <h5 class="success-msg">Order Received</h5>
                                     @endif
-                                    <p class="text-danger text-center"><b>WAITING FOR PAYMENT</b></p>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="gap-40"></div>
