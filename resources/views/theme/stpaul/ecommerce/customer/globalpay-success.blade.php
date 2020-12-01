@@ -64,7 +64,10 @@
                                             @if($sales->sdd_booking_type == 1)
                                             <p class="font-weight-bold"><b>To book a rider, click on the &nbsp;<span class="lnr lnr-bicycle text-md text-first-color font-weight-bold mr-2"></span> and enter the Rider's Information.</b></p>
                                             @else
-                                            <h2 class="text-center"><strong>Thank you for your payment.<br>ST PAULS personnel will contact you once the order is "Ready for Delivery".</strong></h2>
+                                            <p class="font-weight-bold">
+                                            To view the status of your order, click on <b class="text-danger">MY ORDER</b> button below. <br>
+                                            Click on these icons <span class="d-inline-block mr-1" style="transform:translateY(6.5px)"><span class="lnr lnr-eye text-md text-first-color font-weight-bold"></span></span>&nbsp;or&nbsp;<span class="d-inline-block ml-1" style="transform:translateY(2px)"><span class="lnr lnr-car text-md text-first-color font-weight-bold mr-2"></span></span>.
+                                        </p>
                                             @endif
                                         @endif
 
