@@ -2,13 +2,13 @@
 <tr>
     <td width="15%">{{$payment->payment_date}}</td>
     <td width="15%">{{$payment->payment_type}}</td>
-    <td width="25%"><a target="_blank" href="{{ asset('storage/payments/'.$payment->id.'/'.$payment->attachment) }}">{{ $payment->attachment }}</a></td>
+    <td width="20%"><a target="_blank" href="{{ asset('storage/payments/'.$payment->id.'/'.$payment->attachment) }}">{{ $payment->attachment }}</a></td>
     <td width="10%" class="text-right">{{number_format($payment->amount,2)}}</td>
-    <td width="10%">
+    <td width="15%">
     	@if($payment->sales_header->sdd_booking_type == 1)
-    		Customer
+    		<b>Customer</b>
     	@else
-    		ST PAULS Personnel
+    		<b>ST PAULS Personnel</b>
     	@endif
     </td>
     <td width="25%">
