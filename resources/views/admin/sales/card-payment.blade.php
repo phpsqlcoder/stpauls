@@ -222,7 +222,7 @@
                             <th>Type</th>
                             <th>Attachment</th>
                             <th>Amount</th>
-                            <th>Status</th>
+                            <th>Book a Rider</th>
                             <th>Action</th>
                         </thead>
                         <tbody id="payment_details_tbl">
