@@ -208,31 +208,8 @@
 
     <div class="modal effect-scale" id="prompt-show-payment-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Payment Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-bordered payment_details" style="word-break: break-all;">
-                        <thead>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Attachment</th>
-                            <th>Amount</th>
-                            <th>Book a Rider</th>
-                            <th>Action</th>
-                        </thead>
-                        <tbody id="payment_details_tbl">
-
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+            <div class="modal-content" id="payment_details_tbl">
+                
             </div>
         </div>
     </div>
