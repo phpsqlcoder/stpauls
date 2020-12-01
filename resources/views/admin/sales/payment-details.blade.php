@@ -12,7 +12,6 @@
             <th>Attachment</th>
             <th>Amount</th>
             <th>Book a Rider</th>
-            <th>Action</th>
         </thead>
         <tbody>
         	<tr>
