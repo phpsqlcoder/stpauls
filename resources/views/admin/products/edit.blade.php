@@ -75,10 +75,11 @@
                         @endhasError
                     </div>
                     <div class="form-group">
-                        <label>Discount (in Php) </label>
-                        <input class="form-control @error('discount') is-invalid @enderror" type="number" step="0.01" min="0.00" value="{{ old('discount', number_format($product->discount,2,'.','')) }}" name="discount" id="discount">
+                        <label>Discount (in Php)</label>
+                        <input @if($product->salestatus > 0) readonly @endif class="form-control @error('discount') is-invalid @enderror" type="number" step="0.01" min="0.00" value="{{ old('discount', number_format($product->discount,2,'.','')) }}" name="discount" id="discount">
                         @hasError(['inputName' => 'discount'])
                         @endhasError
+                        <small class="text-danger">Note: Discount is disabled if the product is included in the promo.</small>
                     </div>
                     <div class="form-group">
                         <label class="d-block">Short Description</label>

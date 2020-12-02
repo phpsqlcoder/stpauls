@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\EcommerceModel\ProductCategory;
+use App\StPaulModel\OnSaleProducts;
 
 class Product extends Model
 {
@@ -34,6 +35,13 @@ class Product extends Model
     public function getPriceWithCurrencyAttribute()
     {
     	return " ".number_format($this->price,2);
+    }
+
+    public function getSaleStatusAttribute()
+    {
+        $count = OnSaleProducts::where('product_id',$this->id)->count();
+
+        return $count;
     }
 
     public function ratings()
@@ -251,9 +259,6 @@ class Product extends Model
 
         return $data;
     }
-
-
-
 
   
 
