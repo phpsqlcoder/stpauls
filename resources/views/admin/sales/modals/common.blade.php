@@ -17,6 +17,7 @@
                             <option value="Scheduled for Processing">Scheduled for Processing</option>
                             <option value="Processing">Processing</option>
                             <option value="Ready For delivery">Ready For delivery</option>
+                            <option value="Ready for Pickup">Ready for Pickup</option>
                             <option value="Shipped">Shipped</option>
                             <option value="In Transit">In Transit</option>
                             <option value="Delivered">Delivered</option>
