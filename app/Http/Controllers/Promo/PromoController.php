@@ -13,6 +13,7 @@ use App\StPaulModel\OnSaleProducts;
 use App\StPaulModel\Promo;
 
 use Auth;
+use DB;
 
 class PromoController extends Controller
 {
@@ -103,8 +104,13 @@ class PromoController extends Controller
 
         if($promo){
             foreach($prodId as $key => $id){
-                $product = Product::find($id);
+                $sale = DB::table('onsale_products')->join('promos','onsale_products.promo_id','=','promos.id')->where('onsale_products.product_id',$id)->where('promos.status','INACTIVE')->count();
 
+                if($sale){
+                    OnSaleProducts::where('product_id',$id)->delete();
+                }
+
+                $product = Product::find($id);
                 OnSaleProducts::create([
                     'promo_id' => $promo->id,
                     'product_id' => $id,
