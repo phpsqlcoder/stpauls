@@ -388,7 +388,7 @@
                                 <select name="user_id" class="form-control input-sm">
                                     <option value="">- All Users -</option>
                                     @foreach($uniqueProductByUser as $pr)
-                                        <option value="{{$pr->user_id}}" @if ($pr->user_id == auth()->user()->id) selected @endif>{{$pr->user->name}}</option>
+                                        <option value="{{$pr->created_by}}" @if ($pr->created_by == auth()->user()->id) selected @endif>{{$pr->user->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
