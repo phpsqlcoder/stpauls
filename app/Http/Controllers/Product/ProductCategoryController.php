@@ -28,16 +28,20 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        $customConditions = [
-            [
-                'field' => 'parent_id',
-                'operator' => '=',
-                'value' => '0',
-                'apply_to_deleted_data' => false
-            ]
-        ];
+        if(isset($_GET['search']) && $_GET['search'] <> ''){
+            $listing = new ListingHelper( 'asc', 10, 'id'); 
+        } else {
+            $customConditions = [
+                [
+                    'field' => 'parent_id',
+                    'operator' => '=',
+                    'value' => '0',
+                    'apply_to_deleted_data' => false
+                ]
+            ];
 
-        $listing = new ListingHelper( 'asc', 10, 'id', $customConditions);
+            $listing = new ListingHelper( 'asc', 10, 'id',$customConditions);
+        }
 
         $categories = $listing->simple_search(ProductCategory::class, $this->searchFields);
         // Simple search init data

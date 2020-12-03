@@ -7,7 +7,7 @@
             </div>
         </th>
         <td>
-            <strong @if($subcategory->trashed()) style="text-decoration:line-through;" @endif> {{ $subcategory->name }}</strong>
+            <strong @if($subcategory->trashed()) style="text-decoration:line-through;" @endif>{{ $subcategory->name }}</strong>
         </td>
         <td class="text-center">{{ $subcategory->totalsub }}</td>
         <td class="text-center">{{ $subcategory->totalproducts }}</td>
@@ -65,7 +65,7 @@
                     <thead>
                         <tr>
                             <th width="8%"></th>
-                            <th width="27%" class="text-uppercase"><h5>{{ $subcategory->name }}</h5></th>
+                            <th width="27%" class="text-uppercase"><h5>SUB-CATEGORY : {{ $subcategory->name }}</h5></th>
                             <th width="10%"></th>
                             <th width="10%"></th>
                             <th width="10%"></th>

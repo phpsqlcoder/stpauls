@@ -220,7 +220,7 @@ Manage Customer
 
                             @empty
                             <tr>
-                                <th colspan="6" style="text-align: center;"> <p class="text-danger">No categories found.</p></th>
+                                <th colspan="7" style="text-align: center;"> <p class="text-danger">No categories found.</p></th>
                             </tr>
                             @endforelse
                             </tbody>
