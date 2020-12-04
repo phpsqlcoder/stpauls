@@ -92,7 +92,7 @@
                             <thead>
                             <tr>
                                 <th width="65%">Product Name</th>
-                                <th width="20%">Total Count</th>
+                                <th class="text-center" width="20%">Total Count</th>
                                 <th width="15%">Options</th>
                             </tr>
                             </thead>
@@ -100,7 +100,7 @@
                             @forelse($products as $product)
                                 <tr id="row{{$product->id}}" style="padding-top: 5px;">
                                     <td>{{$product->product_name }}</td>
-                                    <td>{{ $product->total_count }}</td>
+                                    <td class="text-center">{{ $product->total_count }}</td>
                                     <td>
                                         <nav class="nav table-options">
                                             <a target="_blank" href="{{ route('product.front.show', $product->product_details->slug) }}" title="View Product Profile" class="nav-link"><i class="fa fa-eye"></i></a>
