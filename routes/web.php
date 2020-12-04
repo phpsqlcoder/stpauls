@@ -51,9 +51,24 @@
         Route::get('/search-product', 'Product\Front\ProductFrontController@search_product')->name('product.front.search');
     //
 
+
+
+
     // Ecommerce Pages
         Route::get('/privacy-policy', 'FrontController@privacy_policy')->name('privacy-policy');
         Route::get('/branches','FrontController@branches')->name('front.branches');
+
+        Route::get('/request-a-title','FrontController@request_title')->name('front.request-a-title');
+        Route::post('/store-request-title','FrontController@store_title_request')->name('front.store-request-title');
+
+        //News Frontend
+        Route::get('/news/', 'News\ArticleFrontController@news_list')->name('news.front.index');
+        Route::get('/news/{slug}', 'News\ArticleFrontController@news_view')->name('news.front.show');
+        Route::get('/news/{slug}/print', 'News\ArticleFrontController@news_print')->name('news.front.print');
+        Route::post('/news/{slug}/share', 'News\ArticleFrontController@news_share')->name('news.front.share');
+
+        // Contact Us
+        Route::post('/contact-us', 'FrontController@contact_us')->name('contact-us');
     //
 
     ########## ECOMMERCE ROUTES #############
@@ -108,8 +123,9 @@
             // Route::get('/account/pay/{id}', 'EcommerceControllers\CartController@pay_again')->name('my-account.pay-again');
 
             Route::post('product/review/store', 'EcommerceControllers\ProductReviewController@store')->name('product.review.store');
-
-
+            Route::post('/product-add-to-wishlist','EcommerceControllers\WishlistController@add_to_wishlist')->name('product.add-to-wishlist');
+            Route::post('/product-remove-to-wishlist','EcommerceControllers\WishlistController@remove_to_wishlist')->name('product.remove-to-wishlist');
+            
     });
 
 
@@ -343,6 +359,9 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::get('/transactions-restore/{id}', 'Transaction\TransactionController@restore')->name('transactions.restore');
         //
 
+        // Wishlist
+            Route::resource('/admin/wishlist','EcommerceControllers\WishlistController');
+
             
         // Migrate products
             Route::post('/product-upload-main','Product\ProductController@upload_main')->name('products.upload.main');
@@ -354,12 +373,10 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/customer-upload','Product\ProductController@upload_customers')->name('customers.upload');
         //
 
-
-        // Route::get('/sales-advance-search/', 'EcommerceControllers\SalesController@advance_index')->name('admin.sales.list.advance-search');
-        // Route::get('/admin/sales-transaction/view-payment/{sales}', 'EcommerceControllers\SalesController@view_payment')->name('sales-transaction.view_payment');
-        //Route::get('/display-added-payments', 'EcommerceControllers\SalesController@display_payments')->name('display.added-payments');
         Route::get('/display-delivery-history', 'EcommerceControllers\SalesController@display_delivery')->name('display.delivery-history');
 
+        // Title Requests
+        Route::get('/title-requests','TitleRequest\TitleRequestController@index')->name('admin.title-requests');
 
 
 
@@ -458,13 +475,6 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/permission/destroy', 'Settings\PermissionController@destroy')->name('permission.destroy');
             Route::get('/permission/restore/{id}', 'Settings\PermissionController@restore')->name('permission.restore');
         //}
-
-        //News Frontend
-            Route::get('/new-development/', 'News\ArticleFrontController@news_list')->name('news.front.index');
-            Route::get('/new-development/{slug}', 'News\ArticleFrontController@news_view')->name('news.front.show');
-            Route::get('/new-development/{slug}/print', 'News\ArticleFrontController@news_print')->name('news.front.print');
-            Route::post('/new-development/{slug}/share', 'News\ArticleFrontController@news_share')->name('news.front.share');
-        //
     });
 });
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\News;
 
-use Facades\App\Helpers\ListingHelper;
+use Facades\App\Helpers\CMS4ListingHelper;
 use App\Helpers\ModelHelper;
 use App\Http\Controllers\Controller;
 use App\ArticleCategory;
@@ -26,9 +26,9 @@ class ArticleCategoryController extends Controller
 
     public function index()
     {
-        $categories = ListingHelper::simple_search(ArticleCategory::class, $this->searchFields);
+        $categories = CMS4ListingHelper::simple_search(ArticleCategory::class, $this->searchFields);
 
-        $filter = ListingHelper::get_filter($this->searchFields);
+        $filter = CMS4ListingHelper::get_filter($this->searchFields);
 
         $searchType = 'simple_search';
 

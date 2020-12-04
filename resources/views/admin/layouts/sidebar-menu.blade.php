@@ -10,7 +10,7 @@
         <a href="{{ route('dashboard') }}" class="nav-link"><i data-feather="home"></i><span>Dashboard</span></a>
     </li>
     
-    <!-- @if (auth()->user()->has_access_to_pages_module())
+    @if (auth()->user()->has_access_to_pages_module())
         <li class="nav-item with-sub @if (request()->routeIs('pages*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="layers"></i> <span>Pages</span></a>
             <ul>
@@ -21,8 +21,8 @@
 
             </ul>
         </li>
-    @endif -->
-    <!-- @if (auth()->user()->has_access_to_albums_module())
+    @endif
+    @if (auth()->user()->has_access_to_albums_module())
         <li class="nav-item with-sub @if (request()->routeIs('albums*')) active show @endif">
             <a href="#" class="nav-link"><i data-feather="image"></i> <span>Banners</span></a>
             <ul>
@@ -38,8 +38,8 @@
         <li class="nav-item @if (\Route::current()->getName() == 'file-manager.index') active @endif">
             <a href="{{ route('file-manager.index') }}" class="nav-link"><i data-feather="folder"></i> <span>Files</span></a>
         </li>
-    @endif -->
-    <!-- @if (auth()->user()->has_access_to_menu_module())
+    @endif
+    @if (auth()->user()->has_access_to_menu_module())
         <li class="nav-item with-sub @if (request()->routeIs('menus*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="menu"></i> <span>Menu</span></a>
             <ul>
@@ -47,8 +47,8 @@
                 <li @if (\Route::current()->getName() == 'menus.create') class="active" @endif><a href="{{ route('menus.create') }}">Create a Menu</a></li>
             </ul>
         </li>
-    @endif -->
-    <!-- @if (auth()->user()->has_access_to_news_module() || auth()->user()->has_access_to_news_categories_module())
+    @endif
+    @if (auth()->user()->has_access_to_news_module() || auth()->user()->has_access_to_news_categories_module())
         <li class="nav-item with-sub @if (request()->routeIs('news*') || request()->routeIs('news-categories*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="edit"></i> <span>News</span></a>
             <ul>
@@ -62,7 +62,7 @@
                 @endif
             </ul>
         </li>
-    @endif -->
+    @endif
     
     <li class="nav-item with-sub @if (request()->routeIs('account*') || request()->routeIs('website-settings*') || request()->routeIs('audit*')) active show @endif">
         <a href="" class="nav-link"><i data-feather="settings"></i> <span>Settings</span></a>
@@ -248,6 +248,15 @@
         </li>
     @endif
 
+    @if (auth()->user()->has_access_to_module('branches'))
+        <li class="nav-item with-sub @if (request()->routeIs('admin.title-requests*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="box"></i> <span>Title Requests</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'admin.title-requests') class="active" @endif><a href="{{ route('admin.title-requests') }}">Manage Requests</a></li>
+            </ul>
+        </li>
+    @endif
+
     @if (auth()->user()->has_access_to_module('email_notifications') || auth()->user()->has_access_to_module('transactions.index'))
         <li class="nav-item with-sub @if (request()->routeIs('transaction-status*') || request()->routeIs('transactions*')) active show @endif">
 
@@ -265,6 +274,15 @@
                 <li @if (\Route::current()->getName() == 'transactions.index') class="active" @endif><a href="{{ route('transactions.index') }}">Manage Transaction Status</a></li>
                 <li><a href="{{ route('transactions.create') }}">Create a Transaction Status</a></li>
                 @endif
+            </ul>
+        </li>
+    @endif
+
+    @if (auth()->user()->has_access_to_module('wishlist'))
+        <li class="nav-item with-sub @if (request()->routeIs('wishlist*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="box"></i> <span>Wishlist</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'wishlist.index') class="active" @endif><a href="{{ route('wishlist.index') }}">Manage Wishlist</a></li>
             </ul>
         </li>
     @endif

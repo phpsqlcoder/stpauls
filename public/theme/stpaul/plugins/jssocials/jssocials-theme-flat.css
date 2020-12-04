@@ -119,7 +119,7 @@
 }
 
 .jssocials-share-link {
-  padding: .5em .6em;
+  padding: .4em .5em .5em;
   color: #fff;
   -webkit-transition: background 200ms ease-in-out, border-color 200ms ease-in-out;
   transition: background 200ms ease-in-out, border-color 200ms ease-in-out;

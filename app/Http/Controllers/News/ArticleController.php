@@ -4,7 +4,7 @@ namespace App\Http\Controllers\News;
 
 use App\Http\Requests\ArticleRequest;
 use Facades\App\Helpers\FileHelper;
-use Facades\App\Helpers\ListingHelper;
+use Facades\App\Helpers\CMS4ListingHelper;
 use App\Helpers\ModelHelper;
 use App\Http\Controllers\Controller;
 use App\Article;
@@ -35,15 +35,15 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $news = ListingHelper::sort_by('is_featured')
+        $news = CMS4ListingHelper::sort_by('is_featured')
             ->filter_fields($this->sortFields)
             ->simple_search(Article::class, $this->searchFields);
 
-        $filter = ListingHelper::filter_fields($this->sortFields)->get_filter($this->searchFields);
+        $filter = CMS4ListingHelper::filter_fields($this->sortFields)->get_filter($this->searchFields);
 
-        $advanceSearchData = ListingHelper::get_search_data($this->advanceSearchFields);
-        $uniqueNewsByCategory = ListingHelper::get_unique_item_by_column(Article::class, 'category_id');
-        $uniqueNewsByUser = ListingHelper::get_unique_item_by_column(Article::class, 'user_id');
+        $advanceSearchData = CMS4ListingHelper::get_search_data($this->advanceSearchFields);
+        $uniqueNewsByCategory = CMS4ListingHelper::get_unique_item_by_column(Article::class, 'category_id');
+        $uniqueNewsByUser = CMS4ListingHelper::get_unique_item_by_column(Article::class, 'user_id');
 
         $searchType = 'simple_search';
 
@@ -58,15 +58,15 @@ class ArticleController extends Controller
     {
         $equalQueryFields = ['album_id', 'category_id', 'status', 'user_id'];
 
-        $news = ListingHelper::sort_by('is_featured')
+        $news = CMS4ListingHelper::sort_by('is_featured')
             ->filter_fields($this->sortFields)
             ->advance_search(Article::class, $this->advanceSearchFields, $equalQueryFields);
 
-        $filter = ListingHelper::filter_fields($this->sortFields)->get_filter($this->searchFields);
+        $filter = CMS4ListingHelper::filter_fields($this->sortFields)->get_filter($this->searchFields);
 
-        $advanceSearchData = ListingHelper::get_search_data($this->advanceSearchFields);
-        $uniqueNewsByCategory = ListingHelper::get_unique_item_by_column(Article::class, 'category_id');
-        $uniqueNewsByUser = ListingHelper::get_unique_item_by_column(Article::class, 'user_id');
+        $advanceSearchData = CMS4ListingHelper::get_search_data($this->advanceSearchFields);
+        $uniqueNewsByCategory = CMS4ListingHelper::get_unique_item_by_column(Article::class, 'category_id');
+        $uniqueNewsByUser = CMS4ListingHelper::get_unique_item_by_column(Article::class, 'user_id');
 
         $searchType = 'advance_search';
 

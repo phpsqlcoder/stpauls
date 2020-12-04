@@ -133,6 +133,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-7">
+                                <input type="rd-navbar-static--hidden" id="productID" value="{{ $product->id }}">
                                 <form id="addToCart" data-source="addToCart" method="post" action="{{ route('product-buy-now') }}">
                                     @csrf
                                     <div class="product-detail">
@@ -209,6 +210,20 @@
                                             <button type="submit" class="btn btn-lg buy-now-btn buyNowButton">
                                                 <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/blitz.png" alt=""> Buy Now
                                             </button>
+                                            @endif
+
+                                            @if(Auth::check())
+                                            <div class="product-wishlist">
+                                                <input name="wishlist" id="wishlist" data-product-id="333" type="checkbox" @if(\App\EcommerceModel\Wishlist::product_wishlist($product->id) > 0) checked @endif/>
+                                                <label for="wishlist">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255.7 225.13">
+                                                        <path style="color:#000000;enable-background:accumulate;"
+                                                        d="M128,69.9s-17-48.25-63-48.25S7.71,75.32,7.71,75.32s-11.36,39.74,39.74,89.29L128,233.77l80.55-69.16c51.09-49.55,39.74-89.29,39.74-89.29S236.9,21.65,191,21.65,128,69.9,128,69.9Z"
+                                                        transform="translate(-0.13 -15.15)" fill="transparent" id="heart-path" stroke="#F8332A" stroke-width="15" marker="none" visibility="visible"
+                                                            display="inline" overflow="visible" />
+                                                    </svg>
+                                                </label>
+                                            </div>
                                             @endif
                                         </div>
                                     </div>
@@ -420,6 +435,43 @@
     <script src="{{ asset('theme/stpaul/plugins/xZoom/src/hammer.js/jquery.hammer.min.js') }}"></script>
 
     <script>
+        $('input[type="checkbox"]').click(function(){
+            if($(this).prop("checked") == true){
+                
+                var prodID = $('#productID').val();
+                $.ajax({
+                    data: {
+                        "product_id": prodID,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    type: "post",
+                    url: "{{route('product.add-to-wishlist')}}",
+                    success: function(returnData) {
+                        swal({
+                            title: '',
+                            text: "Product has been added to wishlist.",         
+                        });
+                    }
+                });
+            }
+            else if($(this).prop("checked") == false){
+                var prodID = $('#productID').val();
+                $.ajax({
+                    data: {
+                        "product_id": prodID,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    type: "post",
+                    url: "{{route('product.remove-to-wishlist')}}",
+                    success: function(returnData) {
+                        swal({
+                            title: '',
+                            text: "Product has been removed to wishlist.",         
+                        });
+                    }
+                });
+            }
+        });
 
         function add_to_cart(productID) {
             $.ajaxSetup({
