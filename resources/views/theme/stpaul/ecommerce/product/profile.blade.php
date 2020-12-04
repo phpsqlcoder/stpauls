@@ -214,7 +214,7 @@
 
                                             @if(Auth::check())
                                             <div class="product-wishlist">
-                                                <input name="wishlist" id="wishlist" data-product-id="333" type="checkbox" @if(\App\EcommerceModel\Wishlist::product_wishlist($product->id) > 0) checked @endif/>
+                                                <input name="wishlist" id="wishlist" data-product-id="333" type="checkbox" @if(\App\EcommerceModel\WishlistCustomer::product_wishlist($product->id) > 0) checked @endif/>
                                                 <label for="wishlist">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255.7 225.13">
                                                         <path style="color:#000000;enable-background:accumulate;"

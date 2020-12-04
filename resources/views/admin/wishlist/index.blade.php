@@ -91,23 +91,52 @@
                         <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                             <tr>
-                                <th width="45%">Name</th>
-                                <th width="20%">Customer</th>
-                                <th width="20%">Email</th>
-                                <th width="15%">Added At</th>
+                                <th width="65%">Product Name</th>
+                                <th width="20%">Total Count</th>
+                                <th width="15%">Options</th>
                             </tr>
                             </thead>
                             <tbody>
                             @forelse($products as $product)
                                 <tr id="row{{$product->id}}" style="padding-top: 5px;">
                                     <td>{{$product->product_name }}</td>
-                                    <td>{{ $product->customer_details->fullname }}</td>
-                                    <td>{{ $product->customer_details->email }}</td>
-                                    <td>{{ Setting::date_for_listing($product->updated_at) }}</td>
+                                    <td>{{ $product->total_count }}</td>
+                                    <td>
+                                        <nav class="nav table-options">
+                                            <a target="_blank" href="{{ route('product.front.show', $product->product_details->slug) }}" title="View Product Profile" class="nav-link"><i class="fa fa-eye"></i></a>
+                                            <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#product_{{$product->product_id}}" class="accordion-toggle" title="View Customers"><i class="fa fa-list"></i></a>
+                                        </nav>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="8" class="hiddenRow">
+                                        <div class="accordian-body collapse" id="product_{{$product->product_id}}">
+                                            <div class="autoship-table">
+                                                <div class="table-responsive mg-b-30">
+                                                    <table class="table table-sm table-hover mg-0">
+                                                        <thead class="mg-b-20">
+                                                            <tr>
+                                                                <th scope="col" width="50%">Customer Name</th>
+                                                                <th scope="col">Email</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($product->wishlist_customer as $customer)
+                                                                <tr>
+                                                                    <td>{{ $customer->customer_details->fullname }}</td>
+                                                                    <td>{{ $customer->customer_details->email }}</td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <th colspan="2" style="text-align: center;"> <p class="text-danger">No products found.</p></th>
+                                    <th colspan="3" style="text-align: center;"> <p class="text-danger">No products found.</p></th>
                                 </tr>
                             @endforelse
                             </tbody>
