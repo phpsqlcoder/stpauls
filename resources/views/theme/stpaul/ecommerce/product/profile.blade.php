@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-7">
-                                <input type="rd-navbar-static--hidden" id="productID" value="{{ $product->id }}">
+                                <input type="hidden" id="productID" value="{{ $product->id }}">
                                 <form id="addToCart" data-source="addToCart" method="post" action="{{ route('product-buy-now') }}">
                                     @csrf
                                     <div class="product-detail">
