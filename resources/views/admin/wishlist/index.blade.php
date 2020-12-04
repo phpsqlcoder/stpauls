@@ -91,7 +91,7 @@
                         <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                             <tr>
-                                <th width="65%">Product Name</th>
+                                <th width="65%">&nbsp;&nbsp;Product Name</th>
                                 <th class="text-center" width="20%">Total Count</th>
                                 <th width="15%">Options</th>
                             </tr>
@@ -101,7 +101,7 @@
                                 <tr id="row{{$product->id}}">
                                     <td>
                                         <p></p>
-                                        {{$product->product_name }}
+                                        &nbsp;&nbsp;{{$product->product_name }}
                                         <div style="visibility: hidden;" class="custom-control custom-checkbox">
                                             <input  type="checkbox" class="custom-control-input cb" id="cb{{ $product->id }}">
                                             <label class="custom-control-label" for="cb{{ $product->id }}"></label>
@@ -125,6 +125,7 @@
                                                             <tr>
                                                                 <th scope="col" width="50%">Customer Name</th>
                                                                 <th scope="col">Email</th>
+                                                                <th>Date Added</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -132,6 +133,7 @@
                                                                 <tr>
                                                                     <td>{{ $customer->customer_details->fullname }}</td>
                                                                     <td>{{ $customer->customer_details->email }}</td>
+                                                                    <td>{{ Setting::date_for_listing($customer->updated_at) }}</td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
