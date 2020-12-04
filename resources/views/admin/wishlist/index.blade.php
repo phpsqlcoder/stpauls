@@ -91,7 +91,7 @@
                         <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                             <tr>
-                                <th width="65%">&nbsp;&nbsp;Product Name</th>
+                                <th width="65%">&nbsp;&nbsp;&nbsp;&nbsp;Product Name</th>
                                 <th class="text-center" width="20%">Total Count</th>
                                 <th width="15%">Options</th>
                             </tr>
@@ -101,7 +101,7 @@
                                 <tr id="row{{$product->id}}">
                                     <td>
                                         <p></p>
-                                        &nbsp;&nbsp;{{$product->product_name }}
+                                        &nbsp;&nbsp;&nbsp;&nbsp;{{$product->product_name }}
                                         <div style="visibility: hidden;" class="custom-control custom-checkbox">
                                             <input  type="checkbox" class="custom-control-input cb" id="cb{{ $product->id }}">
                                             <label class="custom-control-label" for="cb{{ $product->id }}"></label>
