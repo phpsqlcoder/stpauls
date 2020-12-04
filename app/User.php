@@ -206,6 +206,26 @@ class User extends Authenticatable
     {
         return $this->has_access_to_module(array_keys(Permission::modules())[8]);
     }
+    
+    public function has_access_to_subscriber_group_module()
+    {
+        return $this->has_access_to_module(array_keys(Permission::modules())[18]);
+    }
+
+    public function has_access_to_subscriber_module()
+    {
+        return $this->has_access_to_module(array_keys(Permission::modules())[19]);
+    }
+
+    public function has_access_to_campaign_module()
+    {
+        return $this->has_access_to_module(array_keys(Permission::modules())[20]);
+    }
+
+    public function has_access_to_mailing_list_sent_items_module()
+    {
+        return $this->has_access_to_module(array_keys(Permission::modules())[21]);
+    }
 
     public function has_access_to_module($module)
     {

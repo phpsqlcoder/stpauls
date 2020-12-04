@@ -1,0 +1,98 @@
+<?php
+
+use Illuminate\Database\Seeder;
+
+class TblProvinceSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        \App\Provinces::insert([
+            ['region' => '2','province' => 'Abra','slug' => 'abra','island' => 'luzon'],
+            ['region' => '16','province' => 'Agusan del Norte','slug' => 'agusan-del-norte','island' => 'mindanao'],
+            ['region' => '16','province' => 'Agusan del Sur','slug' => 'agusan-del-sur','island' => 'mindanao'],
+            ['region' => '9','province' => 'Aklan','slug' => 'aklan','island' => 'visayas'],
+            ['region' => '8','province' => 'Albay','slug' => 'albay','island' => 'luzon'],
+            ['region' => '9','province' => 'Antique','slug' => 'antique','island' => 'visayas'],
+            ['region' => '2','province' => 'Apayao','slug' => 'apayao','island' => 'luzon'],
+            ['region' => '5','province' => 'Aurora','slug' => 'aurora','island' => 'luzon'],
+            ['region' => '17','province' => 'Basilan','slug' => 'basilan','island' => 'mindanao'],
+            ['region' => '5','province' => 'Bataan','slug' => 'bataan','island' => 'luzon'],
+            ['region' => '4','province' => 'Batanes','slug' => 'batanes','island' => 'luzon'],
+            ['region' => '6','province' => 'Batangas','slug' => 'batangas','island' => 'luzon'],
+            ['region' => '2','province' => 'Benguet','slug' => 'benguet','island' => 'luzon'],
+            ['region' => '11','province' => 'Biliran','slug' => 'biliran','island' => 'visayas'],
+            ['region' => '10','province' => 'Bohol','slug' => 'bohol','island' => 'visayas'],
+            ['region' => '13','province' => 'Bukidnon','slug' => 'bukidnon','island' => 'mindanao'],
+            ['region' => '5','province' => 'Bulacan','slug' => 'bulacan','island' => 'luzon'],
+            ['region' => '4','province' => 'Cagayan','slug' => 'cagayan','island' => 'luzon'],
+            ['region' => '8','province' => 'Camarines Norte','slug' => 'camarines-norte','island' => 'luzon'],
+            ['region' => '8','province' => 'Camarines Sur','slug' => 'camarines-sur','island' => 'luzon'],
+            ['region' => '13','province' => 'Camiguin','slug' => 'camiguin','island' => 'mindanao'],
+            ['region' => '9','province' => 'Capiz','slug' => 'capiz','island' => 'visayas'],
+            ['region' => '8','province' => 'Catanduanes','slug' => 'catanduanes','island' => 'luzon'],
+            ['region' => '6','province' => 'Cavite','slug' => 'cavite','island' => 'luzon'],
+            ['region' => '10','province' => 'Cebu','slug' => 'cebu','island' => 'visayas'],
+            ['region' => '14','province' => 'Compostela Valley','slug' => 'compostela-valley','island' => 'mindanao'],
+            ['region' => '15','province' => 'Cotabato','slug' => 'cotabato','island' => 'mindanao'],
+            ['region' => '14','province' => 'Davao del Norte','slug' => 'davao-del-norte','island' => 'mindanao'],
+            ['region' => '14','province' => 'Davao del Sur','slug' => 'davao-del-sur','island' => 'mindanao'],
+            ['region' => '14','province' => 'Davao Occidental','slug' => 'davao-occidental','island' => 'mindanao'],
+            ['region' => '14','province' => 'Davao Oriental','slug' => 'davao-oriental','island' => 'mindanao'],
+            ['region' => '16','province' => 'Dinagat Islands','slug' => 'dinagat-islands','island' => 'mindanao'],
+            ['region' => '11','province' => 'Eastern Samar','slug' => 'eastern-samar','island' => 'visayas'],
+            ['region' => '9','province' => 'Guimaras','slug' => 'guimaras','island' => 'visayas'],
+            ['region' => '2','province' => 'Ifugao','slug' => 'ifugao','island' => 'luzon'],
+            ['region' => '3','province' => 'Ilocos Norte','slug' => 'ilocos-norte','island' => 'luzon'],
+            ['region' => '3','province' => 'Ilocos Sur','slug' => 'ilocos-sur','island' => 'luzon'],
+            ['region' => '9','province' => 'Iloilo','slug' => 'iloilo','island' => 'visayas'],
+            ['region' => '4','province' => 'Isabela','slug' => 'isabela','island' => 'luzon'],
+            ['region' => '2','province' => 'Kalinga','slug' => 'kalinga','island' => 'luzon'],
+            ['region' => '3','province' => 'La Union','slug' => 'la-union','island' => 'luzon'],
+            ['region' => '6','province' => 'Laguna','slug' => 'laguna','island' => 'luzon'],
+            ['region' => '13','province' => 'Lanao del Norte','slug' => 'lanao-del-norte','island' => 'mindanao'],
+            ['region' => '17','province' => 'Lanao del Sur','slug' => 'lanao-del-sur','island' => 'mindanao'],
+            ['region' => '11','province' => 'Leyte','slug' => 'leyte','island' => 'visayas'],
+            ['region' => '17','province' => 'Maguindanao','slug' => 'maguindanao','island' => 'mindanao'],
+            ['region' => '7','province' => 'Marinduque','slug' => 'marinduque','island' => 'luzon'],
+            ['region' => '8','province' => 'Masbate','slug' => 'masbate','island' => 'luzon'],
+            ['region' => '1','province' => 'Metro Manila','slug' => 'metro-manila','island' => 'luzon'],
+            ['region' => '13','province' => 'Misamis Occidental','slug' => 'misamis-occidental','island' => 'mindanao'],
+            ['region' => '13','province' => 'Misamis Oriental','slug' => 'misamis-oriental','island' => 'mindanao'],
+            ['region' => '2','province' => 'Mountain Province','slug' => 'mountain-province','island' => 'luzon'],
+            ['region' => '9','province' => 'Negros Occidental','slug' => 'negros-occidental','island' => 'visayas'],
+            ['region' => '10','province' => 'Negros Oriental','slug' => 'negros-oriental','island' => 'visayas'],
+            ['region' => '11','province' => 'Northern Samar','slug' => 'northern-samar','island' => 'visayas'],
+            ['region' => '5','province' => 'Nueva Ecija','slug' => 'nueva-ecija','island' => 'luzon'],
+            ['region' => '4','province' => 'Nueva Vizcaya','slug' => 'nueva-vizcaya','island' => 'luzon'],
+            ['region' => '7','province' => 'Occidental Mindoro','slug' => 'occidental-mindoro','island' => 'luzon'],
+            ['region' => '7','province' => 'Oriental Mindoro','slug' => 'oriental-mindoro','island' => 'luzon'],
+            ['region' => '7','province' => 'Palawan','slug' => 'palawan','island' => 'luzon'],
+            ['region' => '5','province' => 'Pampanga','slug' => 'pampanga','island' => 'luzon'],
+            ['region' => '3','province' => 'Pangasinan','slug' => 'pangasinan','island' => 'luzon'],
+            ['region' => '6','province' => 'Quezon','slug' => 'quezon','island' => 'luzon'],
+            ['region' => '4','province' => 'Quirino','slug' => 'quirino','island' => 'luzon'],
+            ['region' => '6','province' => 'Rizal','slug' => 'rizal','island' => 'luzon'],
+            ['region' => '7','province' => 'Romblon','slug' => 'romblon','island' => 'luzon'],
+            ['region' => '11','province' => 'Samar','slug' => 'samar','island' => 'visayas'],
+            ['region' => '15','province' => 'Sarangani','slug' => 'sarangani','island' => 'mindanao'],
+            ['region' => '10','province' => 'Siquijor','slug' => 'siquijor','island' => 'visayas'],
+            ['region' => '8','province' => 'Sorsogon','slug' => 'sorsogon','island' => 'luzon'],
+            ['region' => '15','province' => 'South Cotabato','slug' => 'south-cotabato','island' => 'mindanao'],
+            ['region' => '11','province' => 'Southern Leyte','slug' => 'southern-leyte','island' => 'visayas'],
+            ['region' => '15','province' => 'Sultan Kudarat','slug' => 'sultan-kudarat','island' => 'mindanao'],
+            ['region' => '17','province' => 'Sulu','slug' => 'sulu','island' => 'mindanao'],
+            ['region' => '16','province' => 'Surigao del Norte','slug' => 'surigao-del-norte','island' => 'mindanao'],
+            ['region' => '16','province' => 'Surigao del Sur','slug' => 'surigao-del-sur','island' => 'mindanao'],
+            ['region' => '5','province' => 'Tarlac','slug' => 'tarlac','island' => 'luzon'],
+            ['region' => '17','province' => 'Tawi-Tawi','slug' => 'tawi-tawi','island' => 'mindanao'],
+            ['region' => '5','province' => 'Zambales','slug' => 'zambales','island' => 'luzon'],
+            ['region' => '12','province' => 'Zamboanga del Norte','slug' => 'zamboanga-del-norte','island' => 'mindanao'],
+            ['region' => '12','province' => 'Zamboanga del Sur','slug' => 'zamboanga-del-sur','island' => 'mindanao']
+        ]);
+    }
+}
