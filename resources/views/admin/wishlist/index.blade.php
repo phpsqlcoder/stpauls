@@ -91,6 +91,7 @@
                         <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th width="65%">Product Name</th>
                                 <th class="text-center" width="20%">Total Count</th>
                                 <th width="15%">Options</th>
@@ -99,6 +100,12 @@
                             <tbody>
                             @forelse($products as $product)
                                 <tr id="row{{$product->id}}" style="padding-top: 5px;">
+                                    <th>
+                                        <div style="visibility: hidden;" class="custom-control custom-checkbox">
+                                            <input  type="checkbox" class="custom-control-input cb" id="cb{{ $product->id }}">
+                                            <label class="custom-control-label" for="cb{{ $product->id }}"></label>
+                                        </div>
+                                    </th>
                                     <td>{{$product->product_name }}</td>
                                     <td class="text-center">{{ $product->total_count }}</td>
                                     <td>
