@@ -380,7 +380,21 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         // Title Requests
         Route::get('/title-requests','TitleRequest\TitleRequestController@index')->name('admin.title-requests');
 
+        
+        //// MAILING LIST ////
+        Route::resource('/mailing-list/subscribers', 'MailingList\SubscriberController', ['as' => 'mailing-list']);
+        Route::get('/mailing-list/cancelled-subscribers', 'MailingList\SubscriberController@unsubscribe')->name('mailing-list.subscribers.unsubscribe');
+        Route::post('/mailing-list/subscribers-change-status', 'MailingList\SubscriberController@change_status')->name('mailing-list.subscribers.change-status');
 
+        Route::resource('/mailing-list/groups', 'MailingList\GroupController', ['as' => 'mailing-list']);
+        Route::delete('/delete/mailing-list/groups', 'MailingList\GroupController@destroy_many')->name('mailing-list.groups.destroy_many');
+        Route::post('/mailing-list-groups/{id}/restore', 'MailingList\GroupController@restore')->name('mailing-list.groups.restore');
+
+        Route::resource('/mailing-list/campaigns', 'MailingList\CampaignController', ['as' => 'mailing-list']);
+        Route::get('/mailing-list/campaigns/sent-campaigns', 'MailingList\CampaignController@sent_campaigns')->name('mailing-list.campaigns.sent-campaigns');
+        Route::delete('/delete/mailing-list/campaign', 'MailingList\CampaignController@destroy_many')->name('mailing-list.campaigns.destroy_many');
+        Route::post('/campaigns/{id}/restore', 'MailingList\CampaignController@restore')->name('mailing-list.campaigns.restore');
+        //// END MAILING LIST ////
 
 
 

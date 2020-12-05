@@ -74,7 +74,22 @@ class PermissionSeeder extends Seeder
             ['name' => 'Create Delivery Flat Rate','module' => 'delivery_flat_rate','description' => 'User can create delivery flat rates','routes' => '["locations.create","locations.store"]','methods' => '["create","store"]','user_id' => '1','is_view_page' => '0'],
             ['name' => 'Edit Delivery Flat Rate','module' => 'delivery_flat_rate','description' => 'User can edit delivery flat rates','routes' => '["locations.edit","locations.update"]','methods' => '["edit","update"]','user_id' => '1','is_view_page' => '0'],
             ['name' => 'Delete Delivery Flat Rate','module' => 'delivery_flat_rate','description' => 'User can delete delivery flat rates','routes' => '["locations.destroy","locations.delete"]','methods' => '["destroy","delete"]','user_id' => '1','is_view_page' => '0'],
-            ['name' => 'Change Status of Delivery Flat Rate','module' => 'delivery_flat_rate','description' => 'User can change status of delivery flat rates','routes' => '["locations.enable","locations.disable"]','methods' => '["enable","disable"]','user_id' => '1','is_view_page' => '0']
-        ]);
+            ['name' => 'Change Status of Delivery Flat Rate','module' => 'delivery_flat_rate','description' => 'User can change status of delivery flat rates','routes' => '["locations.enable","locations.disable"]','methods' => '["enable","disable"]','user_id' => '1','is_view_page' => '0'],
+
+            ['name' => 'View Subscriber','module' => 'subscriber','description' => 'User can view subscriber list and detail','routes' => '["mailing-list.subscribers.index","mailing-list.subscribers.show","mailing-list.subscribers.index.unsubscribe"]','methods' => '["index","show","unsubscribe"]','user_id' => '1','is_view_page' => '1'],
+            ['name' => 'Create Subscriber','module' => 'subscriber','description' => 'User can create subscribers','routes' => '["mailing-list.subscribers.create","mailing-list.subscribers.store"]','methods' => '["create","store"]','user_id' => '1','is_view_page' => '0'],
+            ['name' => 'Edit Subscriber','module' => 'subscriber','description' => 'User can edit subscribers','routes' => '["mailing-list.subscribers.edit","mailing-list.subscribers.update"]','methods' => '["edit","update"]','user_id' => '1','is_view_page' => '0'],
+            ['name' => 'Change Status of Subscriber','module' => 'subscriber','description' => 'User can change status of subscribers','routes' => '["mailing-list.subscribers.change-status"]','methods' => '["change_status"]','user_id' => '1','is_view_page' => '0'],
+
+            ['name' => 'View Subscriber Group','module' => 'subscriber_group','description' => 'User can view subscriber group list and detail','routes' => '["mailing-list.groups.index","mailing-list.groups.show"]','methods' => '["index","show"]','user_id' => '1','is_view_page' => '1'],
+            ['name' => 'Create Subscriber Group','module' => 'subscriber_group','description' => 'User can create subscriber group','routes' => '["mailing-list.groups.create","mailing-list.groups.store"]','methods' => '["create","store"]','user_id' => '1','is_view_page' => '0'],
+            ['name' => 'Edit Subscriber Group','module' => 'subscriber_group','description' => 'User can edit subscriber group','routes' => '["mailing-list.groups.edit","mailing-list.groups.update"]','methods' => '["edit","update"]','user_id' => '1','is_view_page' => '0'],
+            ['name' => 'Delete/Restore Subscriber Group','module' => 'subscriber_group','description' => 'User can delete and restore subscriber group','routes' => '["mailing-list.groups.destroy","mailing-list.groups.destroy_many","mailing-list.groups.restore"]','methods' => '["destroy","delete","restore"]','user_id' => '1','is_view_page' => '0'],
+
+            ['name' => 'View Campaign','module' => 'campaign','description' => 'User can view campaign list and detail','routes' => '["mailing-list.campaigns.index","mailing-list.campaigns.show"]','methods' => '["index","show"]','user_id' => '1','is_view_page' => '1'],
+            ['name' => 'Create Campaign','module' => 'campaign','description' => 'User can create campaigns','routes' => '["mailing-list.campaigns.create","mailing-list.campaigns.store"]','methods' => '["create","store"]','user_id' => '1','is_view_page' => '0'],
+            ['name' => 'Edit Campaign','module' => 'campaign','description' => 'User can edit campaigns','routes' => '["mailing-list.campaigns.edit","mailing-list.campaigns.update"]','methods' => '["edit","update"]','user_id' => '1','is_view_page' => '0'],
+            ['name' => 'Delete/Restore Campaign','module' => 'campaign','description' => 'User can delete and restore campaigns','routes' => '["mailing-list.campaigns.destroy","mailing-list.campaigns.destroy_many","mailing-list.campaigns.restore"]','methods' => '["destroy","delete","restore"]','user_id' => '1','is_view_page' => '0']
+	]);
     }
 }

@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             AlbumSeeder::class,
         ]);
 
-        
+
         $this->call([
             BannerSeeder::class,
             PageSeeder::class,
@@ -46,6 +46,9 @@ class DatabaseSeeder extends Seeder
             PaymentListSeeder::class,
             PaymentOptionSeeder::class,
             CheckoutOptionSeeder::class,
+            TblCountrySeeder::class,
+            TblProvinceSeeder::class,
+            TblCitySeeder::class
         ]);
 
         $this->users();

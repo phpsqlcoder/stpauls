@@ -34,7 +34,7 @@ class SettingSeeder extends Seeder
             'social_media_accounts' => '',
             'copyright' => '2019-2020',
             'user_id' => '1',
-
+            'contact_us_email_layout' => ''
         ];
 
         DB::table('settings')->insert($setting);
