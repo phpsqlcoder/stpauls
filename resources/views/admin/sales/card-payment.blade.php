@@ -151,7 +151,7 @@
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         @if($sale->payment_status == 'PAID')
                                                             @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status'))
-                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+                                                                <a class="dropdown-item" href="{{ route('sales.update-delivery-status',$sale->id) }}" title="Update Delivery Status">Update Delivery Status</a>
                                                             @endif
 
                                                             @if (auth()->user()->has_access_to_route('display.delivery-history'))
@@ -279,11 +279,6 @@
                     swal.close();                   
                 }
             });
-        }
-
-        function change_delivery_status(id){
-            $('#prompt-change-delivery-status').modal('show');
-            $('#del_id').val(id);
         }
 
         function show_delivery_history(id){

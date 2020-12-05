@@ -287,6 +287,13 @@ class SalesController extends Controller
         return back()->with('success','Payment has been added.');
     }
 
+    public function update_delivery_status($id)
+    {
+        $sales = SalesHeader::find($id);
+
+        return view('admin.sales.update-delivery-status',compact('sales'));
+    }
+
     public function delivery_status(Request $request)
     {
         $qry = SalesHeader::find($request->del_id);
@@ -305,8 +312,17 @@ class SalesController extends Controller
 
         $this->send_email_notification($qry,$request->delivery_status);
 
-        return back()->with('success','Successfully updated delivery status!');
+        if($qry->payment_method == 0){
+            return redirect(route('sales-transaction.cash-on-delivery'))->with('success','Successfully updated delivery status!');
+        }
 
+        if($qry->payment_method == 1){
+            return redirect(route('sales-transaction.card-payment'))->with('success','Successfully updated delivery status!');
+        }
+
+        if($qry->payment_method == 2 || $qry->payment_method == 3){
+            return redirect(route('sales-transaction.money-transfer'))->with('success','Successfully updated delivery status!');
+        }
     }
 
     public function add_shippingfee(Request $request)

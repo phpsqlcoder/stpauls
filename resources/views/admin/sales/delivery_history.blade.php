@@ -3,7 +3,7 @@
     <tr>
     	<td>{{$d->created_at}}</td>
         <td>{{$d->status}}</td>
-        <td>{{$d->remarks}}</td>   
+        <td>{!!$d->remarks!!}</td>   
     </tr>
 @empty
 	<tr>
