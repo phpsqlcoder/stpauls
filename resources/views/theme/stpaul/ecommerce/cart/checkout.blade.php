@@ -568,10 +568,10 @@
                                                 <input type="hidden" id="input_discount_amount" name="discount_amount">
                                             @endif
                                             <li class="d-flex justify-content-between">
-                                                <span>ADD: Shipping Fee</span>
+                                                <span id="lispan_shippingfee">ADD: Shipping Fee</span>
                                                 <span>
                                                     <input type="hidden" id="input_shippingfee" name="shippingfee">
-                                                    ₱ <span id="span_shippingfee">0.00</span>
+                                                    <span id="span_shippingfee">0.00</span>
                                                 </span>
                                             </li>
                                             <li class="d-flex justify-content-between">
@@ -1058,23 +1058,32 @@
                 if(option == 4){
                     if($('#exampleCheck1').is(":checked")){
                         if(sddServiceFee > 0){
-                            $('#input_servicefee').val(codServiceFee);
-                            $('#span_servicefee').html('₱ '+FormatAmount(codServiceFee,2));
+                            $('#input_servicefee').val(sddServiceFee);
+                            $('#span_servicefee').html('₱ '+FormatAmount(sddServiceFee,2));
                             $('#lispan_servicefee').show();
                             $('#span_servicefee').show();
+
                         } else {
-                           $('#lispan_servicefee').hide();
+                            $('#lispan_servicefee').hide();
                             $('#span_servicefee').hide();
                             $('#input_servicefee').val(0); 
-                        }
+
+                        }   
+
+                        $('#lispan_shippingfee').hide();
+                        $('#span_shippingfee').hide();
+                        $('#input_shippingfee').val(0);
                         
                     } else {
                         $('#lispan_servicefee').hide();
                         $('#span_servicefee').hide();
                         $('#input_servicefee').val(0);
 
-                        $('#input_shippingfee').val(0);
-                        $('#span_shippingfee').html('0.00');
+
+                        $('#input_shippingfee').val(shippingfee);
+                        $('#span_shippingfee').html('₱ '+FormatAmount(shippingfee,2));
+                        $('#lispan_shippingfee').show();
+                        $('#span_shippingfee').show();
                     }
                     
 
@@ -1091,7 +1100,7 @@
                     }
 
                     $('#input_shippingfee').val(shippingfee);
-                    $('#span_shippingfee').html(FormatAmount(shippingfee,2));
+                    $('#span_shippingfee').html('₱ '+FormatAmount(shippingfee,2));
                 }
                 
 
@@ -1125,6 +1134,7 @@
         function subTotal(){
             var totalAmount = 0;
             var totalWeight = 0;
+            var option = $('input[name="shipOption"]:checked').val();
 
             $(".input_product_total_amount").each(function() {
                 if(!isNaN(this.value) && this.value.length!=0) {
