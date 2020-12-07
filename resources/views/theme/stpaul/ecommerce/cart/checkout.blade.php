@@ -381,7 +381,7 @@
                                                 </div>--}}
                                             </div>
 
-                                            <ul class="list-unstyled lh-7 pd-r-10" >
+                                            <ul class="list-unstyled lh-7 pd-r-10" style="display: none;">
                                                 <li class="d-flex justify-content-between">
                                                     <span>Total Puchase Amount</span>
                                                     <span>
