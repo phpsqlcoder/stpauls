@@ -12,7 +12,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('dashboard')}}">CMS</a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{ route('mailing-list.subscribers.index') }}">Mailing List</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{ route('mailing-list.campaigns.index') }}">Manage Campaigns</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Edit Campaign</li>
                     </ol>
                 </nav>
@@ -28,17 +28,6 @@
                     <label class="d-block">Campaign Name *</label>
                     <input name="name" type="text" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $campaign->name) }}" required>
                     @hasError(['inputName' => 'name'])
-                    @endhasError
-                </div><div class="form-group">
-                    <label class="d-block">Sender Name *</label>
-                    <input name="from_name" type="text" class="form-control @error('from_name') is-invalid @enderror" value="{{ old('from_name', $campaign->from_name) }}" required>
-                    @hasError(['inputName' => 'from_name'])
-                    @endhasError
-                </div>
-                <div class="form-group">
-                    <label class="d-block">Sender Email *</label>
-                    <input name="from_email" type="email" class="form-control @error('from_email') is-invalid @enderror" value="{{ old('from_email', $campaign->from_email) }}" required>
-                    @hasError(['inputName' => 'from_email'])
                     @endhasError
                 </div>
                 <div class="form-group">

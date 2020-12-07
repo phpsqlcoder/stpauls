@@ -111,8 +111,6 @@
                                     </div>
                                 </th>
                                 <th scope="col">Name</th>
-                                <th scope="col">From Name</th>
-                                <th scope="col">From Email</th>
                                 <th scope="col">Subject</th>
                                 <th scope="col">Last Date Modified</th>
                                 <th scope="col">Options</th>
@@ -132,8 +130,6 @@
                                             {{ $campaign->name }}
                                         </strong>
                                     </td>
-                                    <td>{{ $campaign->from_name }}</td>
-                                    <td>{{ $campaign->from_email }}</td>
                                     <td>{{ $campaign->subject }}</td>
                                     <td>{{ Setting::date_for_listing($campaign->updated_at) }}</td>
                                     <td class="text-right">
@@ -174,7 +170,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <th colspan="7" style="text-align: center;"> <p class="text-danger">No campaigns found.</p></th>
+                                    <th colspan="5" style="text-align: center;"> <p class="text-danger">No campaigns found.</p></th>
                                 </tr>
                             @endforelse
 

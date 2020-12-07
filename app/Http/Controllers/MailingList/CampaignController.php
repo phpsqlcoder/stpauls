@@ -5,15 +5,13 @@ namespace App\Http\Controllers\MailingList;
 use App\Permission;
 use Facades\App\Helpers\NewListingHelper;
 use App\Jobs\SendCampaignToSubscriberJob;
-use App\Jobs\SendEmailJob;
 use App\MailingListModel\Campaign;
 use App\MailingListModel\Group;
 use App\MailingListModel\Subscriber;
-use App\SentCampaign;
-use App\SentCampaignSubscriber;
+use App\MailingListModel\SentCampaign;
+use App\MailingListModel\SentCampaignSubscriber;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class CampaignController extends Controller
@@ -238,8 +236,6 @@ class CampaignController extends Controller
     {
         return $request->validate([
             'name' => 'max:150|required',
-            'from_name' => 'max:150|required',
-            'from_email' => 'max:150|email|required',
             'subject' => 'max:150|required',
             'content' => 'required',
             'submit' => 'required',

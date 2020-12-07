@@ -80,8 +80,6 @@
                             <thead>
                             <tr>
                                 <th scope="col">Name</th>
-                                <th scope="col">From Name</th>
-                                <th scope="col">From Email</th>
                                 <th scope="col">Subject</th>
                                 <th scope="col">Group</th>
                                 <th scope="col">Recipient</th>
@@ -93,8 +91,6 @@
                             @forelse($sentCampaigns as $sentCampaign)
                                 <tr>
                                     <th>{{ $sentCampaign->name }}</th>
-                                    <td>{{ $sentCampaign->from_name }}</td>
-                                    <td>{{ $sentCampaign->from_email }}</td>
                                     <td>{{ $sentCampaign->subject }}</td>
                                     <td>{{ $sentCampaign->total_group() }}</td>
                                     <td>{{ $sentCampaign->total_subscriber() }}</td>
@@ -103,7 +99,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <th colspan="8" style="text-align: center;"> <p class="text-danger">No campaigns found.</p></th>
+                                    <th colspan="6" style="text-align: center;"> <p class="text-danger">No campaigns found.</p></th>
                                 </tr>
                             @endforelse
 

@@ -18,8 +18,6 @@ class CreateSentCampaignsTable extends Migration
             $table->string('name');
             $table->bigInteger('sender_id')->unsigned();
             $table->bigInteger('campaign_id')->unsigned();
-            $table->string('from_name');
-            $table->string('from_email');
             $table->string('subject');
             $table->text('content');
             $table->timestamps();
