@@ -10,7 +10,7 @@
         <a href="{{ route('front.branches') }}">Branches</a>
     </li>
 
-    <!-- <li @if (\Route::current()->getName() == 'front.branches') class="active" @endif>
+    <li @if (\Route::current()->getName() == 'front.branches') class="active" @endif>
         <a href="{{ route('front.request-a-title') }}">REQUEST A TITLE</a>
-    </li> -->
+    </li>
 </ul>
