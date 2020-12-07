@@ -238,8 +238,6 @@ class CampaignController extends Controller
     {
         return $request->validate([
             'name' => 'max:150|required',
-            'from_name' => 'max:150|required',
-            'from_email' => 'max:150|email|required',
             'subject' => 'max:150|required',
             'content' => 'required',
             'submit' => 'required',

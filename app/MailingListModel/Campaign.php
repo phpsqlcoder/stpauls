@@ -9,6 +9,6 @@ class Campaign extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name', 'from_email', 'from_name', 'subject', 'content'];
+    protected $fillable = ['name', 'subject', 'content'];
 
 }

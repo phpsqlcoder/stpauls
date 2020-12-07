@@ -16,8 +16,6 @@ class CreateCampaignTable extends Migration
         Schema::create('campaigns', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('from_email');
-            $table->string('from_name');
             $table->string('subject');
             $table->text('content');
             $table->timestamps();
