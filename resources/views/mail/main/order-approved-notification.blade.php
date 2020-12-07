@@ -165,7 +165,12 @@
                         Payment Status <span style="float: right;color:#10b759;font-weight: 600;">{{ $sales->payment_status }}</span><br/>
                         <hr>
                         Delivery Type <span style="float: right;text-transform: uppercase;">{{ $sales->delivery_type }}</span><br/>
-                        Branch <span style="float: right;">{{ $sales->branch ?? 'N/A' }}</span><br/>
+
+                        @if($sales->delivery_type == 'Store Pick Up')
+                        Branch <span style="float: right;">{{ $sales->branch }}</span><br/>
+                        Pick-up Date <span style="float: right;">{{ $sales->pickup_date }}</span><br/>
+                        @endif
+
                         Delivery Status <span style="float: right;color:#10b759;font-weight: 600;text-transform: uppercase;">{{ $sales->delivery_status }}</span>
                         &nbsp;<br>
                         &nbsp;<br>
