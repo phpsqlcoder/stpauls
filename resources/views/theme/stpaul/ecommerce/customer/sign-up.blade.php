@@ -15,7 +15,7 @@
                                 <p class="text-lg-right text-md-left text-sm-left" id="log-mem">Already member? <span class="text-nowrap"><a href="{{ route('customer-front.login') }}">Login</a> here.</span></p>
                             </div>
                         </div>
-                        
+
                         @if($message = Session::get('error'))
                             <div class="alert alert-danger" role="alert">
                                 <span class="fa fa-exclamation"></span> {{ $message }}
@@ -55,21 +55,21 @@
                                                 <input required type="text" name="firstname" class="form-control form-input @error('firstname') is-invalid @enderror" value="{{ old('firstname',$socialData->firstname) }}">
                                                 @hasError(['inputName' => 'firstname'])
                                                 @endhasError
-                                                <div class="gap-20"></div>    
+                                                <div class="gap-20"></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <p>Last Name *</p>
                                                 <input required type="text" name="lastname" class="form-control form-input @error('lastname') is-invalid @enderror" value="{{ old('lastname',$socialData->lastname) }}">
                                                 @hasError(['inputName' => 'lastname'])
                                                 @endhasError
-                                                <div class="gap-20"></div>    
+                                                <div class="gap-20"></div>
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Email Address *</p>
                                                 <input required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="email" name="email"  class="form-control form-input  @error('email') is-invalid @enderror" value="{{ old('email',$socialData->email) }}">
                                                 @hasError(['inputName' => 'email'])
                                                 @endhasError
-                                                <div class="gap-20"></div>    
+                                                <div class="gap-20"></div>
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Password *</p>
@@ -79,7 +79,7 @@
                                                 <small class=><b>Minimum of eight (8) alphanumeric characters (combination of letters and numbers) with at least one (1) upper case and one (1) special character.</b></small>
                                                 @hasError(['inputName' => 'password'])
                                                 @endhasError
-                                                <div class="gap-20"></div>    
+                                                <div class="gap-20"></div>
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Confirm Password *</p>
@@ -88,7 +88,7 @@
                                                 </div>
                                                 @hasError(['inputName' => 'password_confirmation'])
                                                 @endhasError
-                                                <div class="gap-30"></div>    
+                                                <div class="gap-30"></div>
                                             </div>
                                             <div class="col-md-12"><hr><div class="gap-30"></div></div>
                                             <div class="col-md-12">
@@ -99,18 +99,18 @@
                                                     <option value="{{ $country->id }}">{{ $country->name }}</option>
                                                     @endforeach
                                                 </select>
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
 
                                             <div class="col-md-12" id="addressdiv" style="display: none;">
                                                 <p>Main Address</p>
                                                 <input type="text" name="address" id="address" class="form-control form-input" placeholder="Unit No./Building/House No./Street" value="{{ old('address') }}">
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-12" id="brgydiv" style="display: none;">
                                                 <p>Alternative Address</p>
                                                 <input type="text" name="brgy" id="brgy" class="form-control form-input" placeholder="Name of Subdivision/Barangay" value="{{ old('brgy') }}">
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-12" id="provincediv" style="display: none;">
                                                 <p>Province</p>
@@ -120,29 +120,29 @@
                                                     <option value="{{ $province->id }}">{{ $province->province }}</option>
                                                     @endforeach
                                                 </select>
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-7" id="citydiv" style="display: none;">
                                                 <p>City</p>
                                                 <select name="city" id="city" class="form-control form-input">
                                                     <option selected disabled value="">-- Select City --</option>
                                                 </select>
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-5" id="zipcodediv" style="display: none;">
                                                 <p>Zip Code</p>
                                                 <input type="text" name="zipcode" class="form-control form-input" value="{{ old('zipcode') }}">
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Telephone Number</p>
                                                 <input type="text" name="telno" id="telno" class="form-control form-input" value="{{ old('telno') }}" min="1">
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Mobile Number</p>
                                                 <input type="text" name="mobileno" id="mobileno" class="form-control form-input" value="{{ old('mobileno') }}" min="1" maxlength="13">
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
 
                                             <div class="col-md-12">
@@ -154,6 +154,15 @@
                                                         <label class="control-label text-danger" for="g-recaptcha-response"><i class="fa fa-times-circle-o"></i>{{ $message }}</label></br>
                                                     @endforeach
                                                 @endif
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="gap-20"></div>
+                                                <div id="chxbx">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck" name="subscribe" value="1">
+                                                        <label class="custom-control-label" for="customCheck">I want to receive exclusive offers and promotions from St Pauls.</label>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="col-lg-6 col-md-7">
                                                 <div class="gap-10"></div>
@@ -187,7 +196,7 @@
                 return true;
 
             });
-        });  
+        });
     </script>
 @endsection
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\EcommerceControllers;
 
 
+use App\MailingListModel\Subscriber;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +32,7 @@ class CustomerFrontController extends Controller
 
         $page = new Page();
         $page->name = 'Sign Up';
-        
+
         $socialData = $request;
 
         return view('theme.stpaul.ecommerce.customer.sign-up',compact('page','socialData'));
@@ -54,7 +55,7 @@ class CustomerFrontController extends Controller
     }
 
     public function customer_sign_up(Request $request)
-    {   
+    {
         Validator::make($request->all(),[
             'firstname' => 'required|max:150',
             'lastname' => 'required|max:150',
@@ -71,7 +72,7 @@ class CustomerFrontController extends Controller
             'password_confirmation' => 'required|same:password',
         ])->validate();
 
-        
+
         // Login Credetials
         $customer = User::create([
             'email' => $request->email,
@@ -105,7 +106,13 @@ class CustomerFrontController extends Controller
                 'reactivate_request' => 0
             ]);
         }
-            
+
+        if ($request->has('subscribe')) {
+            $newSubscriber = $request->only('email', 'firstname', 'lastname');
+            $newSubscriber['code'] = Subscriber::generate_unique_code();
+            Subscriber::create($newSubscriber);
+        }
+
         return redirect(route('customer-front.login'))->with('success','Registration Successful!');
 
     }
@@ -140,12 +147,12 @@ class CustomerFrontController extends Controller
                 ];
 
                 $cart = session('cart', []);
-                
+
                 if (Auth::attempt($userCredentials)) {
 
                     if(auth::user()->role_id != 3){ // block admin from using this login form
                         Auth::logout();
-                        return back()->with('error', 'Administrative account are not allowed to login in this portal.'); 
+                        return back()->with('error', 'Administrative account are not allowed to login in this portal.');
                     }
 
                     if(Auth()->user()->is_active == 0){
@@ -183,11 +190,11 @@ class CustomerFrontController extends Controller
                         return redirect(route('home'));
                 } else {
                     Auth::logout();
-                    return back()->with('error', __('auth.login.incorrect_input'));    
+                    return back()->with('error', __('auth.login.incorrect_input'));
                 }
             }
         } else {
-            return back()->with('error', __('auth.login.incorrect_input')); 
+            return back()->with('error', __('auth.login.incorrect_input'));
         }
 
     }
