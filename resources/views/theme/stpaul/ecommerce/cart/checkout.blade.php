@@ -190,7 +190,7 @@
                                                         <h3>Cash on Delivery</h3>
                                                         <div class="alert alert-info" role="alert">
                                                             <h4 class="alert-heading">Reminder!</h4>
-                                                            <p>{{ $cod->reminder }}</p>
+                                                            <p>{!! $cod->reminder !!}</p>
                                                         </div>
                                                     </div>
                                                 @else
@@ -208,7 +208,7 @@
                                                                         <h3>Cash on Delivery</h3>
                                                                         <div class="alert alert-info" role="alert">
                                                                             <h4 class="alert-heading">Reminder!</h4>
-                                                                            <p>{{ $cod->reminder }}</p>
+                                                                            <p>{!! $cod->reminder !!}</p>
                                                                         </div>
                                                                     </div>
                                                                 @endif
@@ -225,7 +225,7 @@
                                                                     <h3>Cash on Delivery</h3>
                                                                     <div class="alert alert-info" role="alert">
                                                                         <h4 class="alert-heading">Reminder!</h4>
-                                                                        <p>{{ $cod->reminder }}</p>
+                                                                        <p>{!! $cod->reminder !!}</p>
                                                                     </div>
                                                                 </div>
                                                                 @endif
@@ -239,7 +239,7 @@
                                                             <h3>Cash on Delivery</h3>
                                                             <div class="alert alert-info" role="alert">
                                                                 <h4 class="alert-heading">Reminder!</h4>
-                                                                <p>{{ $cod->reminder }}</p>
+                                                                <p>{!! $cod->reminder !!}</p>
                                                             </div>
                                                         </div>
                                                     @endif
@@ -253,7 +253,7 @@
                                                         <h3>Store Pick-up</h3>
                                                         <div class="alert alert-info" role="alert">
                                                             <h4 class="alert-heading">Reminder!</h4>
-                                                            <p>{{ $stp->reminder }}</p>
+                                                            <p>{!! $stp->reminder !!}</p>
                                                         </div>
                                                         <div class="form-row form-style fs-sm">
                                                             <div class="col">
@@ -284,7 +284,7 @@
                                                         <h3>Store Pick-up</h3>
                                                         <div class="alert alert-info" role="alert">
                                                             <h4 class="alert-heading">Reminder!</h4>
-                                                            <p>{{ $stp->reminder }}</p>
+                                                            <p>{!! $stp->reminder !!}</p>
                                                         </div>
                                                         <div class="form-row form-style fs-sm">
                                                             <div class="col">
@@ -317,7 +317,7 @@
                                                     <div class="tab__content">
                                                         <div class="alert alert-info" role="alert">
                                                             <h4 class="alert-heading">Reminder!</h4>
-                                                            <p>{{ $sdd->reminder }}</p>
+                                                            <p>{!! $sdd->reminder !!}</p>
                                                         </div>
                                                         <div class="form-check">
                                                             <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
@@ -334,7 +334,7 @@
                                                                     <div class="tab__content">
                                                                         <div class="alert alert-info" role="alert">
                                                                             <h4 class="alert-heading">Reminder!</h4>
-                                                                            <p>{{ $sdd->reminder }}</p>
+                                                                            <p>{!! $sdd->reminder !!}</p>
                                                                         </div>
                                                                         <div class="form-check">
                                                                             <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
@@ -349,7 +349,7 @@
                                                             <div class="tab__content">
                                                                 <div class="alert alert-info" role="alert">
                                                                     <h4 class="alert-heading">Reminder!</h4>
-                                                                    <p>{{ $sdd->reminder }}</p>
+                                                                    <p>{!! $sdd->reminder !!}</p>
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
@@ -364,7 +364,7 @@
                                                         <div class="tab__content">
                                                             <div class="alert alert-info" role="alert">
                                                                 <h4 class="alert-heading">Reminder!</h4>
-                                                                <p>{{ $sdd->reminder }}</p>
+                                                                <p>{!! $sdd->reminder !!}</p>
                                                             </div>
                                                             <div class="form-check">
                                                                 <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
