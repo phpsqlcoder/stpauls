@@ -240,11 +240,11 @@ class CampaignController extends Controller
             'content' => 'required',
             'submit' => 'required',
             'recipients' => Rule::requiredIf(function() use ($request) {
-                return $request->submit == 'save and send';
+                return $request->submit == 'save and send' && empty($request->recipient_groups);
             }),
             'recipients.*' => 'exists:subscribers,id',
             'recipient_groups' => Rule::requiredIf(function() use ($request) {
-                return $request->submit == 'save and send';
+                return $request->submit == 'save and send' && empty($request->recipients);
             }),
             'recipient_groups.*' => 'exists:groups,id'
         ]);

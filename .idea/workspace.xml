@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ecdd63f0-778c-489c-adf9-a23a2833b564" name="Default Changelist" comment="" />
+    <list default="true" id="ecdd63f0-778c-489c-adf9-a23a2833b564" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/MailingList/CampaignController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/MailingList/CampaignController.php" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -145,7 +148,7 @@
       <updated>1607307831795</updated>
       <workItem from="1607307868066" duration="59000" />
       <workItem from="1607312225771" duration="3587000" />
-      <workItem from="1607320673204" duration="5452000" />
+      <workItem from="1607320673204" duration="8132000" />
     </task>
     <servers />
   </component>
@@ -161,9 +164,9 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1607307925199" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1607329418737">
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1607334368210">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1607329418737" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824/1920.0.1920.1040@0.0.1536.824" timestamp="1607334368210" />
   </component>
 </project>
