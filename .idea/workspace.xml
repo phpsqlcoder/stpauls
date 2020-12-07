@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ecdd63f0-778c-489c-adf9-a23a2833b564" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/phpunit.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/stpauls.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/EcommerceControllers/CustomerFrontController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/EcommerceControllers/CustomerFrontController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/theme/stpaul/ecommerce/customer/sign-up.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/theme/stpaul/ecommerce/customer/sign-up.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +147,7 @@
       <option name="presentableId" value="Default" />
       <updated>1607307831795</updated>
       <workItem from="1607307868066" duration="59000" />
-      <workItem from="1607312225771" duration="1010000" />
+      <workItem from="1607312225771" duration="3587000" />
     </task>
     <servers />
   </component>
