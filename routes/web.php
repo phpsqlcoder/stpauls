@@ -15,14 +15,14 @@
 
         Route::get('oauth/{driver}', 'Auth\SocialiteController@redirectToProvider')->name('social.oauth');
         Route::get('oauth/{driver}/callback', 'Auth\SocialiteController@handleProviderCallback')->name('social.callback');
-        
+
         Route::get('oauth/login/{driver}', 'Auth\SocialiteController@loginRedirectToProvider')->name('social.oauth-login');
         Route::get('oauth/login/{driver}/callback', 'Auth\SocialiteController@loginHandleProviderCallback')->name('social.callback-login');
 
         Route::get('/ajax/deliverable-cities/{id}','EcommerceControllers\CustomerFrontController@ajax_deliverable_cities')->name('ajax.deliverable-cities');
 
         Route::get('/login', 'EcommerceControllers\CustomerFrontController@login')->name('customer-front.login');
-        
+
 
         Route::post('/login', 'EcommerceControllers\CustomerFrontController@customer_login')->name('customer-front.customer_login');
         Route::get('/customer-logout', 'EcommerceControllers\CustomerFrontController@logout')->name('customer.logout');
@@ -70,6 +70,12 @@
         // Contact Us
         Route::post('/contact-us', 'FrontController@contact_us')->name('contact-us');
     //
+
+    //// MAILING LIST ////
+    Route::post('/subscribe', 'MailingList\SubscriberFrontController@subscribe')->name('mailing-list.front.subscribe');
+    Route::get('/unsubscribe/{subscriber}/{code}', 'MailingList\SubscriberFrontController@unsubscribe')->name('mailing-list.front.unsubscribe');
+    //// END MAILING LIST ////
+
 
     ########## ECOMMERCE ROUTES #############
 
@@ -125,7 +131,7 @@
             Route::post('product/review/store', 'EcommerceControllers\ProductReviewController@store')->name('product.review.store');
             Route::post('/product-add-to-wishlist','EcommerceControllers\WishlistController@add_to_wishlist')->name('product.add-to-wishlist');
             Route::post('/product-remove-to-wishlist','EcommerceControllers\WishlistController@remove_to_wishlist')->name('product.remove-to-wishlist');
-            
+
     });
 
 
@@ -149,7 +155,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
 
     //Route::group(['middleware' => 'admin'], function () {
     Route::group(['middleware' => ['admin','authenticated']], function () {
-    
+
         // Customers
             Route::resource('/admin/customers', 'Settings\CustomerController');
             Route::get('/customer-orders/{id}','Settings\CustomerController@orders')->name('customer.orders');
@@ -195,7 +201,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/branch-remove-image','EcommerceControllers\BranchController@remove_image')->name('branch.remove-image');
             Route::post('/branch-area/single-delete', 'EcommerceControllers\BranchController@area_single_delete')->name('branch-area.single.delete');
             Route::post('/branch-area/multiple-delete', 'EcommerceControllers\BranchController@area_multiple_delete')->name('branch-area.multiple.delete');
-            
+
 
         //
 
@@ -350,7 +356,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/admin/transaction-status-multiple-change-status','Transaction\TransactionStatusController@multiple_change_status')->name('transaction_status.multiple.change.status');
             Route::post('/admin/transaction-status-multiple-delete','Transaction\TransactionStatusController@multiple_delete')->name('transaction-status.multiple.delete');
         //
-        
+
         // Transactions
             Route::resource('/admin/transactions','Transaction\TransactionController');
 
@@ -364,7 +370,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         // Wishlist
             Route::resource('/admin/wishlist','EcommerceControllers\WishlistController');
 
-            
+
         // Migrate products
             Route::post('/product-upload-main','Product\ProductController@upload_main')->name('products.upload.main');
             Route::post('/product-upload-additional','Product\ProductController@upload_additional')->name('products.upload.additional');
@@ -380,7 +386,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         // Title Requests
         Route::get('/title-requests','TitleRequest\TitleRequestController@index')->name('admin.title-requests');
 
-        
+
         //// MAILING LIST ////
         Route::resource('/mailing-list/subscribers', 'MailingList\SubscriberController', ['as' => 'mailing-list']);
         Route::get('/mailing-list/cancelled-subscribers', 'MailingList\SubscriberController@unsubscribe')->name('mailing-list.subscribers.unsubscribe');
@@ -483,7 +489,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::resource('/access', 'Settings\AccessController');
             Route::post('/roles_and_permissions/update', 'Settings\AccessController@update_roles_and_permissions')->name('role-permission.update');
         //
-            
+
         //if (env('APP_DEBUG') == "true") {
             // Permission Routes
             Route::resource('/permission', 'Settings\PermissionController');
