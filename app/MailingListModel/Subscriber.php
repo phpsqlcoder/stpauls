@@ -4,7 +4,7 @@ namespace App\MailingListModel;
 
 use App\Helpers\Webfocus\Setting;
 use App\Mail\MailingList\CampaignMail;
-use App\SentCampaign;
+use App\MailingListModel\SentCampaign;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Mail;

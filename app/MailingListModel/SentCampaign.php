@@ -2,6 +2,7 @@
 
 namespace App\MailingListModel;
 
+use App\Logs;
 use Illuminate\Database\Eloquent\Model;
 
 class SentCampaign extends Model
