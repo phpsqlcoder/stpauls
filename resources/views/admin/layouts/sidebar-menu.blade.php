@@ -10,7 +10,7 @@
         <a href="{{ route('dashboard') }}" class="nav-link"><i data-feather="home"></i><span>Dashboard</span></a>
     </li>
     
-    @if (auth()->user()->has_access_to_pages_module())
+    <!-- @if (auth()->user()->has_access_to_pages_module())
         <li class="nav-item with-sub @if (request()->routeIs('pages*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="layers"></i> <span>Pages</span></a>
             <ul>
@@ -62,7 +62,7 @@
                 @endif
             </ul>
         </li>
-    @endif
+    @endif -->
     
     <li class="nav-item with-sub @if (request()->routeIs('account*') || request()->routeIs('website-settings*') || request()->routeIs('audit*')) active show @endif">
         <a href="" class="nav-link"><i data-feather="settings"></i> <span>Settings</span></a>
@@ -248,14 +248,14 @@
         </li>
     @endif
 
-    @if (auth()->user()->has_access_to_module('branches'))
+    <!-- @if (auth()->user()->has_access_to_module('branches'))
         <li class="nav-item with-sub @if (request()->routeIs('admin.title-requests*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="box"></i> <span>Title Requests</span></a>
             <ul>
                 <li @if (\Route::current()->getName() == 'admin.title-requests') class="active" @endif><a href="{{ route('admin.title-requests') }}">Manage Requests</a></li>
             </ul>
         </li>
-    @endif
+    @endif -->
 
     @if (auth()->user()->has_access_to_module('email_notifications') || auth()->user()->has_access_to_module('transactions.index'))
         <li class="nav-item with-sub @if (request()->routeIs('transaction-status*') || request()->routeIs('transactions*')) active show @endif">
@@ -278,7 +278,7 @@
         </li>
     @endif
 
-    @if (auth()->user()->has_access_to_module('wishlist'))
+    <!-- @if (auth()->user()->has_access_to_module('wishlist'))
         <li class="nav-item with-sub @if (request()->routeIs('wishlist*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="box"></i> <span>Wishlist</span></a>
             <ul>
@@ -316,7 +316,7 @@
                 @endif
             </ul>
         </li>
-    @endif
+    @endif -->
 
 
     @if (auth()->user()->has_access_to_route('report.customer.list') || auth()->user()->has_access_to_route('report.product.list') || auth()->user()->has_access_to_route('report.product.list') || auth()->user()->has_access_to_route('report.product.best-selling') || auth()->user()->has_access_to_route('report.sales.list') || auth()->user()->has_access_to_route('report.sales.unpaid') || auth()->user()->has_access_to_route('report.sales.payments') || auth()->user()->has_access_to_route('report.inventory.list') || auth()->user()->has_access_to_route('report.inventory.reorder_point'))
