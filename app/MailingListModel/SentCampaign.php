@@ -2,6 +2,7 @@
 
 namespace App\MailingListModel;
 
+use App\ActivityLog;
 use App\Logs;
 use Illuminate\Database\Eloquent\Model;
 
@@ -52,7 +53,7 @@ class SentCampaign extends Model
 
         self::created(function($model) {
             $name = $model[self::$name];
-            Logs::create([
+            ActivityLog::create([
                 'created_by' => auth()->id(),
                 'activity_type' => 'insert',
                 'dashboard_activity' => 'created a new '. self::$tableTitle,
@@ -81,7 +82,7 @@ class SentCampaign extends Model
                 $oldValue = $model[$fieldName];
                 if ($oldValue != $value) {
                     $fieldNames = implode(' ', explode('_', $fieldName));
-                    Logs::create([
+                    ActivityLog::create([
                         'created_by' => auth()->id(),
                         'activity_type' => 'update',
                         'dashboard_activity' => 'updated the '. self::$tableTitle .' '. $fieldNames,
@@ -98,7 +99,7 @@ class SentCampaign extends Model
 
         self::deleted(function($model){
             $name = $model[self::$name];
-            Logs::create([
+            ActivityLog::create([
                 'created_by' => auth()->id(),
                 'activity_type' => 'delete',
                 'dashboard_activity' => 'deleted a '. self::$tableTitle,
