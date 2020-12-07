@@ -1134,8 +1134,6 @@
         function subTotal(){
             var totalAmount = 0;
             var totalWeight = 0;
-            var option = $('input[name="shipOption"]:checked').val();
-
             $(".input_product_total_amount").each(function() {
                 if(!isNaN(this.value) && this.value.length!=0) {
                     totalAmount += parseFloat(this.value);
@@ -1155,16 +1153,6 @@
             $('#sub-total').html(FormatAmount(totalAmount,2));
             $('#input_sub_total').val(totalAmount.toFixed(2));
 
-            // if(option == 4){
-            //     if($('#exampleCheck1').is(":checked")){
-
-            //     } else {
-            //         total_weight();
-            //     }
-            // } else {
-            //     total_weight();
-            // }
-
             total_weight();
             
         }
@@ -1173,6 +1161,7 @@
             var weight = $('#input_total_weight').val();
             var country= $('#country').val();
             var city   = $('#city').val(); 
+            var option = $('input[name="shipOption"]:checked').val();
 
             $.ajax({
                 type: "GET",
@@ -1183,15 +1172,50 @@
                     'weight' : weight
                 },
                 success: function(response) {
-                    $('#input_shippingfee').val(response.rate);
-                    $('#span_shippingfee').html(FormatAmount(response.rate,2));
+
+                    if(option == 4){
+                        if($('#exampleCheck1').is(":checked")){
+                            console.log('check');
+                            $('#input_shippingfee').val(0);
+                        } else {
+                            console.log('wala');
+                            $('#input_shippingfee').val(response.rate);
+                            $('#span_shippingfee').html(FormatAmount(response.rate,2));
+                        }
+                    } else {
+                        console.log('check');
+                        $('#input_shippingfee').val(response.rate);
+                        $('#span_shippingfee').html(FormatAmount(response.rate,2));
+                    }
 
                     totalDue();
                 }
             });
+        }
+
+        // function total_weight(){
+        //     var weight = $('#input_total_weight').val();
+        //     var country= $('#country').val();
+        //     var city   = $('#city').val(); 
+
+        //     $.ajax({
+        //         type: "GET",
+        //         url: "{{ route('ajax.get-city-rates') }}",
+        //         data: {
+        //             'city' : city,
+        //             'country' : country,
+        //             'weight' : weight
+        //         },
+        //         success: function(response) {
+        //             $('#input_shippingfee').val(response.rate);
+        //             $('#span_shippingfee').html(FormatAmount(response.rate,2));
+
+        //             totalDue();
+        //         }
+        //     });
 
             
-        }
+        // }
 
         function totalDue(){
             var subtotal    = $('#input_sub_total').val();
