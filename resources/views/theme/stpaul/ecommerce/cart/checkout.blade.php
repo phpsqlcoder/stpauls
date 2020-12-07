@@ -1057,13 +1057,6 @@
 
                 if(option == 4){
                     if($('#exampleCheck1').is(":checked")){
-                        $('#lispan_servicefee').hide();
-                        $('#span_servicefee').hide();
-                        $('#input_servicefee').val(0);
-
-                        $('#input_shippingfee').val(0);
-                        $('#span_shippingfee').html('0.00');
-                    } else {
                         if(sddServiceFee > 0){
                             $('#input_servicefee').val(codServiceFee);
                             $('#span_servicefee').html('₱ '+FormatAmount(codServiceFee,2));
@@ -1074,6 +1067,14 @@
                             $('#span_servicefee').hide();
                             $('#input_servicefee').val(0); 
                         }
+                        
+                    } else {
+                        $('#lispan_servicefee').hide();
+                        $('#span_servicefee').hide();
+                        $('#input_servicefee').val(0);
+
+                        $('#input_shippingfee').val(0);
+                        $('#span_shippingfee').html('0.00');
                     }
                     
 
