@@ -16,13 +16,13 @@
                     <div class="category-nav-1">
                     <ul class="nav nav-pills" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="pills-book-tab" data-toggle="pill" href="#pills-book" role="tab" aria-controls="pills-home" aria-selected="true">Books</a>
+                            <a class="nav-link active" id="pills-book-tab" data-toggle="pill" href="#pills-book" role="tab" aria-controls="pills-book" aria-selected="true">Books</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="pills-bible-tab" data-toggle="pill" href="#pills-bible" role="tab" aria-controls="pills-profile" aria-selected="false">Bibles</a>
+                            <a class="nav-link" id="pills-bible-tab" data-toggle="pill" href="#pills-bible" role="tab" aria-controls="pills-bible" aria-selected="false">Bibles</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="pills-devotional-tab" data-toggle="pill" href="#pills-devotional" role="tab" aria-controls="pills-contact" aria-selected="false">Devotional</a>
+                            <a class="nav-link" id="pills-devotional-tab" data-toggle="pill" href="#pills-devotional" role="tab" aria-controls="pills-devotional" aria-selected="false">Devotional</a>
                         </li>
                     </ul>
                     <div class="product-nav">
