@@ -1,3 +1,4 @@
 *.env
 readme.md
 public/storage
+.idea
