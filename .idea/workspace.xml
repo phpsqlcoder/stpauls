@@ -3,15 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="ecdd63f0-778c-489c-adf9-a23a2833b564" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/MailingList/CampaignController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/MailingList/CampaignController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/MailingListModel/Campaign.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/MailingListModel/Campaign.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/SentCampaign.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/SentCampaign.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2020_03_07_014037_create_campaign_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_03_07_014037_create_campaign_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2020_03_10_100734_create_sent_campaigns_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_03_10_100734_create_sent_campaigns_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/mailing-list/campaigns/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/mailing-list/campaigns/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/mailing-list/campaigns/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/mailing-list/campaigns/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/mailing-list/campaigns/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/mailing-list/campaigns/index.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/admin/mailing-list/campaigns/sent-campaigns.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/mailing-list/campaigns/sent-campaigns.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/SentCampaign.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/SentCampaignSubscriber.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/autoload.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/autoload.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/ClassLoader.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/ClassLoader.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_files.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_files.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_namespaces.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_namespaces.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_real.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_real.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_static.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_static.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +158,7 @@
       <updated>1607307831795</updated>
       <workItem from="1607307868066" duration="59000" />
       <workItem from="1607312225771" duration="3587000" />
-      <workItem from="1607320673204" duration="3986000" />
+      <workItem from="1607320673204" duration="5136000" />
     </task>
     <servers />
   </component>
