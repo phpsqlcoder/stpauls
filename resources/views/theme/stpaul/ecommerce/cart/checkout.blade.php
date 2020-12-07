@@ -381,7 +381,7 @@
                                                 </div>--}}
                                             </div>
 
-                                            <ul class="list-unstyled lh-7 pd-r-10" style="display: none;">
+                                            <ul class="list-unstyled lh-7 pd-r-10" >
                                                 <li class="d-flex justify-content-between">
                                                     <span>Total Puchase Amount</span>
                                                     <span>
@@ -427,6 +427,13 @@
                                                     <span>COD Service Fee</span>
                                                     <span>
                                                         <input type="text" id="cod_service_fee" value="{{ $cod->service_fee }}">
+                                                    </span>
+                                                </li>
+
+                                                <li class="d-flex justify-content-between">
+                                                    <span>SDD Service Fee</span>
+                                                    <span>
+                                                        <input type="text" id="sdd_service_fee" value="{{ $sdd->service_fee }}">
                                                     </span>
                                                 </li>
 
@@ -1042,18 +1049,33 @@
 
         function shippingFee(option){
 
-            var codServiceFee    = $('#cod_service_fee').val();
+            var codServiceFee = $('#cod_service_fee').val();
+            var sddServiceFee = $('#sdd_service_fee').val();
             var shippingfee   = $('#shipping_fee').val();
 
             if(option == 1 || option == 3 || option == 4){
 
-                if($('#exampleCheck1').is(":checked") && option == 4){
-                    $('#lispan_servicefee').hide();
-                    $('#span_servicefee').hide();
-                    $('#input_servicefee').val(0);
+                if(option == 4){
+                    if($('#exampleCheck1').is(":checked")){
+                        $('#lispan_servicefee').hide();
+                        $('#span_servicefee').hide();
+                        $('#input_servicefee').val(0);
 
-                    $('#input_shippingfee').val(0);
-                    $('#span_shippingfee').html('0.00');
+                        $('#input_shippingfee').val(0);
+                        $('#span_shippingfee').html('0.00');
+                    } else {
+                        if(sddServiceFee > 0){
+                            $('#input_servicefee').val(codServiceFee);
+                            $('#span_servicefee').html('₱ '+FormatAmount(codServiceFee,2));
+                            $('#lispan_servicefee').show();
+                            $('#span_servicefee').show();
+                        } else {
+                           $('#lispan_servicefee').hide();
+                            $('#span_servicefee').hide();
+                            $('#input_servicefee').val(0); 
+                        }
+                    }
+                    
 
                 } else {
                     if(option == 1){
