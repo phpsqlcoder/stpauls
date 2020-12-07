@@ -1155,15 +1155,17 @@
             $('#sub-total').html(FormatAmount(totalAmount,2));
             $('#input_sub_total').val(totalAmount.toFixed(2));
 
-            if(option == 4){
-                if($('#exampleCheck1').is(":checked")){
+            // if(option == 4){
+            //     if($('#exampleCheck1').is(":checked")){
 
-                } else {
-                    total_weight();
-                }
-            } else {
-                total_weight();
-            }
+            //     } else {
+            //         total_weight();
+            //     }
+            // } else {
+            //     total_weight();
+            // }
+
+            total_weight();
             
         }
 
