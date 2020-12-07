@@ -1175,15 +1175,12 @@
 
                     if(option == 4){
                         if($('#exampleCheck1').is(":checked")){
-                            console.log('check');
                             $('#input_shippingfee').val(0);
                         } else {
-                            console.log('wala');
                             $('#input_shippingfee').val(response.rate);
                             $('#span_shippingfee').html(FormatAmount(response.rate,2));
                         }
                     } else {
-                        console.log('check');
                         $('#input_shippingfee').val(response.rate);
                         $('#span_shippingfee').html(FormatAmount(response.rate,2));
                     }
