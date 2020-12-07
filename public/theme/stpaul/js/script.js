@@ -42,6 +42,13 @@ $(function () {
         if (href.indexOf("storage/products/") > 0) {
             return;
         }
+        if (
+            href.indexOf("#pills-book") == 0 ||
+            href.indexOf("#pills-bible") == 0 ||
+            href.indexOf("#pills-devotional") == 0
+        ) {
+            return;
+        }
         if (!href) {
             return;
         }
