@@ -10,7 +10,7 @@
         <a href="{{ route('dashboard') }}" class="nav-link"><i data-feather="home"></i><span>Dashboard</span></a>
     </li>
     
-    <!-- @if (auth()->user()->has_access_to_pages_module())
+    @if (auth()->user()->has_access_to_pages_module())
         <li class="nav-item with-sub @if (request()->routeIs('pages*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="layers"></i> <span>Pages</span></a>
             <ul>
@@ -62,7 +62,7 @@
                 @endif
             </ul>
         </li>
-    @endif -->
+    @endif
     
     <li class="nav-item with-sub @if (request()->routeIs('account*') || request()->routeIs('website-settings*') || request()->routeIs('audit*')) active show @endif">
         <a href="" class="nav-link"><i data-feather="settings"></i> <span>Settings</span></a>
@@ -248,14 +248,14 @@
         </li>
     @endif
 
-    <!-- @if (auth()->user()->has_access_to_module('branches'))
+    @if (auth()->user()->has_access_to_module('branches'))
         <li class="nav-item with-sub @if (request()->routeIs('admin.title-requests*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="box"></i> <span>Title Requests</span></a>
             <ul>
                 <li @if (\Route::current()->getName() == 'admin.title-requests') class="active" @endif><a href="{{ route('admin.title-requests') }}">Manage Requests</a></li>
             </ul>
         </li>
-    @endif -->
+    @endif
 
     @if (auth()->user()->has_access_to_module('email_notifications') || auth()->user()->has_access_to_module('transactions.index'))
         <li class="nav-item with-sub @if (request()->routeIs('transaction-status*') || request()->routeIs('transactions*')) active show @endif">
@@ -278,18 +278,18 @@
         </li>
     @endif
 
-    <!-- @if (auth()->user()->has_access_to_module('wishlist'))
+    @if (auth()->user()->has_access_to_module('wishlist'))
         <li class="nav-item with-sub @if (request()->routeIs('wishlist*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="box"></i> <span>Wishlist</span></a>
             <ul>
                 <li @if (\Route::current()->getName() == 'wishlist.index') class="active" @endif><a href="{{ route('wishlist.index') }}">Manage Wishlist</a></li>
             </ul>
         </li>
-    @endif -->
+    @endif
 
     @if (auth()->user()->has_access_to_subscriber_group_module() || auth()->user()->has_access_to_subscriber_module() ||
         auth()->user()->has_access_to_campaign_module() || auth()->user()->has_access_to_mailing_list_sent_items_module())
-        <!-- <li class="nav-item with-sub @if (request()->routeIs('mailing-list*')) active show @endif">
+        <li class="nav-item with-sub @if (request()->routeIs('mailing-list*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="credit-card"></i> <span>Mailing List</span></a>
             <ul>
                 @if (auth()->user()->has_access_to_subscriber_module())
@@ -315,7 +315,7 @@
                     <li @if (\Route::current()->getName() == 'mailing-list.campaigns.sent-campaigns') class="active" @endif><a href="{{ route('mailing-list.campaigns.sent-campaigns') }}">Sent Items</a></li>
                 @endif
             </ul>
-        </li> -->
+        </li>
     @endif
 
 
