@@ -258,10 +258,16 @@
                     <span>Delivery Type</span>
                     <span class="tx-semibold tx-uppercase">{{ $sales->delivery_type }}</span>
                 </li>
+                @if($sales->delivery_type == 'Store Pick Up')
                 <li class="d-flex justify-content-between">
                     <span>Branch</span>
-                    <span class="tx-semibold tx-uppercase">{{ $sales->branch ?? 'N/A' }}</span>
+                    <span class="tx-semibold tx-uppercase">{{ $sales->branch }}</span>
                 </li>
+                <li class="d-flex justify-content-between">
+                    <span>Pick-up Date</span>
+                    <span class="tx-semibold tx-uppercase">{{ $sales->pickup_date }}</span>
+                </li>
+                @endif
                 <li class="d-flex justify-content-between">
                     <span>Delivery Status</span>
                     <span class="tx-success tx-semibold tx-uppercase">{{ $sales->delivery_status }}</span>
