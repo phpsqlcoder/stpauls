@@ -15,6 +15,7 @@ use App\EcommerceModel\PaymentOption;
 use App\EcommerceModel\SalesPayment;
 use App\EcommerceModel\DeliveryStatus;
 use App\EcommerceModel\SalesDetail;
+use App\User;
 
 class SalesFrontController extends Controller
 {
@@ -42,7 +43,11 @@ class SalesFrontController extends Controller
             'created_by' => Auth::id()
         ]);
 
+
         $sales = SalesHeader::find($request->header_id);
+
+        $admin = User::find(Auth::id());
+        $admin->send_payment_approval_request_email($sales);
 
         $sales->update([
             'user_id' => Auth::id(),
@@ -123,6 +128,9 @@ class SalesFrontController extends Controller
         $page->name = 'Success Payment';
 
         $sales = SalesHeader::where('order_number',$orderno)->first();
+
+        $admin = User::find(Auth::id());
+        $admin->send_order_approved_email($sales,now());
 
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.globalpay-success',compact('page','sales'));
     }

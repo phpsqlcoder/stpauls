@@ -81,7 +81,7 @@
     </head>
     <body style="background:#FFFFFF;font-family:arial;">
     <p>&nbsp;</p>
-    <table style="width:750px;margin:auto;background:#fff;border:1px solid #dddddd;padding:1em;-webkit-border-radius:5px;border-radius:5px;font-size:12px;">
+    <table style="width:850px;margin:auto;background:#fff;border:1px solid #dddddd;padding:1em;-webkit-border-radius:5px;border-radius:5px;font-size:12px;">
         <tr>
             <td>
                 <a href="{{ url('/') }}">
@@ -91,33 +91,28 @@
         </tr>
         <tr>
             <td>
+                Dear Admin,
+                <br>
+                <br>
+                Good Day!
+                <br>
+                <br>
+                You have received a payment from <strong>{{ $sales->order_number }}</strong> for validation.
+                <br>
+                <br>
                 @php
-                    $qrypayment    = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sales->id);
-                    $countpayment  = $qrypayment->count();
-
-                    if($countpayment > 0){
-                        $payment = $qrypayment->first();
-
-                        $paidamount = $payment->amount;
-                    } else {
-                        $paidamount = 0;
-                    }   
-
-                    $payment       = $qrypayment->first();
-
-                    $content    = $template->content;
-                    $keywords   = ['{order_number}', '{shippingfee}', '{paid_amount}', '{remarks}', '{net_amount}', '{delivery_status}'];
-
-                    $variables  = [$sales->order_number, number_format($sales->delivery_fee_amount,2), number_format($paidamount,2), $sales->remarks, number_format($sales->net_amount,2), $sales->delivery_status];
-
-                    $newContent = str_replace($keywords,$variables,$content);
+                    $payment = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sales->id)->first();
                 @endphp
 
-                    {!! $newContent !!}
+                Payment details: 
+                <br>
+                Date of payment: {{ $payment->payment_date }}<br />
+                Mode of Payment: {{ $payment->type }}<br />
+                Payment Attachment: <a target="_blank" href="{{ asset('storage').'/payments/'.$payment->id.'/'.$payment->attachment }} ">{{ $payment->attachment }}</a>
 
                 <br />
                 <br />
-                <strong>Your order details are as follows:</strong><br />
+                <strong>Order Details Below:</strong><br />
 
                 <div style="overflow:auto;margin-bottom:20px;">
                     <div>
@@ -128,7 +123,7 @@
                     </div>
                 </div>
 
-                <div style="margin-bottom: 200px;">
+                <div style="margin-bottom: 250px;">
                     <div id="customer" style="flex: 0 0 40%;max-width: 100%;">
                         <label style="display: inline-block;margin-bottom: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, 'Inter UI', Roboto, sans-serif;font-weight: 500;letter-spacing: 0.5px;color: #8392a5;">Billing Details</label>
                         <h2 class="name">{{ $sales->customer_name }}</h2>
@@ -138,26 +133,11 @@
                         <p class="mg-b-10">Remarks :</p>
                         <ul class="list-unstyled">
                             @if($sales->remarks != '')
-                                <li>* {{ $sales->remarks }}</li>
-                            @endif
-                            
-                            @php
-                                $paymentQry = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sales->id);
-                                $paymentCount = $paymentQry->count();
-                            @endphp
-
-                            @if($paymentQry->count() > 0)
-                                @php
-                                    $paymentRemarks = $paymentQry->first();
-                                @endphp
-
-                                @if($paymentRemarks->remarks != '')
-                                    <li>* {{ $paymentRemarks->remarks }}</li>
-                                @endif
+                                <li>{{ $sales->remarks }}</li>
                             @endif
                         </ul>
                         <p>Other Instructions : {{ $sales->other_instruction ?? 'N/A' }}</p>
-                        
+
                         @if($sales->sdd_booking_type == 1)
                         <p>Courier Name : {{ $sales->courier_name }}</p>
                         <p>Rider Name : {{ $sales->rider_name }}</p>
@@ -181,6 +161,21 @@
                         @endif
 
                         Delivery Status <span style="float: right;color:#10b759;font-weight: 600;text-transform: uppercase;">{{ $sales->delivery_status }}</span>
+                        &nbsp;<br>
+                        &nbsp;<br>
+                        &nbsp;<br>
+                        &nbsp;<br>
+                        &nbsp;<br>
+                        @if($sales->delivery_type == 'Store Pick Up')
+                        &nbsp;</br>
+                        &nbsp;<br>
+                        @endif
+                        @if($sales->sdd_booking_type == 1)
+                        <span>&nbsp;</span>
+                        <span>&nbsp;</span>
+                        <span>&nbsp;</span>
+                        <span>&nbsp;</span>
+                        @endif
                     </div>
                 </div>
 
@@ -251,13 +246,19 @@
                         </tr>
                     </tfoot>
                 </table>
-                <br />
-                <br />
-                <small style="color:red">This is an auto-generated notification, please do not reply. This communication is intended solely for the use of the addressee and authorized recipients. It may contain confidential or legally privileged information and is subject to the conditions in <a href="{{ url('/') }}">{{ url('/') }}</a></small>
+                <br>
+                <br>
+                <p>
+                    For verification and approval of the payment, you may check the payment details here <a href="{{ route('sales-transaction.view',$sales->id) }}">Order Details</a>.
+                </p>
+                <br>
+                <br>
+                Thank you.
+                <br>
+                <br>
+                Regards
             </td>
         </tr>
     </table>
-    <p style="text-align:center;font-size:11px;color:#999999;">Copyright &copy; {{ date('Y') }} <a href="">{{ $setting->company_name }}</a>. All rights reserved.</p>
-    <p>&nbsp;</p>
     </body>
 </html>

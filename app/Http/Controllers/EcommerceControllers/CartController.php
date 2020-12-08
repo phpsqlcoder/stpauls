@@ -31,6 +31,8 @@ use App\Cities;
 use App\Provinces;
 use App\Countries;
 
+use App\User;
+
 
 
 class CartController extends Controller
@@ -373,6 +375,12 @@ class CartController extends Controller
         // 
 
         Cart::where('user_id', Auth::id())->delete();
+
+        if($request->shipOption == 1){
+            $admin = User::find(Auth::id());
+            $admin->send_cod_approval_request_email($salesHeader);  
+        }
+        
 
         // Loyalty
             $discountPurchaseAmount = 10000;

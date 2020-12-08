@@ -14,6 +14,8 @@ use App\Notifications\UserResetPasswordNotification;
 use App\Notifications\SendEmailNotification;
 use App\Notifications\SendAccountEmailNotification;
 use App\Notifications\SendOrderApprovedEmailNotification;
+use App\Notifications\SendPaymentApprovalRequestEmailNotification;
+use App\Notifications\SendCODApprovalRequestEmailNotification;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -131,6 +133,18 @@ class User extends Authenticatable
     {
         $this->notify(new SendOrderApprovedEmailNotification($sales,$date));
     }
+
+    public function send_payment_approval_request_email($sales)
+    {
+        $this->notify(new SendPaymentApprovalRequestEmailNotification($sales));
+    }
+
+    public function send_cod_approval_request_email($sales)
+    {
+        $this->notify(new SendCODApprovalRequestEmailNotification($sales));
+    }
+
+    
 
     public function customer_send_reset_password_email()
     {
