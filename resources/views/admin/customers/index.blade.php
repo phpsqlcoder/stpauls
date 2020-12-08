@@ -75,7 +75,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="ml-auto bd-highlight mg-t-10 mg-r-10">
                             <form class="form-inline" id="searchForm">
                                 <div class="search-form mg-r-10">
@@ -83,6 +83,9 @@
                                     <button class="btn filter" type="button" id="btnSearch"><i data-feather="search"></i></button>
                                 </div>
                             </form>
+                        </div>
+                        <div class="mg-t-10">
+                                <a class="btn btn-success btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-main').modal('show');">Upload Customers</a>
                         </div>
                     </div>
                 </div>
