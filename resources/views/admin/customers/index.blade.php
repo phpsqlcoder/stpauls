@@ -84,9 +84,9 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="mg-t-10">
+                        {{--<div class="mg-t-10">
                                 <a class="btn btn-success btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-main').modal('show');">Upload Customers</a>
-                        </div>
+                        </div>--}}
                     </div>
                 </div>
 
