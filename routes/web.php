@@ -109,7 +109,6 @@
 
 
             Route::get('/order-received/{orderno}', 'EcommerceControllers\SalesFrontController@globalpay_success')->name('order.received');
-            Route::get('/order-payment-received/{orderno}', 'EcommerceControllers\SalesFrontController@payment_success')->name('order.payment-received');
             Route::get('/payment-failed/{orderno}/{reasoncode}', 'EcommerceControllers\SalesFrontController@globalpay_failed')->name('payment.failed');
         //
 
