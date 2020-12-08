@@ -377,7 +377,7 @@ class CartController extends Controller
         Cart::where('user_id', Auth::id())->delete();
 
         if($request->shipOption == 1){
-            $admin = User::find(Auth::id());
+            $admin = User::find(1);
             $admin->send_cod_approval_request_email($salesHeader);  
         }
         
@@ -423,7 +423,7 @@ class CartController extends Controller
             }
 
         } else {
-            return redirect(route('order.received',$requestId));
+            return redirect(route('order.payment-received',$requestId));
         }
               
     }

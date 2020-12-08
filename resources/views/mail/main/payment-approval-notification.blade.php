@@ -105,9 +105,9 @@
                 @endphp
 
                 Payment details: 
-                <br>
+                <br><br>
                 Date of payment: {{ $payment->payment_date }}<br />
-                Mode of Payment: {{ $payment->type }}<br />
+                Mode of Payment: {{ $payment->payment_type }}<br />
                 Payment Attachment: <a target="_blank" href="{{ asset('storage').'/payments/'.$payment->id.'/'.$payment->attachment }} ">{{ $payment->attachment }}</a>
 
                 <br />
