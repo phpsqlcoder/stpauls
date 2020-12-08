@@ -49,7 +49,7 @@ class LoginController extends Controller
 
             if(auth::user()->role_id == 3 || auth::user()->is_active == 0){ // block customers from using this login form
                 Auth::logout();
-                return redirect(route('logout'))->with('unauthorize-login', 'Unauthorize login.'); 
+                return back()->with('unauthorize-login', 'Unauthorize login.'); 
             }
         }
 
