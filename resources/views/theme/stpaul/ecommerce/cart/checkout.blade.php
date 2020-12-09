@@ -175,7 +175,16 @@
                                                 foreach($stp_days as $day){
                                                     $stp_allowed_days .= date('N',strtotime($day)).',';
                                                 }
+
+                                                $sdd_arr = [];
+                                                $sdd_days = explode('|',$sdd->allowed_days);
+
+                                                foreach($sdd_days as $day){
+                                                    array_push($sdd_arr,$day);
+                                                }
+
                                             @endphp
+
                                             <!-- Store Pick Up -->
                                             <input type="hidden" id="time_from" value="{{ $stp->allowed_time_from }}">
                                             <input type="hidden" id="time_to" value="{{ $stp->allowed_time_to }}">
@@ -310,27 +319,44 @@
                                                     </div>
                                                     @endif
                                                 @endif
-                                                
-                                                @if($customer->details->country == '')
-                                                    <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                    <label id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                    <div class="tab__content">
-                                                        <div class="alert alert-info" role="alert">
-                                                            <h4 class="alert-heading">Reminder!</h4>
-                                                            <p>{!! $sdd->reminder !!}</p>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
-                                                            <label class="form-check-label" for="exampleCheck1"><strong>Book your own rider</strong></label>
-                                                        </div>
-                                                    </div>
-                                                @else
-                                                    @if($customer->details->country == 259)
-                                                        @if($customer->details->city != '')
-                                                            @if(\App\ShippingfeeLocations::checkNearbyProvinces($customer->details->cities->city) > 0)
-                                                                @if($amount <= $sdd->maximum_purchase)
+
+                                                @if(in_array(date('D'),$sdd_arr))
+                                                    @if(date('H:i') > $sdd->allowed_time_from && date('H:i') < $sdd->allowed_time_to)
+                                                        @if($customer->details->country == '')
+                                                            <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
+                                                            <label id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                            <div class="tab__content">
+                                                                <div class="alert alert-info" role="alert">
+                                                                    <h4 class="alert-heading">Reminder!</h4>
+                                                                    <p>{!! $sdd->reminder !!}</p>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
+                                                                    <label class="form-check-label" for="exampleCheck1"><strong>Book your own rider</strong></label>
+                                                                </div>
+                                                            </div>
+                                                        @else
+                                                            @if($customer->details->country == 259)
+                                                                @if($customer->details->city != '')
+                                                                    @if(\App\ShippingfeeLocations::checkNearbyProvinces($customer->details->cities->city) > 0)
+                                                                        @if($amount <= $sdd->maximum_purchase)
+                                                                            <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
+                                                                            <label id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                            <div class="tab__content">
+                                                                                <div class="alert alert-info" role="alert">
+                                                                                    <h4 class="alert-heading">Reminder!</h4>
+                                                                                    <p>{!! $sdd->reminder !!}</p>
+                                                                                </div>
+                                                                                <div class="form-check">
+                                                                                    <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
+                                                                                    <label class="form-check-label" for="exampleCheck1"><strong>Book your own rider</strong></label>
+                                                                                </div>
+                                                                            </div>
+                                                                        @endif
+                                                                    @endif
+                                                                @else
                                                                     <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                                    <label id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                    <label style="display: none;" id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                                     <div class="tab__content">
                                                                         <div class="alert alert-info" role="alert">
                                                                             <h4 class="alert-heading">Reminder!</h4>
@@ -342,35 +368,22 @@
                                                                         </div>
                                                                     </div>
                                                                 @endif
+                                                                 
+                                                            @else
+                                                                <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
+                                                                <label style="display: none;" id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                <div class="tab__content">
+                                                                    <div class="alert alert-info" role="alert">
+                                                                        <h4 class="alert-heading">Reminder!</h4>
+                                                                        <p>{!! $sdd->reminder !!}</p>
+                                                                    </div>
+                                                                    <div class="form-check">
+                                                                        <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
+                                                                        <label class="form-check-label" for="exampleCheck1"><strong>Book your own rider</strong></label>
+                                                                    </div>
+                                                                </div>
                                                             @endif
-                                                        @else
-                                                            <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                            <label style="display: none;" id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                            <div class="tab__content">
-                                                                <div class="alert alert-info" role="alert">
-                                                                    <h4 class="alert-heading">Reminder!</h4>
-                                                                    <p>{!! $sdd->reminder !!}</p>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
-                                                                    <label class="form-check-label" for="exampleCheck1"><strong>Book your own rider</strong></label>
-                                                                </div>
-                                                            </div>
                                                         @endif
-                                                         
-                                                    @else
-                                                        <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                        <label style="display: none;" id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                        <div class="tab__content">
-                                                            <div class="alert alert-info" role="alert">
-                                                                <h4 class="alert-heading">Reminder!</h4>
-                                                                <p>{!! $sdd->reminder !!}</p>
-                                                            </div>
-                                                            <div class="form-check">
-                                                                <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
-                                                                <label class="form-check-label" for="exampleCheck1"><strong>Book your own rider</strong></label>
-                                                            </div>
-                                                        </div>
                                                     @endif
                                                 @endif
 
