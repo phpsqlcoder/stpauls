@@ -54,7 +54,7 @@ class PaymentAPIController extends Controller
                     ]);
 
                     $admin = User::find(1);
-                    $admin->send_order_received_email($sales);
+                    $admin->send_order_received_email($salesHeader);
                 }
             } else {
                 if ($salesHeader) {
