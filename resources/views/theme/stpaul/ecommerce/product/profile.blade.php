@@ -194,7 +194,6 @@
                                                     <div class="quantity-button quantity-up">+</div>
                                                     <div class="quantity-button quantity-down">-</div>
                                                 </div>
-                                                <span class="product-pcs">{{ $product->uom }}</span>
                                             </div>
                                             <div class="product-sku">
                                                 <input type="hidden" id="input_avail_stock" value="{{ $product->inventory }}">
@@ -255,7 +254,7 @@
                                         <td><p><b>Author/s:</b> {{ $product->additional_info->authors }}</p></td>
                                     </tr>
                                     <tr>
-                                        <td><p><b>Size:</b> {{ $product->size }} {{ $product->uom }}</p></td>
+                                        <td><p><b>Size:</b> {{ $product->size }}</p></td>
                                     </tr>
                                     <tr>
                                         <td><p><b>Materials:</b> {{ $product->additional_info->materials }}</p></td>
