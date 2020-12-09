@@ -27,7 +27,7 @@ class ShippingfeeLocations extends Model
         return $this->belongsTo('App\Shippingfee','shippingfee_id');
     }   
 
-    public static function shipping_fee($city,$country,$weight){
+    public static function shipping_fee($province,$city,$country,$weight){
         if($country == ""){
             return 0;
         } else {
@@ -37,13 +37,15 @@ class ShippingfeeLocations extends Model
                 if($country == 259){
                     $city = Cities::find($city);
                     $location = $city->city;
+                    $sp_location = ShippingfeeLocations::where('name',$location)->where('province_id',$province);
                     
                 } else {
                     $country  = Countries::find($country);
                     $location = $country->name; 
+                    $sp_location = ShippingfeeLocations::where('name',$location);
                 }
 
-                $sp_location = ShippingfeeLocations::where('name',$location);
+               
                 
                 if($sp_location->count() > 0){
                     $data = $sp_location->first();
@@ -77,6 +79,19 @@ class ShippingfeeLocations extends Model
             }
             
         }
+    }
+
+    public static function islocation($location,$country,$province)
+    {
+        if($country == 259){
+            $city = Cities::find($location);
+            $count = ShippingfeeLocations::where('name',$city->city)->where('province_id',$province)->count();
+        } else {
+            $country = Countries::find($location);
+            $count = ShippingfeeLocations::where('name',$country->name)->count();
+        }
+
+        return $count;
     }
 
     public static function provinces($feeId)

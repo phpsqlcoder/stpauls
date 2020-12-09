@@ -127,7 +127,7 @@
                                                     <option value="">-- Select City --</option>
                                                     @endif
                                                     </select>
-                                                    <p id="alert_cityrate" style="display: none;" class="text-danger"><small>The city selected has no shipping rate in the system. Please expect an updated invoice once the order is confirmed.</small></p>
+                                                    <p id="alert_cityrate" @if(\App\ShippingfeeLocations::islocation($customer->details->city,$customer->details->country,$customer->details->province) == 1) style="display: none;" @endif class="text-danger"><small>The city selected has no shipping rate in the system. Please expect an updated invoice once the order is confirmed.</small></p>
                                                     <p id="p_city" class="text-danger" style="display: none;"><small>The city field is required.</small></p>
                                                 </div>
 
@@ -324,7 +324,7 @@
                                                     @if(date('H:i') > $sdd->allowed_time_from && date('H:i') < $sdd->allowed_time_to)
                                                         @if($customer->details->country == '')
                                                             <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                            <label id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                            <label id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                             <div class="tab__content">
                                                                 <div class="alert alert-info" role="alert">
                                                                     <h4 class="alert-heading">Reminder!</h4>
@@ -332,7 +332,7 @@
                                                                 </div>
                                                                 <div class="form-check">
                                                                     <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
-                                                                    <label class="form-check-label" for="exampleCheck1"><strong>Book your own rider</strong></label>
+                                                                    <label class="form-check-label" for="exampleCheck1"><strong>Same Day Delivery</strong></label>
                                                                 </div>
                                                             </div>
                                                         @else
@@ -341,7 +341,7 @@
                                                                     @if(\App\ShippingfeeLocations::checkNearbyProvinces($customer->details->cities->city) > 0)
                                                                         @if($amount <= $sdd->maximum_purchase)
                                                                             <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                                            <label id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                            <label id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                                             <div class="tab__content">
                                                                                 <div class="alert alert-info" role="alert">
                                                                                     <h4 class="alert-heading">Reminder!</h4>
@@ -349,14 +349,29 @@
                                                                                 </div>
                                                                                 <div class="form-check">
                                                                                     <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
-                                                                                    <label class="form-check-label" for="exampleCheck1"><strong>Book your own rider</strong></label>
+                                                                                    <label class="form-check-label" for="exampleCheck1"><strong>Same Day Delivery</strong></label>
                                                                                 </div>
                                                                             </div>
+                                                                        @endif
+                                                                    @else
+                                                                        @if($amount <= $sdd->maximum_purchase)
+                                                                        <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
+                                                                        <label style="display: none;" id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                        <div class="tab__content">
+                                                                            <div class="alert alert-info" role="alert">
+                                                                                <h4 class="alert-heading">Reminder!</h4>
+                                                                                <p>{!! $sdd->reminder !!}</p>
+                                                                            </div>
+                                                                            <div class="form-check">
+                                                                                <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
+                                                                                <label class="form-check-label" for="exampleCheck1"><strong>Same Day Delivery</strong></label>
+                                                                            </div>
+                                                                        </div>
                                                                         @endif
                                                                     @endif
                                                                 @else
                                                                     <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                                    <label style="display: none;" id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                    <label style="display: none;" id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                                     <div class="tab__content">
                                                                         <div class="alert alert-info" role="alert">
                                                                             <h4 class="alert-heading">Reminder!</h4>
@@ -364,14 +379,13 @@
                                                                         </div>
                                                                         <div class="form-check">
                                                                             <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
-                                                                            <label class="form-check-label" for="exampleCheck1"><strong>Book your own rider</strong></label>
+                                                                            <label class="form-check-label" for="exampleCheck1"><strong>Same Day Delivery</strong></label>
                                                                         </div>
                                                                     </div>
                                                                 @endif
-                                                                 
                                                             @else
                                                                 <input type="radio" id="tab3" name="shipOption" value="4" class="tab">
-                                                                <label style="display: none;" id="sdd_label" for="tab3">Book Your Own Rider <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                <label style="display: none;" id="sdd_label" for="tab3">Same Day Delivery <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                                 <div class="tab__content">
                                                                     <div class="alert alert-info" role="alert">
                                                                         <h4 class="alert-heading">Reminder!</h4>
@@ -379,7 +393,7 @@
                                                                     </div>
                                                                     <div class="form-check">
                                                                         <input type="checkbox" class="form-check-input" name="bookingType" id="exampleCheck1">
-                                                                        <label class="form-check-label" for="exampleCheck1"><strong>Book your own rider</strong></label>
+                                                                        <label class="form-check-label" for="exampleCheck1"><strong>Same Day Delivery</strong></label>
                                                                     </div>
                                                                 </div>
                                                             @endif
@@ -453,7 +467,13 @@
                                                 <li class="d-flex justify-content-between">
                                                     <span>Shipping Fee</span>
                                                     <span>
-                                                        <input type="text" id="shipping_fee" value="{{\App\ShippingfeeLocations::shipping_fee($customer->details->city,$customer->details->country,number_format(($weight/1000),2,'.','')) }}">
+                                                        <input type="text" id="shipping_fee" value="{{\App\ShippingfeeLocations::shipping_fee($customer->details->province,$customer->details->city,$customer->details->country,number_format(($weight/1000),2,'.','')) }}">
+                                                    </span>
+                                                </li>
+                                                <li class="d-flex justify-content-between">
+                                                    <span>Is Location</span>
+                                                    <span>
+                                                        <input type="text" id="islocation" name="islocation" value="{{ \App\ShippingfeeLocations::islocation($customer->details->city,$customer->details->country,$customer->details->province) }}">
                                                     </span>
                                                 </li>
                                                 <li class="d-flex justify-content-between">
@@ -831,7 +851,9 @@
             $('select[name="city"]').on('change', function() {
                 var city  = $(this).val();
                 var weight  = $('#total_weight').val();
-                var country = $('#country').val(); 
+                var country = $('#country').val();
+
+                var province = $('#province').val();  
 
                 var cityName = $("#city option:selected" ).text();
                 var sddMaxPurchase = $('#sdd_max_purchase').val();
@@ -842,12 +864,12 @@
                     type: "GET",
                     url: "{{ route('ajax.get-city-rates') }}",
                     data: {
+                        'province' : province,
                         'city' : city,
                         'country' : country,
                         'weight' : weight
                     },
                     success: function(response) {
-
                         var cities = $('#array_cities').val();
                         var x = cities.split(',');
                         
@@ -866,12 +888,13 @@
                             $('#sdd_label').css('display','none');
                         }
                         
-                        if(response.rate == 0){
+                        if(response.islocation == 0){
                             $('#alert_cityrate').css('display','block');
                         } else {
                             $('#alert_cityrate').css('display','none');
                         }
 
+                        $('#islocation').val(response.islocation);
                         $('#shipping_fee').val(response.rate);
                     }
                 });
@@ -1037,7 +1060,7 @@
                 }
 
                 if(option == 4){
-                    $('#delivery-type').html('Book Your Own Rider');
+                    $('#delivery-type').html('Same Day Delivery');
                 }
                 
                 $('#customer-email').html(email);
@@ -1065,6 +1088,12 @@
             var codServiceFee = $('#cod_service_fee').val();
             var sddServiceFee = $('#sdd_service_fee').val();
             var shippingfee   = $('#shipping_fee').val();
+
+            if (shippingfee == 0){
+                $('#lispan_shippingfee').hide();
+                $('#span_shippingfee').hide();
+                $('#input_shippingfee').val(0);
+            }
 
             if(option == 1 || option == 3 || option == 4){
 

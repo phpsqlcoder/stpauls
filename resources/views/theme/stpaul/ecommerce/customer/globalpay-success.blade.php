@@ -55,7 +55,12 @@
                                         @if($sales->delivery_type == 'Cash on Delivery')
                                             <p class="text-danger text-center"><b>COD REQUEST IS SUBJECT FOR APPROVAL</b></p>
                                         @else
-                                            <p class="text-danger text-center"><b>WAITING FOR PAYMENT</b></p>
+                                            @if($sales->delivery_status == 'Shipping Fee Validation')
+                                                <p class="text-danger text-center"><b>SHIPPING FEE VALIDATION</b></p>
+                                            @else
+                                                <p class="text-danger text-center"><b>WAITING FOR PAYMENT</b></p>
+                                            @endif
+                                            
                                         @endif
                                     @endif
                                 </div>
@@ -89,7 +94,13 @@
                                             To view the status of your order, click on <b class="text-danger">MY ORDER</b> button below. Click on these icons <span class="d-inline-block mr-1" style="transform:translateY(6.5px)"><span class="lnr lnr-eye text-md text-first-color font-weight-bold"></span></span>&nbsp;or&nbsp;<span class="d-inline-block ml-1" style="transform:translateY(2px)"><span class="lnr lnr-car text-md text-first-color font-weight-bold mr-2"></span></span>.
                                         </p>
                                         @else
-                                        <p class="font-weight-bold">For <b class="text-danger">unpaid orders</b>, click on <b class="text-danger">MY ORDER</b> button below. Click on the <span class="d-inline-block ml-1 mr-1" style="transform:translateY(6px)"><span class="c-icon c-icon-peso-red"></span></span> button to attach your proof of payment. <b>To view the status of your order, click on &nbsp;<span class="d-inline-block mr-1" style="transform:translateY(6.5px)"><span class="lnr lnr-eye text-md text-first-color font-weight-bold"></span></span>&nbsp;or&nbsp;<span class="d-inline-block ml-1" style="transform:translateY(2px)"><span class="lnr lnr-car text-md text-first-color font-weight-bold mr-2"></span></span>.</b></p>
+                                            @if($sales->delivery_status == 'Shipping Fee Validation')
+                                                <p class="font-weight-bold">
+                                                    Kindly wait for ST PAULS update on your shipping fee before payment. To view updated invoice, click on <b class="text-danger">MY ORDER</b> button below, click on <span class="d-inline-block mr-1" style="transform:translateY(6.5px)"><span class="lnr lnr-eye text-md text-first-color font-weight-bold"></span></span> icon. To pay for your order, click on the <span class="d-inline-block ml-1 mr-1" style="transform:translateY(6px)"><span class="c-icon c-icon-peso-red"></span></span> icon to attach your proof of payment.
+                                                </p>
+                                            @else
+                                                <p class="font-weight-bold">For <b class="text-danger">unpaid orders</b>, click on <b class="text-danger">MY ORDER</b> button below. Click on the <span class="d-inline-block ml-1 mr-1" style="transform:translateY(6px)"><span class="c-icon c-icon-peso-red"></span></span> button to attach your proof of payment. <b>To view the status of your order, click on &nbsp;<span class="d-inline-block mr-1" style="transform:translateY(6.5px)"><span class="lnr lnr-eye text-md text-first-color font-weight-bold"></span></span>&nbsp;or&nbsp;<span class="d-inline-block ml-1" style="transform:translateY(2px)"><span class="lnr lnr-car text-md text-first-color font-weight-bold mr-2"></span></span>.</b></p>
+                                            @endif
                                         @endif
                                     @endif
                                     <div class="gap-20"></div>

@@ -233,11 +233,13 @@
                             <td class="text-right text-danger">{{ number_format($sales->discount_amount,2) }}</td>
                         </tr>
                         @endif
+                        @if($sales->delivery_fee_amount > 0)
                         <tr>
                             <td colspan="4"></td>
                             <td>ADD: Shipping Fee</td>
                             <td class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
                         </tr>
+                        @endif
                         @if($sales->service_fee > 0)
                         <tr>
                             <td colspan="4"></td>

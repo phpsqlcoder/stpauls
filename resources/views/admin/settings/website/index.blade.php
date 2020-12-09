@@ -582,7 +582,7 @@
                                 
                                 <div class="form-group">
                                     <div class="parsley-input">
-                                        Option 7: Book Your Own Rider
+                                        Option 7: Same Day Delivery
                                     </div>
                                 </div>
 

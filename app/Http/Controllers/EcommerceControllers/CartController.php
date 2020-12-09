@@ -281,19 +281,30 @@ class CartController extends Controller
             $address = $request->billing_address;
         }
 
-        if($request->has('bookingType')){
-            $deliveryStatus = 'Waiting for Payment';
-        } else {
-           if($request->shipOption != 2 && $request->shippingfee == 0){
+        if($request->islocation == 0){
             $deliveryStatus = 'Shipping Fee Validation';
+        } else {
+            if($request->shipOption == 1){
+                $deliveryStatus = 'Waiting for Approval';
             } else {
-                if($request->shipOption == 1){
-                    $deliveryStatus = 'Waiting for Approval';
-                } else {
-                    $deliveryStatus = 'Waiting for Payment';
-                }
-            } 
+                $deliveryStatus = 'Waiting for Payment';
+            }
         }
+
+        // if($request->has('bookingType')){
+        //     $deliveryStatus = 'Waiting for Payment';
+        // } else {
+
+        //    if($request->shipOption != 2 && $request->shippingfee == 0){
+        //         $deliveryStatus = 'Shipping Fee Validation';
+        //     } else {
+        //         if($request->shipOption == 1){
+        //             $deliveryStatus = 'Waiting for Approval';
+        //         } else {
+        //             $deliveryStatus = 'Waiting for Payment';
+        //         }
+        //     } 
+        // }
 
         $salesHeader = SalesHeader::create([
             'order_number' => $requestId,
