@@ -45,7 +45,7 @@ class SendCODApprovalRequestEmailNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new SendCODApprovalEmail(Setting::info(), $this->sales))->to('orders@stpauls.ph');
+        return (new SendCODApprovalEmail(Setting::info(), $this->sales))->to('wsiprod.demo@gmail.com');
     }
 
     /**
