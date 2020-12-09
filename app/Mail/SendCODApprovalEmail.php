@@ -36,6 +36,6 @@ class SendCODApprovalEmail extends Mailable
     {
         return $this->view('mail.main.cod-approval-notification')
             ->text('mail.main.cod-approval-notification-plain')
-            ->subject('COD request for approval');
+            ->subject('COD request for approval from '.$this->sales->customer_name);
     }
 }

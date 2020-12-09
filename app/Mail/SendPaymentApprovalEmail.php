@@ -36,6 +36,6 @@ class SendPaymentApprovalEmail extends Mailable
     {
         return $this->view('mail.main.payment-approval-notification')
             ->text('mail.main.payment-approval-notification-plain')
-            ->subject('Payment Validation');
+            ->subject('Payment Validation from '.$this->sales->customer_name);
     }
 }

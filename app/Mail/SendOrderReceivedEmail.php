@@ -36,6 +36,6 @@ class SendOrderReceivedEmail extends Mailable
     {
         return $this->view('mail.main.order-received-notification')
             ->text('mail.main.order-received-notification-plain')
-            ->subject('Order Received');
+            ->subject('Order Received from '.$this->sales->customer_name);
     }
 }

@@ -91,9 +91,6 @@
         </tr>
         <tr>
             <td>
-                Customer: {{ $sales->customer_name }}
-                <br>
-                <br>
                 Dear Admin,
                 <br>
                 <br>

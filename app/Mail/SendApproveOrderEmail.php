@@ -38,6 +38,6 @@ class SendApproveOrderEmail extends Mailable
     {
         return $this->view('mail.main.order-approved-notification')
             ->text('mail.main.order-approved-notification-plain')
-            ->subject('Order #'.$this->sales->order_number.' has been approved');
+            ->subject('Order #'.$this->sales->order_number.' from '.$this->sales->customer_name.' has been approved');
     }
 }
