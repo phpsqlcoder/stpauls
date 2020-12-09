@@ -45,7 +45,7 @@ class SendOrderReceivedEmailNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new SendApproveOrderEmail(Setting::info(), $this->sales))->to('wsiprod.demo@gmail.com');
+        return (new SendOrderReceivedEmail(Setting::info(), $this->sales))->to('wsiprod.demo@gmail.com');
     }
 
     /**
