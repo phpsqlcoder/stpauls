@@ -249,7 +249,13 @@
                 <hr style="margin: 0;">
                 <li class="d-flex justify-content-between">
                     <span>Delivery Type</span>
-                    <span class="tx-semibold tx-uppercase">{{ $sales->delivery_type }}</span>
+                    <span class="tx-semibold tx-uppercase">
+                        @if($sales->delivery_type == 'Same Day Delivery')
+                            Book Your Own Rider
+                        @else
+                            {{ $sales->delivery_type }}
+                        @endif
+                    </span>
                 </li>
                 @if($sales->delivery_type == 'Store Pick Up')
                 <li class="d-flex justify-content-between">

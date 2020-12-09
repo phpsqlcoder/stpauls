@@ -141,7 +141,13 @@
                         Payment Method <span style="float: right;">{{ \App\EcommerceModel\SalesHeader::payment_type($sales->id) }}</span><br/>
                         Payment Status <span style="float: right;color:#10b759;font-weight: 600;">{{ $sales->payment_status }}</span><br/>
                         <hr>
-                        Delivery Type <span style="float: right;text-transform: uppercase;">{{ $sales->delivery_type }}</span><br/>
+                        Delivery Type <span style="float: right;text-transform: uppercase;">
+                                        @if($sales->delivery_type == 'Same Day Delivery')
+                                            Book Your Own Rider
+                                        @else
+                                            {{ $sales->delivery_type }}
+                                        @endif
+                                      </span><br/>
 
                         @if($sales->delivery_type == 'Store Pick Up')
                         Branch <span style="float: right;">{{ $sales->branch }}</span><br/>

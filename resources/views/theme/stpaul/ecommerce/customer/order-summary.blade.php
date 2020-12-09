@@ -133,7 +133,13 @@
                                 <hr>
                                 <li class="d-flex justify-content-between">
                                     <span>Delivery Type</span>
-                                    <span class="text-right"><b>{{ $sales->delivery_type }}</b></span>
+                                    <span class="text-right">
+                                        @if($sales->delivery_type == 'Same Day Delivery')
+                                            <b>Book Your Own Rider</b>
+                                        @else
+                                            <b>{{ $sales->delivery_type }}</b>
+                                        @endif
+                                    </span>
                                 </li>
                                 @if($sales->delivery_type == 'Store Pick Up')
                                 <li class="d-flex justify-content-between">
