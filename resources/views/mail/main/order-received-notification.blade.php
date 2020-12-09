@@ -91,13 +91,16 @@
         </tr>
         <tr>
             <td>
+                Customer: {{ $sales->customer_name }}
+                <br>
+                <br>
                 Dear Admin,
                 <br>
                 <br>
                 Good Day!
                 <br>
                 <br>
-                Order # <strong>{{ $sales->order_number }}</strong> received.
+                You have received a payment for order # <b>{{ $sales->order_number }}</b>.
                 <br />
                 <br />
                 <strong>Order Details Below:</strong><br />
