@@ -126,17 +126,7 @@
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
-                                        @if($count > 0 && $sale->status != 'CANCELLED')
-                                            @if($payment->is_verify == 0)
-                                                @if (auth()->user()->has_access_to_route('display.payment-details'))
-                                                    <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
-                                                @endif
-                                            @else
-                                                <span class="@if($sale->delivery_status == 'Waiting for Payment') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
-                                            @endif
-                                        @else
-                                            <span class="@if($sale->delivery_status == 'Shipping Fee Validation' || $sale->delivery_status == 'Waiting for Payment') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
-                                        @endif   
+                                        <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span> 
                                     </td>
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>

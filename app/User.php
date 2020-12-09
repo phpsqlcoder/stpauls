@@ -16,6 +16,7 @@ use App\Notifications\SendAccountEmailNotification;
 use App\Notifications\SendOrderApprovedEmailNotification;
 use App\Notifications\SendPaymentApprovalRequestEmailNotification;
 use App\Notifications\SendCODApprovalRequestEmailNotification;
+use App\Notifications\SendOrderReceivedEmailNotification;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -142,6 +143,11 @@ class User extends Authenticatable
     public function send_cod_approval_request_email($sales)
     {
         $this->notify(new SendCODApprovalRequestEmailNotification($sales));
+    }
+
+    public function send_order_received_email($sales)
+    {
+        $this->notify(new SendOrderReceivedEmailNotification($sales));
     }
 
     

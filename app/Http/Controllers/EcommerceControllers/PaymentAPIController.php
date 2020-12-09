@@ -8,6 +8,8 @@ use App\EcommerceModel\SalesPayment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\User;
+
 class PaymentAPIController extends Controller
 {
     /**
@@ -35,8 +37,8 @@ class PaymentAPIController extends Controller
                     $salesHeader->update([
                         'response_code' => $apiLogs['reason_code'],
                         'payment_status' => 'PAID',
-                        'delivery_status' => 'WAITING FOR VALIDATION',
-                        'is_approve' => null
+                        'delivery_status' => 'Scheduled for Processing',
+                        'is_approve' => 1
                     ]);
 
                     SalesPayment::create([
@@ -48,8 +50,11 @@ class PaymentAPIController extends Controller
                         'receipt_number'=> $apiLogs['merchant_transaction_id'],
                         'created_by'=> $salesHeader->customer_id,
                         'created_at'=> date('Y-m-d H:i:s'),
-                        'is_verify'=> null
+                        'is_verify'=> 1
                     ]);
+
+                    $admin = User::find(1);
+                    $admin->send_order_received_email($sales);
                 }
             } else {
                 if ($salesHeader) {

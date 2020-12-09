@@ -71,7 +71,10 @@ class SalesHeader extends Model
 
     public static function pending_credit_payment()
     {
-        $qry = SalesHeader::where('status','active')->where('payment_method',1)->whereIn('delivery_status',['WAITING FOR VALIDATION','Waiting for Payment'])->count();
+        $qry = SalesHeader::where('status','active')
+            ->where('payment_method',1)
+            ->whereIn('delivery_status',['Shipping Fee Validation','Scheduled for Processing'])
+            ->count();
 
         return $qry;
     }
