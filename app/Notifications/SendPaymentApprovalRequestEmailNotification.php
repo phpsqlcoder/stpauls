@@ -45,7 +45,7 @@ class SendPaymentApprovalRequestEmailNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new SendPaymentApprovalEmail(Setting::info(), $this->sales))->to('wsiprod.demo@gmail.com');
+        return (new SendPaymentApprovalEmail(Setting::info(), $this->sales))->to('orders@stpauls.ph');
     }
 
     /**
