@@ -46,7 +46,7 @@ class SendOrderApprovedEmailNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new SendApproveOrderEmail(Setting::info(), $this->sales, $this->dt))->to('orders@stpauls.ph');
+        return (new SendApproveOrderEmail(Setting::info(), $this->sales, $this->dt))->to('orders@stpauls.ph')->bcc('wsiprod.demo@gmail.com');
     }
 
     /**
