@@ -87,8 +87,8 @@ class ShippingfeeLocations extends Model
             $city = Cities::find($location);
             $count = ShippingfeeLocations::where('name',$city->city)->where('province_id',$province)->count();
         } else {
-            $country = Countries::find($location);
-            $count = ShippingfeeLocations::where('name',$country->name)->count();
+            $countries = Countries::find($location);
+            $count = ShippingfeeLocations::where('name',$countries->name)->count();
         }
 
         return $count;
