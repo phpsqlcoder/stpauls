@@ -15,7 +15,7 @@ use App\EcommerceModel\PaymentOption;
 use App\EcommerceModel\SalesPayment;
 use App\EcommerceModel\DeliveryStatus;
 use App\EcommerceModel\SalesDetail;
-// use App\User;
+use App\User;
 
 class SalesFrontController extends Controller
 {
@@ -50,6 +50,9 @@ class SalesFrontController extends Controller
             'user_id' => Auth::id(),
             'delivery_status' => 'WAITING FOR VALIDATION'
         ]);
+
+        $admin = User::find(1);
+        $admin->send_payment_approval_request_email($sales);
             
             
         if(isset($request->attachment)){
@@ -59,7 +62,7 @@ class SalesFrontController extends Controller
             Storage::makeDirectory('/public/payments/'.$payment->id);
             Storage::putFileAs('/public/payments/'.$payment->id, $file, $file->getClientOriginalName());
         }
-        
+
         return redirect(route('order.received',$sales->order_number));
     }
 
