@@ -95,7 +95,7 @@
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>Billing Address *</p>
-                                                    <textarea name="billing_address" class="form-control form-input" rows="3" id="billing_address">{{ $customer->details->intl_address }}</textarea>
+                                                    <textarea name="billing_address" class="form-control form-input" rows="3" id="billing_address" maxlength="60">{{ $customer->details->intl_address }}</textarea>
                                                     <p id="p_otheradd" class="text-danger" style="display: none;"><small>The billing address field is required.</small></p>
                                                 </div>
                                             </div>
@@ -134,7 +134,7 @@
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>Main Address *</p>
-                                                    <input required type="text" class="form-control form-input" name="address" id="input_address" value="{{ $customer->details->address }}">
+                                                    <input required type="text" class="form-control form-input" name="address" id="input_address" value="{{ $customer->details->address }}" maxlength="60">
                                                     <p id="p_address" class="text-danger" style="display: none;"><small>The main address field is required.</small></p>
                                                 </div>
 
@@ -154,7 +154,7 @@
                                             <div class="gap-10"></div>
                                             <div class="form-group form-wrap">
                                                 <p>Other Instruction</p>
-                                                <textarea name="other_instruction" class="form-control form-input" rows="3" id="other_instruction"></textarea>
+                                                <textarea name="other_instruction" class="form-control form-input" rows="3" id="other_instruction" placeholder="You can input your full address here..."></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -1042,7 +1042,7 @@
 
             /* BEGIN ORDER REVIEW INITIALIZE */
                 if($('#country').val() == 259){
-                    $('#customer-address').html($('#input_address').val()+' '+$('#input_barangay').val()+', '+$("#province option:selected" ).text()+' '+$("#city option:selected" ).text()+', '+$('#input_zipcode').val()+' '+$("#country option:selected" ).text());
+                    $('#customer-address').html($('#input_address').val()+' '+$('#input_barangay').val()+', '+$("#city option:selected" ).text()+' '+$("#province option:selected" ).text()+', '+$('#input_zipcode').val()+' '+$("#country option:selected" ).text());
                 } else {
                     $('#customer-address').html($('#billing_address').val()+', '+$('#input_zipcode').val()+', '+$("#country option:selected" ).text());
                 }

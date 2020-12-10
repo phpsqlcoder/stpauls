@@ -52,6 +52,7 @@ class WebController extends Controller
         $web->company_name = $request->company_name;
         $web->copyright = $request->copyright;
         $web->google_map = $request->g_map;
+        $web->google_analytics = $request->g_analytics_code;
         $web->user_id = Auth::id();
         $web->google_recaptcha_sitekey = $request->g_recaptcha_sitekey;
         $web->save();
