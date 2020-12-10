@@ -278,7 +278,8 @@ class CartController extends Controller
 
             $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province.', '.$request->zipcode.' '.$data_country->name;
         } else {
-            $address = $request->billing_address;
+            $data_country  = Countries::find($request->country);
+            $address = $request->billing_address.', '.$data_country->name;
         }
 
         if($request->islocation == 0){
