@@ -196,13 +196,41 @@
             var value = $(this).val();
             if ( value.length > 0){
                 $('#productSearchResult').show();
-                
+                $('#searchbtn').removeClass('openbtn');
                 $('#searchbtn').addClass('closebtn');
                 $('#search-icon').removeClass('fa fa-search');
                 $('#search-icon').addClass('fa fa-times');
             } else {
                 $('#productSearchResult').hide();
             }
+        });
+        
+        $('input[name="keyword"]').keyup(function(){
+            var value = $(this).val();
+            if ( value.length > 0){
+                $('#searchbtn').addClass('openbtn');
+                $('#searchbtn').removeClass('closebtn');
+                 $('#search-icon').removeClass('fa fa-times');
+                  $('#search-icon').addClass('fa fa-search');
+            }
+            else{
+                $('#productSearchResult').hide();
+                $('#searchbtn').addClass('openbtn');
+                 $('#searchbtn').removeClass('closebtn');
+                 $('#search-icon').removeClass('fa fa-times');
+                  $('#search-icon').addClass('fa fa-search');
+            
+            }
+        });
+        
+        $(document).on('click','.openbtn',function(){
+            var value = $(this).val();
+            $('#productSearchResult').show();
+            $('#searchbtn').removeClass('openbtn');
+            $('#searchbtn').addClass('closebtn');
+            $('#search-icon').removeClass('fa fa-search');
+            $('#search-icon').addClass('fa fa-times');
+            $('#productSearchForm').submit();
         });
 
         $('#productSearchForm').submit(function(e){
@@ -215,6 +243,7 @@
                 data: $('#productSearchForm').serialize(),
                 success: function( response ) {
                     $('#searchbtn').addClass('closebtn');
+                    $('#searchbtn').removeClass('openbtn');
                     $('#search-icon').removeClass('fa fa-search');
                     $('#search-icon').addClass('fa fa-times');
 
@@ -228,6 +257,7 @@
         $(document).on('click','.closebtn',function(){
 
             $('#searchbtn').removeClass('closebtn');
+            $('#searchbtn').addClass('openbtn');
             $('#search-icon').removeClass('fa fa-times');
             $('#search-icon').addClass('fa fa-search');
 
