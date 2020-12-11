@@ -155,7 +155,7 @@
                                                     @endforeach
                                                 @endif
                                             </div>
-                                            <div class="col-md-12">
+                                            <!-- <div class="col-md-12">
                                                 <div class="gap-20"></div>
                                                 <div id="chxbx">
                                                     <div class="custom-control custom-checkbox">
@@ -163,7 +163,7 @@
                                                         <label class="custom-control-label" for="customCheck">I want to receive exclusive offers and promotions from St Pauls.</label>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="col-lg-6 col-md-7">
                                                 <div class="gap-10"></div>
                                                 <button type="submit" class="btn btn-md primary-btn btn-block">Sign Up</button>
