@@ -447,7 +447,7 @@ class CartController extends Controller
         $data_city = Cities::find($customer->city);
         $data_province = Provinces::find($customer->province);
 
-        $address_line1 = ($customer->country == 259) ? $request->input_address: $customer->intl_address;
+        $address_line1 = ($customer->country == 259) ? $customer->address: $customer->intl_address;
         $address_line2 = ($customer->country == 259) ? $customer->barangay : '';
         $city          = ($customer->country == 259) ? $data_city->city : '';
         $province      = ($customer->country == 259) ? $data_province->province : '';
