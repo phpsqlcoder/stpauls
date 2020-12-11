@@ -73,7 +73,7 @@ class SalesHeader extends Model
     {
         $qry = SalesHeader::where('status','active')
             ->where('payment_method',1)
-            ->whereIn('delivery_status',['Shipping Fee Validation','Scheduled for Processing'])
+            ->whereIn('delivery_status',['Shipping Fee Validation','Scheduled for Processing','Waiting for Payment'])
             ->count();
 
         return $qry;
