@@ -256,7 +256,7 @@
 
 <div class="modal effect-scale" id="prompt-add-shippingfee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form action="{{ route('add-shipping-fee') }}" method="POST">
+        <form id="addshipingfeeform" action="{{ route('add-shipping-fee') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
@@ -271,7 +271,7 @@
                     <input type="number" name="shippingfee" class="form-control" min="1">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-primary" id="btnDelete">Submit Shipping Fee</button>
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnAddShippingfee">Submit Shipping Fee</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -305,7 +305,7 @@
                     <textarea name="remarks" requried class="form-control" rows="5" placeholder="Please enter a remarks"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-primary" id="btnDelete">Yes, Approve</button>
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnApprove">Yes, Approve</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -331,7 +331,7 @@
                     <textarea name="remarks" requried class="form-control" rows="5" placeholder="Please enter a remarks"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-danger" id="btnDelete">Yes, Reject</button>
+                    <button type="submit" class="btn btn-sm btn-danger" id="btnReject">Yes, Reject</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -360,5 +360,9 @@
                 $('#prompt-reject-order').modal('show');
             }
         }
+
+        $('#addshipingfeeform').submit(function(){
+            $('#btnAddShippingfee').prop('disabled',true);
+        });
     </script>
 @endsection
