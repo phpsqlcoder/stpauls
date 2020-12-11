@@ -126,7 +126,7 @@
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
-                                        <span class="@if($sale->delivery_status == 'Shipping Fee Validation' || $sale->delivery_status == 'Scheduled for Processing') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span> 
+                                        <span class="@if($sale->delivery_status == 'Shipping Fee Validation' || $sale->delivery_status == 'Scheduled for Processing' || $sale->delivery_status == 'Waiting for Payment') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span> 
                                     </td>
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
