@@ -58,7 +58,7 @@ class PaymentAPIController extends Controller
                 }
             } else {
                 if ($salesHeader) {
-                    $salesHeader->update(['response_code' => $apiResponse['reason_code']]);
+                    $salesHeader->update(['response_code' => $apiLogs['reason_code']]);
                 }
             }
         } else {
