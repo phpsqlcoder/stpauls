@@ -538,7 +538,8 @@
                                                 <td class="text-center">
                                                     <input type="hidden" name="productid[]" value="{{ $product->product_id }}">
                                                     <div class="quantity">
-                                                        <input type="number" name="qty[]" min="1" step="1" value="{{ $product->qty }}" data-inc="1" id="product_qty_{{$product->product_id}}" onchange="updateAmount('{{$product->product_id}}')">
+                                                        <!-- <input type="number" name="qty[]" min="1" step="1" value="{{ $product->qty }}" data-inc="1" id="product_qty_{{$product->product_id}}" onchange="updateAmount('{{$product->product_id}}')"> -->
+                                                        <input type="number" name="qty[]" min="1" step="1" value="{{ $product->qty }}" data-inc="1" id="product_qty_{{$product->product_id}}">
                                                         <div class="quantity-nav">
                                                             <div class="quantity-button quantity-up" id="{{$product->product_id}}">+</div>
                                                             <div class="quantity-button quantity-down" id="{{$product->product_id}}">-</div>
@@ -707,6 +708,7 @@
                     $('#prevqty'+id).val(qty);
                     $('#maxorder'+id).val(stock);
 
+                    updateAmount(id);
                     total_weight();
                 }  
             }
@@ -728,6 +730,8 @@
                 } else {
                     $('#prevqty'+id).val(prevqty-1);
                     $('#maxorder'+id).val(stock);
+
+                    updateAmount(id);
 
                 }   
             }
