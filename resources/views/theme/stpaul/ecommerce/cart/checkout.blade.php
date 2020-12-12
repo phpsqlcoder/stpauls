@@ -1230,11 +1230,11 @@
                             $('#input_shippingfee').val(0);
                         } else {
                             $('#input_shippingfee').val(response.rate);
-                            $('#span_shippingfee').html(FormatAmount(response.rate,2));
+                            $('#span_shippingfee').html('₱ '+FormatAmount(response.rate,2));
                         }
                     } else {
                         $('#input_shippingfee').val(response.rate);
-                        $('#span_shippingfee').html(FormatAmount(response.rate,2));
+                        $('#span_shippingfee').html('₱ '+FormatAmount(response.rate,2));
                     }
 
                     totalDue();
