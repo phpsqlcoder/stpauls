@@ -713,6 +713,7 @@
         });
 
         $('.quantity-down').click(function(){
+            total_weight();
             var id = $(this).attr("id");
             if(id){
                 var qty = $('#product_qty_'+id).val();
@@ -727,8 +728,7 @@
                 } else {
                     $('#prevqty'+id).val(prevqty-1);
                     $('#maxorder'+id).val(stock);
-                    
-                    total_weight();
+
                 }   
             }
         });
