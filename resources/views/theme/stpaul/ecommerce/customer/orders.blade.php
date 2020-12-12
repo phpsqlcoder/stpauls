@@ -177,7 +177,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form autocomplete="off" action="{{ route('pay-order') }}" method="post" enctype="multipart/form-data">
+            <form id="paymentForm" autocomplete="off" action="{{ route('pay-order') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -201,7 +201,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="paymentBtn">Submit</button>
                 </div>
             </form>
         </div>
@@ -305,6 +305,11 @@
         });
     </script>
     <script>
+
+        $('#paymentForm').submit(function(){
+            $('#paymentBtn').prop('disabled',true);
+        });
+        
         var _URL = window.URL || window.webkitURL;
         $('#attachment').change(function () {
             var file = $(this)[0].files[0];
