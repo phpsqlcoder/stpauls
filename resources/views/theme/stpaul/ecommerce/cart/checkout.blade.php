@@ -706,6 +706,8 @@
                     var stock = maxorder-1;
                     $('#prevqty'+id).val(qty);
                     $('#maxorder'+id).val(stock);
+
+                    total_weight();
                 }  
             }
         });
@@ -725,6 +727,8 @@
                 } else {
                     $('#prevqty'+id).val(prevqty-1);
                     $('#maxorder'+id).val(stock);
+                    
+                    total_weight();
                 }   
             }
         });
@@ -1195,7 +1199,7 @@
             $('#sub-total').html(FormatAmount(totalAmount,2));
             $('#input_sub_total').val(totalAmount.toFixed(2));
 
-            total_weight();
+            // total_weight();
             
         }
 
