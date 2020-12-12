@@ -1204,11 +1204,13 @@
             var country= $('#country').val();
             var city   = $('#city').val(); 
             var option = $('input[name="shipOption"]:checked').val();
+            var province = $('#province').val(); 
 
             $.ajax({
                 type: "GET",
                 url: "{{ route('ajax.get-city-rates') }}",
                 data: {
+                    'province' : province,
                     'city' : city,
                     'country' : country,
                     'weight' : weight
@@ -1231,30 +1233,6 @@
                 }
             });
         }
-
-        // function total_weight(){
-        //     var weight = $('#input_total_weight').val();
-        //     var country= $('#country').val();
-        //     var city   = $('#city').val(); 
-
-        //     $.ajax({
-        //         type: "GET",
-        //         url: "{{ route('ajax.get-city-rates') }}",
-        //         data: {
-        //             'city' : city,
-        //             'country' : country,
-        //             'weight' : weight
-        //         },
-        //         success: function(response) {
-        //             $('#input_shippingfee').val(response.rate);
-        //             $('#span_shippingfee').html(FormatAmount(response.rate,2));
-
-        //             totalDue();
-        //         }
-        //     });
-
-            
-        // }
 
         function totalDue(){
             var subtotal    = $('#input_sub_total').val();
