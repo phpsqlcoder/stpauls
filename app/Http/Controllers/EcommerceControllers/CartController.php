@@ -427,11 +427,10 @@ class CartController extends Controller
             $lastname      = $customer->lastname;
             $email         = $customer->email;
 
-            if($request->shippingfee > 0){
-                return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode','firstname','lastname','email'));
-            } else {
-
+            if($request->islocation == 0){
                 return redirect(route('order.received',$requestId));
+            } else {
+                return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode','firstname','lastname','email'));
             }
 
         } else {
