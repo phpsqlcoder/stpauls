@@ -29,16 +29,7 @@ class BranchController extends Controller
      */
     public function index()
     {
-        $customConditions = [
-            [
-                'field' => 'status',
-                'operator' => '=',
-                'value' => 'ACTIVE',
-                'apply_to_deleted_data' => false
-            ]
-        ];
-
-        $listing = new ListingHelper('asc', 10, 'name', $customConditions);
+        $listing = new ListingHelper('desc', 10, 'updated_at');
 
         $branches = $listing->simple_search(Branch::class, $this->searchFields);
         $filter = $listing->get_filter($this->searchFields);
@@ -235,6 +226,30 @@ class BranchController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function update_status($id,$status)
+    {
+        Branch::findOrFail($id)->update([
+            'status' => $status,
+            'user_id' => Auth::id()
+        ]);
+
+        return back()->with('success', __('standard.branches.update_success'));
+    }
+
+    public function multiple_change_status(Request $request)
+    {
+        $branches = explode("|", $request->branches);
+
+        foreach ($branches as $branch) {
+            $status = Branch::where('status', '!=', $request->status)->whereId($branch)->update([
+                'status'  => $request->status,
+                'user_id' => Auth::id()
+            ]);
+        }
+
+        return back()->with('success',  __('standard.branches.multiple_update_success', ['STATUS' => $request->status]));
     }
 
     public function single_delete(Request $request)

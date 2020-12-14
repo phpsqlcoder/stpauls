@@ -194,6 +194,10 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/admin/branch/multiple-delete','EcommerceControllers\BranchController@multiple_delete')->name('branch.multiple.delete');
             Route::post('branch-remove-contact','EcommerceControllers\BranchController@remove_contact')->name('branch-remove-contact');
 
+            Route::get('/admin/branch/{id}/{status}', 'EcommerceControllers\BranchController@update_status')->name('branch.change-status');
+            Route::post('/admin/branch-multiple-change-status','EcommerceControllers\BranchController@multiple_change_status')->name('branch.multiple.change.status');
+
+
             Route::get('/admin/branch-areas','EcommerceControllers\BranchController@areas')->name('branch.areas');
             Route::get('/admin/branch-area/create','EcommerceControllers\BranchController@area_create')->name('branch.area-create');
             Route::post('branch-area-store','EcommerceControllers\BranchController@area_store')->name('branch.area-store');

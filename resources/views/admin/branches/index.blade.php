@@ -44,8 +44,12 @@
                                         <div class="form-group">
                                             <label for="exampleDropdownFormEmail1">{{__('common.sort_by')}}</label>
                                             <div class="custom-control custom-radio">
-                                                <input type="radio" id="orderBy1" name="orderBy" class="custom-control-input" value="name" @if ($filter->orderBy == 'name') checked @endif>
-                                                <label class="custom-control-label" for="orderBy1">Branch Name</label>
+                                                <input type="radio" id="orderBy1" name="orderBy" class="custom-control-input" value="updated_at" @if ($filter->orderBy == 'updated_at') checked @endif>
+                                                <label class="custom-control-label" for="orderBy1">{{__('common.date_modified')}}</label>
+                                            </div>
+                                            <div class="custom-control custom-radio">
+                                                <input type="radio" id="orderBy2" name="orderBy" class="custom-control-input" value="name" @if ($filter->orderBy == 'name') checked @endif>
+                                                <label class="custom-control-label" for="orderBy2">{{__('common.name')}}</label>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -66,6 +70,7 @@
                                                 <label class="custom-control-label" for="showDeleted">{{__('common.show_deleted')}}</label>
                                             </div>
                                         </div>
+
                                         <div class="form-group mg-b-40">
                                             <label class="d-block">{{__('common.item_displayed')}}</label>
                                             <input id="displaySize" type="text" class="js-range-slider" name="perPage" value="{{ $filter->perPage }}"/>
@@ -82,6 +87,10 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_branches()">{{__('common.delete')}}</a>
+                                        @if (auth()->user()->has_access_to_route('branch.multiple.change.status'))
+                                            <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('ACTIVE')">Active</a>
+                                            <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('INACTIVE')">Inactive</a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -120,10 +129,11 @@
                                         <label class="custom-control-label" for="checkbox_all"></label>
                                     </div>
                                 </th>
-                                <th width="20%">Name</th>
-                                <th width="30%">Address</th>
-                                <th width="25%">Contact Number</th>
+                                <th width="17%">Name</th>
+                                <th width="25%">Address</th>
+                                <th width="20%">Contact Number</th>
                                 <th width="10%">Status</th>
+                                <th width="13%">Last Date Modified</th>
                                 <th width="10%">Action</th>
                             </tr>
                             </thead>
@@ -136,7 +146,7 @@
                                             <label class="custom-control-label" for="cb{{ $branch->id }}"></label>
                                         </div>
                                     </th>
-                                    <td> <strong @if($branch->trashed()) style="text-decoration:line-through;" @endif> {{$branch->name }}</strong></td>
+                                    <td><strong @if($branch->trashed()) style="text-decoration:line-through;" @endif> {{$branch->name }}</strong></td>
                                     <td>{{ $branch->branchaddress }}</td>
                                     <td>
                                         <ul class="list-unstyled">
@@ -146,6 +156,7 @@
                                         </ul>
                                     </td>
                                     <td>{{ $branch->status }}</td>
+                                    <td>{{ Setting::date_for_listing($branch->updated_at) }}</td>
                                     <td>
                                         <nav class="nav table-options">
                                             <a class="nav-link" target="_blank" href="{{ route('front.branches') }}#area_{{$branch->area}}" title="View Branch"><i data-feather="eye"></i></a>
@@ -163,7 +174,20 @@
                                                 @endif
 
                                                 @if (auth()->user()->has_access_to_route('branch.single.delete'))
-                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_branch('{{$branch->id}}','{{$branch->name}}')" title="Delete Branch"><i data-feather="trash"></i></a>
+                                                <a class="nav-link" href="javascript:void(0)" onclick="delete_one_branch('{{$branch->id}}')" title="Delete Branch"><i data-feather="trash"></i></a>
+                                                @endif
+
+                                                @if (auth()->user()->has_access_to_route('product.category.change-status'))
+                                                    <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i data-feather="settings"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        @if($branch->status == 'ACTIVE')
+                                                            <a class="dropdown-item" href="{{route('branch.change-status',[$branch->id,'INACTIVE'])}}" > Inactive</a>
+                                                        @else
+                                                            <a class="dropdown-item" href="{{route('branch.change-status',[$branch->id,'ACTIVE'])}}"> Active</a>
+                                                        @endif
+                                                    </div>
                                                 @endif
                                             @endif
                                         </nav>
@@ -203,6 +227,7 @@
     <form action="" id="posting_form" style="display: none;" method="post">
         @csrf
         <input type="text" id="branches" name="branches">
+        <input type="text" id="status" name="status">
     </form>
 
     <div class="modal effect-scale" id="prompt-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -263,6 +288,26 @@
             </div>
         </div>
     </div>
+
+    <div class="modal effect-scale" id="prompt-update-status" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">{{__('common.update_confirmation_title')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You are about to <span id="branchStatus"></span> this item. Do you want to continue?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" id="btnUpdateStatus">Yes, Update</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('pagejs')
@@ -292,16 +337,17 @@
             $('.cb').not(this).prop('checked', this.checked);
         });
 
-        function post_form(id,branches){
-            $('#posting_form').attr('action',id);
+        function post_form(url,status,branches){
+            $('#posting_form').attr('action',url);
             $('#branches').val(branches);
+            $('#status').val(status);
             $('#posting_form').submit();
         }
 
         function delete_one_branch(id){
             $('#prompt-delete').modal('show');
             $('#btnDelete').on('click', function() {
-                post_form("{{route('branch.single.delete')}}",id);
+                post_form("{{route('branch.single.delete')}}",'',id);
             });
         }
 
@@ -322,8 +368,36 @@
             else{
                 $('#prompt-multiple-delete').modal('show');
                 $('#btnDeleteMultiple').on('click', function() {
-                    post_form("{{route('branch.multiple.delete')}}",selected_branches);
+                    post_form("{{route('branch.multiple.delete')}}",'',selected_branches);
                 });
+            }
+        }
+
+        /*** handles the changing of status of multiple pages ***/
+        function change_status(status){
+            var counter = 0;
+            var selected_branches = '';
+            $(".cb:checked").each(function(){
+                counter++;
+                fid = $(this).attr('id');
+                selected_branches += fid.substring(2, fid.length)+'|';
+            });
+            if(parseInt(counter) < 1){
+                $('#prompt-no-selected').modal('show');
+                return false;
+            }
+            else{
+                if(parseInt(counter)>1){ // ask for confirmation when multiple pages was selected
+                    $('#branchStatus').html(status)
+                    $('#prompt-update-status').modal('show');
+
+                    $('#btnUpdateStatus').on('click', function() {
+                        post_form("{{route('branch.multiple.change.status')}}",status,selected_branches);
+                    });
+                }
+                else{
+                    post_form("{{route('branch.multiple.change.status')}}",status,selected_branches);
+                }
             }
         }
     </script>

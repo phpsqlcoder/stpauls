@@ -51,7 +51,7 @@
                             @if(count($area->branches))
                                 <h2 id="area_{{$area->id}}">{{ $area->name }} Branches</h2>
                                 <div class="row">
-                                @forelse($area->branches->where('isfeatured',0) as $branch)
+                                @forelse($area->branches->where('status','ACTIVE')->where('isfeatured',0) as $branch)
                                     <div class="col-lg-6">
                                         <div class="card">
                                             <img class="m-0" src="{{ asset('storage/branches/'.$branch->id.'/'.$branch->img) }}" alt="">
@@ -62,7 +62,9 @@
                                                     @foreach($branch->contacts as $contact)
                                                     {{ $contact->contact_name }} - {{ $contact->contact_no }}<br>
                                                     @endforeach
-                                                </small>
+                                                </small><br>
+                                                <small>{{ $branch->email }}</small><br>
+                                                <small><a class="text-primary" target="_blank" href="{{ $branch->url }}">{{ $branch->url }}</a></small>
                                             </div>
                                         </div>
                                     </div>

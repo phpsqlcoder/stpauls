@@ -34,7 +34,7 @@
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <p>Email Address *</p>
-                                                <input type="email" name="email" class="form-control form-input  @error('email') is-invalid @enderror" value="{{ old('email') }}">
+                                                <input pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="email" name="email" class="form-control form-input  @error('email') is-invalid @enderror" value="{{ old('email') }}">
                                                 @hasError(['inputName' => 'email'])
                                                 @endhasError
                                                 <div class="gap-10"></div>    

@@ -97,12 +97,17 @@ class FrontController extends Controller
 
     public function store_title_request(Request $request)
     {
-        Validator::make($request->all(),[
-            'firstname' => 'required|max:150',
-            'lastname' => 'required|max:150',
-            'email' => 'required|email|max:150|unique:title_requests,email',
-            'title' => 'required',
-        ])->validate();
+        Validator::make(
+            $request->all(),[
+                'firstname' => 'required|max:150',
+                'lastname' => 'required|max:150',
+                'email' => 'required|email|max:150|unique:title_requests,email',
+                'title' => 'required',
+            ],
+            [
+                'firstname.required' => 'The first name field is required.',
+                'lastname.required' => 'The last name field is required.'
+            ])->validate();
 
         TitleRequest::create([
             'email' => $request->email,
