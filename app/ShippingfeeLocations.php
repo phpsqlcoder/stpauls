@@ -83,13 +83,19 @@ class ShippingfeeLocations extends Model
 
     public static function islocation($location,$country,$province)
     {
-        if($country == 259){
-            $city = Cities::find($location);
-            $count = ShippingfeeLocations::where('name',$city->city)->where('province_id',$province)->count();
+        if($country == '' || $location == '' || $province == ''){
+            return 0;
         } else {
-            $countries = Countries::find($country);
-            $count = ShippingfeeLocations::where('name',$countries->name)->count();
-        }
+
+            if($country == 259){
+                $city = Cities::find($location);
+                $count = ShippingfeeLocations::where('name',$city->city)->where('province_id',$province)->count();
+            } else {
+                $countries = Countries::find($country);
+                $count = ShippingfeeLocations::where('name',$countries->name)->count();
+            }
+            
+            }
 
         return $count;
     }
