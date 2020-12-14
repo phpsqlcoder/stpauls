@@ -148,7 +148,7 @@
                                     <td>{{ $branch->status }}</td>
                                     <td>
                                         <nav class="nav table-options">
-                                            <a class="nav-link" target="_blank" href="" title="View Branch"><i data-feather="eye"></i></a>
+                                            <a class="nav-link" target="_blank" href="{{ route('front.branches') }}#area_{{$branch->area}}" title="View Branch"><i data-feather="eye"></i></a>
 
                                             @if($branch->trashed())
                                                 @if (auth()->user()->has_access_to_route('branch.restore'))
