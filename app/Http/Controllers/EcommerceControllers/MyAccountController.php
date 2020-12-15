@@ -13,6 +13,8 @@ use App\EcommerceModel\Customer;
 use App\User;
 use App\Provinces;
 use App\Setting;
+use App\EcommerceModel\WishlistCustomer;
+use App\EcommerceModel\Wishlist;
 
 use Auth;
 
@@ -200,5 +202,23 @@ class MyAccountController extends Controller
 
         return redirect(route('cart.front.show'));
 //        return redirect()->back()->with('success', 'Reorder has been successful');
+    }
+
+    public function wishlist()
+    {
+        $page = new Page();
+        $page->name = 'Manage Wishlist';
+
+        $wishlist = WishlistCustomer::where('customer_id',Auth::id())->get();
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.my-account.wishlist', compact('page','wishlist'));
+    }
+
+    public function remove_product(Request $request)
+    {
+        $wishlist = WishlistCustomer::find($request->id);
+        Wishlist::where('product_id',$wishlist->product_id)->decrement('total_count',1);
+        $wishlist->delete();
+
     }
 }

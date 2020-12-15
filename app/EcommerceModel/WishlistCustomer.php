@@ -22,4 +22,9 @@ class WishlistCustomer extends Model
 
     	return $count;
     }
+
+    public function product_details()
+    {
+        return $this->belongsTo('\App\EcommerceModel\Product','product_id');
+    }
 }

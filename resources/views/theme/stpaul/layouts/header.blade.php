@@ -99,6 +99,7 @@
                                         <div class="acc-dropdown-menu dropdown-menu dropdown-menu-right " aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="{{ route('my-account.manage-account') }}"><span class="lnr lnr-user mr-2"></span>Account Information</a>
                                             <a class="dropdown-item" href="{{route('account-my-orders') }}"><span class="lnr lnr-user mr-2"></span>My Orders</a>
+                                            <a class="dropdown-item" href="{{route('account.manage-wishlist') }}"><span class="lnr lnr-user mr-2"></span>My Wishlist</a>
                                             <a class="dropdown-item" href="{{ route('customer.logout') }}"><span class="lnr lnr-exit mr-2"></span>Log Out</a>
                                         </div>
                                     </li>

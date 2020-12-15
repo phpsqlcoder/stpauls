@@ -133,6 +133,11 @@
             Route::post('/product-add-to-wishlist','EcommerceControllers\WishlistController@add_to_wishlist')->name('product.add-to-wishlist');
             Route::post('/product-remove-to-wishlist','EcommerceControllers\WishlistController@remove_to_wishlist')->name('product.remove-to-wishlist');
 
+        // Wishlist
+            Route::get('/account/manage/wishlists','EcommerceControllers\MyAccountController@wishlist')->name('account.manage-wishlist');
+            Route::get('/wishlist-remove-product','EcommerceControllers\MyAccountController@remove_product')->name('wishlist.remove-product');
+        //
+
     });
 
 
