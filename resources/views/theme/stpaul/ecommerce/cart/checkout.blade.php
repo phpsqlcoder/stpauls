@@ -792,6 +792,7 @@
                                     $('#alert_countryrate').css('display','none');
                                 }
 
+                                $('#islocation').val(response.islocation);
                                 $('#shipping_fee').val(response.rate);
                             }
                         });
