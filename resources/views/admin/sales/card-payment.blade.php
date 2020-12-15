@@ -128,7 +128,17 @@
                                     <td>
                                         <span class="@if($sale->delivery_status == 'Shipping Fee Validation' || $sale->delivery_status == 'Scheduled for Processing' || $sale->delivery_status == 'Waiting for Payment') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span> 
                                     </td>
-                                    <td>{{ $sale->delivery_type }}</td>
+                                    <td>
+                                        @if($sale->delivery_type == 'Same Day Delivery')
+                                            @if($sale->sdd_booking_type == 1)
+                                                Book Your Own Rider
+                                            @else
+                                                Same Day Delivery
+                                            @endif
+                                        @else
+                                            {{ $sale->delivery_type }}
+                                        @endif
+                                    </td>
                                     <td>
                                         <nav class="nav table-options">
                                             <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Details"><i data-feather="eye"></i></a>
