@@ -135,7 +135,11 @@
                                     <span>Delivery Type</span>
                                     <span class="text-right">
                                         @if($sales->delivery_type == 'Same Day Delivery')
-                                            <b>Book Your Own Rider</b>
+                                            @if($sales->sdd_booking_type == 1)
+                                                <b>Book Your Own Rider</b>
+                                            @else
+                                                <b>Same Day Delivery</b>
+                                            @endif
                                         @else
                                             <b>{{ $sales->delivery_type }}</b>
                                         @endif

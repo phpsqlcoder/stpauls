@@ -292,21 +292,6 @@ class CartController extends Controller
             }
         }
 
-        // if($request->has('bookingType')){
-        //     $deliveryStatus = 'Waiting for Payment';
-        // } else {
-
-        //    if($request->shipOption != 2 && $request->shippingfee == 0){
-        //         $deliveryStatus = 'Shipping Fee Validation';
-        //     } else {
-        //         if($request->shipOption == 1){
-        //             $deliveryStatus = 'Waiting for Approval';
-        //         } else {
-        //             $deliveryStatus = 'Waiting for Payment';
-        //         }
-        //     } 
-        // }
-
         $salesHeader = SalesHeader::create([
             'order_number' => $requestId,
             'customer_id' => Auth::id(),
@@ -390,7 +375,10 @@ class CartController extends Controller
 
         if($request->shipOption == 1){
             $admin = User::find(1);
-            $admin->send_cod_approval_request_email($salesHeader);  
+            $admin->send_cod_approval_request_email($salesHeader);
+
+            $customer = User::find(Auth::id());
+            $customer->send_customer_cod_approval_request_email($salesHeader);
         }
         
 

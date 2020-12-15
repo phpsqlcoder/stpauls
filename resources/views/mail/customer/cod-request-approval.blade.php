@@ -91,14 +91,13 @@
         </tr>
         <tr>
             <td>
-                Dear Admin,
+                Dear {{$sales->customer_name}},
                 <br>
                 <br>
                 Good Day!
                 <br>
                 <br>
-                <strong>{{ $sales->order_number }}</strong> has been approved at {{ $date }}.
-
+                Your COD request for order #<strong>{{ $sales->order_number }}</strong> is for approval.
                 <br />
                 <br />
                 <strong>Order Details Below:</strong><br />
@@ -106,7 +105,7 @@
                 <br>
                 <br>
                 <p>
-                    For verification and approval of the payment, you may check the payment details here <a href="{{ route('sales-transaction.view',$sales->id) }}">Order Details</a>.
+                    For approval of the order, you may check the order details here <a href="{{ route('sales-transaction.view',$sales->id) }}">Order Details</a>.
                 </p>
                 <br>
                 <br>

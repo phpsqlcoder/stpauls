@@ -31,13 +31,13 @@
 
                         <div class="gap-20"></div>
 
-                        <table id="salesTransaction" class="table table-md table-hover text-nowrap stripe" style="width:100%">
+                        <table id="wishlistTable" class="table table-md table-hover text-nowrap stripe" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th scope="col">Product Code</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col" width="20%">product Code</th>
+                                    <th scope="col" width="55%">Name</th>
+                                    <th scope="col" width="15%">Amount</th>
+                                    <th scope="col" width="10%">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -71,6 +71,59 @@
 @section('pagejs')
     <script src="{{ asset('theme/stpaul/plugins/datatables/datatables.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script>
+        $(function () {
+            var table = $('#wishlistTable').DataTable({
+                "responsive": true,
+                "scrollX": true,
+                "scrollCollapse": true,
+                "searching": false,
+                "columnDefs": [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: -1 }
+                ],
+                "order": [[0, 'desc']],
+                "language": {
+                    "paginate": {
+                        "previous": "<i class='nr lnr-chevron-left'></i>",
+                        "next": "<i class='nr lnr-chevron-right'></i>"
+                    }
+                },
+                "pageLength": 5,
+                "dom": 'rt<"text-left"i>p'
+            });
+
+            table.rows(':not(.parent)').nodes().to$().find('td:first-child').trigger('click');
+
+            $(window).resize(function () {
+                table.rows(':not(.parent)').nodes().to$().find('td:first-child').trigger('click');
+
+                $("#wishlistTable tr.child").hover(function() {
+                    $(this).find('td').css("background-color", "#dceefd");
+                    $(this).prev().css("background-color", "#dceefd");
+                },
+                function() {
+                    $(this).find('td').removeAttr("style");
+                    $(this).prev().removeAttr("style");
+                });
+            });
+
+            $('#wishlistTable').on( 'page.dt', function () {
+                setInterval(function(){
+                    table.rows(':not(.parent)').nodes().to$().find('td:first-child').trigger('click');
+                }, 500);
+            });
+
+            $("#wishlistTable tr.child").hover(function() {
+                $(this).find('td').css("background-color", "#dceefd");
+                $(this).prev().css("background-color", "#dceefd");
+            },
+            function() {
+                $(this).find('td').removeAttr("style");
+                $(this).prev().removeAttr("style");
+            });
+        });
+    </script>
 @endsection
 
 @section('customjs')
