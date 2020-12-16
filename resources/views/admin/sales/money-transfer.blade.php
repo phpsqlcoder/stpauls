@@ -122,16 +122,20 @@
                                     <td>{{ \App\EcommerceModel\SalesHeader::payment_type($sale->id) }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
-                                        @if($count > 0 && $sale->status != 'CANCELLED')
-                                            @if($payment->is_verify == 0)
-                                                @if (auth()->user()->has_access_to_route('display.payment-details'))
-                                                    <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
+                                        @if($sale->status == 'CANCELLED')
+                                            CANCELLED
+                                        @else
+                                            @if($count > 0)
+                                                @if($payment->is_verify == 0)
+                                                    @if (auth()->user()->has_access_to_route('display.payment-details'))
+                                                        <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
+                                                    @endif
+                                                @else
+                                                    <span class="@if($sale->delivery_status == 'Waiting for Payment') tx-semibold tx-danger @endif">{{ $sale->delivery_status }}</span>
                                                 @endif
                                             @else
-                                                <span class="@if($sale->delivery_status == 'Waiting for Payment') tx-semibold tx-danger @endif">{{ $sale->delivery_status }}</span>
+                                                <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif @if($sale->delivery_status == 'Waiting for Payment') tx-semibold tx-danger @endif">{{ $sale->delivery_status }}</span>
                                             @endif
-                                        @else
-                                            <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif @if($sale->delivery_status == 'Waiting for Payment') tx-semibold tx-danger @endif">{{ $sale->delivery_status }}</span>
                                         @endif
                                     </td>
                                     <td>

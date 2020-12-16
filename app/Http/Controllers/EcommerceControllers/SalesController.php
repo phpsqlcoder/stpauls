@@ -365,7 +365,7 @@ class SalesController extends Controller
     {
         SalesHeader::find($request->orderid)->update([
             'status' => 'CANCELLED',
-            'delivery_status' => 'Cancelled'
+            'delivery_status' => 'CANCELLED'
         ]);
 
         return back()->with('success', 'Order has been cancelled.');
