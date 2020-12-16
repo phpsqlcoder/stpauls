@@ -25,6 +25,8 @@ use App\Deliverablecities;
 use App\Provinces;
 use App\Cities;
 
+use App\Rules\RecaptchaRule;
+
 class CustomerFrontController extends Controller
 {
 
@@ -70,6 +72,7 @@ class CustomerFrontController extends Controller
                 'regex:/[@$!%*#?&]/', // must contain a special character
             ],
             'password_confirmation' => 'required|same:password',
+            'g-recaptcha-response' => ['required', new RecaptchaRule]
         ])->validate();
 
 
