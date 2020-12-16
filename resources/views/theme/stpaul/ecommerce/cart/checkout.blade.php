@@ -536,18 +536,9 @@
                                                     <input type="hidden" class="input_product_total_weight" id="total_product_weight_{{$product->product_id}}" value="{{$product->product->weight*$product->qty}}">
                                                 </td>
                                                 <td class="text-center">
+                                                    {{ $product->qty }}
                                                     <input type="hidden" name="productid[]" value="{{ $product->product_id }}">
-                                                    <div class="quantity">
-                                                        <!-- <input type="number" name="qty[]" min="1" step="1" value="{{ $product->qty }}" data-inc="1" id="product_qty_{{$product->product_id}}" onchange="updateAmount('{{$product->product_id}}')"> -->
-                                                        <input type="number" name="qty[]" min="1" step="1" value="{{ $product->qty }}" data-inc="1" id="product_qty_{{$product->product_id}}">
-                                                        <div class="quantity-nav">
-                                                            <div class="quantity-button quantity-up" id="{{$product->product_id}}">+</div>
-                                                            <div class="quantity-button quantity-down" id="{{$product->product_id}}">-</div>
-                                                        </div>
-                                                    </div>
-
-                                                    <input type="hidden" id="prevqty{{$product->product_id}}" value="{{ $product->qty }}">
-                                                    <input type="hidden" id="maxorder{{$product->product_id}}" value="{{ $product->product->Maxpurchase }}">
+                                                    <input type="hidden" name="qty[]" value="{{ $product->qty }}" id="product_qty_{{$product->product_id}}">
                                                 </td>
                                                 <td class="text-right">₱ {{ number_format($product->price,2) }}
                                                     <input type="hidden" name="product_price[]" id="product_price_{{$product->product_id}}" value="{{ $product->price }}">
@@ -688,55 +679,7 @@
     <script src="{{ asset('theme/stpaul/plugins/responsive-tabs/js/jquery.responsiveTabs.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
-    <script> 
-        $('.quantity-up').click(function(){
-            var id = $(this).attr("id");
-            if(id){
-                var qty = $('#product_qty_'+id).val();
-                var maxorder = $('#maxorder'+id).val();
-
-
-                if(maxorder == 0){
-                    swal({
-                        title: '',
-                        text: "Sorry. Currently, there is no sufficient stocks for the item you wish to order.",         
-                    });
-
-                    $('#product_qty_'+id).val(qty-1);
-                } else {
-                    var stock = maxorder-1;
-                    $('#prevqty'+id).val(qty);
-                    $('#maxorder'+id).val(stock);
-
-                    updateAmount(id);
-                    total_weight();
-                }  
-            }
-        });
-
-        $('.quantity-down').click(function(){
-            total_weight();
-            var id = $(this).attr("id");
-            if(id){
-                var qty = $('#product_qty_'+id).val();
-                var prevqty = $('#prevqty'+id).val();
-
-                var maxorder = $('#maxorder'+id).val();
-                var stock = parseFloat(maxorder)+1;
-
-
-                if(prevqty == 1){
-
-                } else {
-                    $('#prevqty'+id).val(prevqty-1);
-                    $('#maxorder'+id).val(stock);
-
-                    updateAmount(id);
-
-                }   
-            }
-        });
-
+    <script>
         $(document).ready(function() {
             $("#input_mobile").keypress(function (e) {
                 var charCode = (e.which) ? e.which : event.keyCode
@@ -756,6 +699,7 @@
 
                 if(country != ""){
                     if(country == 259){
+
                         $('#cod_label').css('display','block');
                         $('#stp_label').css('display','block');
 
@@ -1008,7 +952,6 @@
                 } else {
                     if(intl_add.length === 0){ $('#p_otheradd').show(); } else { $('#p_otheradd').hide(); }
                 }
-                
             /* END BILLING VALIDATION */
 
             /* BEGIN SHIPPING VALIDATION */
@@ -1049,7 +992,7 @@
                 totalDue();
             /* END SHIPPING VALIDATION */
 
-            /* BEGIN ORDER REVIEW INITIALIZE */
+            /* BEGIN ORDER SUMMARY */
                 if($('#country').val() == 259){
                     $('#customer-address').html($('#input_address').val()+' '+$('#input_barangay').val()+', '+$("#city option:selected" ).text()+' '+$("#province option:selected" ).text()+', '+$('#input_zipcode').val()+' '+$("#country option:selected" ).text());
                 } else {
@@ -1076,7 +1019,7 @@
                 $('#customer-name').html(name);
                 $('#p_instructions').html($('#other_instruction').val());
                 $('#customer-phone').html(mobile);
-            /* END ORDER REVIEW INITIALIZE */
+            /* END ORDER SUMMARY */
         });
 
         function select_shipping_method(){
@@ -1164,83 +1107,6 @@
                 $('#span_shippingfee').html('0.00');
             }
 
-        }
-
-        function updateAmount(id){
-            var qty   = $('#product_qty_'+id).val();
-            var price = $('#product_price_'+id).val();
-            var weight= $('#product_weight_'+id).val()
-
-            var totalAmount = parseFloat(price)*parseFloat(qty);
-            var totalWeight = parseFloat(weight)*parseFloat(qty);
-
-            $('#product_total_amount_'+id).html(FormatAmount(totalAmount,2));
-            $('#input_product_total_amount_'+id).val(totalAmount.toFixed(2));
-
-            $('#total_product_weight_'+id).val(totalWeight);
-
-            subTotal();
-        }
-
-        function subTotal(){
-            var totalAmount = 0;
-            var totalWeight = 0;
-            $(".input_product_total_amount").each(function() {
-                if(!isNaN(this.value) && this.value.length!=0) {
-                    totalAmount += parseFloat(this.value);
-                }
-            });
-
-            $(".input_product_total_weight").each(function() {
-                if(!isNaN(this.value) && this.value.length!=0) {
-                    totalWeight += parseFloat(this.value);
-                }
-            });
-
-
-            $('#total-weight').html(FormatAmount((totalWeight/1000),2));
-            $('#input_total_weight').val((totalWeight/1000).toFixed(2));
-
-            $('#sub-total').html(FormatAmount(totalAmount,2));
-            $('#input_sub_total').val(totalAmount.toFixed(2));
-
-            // total_weight();
-            
-        }
-
-        function total_weight(){
-            var weight = $('#input_total_weight').val();
-            var country= $('#country').val();
-            var city   = $('#city').val(); 
-            var option = $('input[name="shipOption"]:checked').val();
-            var province = $('#province').val(); 
-
-            $.ajax({
-                type: "GET",
-                url: "{{ route('ajax.get-city-rates') }}",
-                data: {
-                    'province' : province,
-                    'city' : city,
-                    'country' : country,
-                    'weight' : weight
-                },
-                success: function(response) {
-
-                    if(option == 4){
-                        if($('#exampleCheck1').is(":checked")){
-                            $('#input_shippingfee').val(0);
-                        } else {
-                            $('#input_shippingfee').val(response.rate);
-                            $('#span_shippingfee').html('₱ '+FormatAmount(response.rate,2));
-                        }
-                    } else {
-                        $('#input_shippingfee').val(response.rate);
-                        $('#span_shippingfee').html('₱ '+FormatAmount(response.rate,2));
-                    }
-
-                    totalDue();
-                }
-            });
         }
 
         function totalDue(){
