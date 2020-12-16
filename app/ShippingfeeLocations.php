@@ -82,22 +82,25 @@ class ShippingfeeLocations extends Model
     }
 
     public static function islocation($location,$country,$province)
-    {
-        if($country == '' || $location == '' || $province == ''){
-            return 0;
-        } else {
-
+    {   
+        if($country != ''){
             if($country == 259){
-                $city = Cities::find($location);
-                $count = ShippingfeeLocations::where('name',$city->city)->where('province_id',$province)->count();
+                if($location != ''){
+                    $city = Cities::find($location);
+                    $count = ShippingfeeLocations::where('name',$city->city)->where('province_id',$province)->count();
+                } else {
+                    return 0;
+                }
+                
             } else {
                 $countries = Countries::find($country);
                 $count = ShippingfeeLocations::where('name',$countries->name)->count();
+                return $count;
             }
             
-            }
-
-        return $count;
+        } else{
+            return 0;
+        }
     }
 
     public static function provinces($feeId)
