@@ -37,6 +37,18 @@ use App\User;
 
 class CartController extends Controller
 {
+    public function deduct_qty(Request $request)
+    {
+        $cart = Cart::where('product_id', $request->product_id)
+                ->where('user_id', Auth::id())
+                ->decrement('qty',1);
+
+        return response()->json([
+            'success' => true,
+            'totalItems' => Setting::EcommerceCartTotalItems()                
+        ]);
+    }
+
     public function store(Request $request)
     {       
         $product = Product::whereId($request->product_id)->first();

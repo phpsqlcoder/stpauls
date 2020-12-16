@@ -37,6 +37,7 @@
 
     // Cart
         Route::post('cart/add-product','EcommerceControllers\CartController@store')->name('cart.add');
+        Route::post('cart/deduct-qty','EcommerceControllers\CartController@deduct_qty')->name('cart.deduct');
         Route::get('/cart/view', 'EcommerceControllers\CartController@view')->name('cart.front.show');
 
         Route::post('cart/proceed-checkout','EcommerceControllers\CartController@proceed_checkout')->name('cart.front.proceed_checkout');

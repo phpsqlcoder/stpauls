@@ -70,12 +70,13 @@
                                             <div class="cart-quantity">
                                                 <label for="quantity">Quantity</label>
                                                 <div class="quantity">
-                                                    <input readonly type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="1000000" step="1" data-inc="1" onchange="updateTotalAmount('{{$loop->iteration}}','{{$order->product_id}}');" id="order{{$loop->iteration}}_qty">
+                                                    <input readonly type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="1000000" step="1" data-inc="1" id="order{{$loop->iteration}}_qty">
                                                     <div class="quantity-nav">
                                                         <div class="quantity-button quantity-up" id="{{$loop->iteration}}">+</div>
                                                         <div class="quantity-button quantity-down" id="{{$loop->iteration}}">-</div>
                                                     </div>
                                                 </div>
+                                                <input type="hidden" id="orderID_{{$loop->iteration}}" value="{{$order->product_id}}">
                                                 <input type="hidden" id="prevqty{{$loop->iteration}}" value="{{ $order->qty }}">
                                                 <input type="hidden" id="maxorder{{$loop->iteration}}" value="{{ $order->product->Maxpurchase }}">
                                             </div>
@@ -166,8 +167,10 @@
                                     <div class="col-12">
                                         @if(Auth::check())
                                         <input type="hidden" id="roleid" value="{{ auth()->user()->role_id }}">
+                                        <input type="hidden" id="auth" value="1">
                                         @else
                                         <input type="hidden" id="roleid" value="3">
+                                        <input type="hidden" id="auth" value="0">
                                         @endif
                                         <button @if($totalproducts > 0) @else disabled @endif type="button" id="btnCheckout" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
                                     </div>
@@ -219,6 +222,8 @@
 
         $('.quantity-up').click(function(){
             var id = $(this).attr("id");
+            var orderid = $('#orderID_'+id).val();
+
             if(id){
                 var qty = $('#order'+id+'_qty').val();
                 var maxorder = $('#maxorder'+id).val();
@@ -235,12 +240,16 @@
                     var stock = maxorder-1;
                     $('#prevqty'+id).val(qty);
                     $('#maxorder'+id).val(stock);
+
+                    addQty(id,orderid);
                 }  
             }
         });
 
         $('.quantity-down').click(function(){
             var id = $(this).attr("id");
+            var productid = $('#orderID_'+id).val();
+
             if(id){
                 var qty = $('#order'+id+'_qty').val();
                 var prevqty = $('#prevqty'+id).val();
@@ -254,12 +263,18 @@
                 } else {
                     $('#prevqty'+id).val(prevqty-1);
                     $('#maxorder'+id).val(stock);
-                }   
+
+                    var auth = $('#auth').val();
+                    if(auth == 0){
+                        addQty(id,productid);  
+                    } else {
+                        deductQty(id,productid);
+                    }
+                } 
             }
         });
 
-        function updateTotalAmount(id,productid){
-
+        function deductQty(id,productid){
             var qty = $('#order'+id+'_qty').val();
             var weight = $('#input_order'+id+'_product_weight').val();
             var price = $('#input_order'+id+'_product_price').val();
@@ -274,16 +289,64 @@
             $.ajax({
                 data: {
                     "product_id": productid,
-                    "qty": 1,
+                    "_token": "{{ csrf_token() }}",
+                },
+                type: "post",
+                url: "{{route('cart.deduct')}}",
+                success: function(returnData) {
+                    if (returnData['success']) {
+                        $('.cart-counter').html(returnData['totalItems']);
+                        $('.counter').html(returnData['totalItems']);
+
+                        swal({
+                            title: '',
+                            text: "Cart updated successfully.",         
+                        });
+                    } 
+                }
+            });
+
+            grandTotal();
+        }
+
+        function addQty(id,productid){
+
+            var qty = $('#order'+id+'_qty').val();
+            var weight = $('#input_order'+id+'_product_weight').val();
+            var price = $('#input_order'+id+'_product_price').val();
+
+            total_weight = parseFloat(weight)*parseFloat(qty);
+            total_price  = parseFloat(price)*parseFloat(qty);
+
+            $('#order'+id+'_total_weight').html(FormatAmount(total_weight,2));
+            $('#order'+id+'_total_price').html(FormatAmount(total_price,2));
+            $('#input_order'+id+'_product_total_price').val(total_price);
+
+            var auth = $('#auth').val();
+            if(auth == 1){
+                var orderqty = 1;
+            } else {
+                var orderqty = qty;
+            }
+
+            $.ajax({
+                data: {
+                    "product_id": productid,
+                    "qty": orderqty,
                     "_token": "{{ csrf_token() }}",
                 },
                 type: "post",
                 url: "{{route('cart.add')}}",
                 success: function(returnData) {
-                    swal({
-                        title: '',
-                        text: "Cart updated successfully.",         
-                    });
+                    if (returnData['success']) {
+                        $('.cart-counter').html(returnData['totalItems']);
+                        $('.counter').html(returnData['totalItems']);
+
+                        swal({
+                            title: '',
+                            text: "Cart updated successfully.",         
+                        });
+                    }
                 }
             });
 
