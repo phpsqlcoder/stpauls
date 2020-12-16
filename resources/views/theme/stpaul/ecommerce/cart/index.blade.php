@@ -274,7 +274,7 @@
             $.ajax({
                 data: {
                     "product_id": productid,
-                    "qty": qty,
+                    "qty": 1,
                     "_token": "{{ csrf_token() }}",
                 },
                 type: "post",
