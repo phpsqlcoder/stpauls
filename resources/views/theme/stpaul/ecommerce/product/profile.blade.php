@@ -202,11 +202,11 @@
                                         </div>
                                         <div class="product-btn">
                                             @if($product->inventory > 0)
-                                            <button type="button" onclick="add_to_cart('{{$product->id}}');" class="btn btn-lg add-cart-alt2-btn addToCartButton">
+                                            <button type="button" onclick="add_to_cart('{{$product->id}}');" class="btn btn-lg add-cart-alt2-btn addToCartButton" id="addtocart">
                                                 <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/cart.png" alt=""> Add to cart
                                             </button>
 
-                                            <button type="submit" class="btn btn-lg buy-now-btn buyNowButton">
+                                            <button type="submit" class="btn btn-lg buy-now-btn buyNowButton" id="buynow">
                                                 <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/blitz.png" alt=""> Buy Now
                                             </button>
                                             @endif
@@ -482,66 +482,71 @@
             var available_stock = $('#input_avail_stock').val();
             var ordered_qty     = $('#qty').val(); 
             var inventory = parseFloat(available_stock)-parseFloat(ordered_qty);
+            var qty = $('#qty').val();
 
-            $.ajax({
-                data: {
-                    "product_id": productID,
-                    "qty": $('#qty').val(),
-                    "price": $('#product_price').val(),
-                    "_token": "{{ csrf_token() }}",
-                },
-                type: "post",
-                url: "{{route('cart.add')}}",
-                success: function(returnData) {
-                    $('#input_avail_stock').val(inventory);
-                    $('#available_stock').html(inventory);
-                    if (returnData['success']) {
-                        $('.cart-counter').html(returnData['totalItems']);
-                        $('.counter').html(returnData['totalItems']);
-                        
-                        swal({
-                            toast: true,
-                            position: 'center',
-                            title: "Product added to your cart!",
-                            type: "success",
-                            showCancelButton: true,
-                            timerProgressBar: true,
-                            confirmButtonClass: "btn-danger",
-                            confirmButtonText: "View Cart",
-                            cancelButtonText: "Continue Shopping",
-                            closeOnConfirm: false,
-                            closeOnCancel: false
+            if(parseInt(qty) > parseInt(available_stock)){
+                swal({
+                    title: '',
+                    text: "Entered quantity exceeded to the available inventory.",         
+                });
+            } else {
+               $.ajax({
+                    data: {
+                        "product_id": productID,
+                        "qty": qty,
+                        "price": $('#product_price').val(),
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    type: "post",
+                    url: "{{route('cart.add')}}",
+                    success: function(returnData) {
+                        if (returnData['success']) {
+                            $('.cart-counter').html(returnData['totalItems']);
+                            $('.counter').html(returnData['totalItems']);
                             
-                        },
-                        function(isConfirm) {
-                            if (isConfirm) {
-                                window.location.href = "{{route('cart.front.show')}}";
-                            } 
-                            else {
-                                swal.close();
-                               
-                            }
-                        });
-                        
-                    }
-                    else{
-                        swal({
-                            toast: true,
-                            position: 'center',
-                            title: "Warning!",
-                            text: "We have insufficient inventory for this item.",
-                            type: "warning",
-                            showCancelButton: true,
-                            timerProgressBar: true, 
-                            closeOnCancel: false
+                            swal({
+                                toast: true,
+                                position: 'center',
+                                title: "Product added to your cart!",
+                                type: "success",
+                                showCancelButton: true,
+                                timerProgressBar: true,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "View Cart",
+                                cancelButtonText: "Continue Shopping",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                                
+                            },
+                            function(isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = "{{route('cart.front.show')}}";
+                                } 
+                                else {
+                                    swal.close();
+                                }
+                            });
                             
-                        });
+                        }
+                        else{
+                            swal({
+                                toast: true,
+                                position: 'center',
+                                title: "Warning!",
+                                text: "We have insufficient inventory for this item.",
+                                type: "warning",
+                                showCancelButton: true,
+                                timerProgressBar: true, 
+                                closeOnCancel: false
+                                
+                            });
+                        }
+                    },
+                    failed: function() {
+                        $("#loading-overlay").hide(); 
                     }
-                },
-                failed: function() {
-                    $("#loading-overlay").hide(); 
-                }
-            });
+                }); 
+           }   
         }
     </script>
 @endsection
