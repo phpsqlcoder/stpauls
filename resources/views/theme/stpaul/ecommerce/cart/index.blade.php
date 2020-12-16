@@ -297,11 +297,6 @@
                     if (returnData['success']) {
                         $('.cart-counter').html(returnData['totalItems']);
                         $('.counter').html(returnData['totalItems']);
-
-                        swal({
-                            title: '',
-                            text: "Cart updated successfully.",         
-                        });
                     } 
                 }
             });
@@ -341,11 +336,6 @@
                     if (returnData['success']) {
                         $('.cart-counter').html(returnData['totalItems']);
                         $('.counter').html(returnData['totalItems']);
-
-                        swal({
-                            title: '',
-                            text: "Cart updated successfully.",         
-                        });
                     }
                 }
             });
