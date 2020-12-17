@@ -249,28 +249,14 @@ class CartController extends Controller
             }
 
             foreach($cartId as $key => $cart){
-                Cart::whereId($cart)->update([
+                Cart::find($cart)->update([
                     'qty' => $qty[$key],
                     'price' => $price[$key]
                 ]);
             }
            
             return redirect()->route('cart.front.checkout');
-
         } else {
-            $cart = session('cart', []);
-
-            for ($x = 1; $x <= $request->total_products; $x++) {
-                foreach ($cart as $key => $order) {
-                    if ($order->product_id == $request->record_id[$x]) {
-                        $cart[$key]->qty = $request->quantity[$x];
-                        break;
-                    }
-                }
-            }
-
-            session(['cart' => $cart]);
-
             return redirect()->route('customer-front.login');
         }
     }

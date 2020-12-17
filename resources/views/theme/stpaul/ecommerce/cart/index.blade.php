@@ -55,7 +55,12 @@
                                     <div class="col-lg-10 col-md-9">
                                         <div class="info-wrap">
                                             <div class="cart-description">
-                                                <input type="hidden" name="cart_id[]" value="{{$order->product_id}}">
+                                                @if(Auth::check())
+                                                    <input type="hidden" name="cart_id[]" value="{{ $order->id }}">
+                                                @else
+                                                    <input type="hidden" name="cart_id[]" value="{{$order->product_id}}">
+                                                @endif
+                                                
                                                 <h3 class="cart-product-title"><a href="{{ route('product.front.show',$order->product->slug)}}">{{ $order->product->name }}</a></h3>
                                                 <ol class="breadcrumb">
                                                     @php 
