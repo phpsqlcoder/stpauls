@@ -2287,7 +2287,11 @@ ol li::marker {
 .list-product .product-card,
 .product-related .product-card {
   background: #f3f3f3;
+<<<<<<< HEAD
+  padding: 30px 30px 100px;
+=======
   padding: 30px 30px 80px;
+>>>>>>> a5210892207ac0f6e1e97af97fdec1837bf67ebe
   text-align: center;
   width: 100%;
   border: 1px solid #dfdfdf;
