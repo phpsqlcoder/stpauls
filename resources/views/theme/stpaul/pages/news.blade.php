@@ -24,9 +24,6 @@
                             <p>
                                 <a data-toggle="modal" data-target="#email-article"><span><i class="fa fa-share"></i></span>E-mail this article</a>
                             </p>
-                            <p>
-                                <a href="{{ route('news.front.print', $news->slug) }}"><span><i class="fa fa-print"></i></span>Print this article</a>
-                            </p>
                         </div>
                         <div class="gap-20"></div>
                         <div class="article-widget">
@@ -37,7 +34,7 @@
                             <div class="article-widget-news">
                                 <p class="news-date">{{ date('F d, Y',strtotime($latest->date)) }}</p>
                                 <p class="news-title">
-                                    <a href="{{ route('news.front.show',$latest->slug) }}">{{ $latest->teaser }}</a>
+                                    <a href="{{ route('news.front.show',$latest->slug) }}">{{ $latest->name }}</a>
                                 </p>
                             </div>
                             @endforeach

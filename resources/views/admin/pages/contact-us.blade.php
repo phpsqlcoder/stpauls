@@ -108,11 +108,6 @@
                                     @endforelse
                                 </select>
                             </div>
-                            {{--						<div class="col-md-2">--}}
-                            {{--							<div class="col-md-2" id="preview_btn_div" @if(!$page->has_slider() || empty($page->album_id)) style="display:none;" @endif>--}}
-                            {{--                                <a href="#" data-toggle="modal" data-target="#preview-banner" id="preview_btn" class="btn btn-xs btn-success" data-id="{{$page->album_id}}">Preview</a>--}}
-                            {{--						    </div>--}}
-                            {{--						</div>--}}
                         </div>
                         @hasError(['inputName' => 'album_id'])
                         @endhasError

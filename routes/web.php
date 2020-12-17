@@ -65,7 +65,7 @@
         //News Frontend
         Route::get('/news/', 'News\ArticleFrontController@news_list')->name('news.front.index');
         Route::get('/news/{slug}', 'News\ArticleFrontController@news_view')->name('news.front.show');
-        Route::get('/news/{slug}/print', 'News\ArticleFrontController@news_print')->name('news.front.print');
+        // Route::get('/news/{slug}/print', 'News\ArticleFrontController@news_print')->name('news.front.print');
         Route::post('/news/{slug}/share', 'News\ArticleFrontController@news_share')->name('news.front.share');
 
         // Contact Us

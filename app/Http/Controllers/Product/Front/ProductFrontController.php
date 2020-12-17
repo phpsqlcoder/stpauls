@@ -47,13 +47,12 @@ class ProductFrontController extends Controller
     public function product_list(Request $request, $slug)
     {
         $category = ProductCategory::where('slug',$slug)->first();
+        $subcategories = [];
+        array_push($subcategories,$category->id);
 
         $page = new Page();
         $page = $category;
         $pageLimit = 40;
-
-        $subcategories = [];
-        array_push($subcategories,$category->id);
 
         foreach($category->child_categories as $child){
             array_push($subcategories,$child->id);

@@ -488,7 +488,7 @@
                                 </div>
                             </div>
                             <div class="checkout-nav">
-                                <span></span>
+                                <a class="checkout-back-btn" href="{{ route('cart.front.show') }}"><span class="lnr lnr-chevron-left"></span> Back to Cart</a>
                                 <a class="checkout-next-btn" href="" id="billingNxtBtn" style="color:white;font-size:1em;font-weight: 700;">Next <span class="lnr lnr-chevron-right"></span></a>
                             </div>
                         </div>

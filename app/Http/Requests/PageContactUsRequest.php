@@ -41,7 +41,7 @@ class PageContactUsRequest extends FormRequest
             'album_id' => 'nullable|exists:albums,id',
             'name' => 'required|max:150',
             'label' => 'required|max:150',
-            'content' => '',
+            'contents' => '',
             'emails' => function ($attribute, $value, $fail) {
                 if (empty($value)) {
                     $fail('The email recipients field is required.');
