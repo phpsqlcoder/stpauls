@@ -150,9 +150,13 @@ Manage Customer
                                         @else
                                             <nav class="nav table-options">
                                                 @if($review->is_approved <> 1)
-                                                <a class="nav-link" href="javascript:void(0)" onclick="single_delete('{{$review->id}}')" title="Delete Review"><i data-feather="trash"></i></a>
-                                                    
-                                                <a class="nav-link" href="javascript:void(0)" onclick="single_approve('{{$review->id}}')" title="Approve Review"><i data-feather="check"></i></a>
+                                                    @if (auth()->user()->has_access_to_route('product-review.single-delete'))
+                                                        <a class="nav-link" href="javascript:void(0)" onclick="single_delete('{{$review->id}}')" title="Delete Review"><i data-feather="trash"></i></a>
+                                                    @endif
+
+                                                    @if (auth()->user()->has_access_to_route('product-review.single-approve'))
+                                                        <a class="nav-link" href="javascript:void(0)" onclick="single_approve('{{$review->id}}')" title="Approve Review"><i data-feather="check"></i></a>
+                                                    @endif
                                                 @endif
                                             </nav>
                                         @endif

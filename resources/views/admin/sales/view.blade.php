@@ -37,11 +37,18 @@
             font-weight: normal;
         }
 
-        table tbody tr:last-child td {
-            border: none;
+        table tfoot tr:first-child td {
+            border-top: none; 
         }
 
-        table tfoot tr td:second-child {
+        table tfoot tr:last-child td {
+            color: #57B223;
+            font-size: 1.4em;
+            border-top: 1px solid #57B223; 
+
+        }
+
+        table tfoot tr td:first-child {
             border: none;
         }
     </style>
@@ -82,7 +89,29 @@
             <p class="mg-b-3">{{$sales->customer_contact_number}}</p>
             <p class="mg-b-3"><a href="mailto:{{ $sales->customer_main_details->email }}">{{ $sales->customer_main_details->email }}</a></p>
             <p>&nbsp;</p>
-            <p class="mg-b-10">Remarks : {{ $sales->remarks }}</p>
+            <p class="mg-b-10">Remarks :</p>
+            <ul class="list-unstyled">
+                @if($sales->remarks != '')
+                    <li>* {{ $sales->remarks }}</li>
+                @endif
+                
+                @php
+                    $paymentQry = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sales->id);
+                    $paymentCount = $paymentQry->count();
+                @endphp
+
+                @if($paymentQry->count() > 0)
+                    @php
+                        $paymentRemarks = $paymentQry->first();
+                    @endphp
+
+                    @if($paymentRemarks->remarks != '')
+                        <li>* {{ $paymentRemarks->remarks }}</li>
+                    @endif
+                @endif
+            </ul>
+            <p>Other Instructions : {{ $sales->other_instruction ?? 'N/A' }}</p>
+
             @if($sales->sdd_booking_type == 1)
             <p class="mg-b-3">Courier Name : {{ $sales->courier_name }}</p>
             <p class="mg-b-3">Rider Name : {{ $sales->rider_name }}</p>
@@ -111,12 +140,28 @@
                 <hr>
                 <li class="d-flex justify-content-between">
                     <span>Delivery Type</span>
-                    <span class="tx-semibold tx-uppercase">{{ $sales->delivery_type }}</span>
+                    <span class="tx-semibold tx-uppercase">
+                        @if($sales->delivery_type == 'Same Day Delivery')
+                            @if($sales->sdd_booking_type == 1)
+                                <b>Book Your Own Rider</b>
+                            @else
+                                <b>Same Day Delivery</b>
+                            @endif
+                        @else
+                            <b>{{ $sales->delivery_type }}</b>
+                        @endif
+                    </span>
                 </li>
+                @if($sales->delivery_type == 'Store Pick Up')
                 <li class="d-flex justify-content-between">
                     <span>Branch</span>
-                    <span class="tx-semibold tx-uppercase">{{ $sales->branch ?? 'N/A' }}</span>
+                    <span class="tx-semibold tx-uppercase">{{ $sales->branch }}</span>
                 </li>
+                <li class="d-flex justify-content-between">
+                    <span>Pick-up Date</span>
+                    <span class="tx-semibold tx-uppercase">{{ $sales->pickup_date }}</span>
+                </li>
+                @endif
                 <li class="d-flex justify-content-between">
                     <span>Delivery Status</span>
                     <span class="tx-success tx-semibold tx-uppercase">{{ $sales->delivery_status }}</span>
@@ -156,36 +201,39 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" rowspan="3"></td>
+                    <td colspan="4"></td>
                     <td>Total Weight</td>
                     <td class="text-right">{{ ($totalweight/1000) }} kg</td>
                 </tr>
                 <tr>
+                    <td colspan="4"></td>
                     <td>Sub-Total</td>
                     <td class="text-right">{{ number_format($subtotal,2) }}</td>
                 </tr>
+                @if($sales->discount_percentage > 0)
                 <tr>
+                    <td colspan="4"></td>
                     <td class="text-danger">LESS: Loyalty Discount({{$sales->discount_percentage}}%)</td>
                     <td class="text-right text-danger">{{ number_format($sales->discount_amount,2) }}</td>
-                    
                 </tr>
+                @endif
+                @if($sales->delivery_fee_amount > 0)
                 <tr>
-                    <td colspan="4" rowspan="3">
-                        <div class="col-sm-12 col-lg-8 order-2 order-sm-0 mg-t-40 mg-sm-t-0">
-                            <div class="gap-30"></div>
-                            <label class="tx-sans tx-10 tx-medium tx-spacing-1 tx-color-03">Other Instructions</label>
-                            <p>{{ $sales->other_instruction ?? 'N/A' }}</p>
-                        </div>
-                    </td>
+                    <td colspan="4"></td>
                     <td>ADD: Shipping Fee</td>
                     <td class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
                 </tr>
+                @endif
+                @if($sales->service_fee > 0)
                 <tr>
+                    <td colspan="4"></td>
                     <td>ADD: Service Fee</td>
                     <td class="text-right">{{ number_format($sales->service_fee,2) }}</td>
                 </tr>
+                @endif
                 <tr>
-                    <td><h5 class="tx-success">TOTAL DUE</h5></td>
+                    <td colspan="4"></td>
+                    <td><h5 class="text-success"><b>TOTAL DUE</b></h5></td>
                     <td class="text-right"><h5>{{ number_format($sales->net_amount,2)}}</h5></td>
                 </tr>
             </tfoot>
@@ -194,11 +242,15 @@
         <div class="table-responsive mg-t-20">
             @if($sales->status != 'CANCELLED')
                 @if($sales->delivery_status == 'Shipping Fee Validation')
-                    <button type="button" class="btn btn-sm btn-primary float-right mg-l-5" onclick="add_shippingfee('{{$sales->id}}','{{$sales->order_number}}');">Add Shipping Fee</button>
+                    @if (auth()->user()->has_access_to_route('add-shipping-fee'))
+                        <button type="button" class="btn btn-sm btn-primary float-right mg-l-5" onclick="add_shippingfee('{{$sales->id}}','{{$sales->order_number}}');">Add Shipping Fee</button>
+                    @endif
                 @else
                     @if($sales->is_approve == '' && $sales->delivery_type == 'Cash on Delivery')
-                        <button type="button" class="btn btn-sm btn-danger float-right mg-l-5" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','REJECT');">Reject</button>
-                        <button type="button" class="btn btn-sm btn-primary float-right" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','APPROVE');">Approve</button>
+                        @if (auth()->user()->has_access_to_route('cod-order-response'))
+                            <button type="button" class="btn btn-sm btn-danger float-right mg-l-5" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','REJECT');">Reject</button>
+                            <button type="button" class="btn btn-sm btn-primary float-right" onclick="order_response('{{$sales->id}}','{{$sales->order_number}}','APPROVE');">Approve</button>
+                        @endif
                     @endif
                 @endif
             @endif
@@ -208,7 +260,7 @@
 
 <div class="modal effect-scale" id="prompt-add-shippingfee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <form action="{{ route('add-shipping-fee') }}" method="POST">
+        <form id="addshipingfeeform" action="{{ route('add-shipping-fee') }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
@@ -223,7 +275,7 @@
                     <input type="number" name="shippingfee" class="form-control" min="1">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-primary" id="btnDelete">Submit Shipping Fee</button>
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnAddShippingfee">Submit Shipping Fee</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -257,7 +309,7 @@
                     <textarea name="remarks" requried class="form-control" rows="5" placeholder="Please enter a remarks"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-primary" id="btnDelete">Yes, Approve</button>
+                    <button type="submit" class="btn btn-sm btn-primary" id="btnApprove">Yes, Approve</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -283,7 +335,7 @@
                     <textarea name="remarks" requried class="form-control" rows="5" placeholder="Please enter a remarks"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-sm btn-danger" id="btnDelete">Yes, Reject</button>
+                    <button type="submit" class="btn btn-sm btn-danger" id="btnReject">Yes, Reject</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -312,5 +364,9 @@
                 $('#prompt-reject-order').modal('show');
             }
         }
+
+        $('#addshipingfeeform').submit(function(){
+            $('#btnAddShippingfee').prop('disabled',true);
+        });
     </script>
 @endsection

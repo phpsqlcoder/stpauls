@@ -79,9 +79,12 @@
                                                 <a class="dropdown-item" href="javascript:void(0)" onclick="change_status('PRIVATE')">{{__('common.private')}}</a>
                                             @endif
 
+                                            <a class="dropdown-item" href="javascript:void(0)" onclick="assign_category()">Assign Product Category</a>
+
                                             @if (auth()->user()->has_access_to_route('products.multiple.delete'))
                                                 <a class="dropdown-item tx-danger" href="javascript:void(0)" onclick="delete_category()">{{__('common.delete')}}</a>
                                             @endif
+
                                         </div>
                                     </div>
                                 </div>
@@ -103,12 +106,12 @@
                             @endif
                         </div>
                     </div>
-                    <a class="btn btn-secondary btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-main').modal('show');">Upload Products (Main Info)</a>
-                    <a class="btn btn-warning btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-add').modal('show');">Upload Products (Additional Info)</a>
-                    <a class="btn btn-info btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-featured').modal('show');">Upload Featured Products</a>
-                    <a class="btn btn-danger btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-category').modal('show');">Upload Product Categories</a>
-                    <a class="btn btn-primary btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-photos').modal('show');">Assign Product Photos</a>
-                    <a class="btn btn-success btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-images').modal('show');">Upload Product Images</a>
+                    {{--<a class="btn btn-secondary btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-main').modal('show');">Upload Products (Main Info)</a>--}}
+                    {{--<a class="btn btn-warning btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-add').modal('show');">Upload Products (Additional Info)</a>--}}
+                    {{--<a class="btn btn-info btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-featured').modal('show');">Upload Featured Products</a>--}}
+                    {{--<a class="btn btn-danger btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-category').modal('show');">Upload Product Categories</a>--}}
+                    {{--<a class="btn btn-primary btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-photos').modal('show');">Assign Product Photos</a>--}}
+                    {{--<a class="btn btn-success btn-sm mg-b-20" href="javascript:void(0)" onclick="$('#prompt-upload-images').modal('show');">Upload Product Images</a>--}}
                 </div>
             </div>
             <!-- End Filters -->
@@ -185,7 +188,7 @@
                                                 @endif
 
                                                 @if (auth()->user()->has_access_to_route('product.single.delete'))
-                                                    <a class="nav-link" href="javascript:void(0)" onclick="delete_one_category({{$product->id}},'{{$product->name}}')" title="Delete Product"><i data-feather="trash"></i></a>
+                                                    <a class="nav-link" href="javascript:void(0)" onclick="delete_one_category('{{$product->id}}','{{$product->name}}')" title="Delete Product"><i data-feather="trash"></i></a>
                                                 @endif
 
                                                 @if (auth()->user()->has_access_to_route('product.single-change-status'))
@@ -235,10 +238,11 @@
         </div>
     </div>
 
-    <form action="" id="posting_form" style="display:none;" method="post">
+    <form action="" id="posting_form" style="display: none;" method="post">
         @csrf
         <input type="text" id="products" name="products">
         <input type="text" id="status" name="status">
+        <input type="text" name="categoryid" id="categoryid">
     </form>
 
     <div class="modal effect-scale" id="prompt-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -275,6 +279,39 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-danger" id="btnDeleteMultiple">Yes, Delete</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal effect-scale" id="prompt-multiple-assign" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Assign Product Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="d-block">Product Category *</label>
+                        <select required name="category" id="category" class="form-control">
+                            <option value="">-- Select Category --</option>
+                            @foreach($parentcategories as $parent)
+                                    <option style="font-weight: bold;" value="{{$parent->id}}">{{ $parent->name }}</option>
+                                    @foreach($subcategories as $sub)
+                                        @if($sub->parent_id == $parent->id)
+                                            <option value="{{$sub->id}}">&nbsp;&nbsp;&nbsp;{{ $sub->name }}</option>
+                                        @endif
+                                    @endforeach
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-primary" id="btnMultipleUpdateCategory">Update Category</button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -351,7 +388,7 @@
                                 <select name="user_id" class="form-control input-sm">
                                     <option value="">- All Users -</option>
                                     @foreach($uniqueProductByUser as $pr)
-                                        <option value="{{$pr->user_id}}" @if ($advanceSearchData->user_id == $pr->user_id) selected @endif>{{$pr->user->name}}</option>
+                                        <option value="{{$pr->created_by}}">{{$pr->user->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -412,6 +449,21 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <div class="modal effect-scale" id="prompt-upload-main" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <form action="{{ route('products.upload.main') }}" method="post" enctype="multipart/form-data">
@@ -596,6 +648,7 @@
 
     <script>
         let listingUrl = "{{ route('products.index') }}";
+        let advanceListingUrl = "{{ route('product.index.advance-search') }}";
         let searchType = "{{ $searchType }}";
     </script>
     <script src="{{ asset('js/listing.js') }}"></script>
@@ -625,11 +678,11 @@
         /*** handles the changing of status of multiple pages ***/
         function change_status(status){
             var counter = 0;
-            var selected_videos = '';
+            var selected_products = '';
             $(".cb:checked").each(function(){
                 counter++;
                 fid = $(this).attr('id');
-                selected_videos += fid.substring(2, fid.length)+'|';
+                selected_products += fid.substring(2, fid.length)+'|';
             });
             if(parseInt(counter) < 1){
                 $('#prompt-no-selected').modal('show');
@@ -641,19 +694,20 @@
                     $('#prompt-update-status').modal('show');
 
                     $('#btnUpdateStatus').on('click', function() {
-                        post_form("{{route('product.multiple.change.status')}}",status,selected_videos);
+                        post_form("{{route('product.multiple.change.status')}}",status,selected_products,'');
                     });
                 }
                 else{
-                    post_form("{{route('product.multiple.change.status')}}",status,selected_videos);
+                    post_form("{{route('product.multiple.change.status')}}",status,selected_products,'');
                 }
             }
         }
 
-        function post_form(url,status,product){
+        function post_form(url,status,product,categoryid){
             $('#posting_form').attr('action',url);
             $('#products').val(product);
             $('#status').val(status);
+            $('#categoryid').val(categoryid);
             $('#posting_form').submit();
         }
 
@@ -673,7 +727,29 @@
             else{
                 $('#prompt-multiple-delete').modal('show');
                 $('#btnDeleteMultiple').on('click', function() {
-                    post_form("{{route('products.multiple.delete')}}",'',selected_products);
+                    post_form("{{route('products.multiple.delete')}}",'',selected_products,'');
+                });
+            }
+        }
+
+        function assign_category(){
+            var counter = 0;
+            var selected_products = '';
+            $(".cb:checked").each(function(){
+                counter++;
+                fid = $(this).attr('id');
+                selected_products += fid.substring(2, fid.length)+'|';
+            });
+
+            if(parseInt(counter) < 1){
+                $('#prompt-no-selected').modal('show');
+                return false;
+            }
+            else{
+                $('#prompt-multiple-assign').modal('show');
+                $('#btnMultipleUpdateCategory').on('click', function() {
+                    var category = $('#category').val();
+                    post_form("{{route('products.multiple.assign.category')}}",'',selected_products,category);
                 });
             }
         }
@@ -681,7 +757,7 @@
         function delete_one_category(id,product){
             $('#prompt-delete').modal('show');
             $('#btnDelete').on('click', function() {
-                post_form("{{route('product.single.delete')}}",'',id);
+                post_form("{{route('product.single.delete')}}",'',id,'');
             });
         }
 

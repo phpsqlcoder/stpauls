@@ -72,8 +72,10 @@ class EcommerceFrontController extends Controller
         if (!$this->broker()->tokenExists($user, $token)) {
             return redirect()->route('ecommerce.forgot_password')->with('error','Your link is expired. Please reset your password again.');
         }
+        
+        $user = User::where('email',$request->email)->first();
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.reset-password',compact('page'))->with(
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.reset-password',compact('page','user'))->with(
             ['token' => $token, 'email' => $request->email]
         );
     }
@@ -83,7 +85,15 @@ class EcommerceFrontController extends Controller
         $credentials = $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|max:150|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
+            'password' => [
+                'required',
+                'max:150',
+                'min:8',
+                'regex:/[a-z]/', // must contain at least one lowercase letter
+                'regex:/[A-Z]/', // must contain at least one uppercase letter
+                'regex:/[0-9]/', // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
+            ],
             'password_confirmation' => 'required|same:password',
         ]);
 

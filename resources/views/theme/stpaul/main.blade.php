@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>ST PAULS Online | Catholic Online Bookstore in Philippines</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{  asset('storage/icons/'.Setting::getFaviconLogo()->website_favicon) }}">
 
     <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/bootstrap/css/bootstrap.css') }}" />
-    <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/jssocials/jssocials-theme-flat.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/font-awesome/css/all.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/linearicon/css/linearicons.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/responsive-tabs/css/responsive-tabs.css') }}" />
@@ -21,11 +21,17 @@
     <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/css/animate.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/css/style.css') }}" />
 
-    
+    <style>
+        .rd-navbar-n-search .rd-n-search__submit::before {
+            content: "";
+        }
+        
+    </style>
 
     @yield('pagecss')
 
     {!! \Setting::info()->google_analytics !!}
+    {{ \App\StPaulModel\Promo::update_promo_xpiration() }}
 
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -63,28 +69,59 @@
                         <li>
                             <div class="unit flex-row align-items-center unit-spacing-xs">
                                 <div class="unit__left"><span class="icon icon-md icon-primary fab {{ \App\MediaAccounts::icons($media->name) }}"></span></div>
-                                <div class="unit__body"><a href="{{$media->media_account}}" target="_blank">{{ ucwords($media->name) }}</a></div>
+                                <div class="unit__body"><a href="{{$media->media_account}}" target="_blank">{{ ucwords($media->account_name) }}</a></div>
                             </div>
                             <div class="gap-20"></div>
                         </li>
                     @endforeach
+                        <li>&nbsp;</li>
+                        <li>&nbsp;</li>
+                        <li>
+                            <div class="unit flex-row align-items-center unit-spacing-xs">
+                                <div class="unit__left"><i style="font-size: 22px;width: 30px;text-align: center;" class="fab fa-viber"></i></div>
+                                <div class="unit__body"><a href="#">{{ \Setting::info()->viber_no }}</a></div>
+                            </div>
+                            <div class="gap-20"></div>
+                        </li>
+                        <li>
+                            <div class="unit flex-row align-items-center unit-spacing-xs">
+                                <div class="unit__left"><i style="font-size: 22px;width: 30px;text-align: center;" class="fas fa-mobile-alt"></i></div>
+                                <div class="unit__body"><a href="#">{{ \Setting::info()->mobile_no }}</a></div>
+                            </div>
+                            <div class="gap-20"></div>
+                        </li>
+                        <li>
+                            <div class="unit flex-row align-items-center unit-spacing-xs">
+                                <div class="unit__left"><i style="font-size: 22px;width: 30px;text-align: center;" class="fas fa-phone-square-alt"></i></div>
+                                <div class="unit__body"><a href="#">{{ \Setting::info()->tel_no }}</a></div>
+                            </div>
+                            <div class="gap-20"></div>
+                        </li>
+                        <li>
+                            <div class="unit flex-row align-items-center unit-spacing-xs">
+                                <div class="unit__left"><i style="font-size: 22px;width: 30px;text-align: center;" class="fas fa-fax"></i></div>
+                                <div class="unit__body"><a href="#">{{ \Setting::info()->fax_no }}</a></div>
+                            </div>
+                            <div class="gap-20"></div>
+                        </li>
                 </ul>
             </div>
         </nav>
     </div>
 
-    <!-- <div class="privacy-policy">
+    <!-- PRIVACY POLICY WIDGET -->
+    <div class="privacy-policy dark" style="display: none;" id="popupPrivacy">
       <div class="privacy-policy-desc">
         <p class="title">Privacy-Policy</p>
         <p>
-          This website uses cookies to ensure you get the best experience.
+          {!! \Setting::info()->data_privacy_popup_content !!}
         </p>
       </div>
       <div class="privacy-policy-btn">
-        <a class="primary-btn" href="#">Accept</a>
-        <a class="default-btn" href="#">Learn More</a>
+        <button type="button" class="btn btn-lg primary-btn" id="popup-close">Accept</button>
+        <a class="btn btn-lg default-btn" href="{{route('privacy-policy')}}">Learn More</a>
       </div>
-    </div> -->
+    </div>
 
     <div id="top">
         <img src="{{ asset('theme/stpaul/images/misc/top.png') }}" />
@@ -119,6 +156,18 @@
     <script src="{{ asset('theme/stpaul/plugins/flexmenu/flexmenu.min.js') }}"></script>
     <script src="{{ asset('theme/stpaul/js/script.js') }}"></script>
     <script type="text/javascript">
+        $(document).ready(function() {
+            if(localStorage.getItem('popState') != 'shown'){
+                $('#popupPrivacy').delay(1000).fadeIn();
+            }
+        });
+
+        $('#popup-close').click(function() // You are clicking the close button
+        {
+            $('#popupPrivacy').fadeOut(); // Now the pop up is hidden.
+            localStorage.setItem('popState','shown');
+        });
+
         $(function () {
             $('header nav .rd-navbar-nav-wrap .rd-navbar-nav').flexMenu({
                 linkTitle: "",
@@ -141,6 +190,78 @@
                     linkText: "More"
                 });
             }
+        });
+
+        $('input[name="keyword"]').focusin(function(){
+            var value = $(this).val();
+            if ( value.length > 0){
+                $('#productSearchResult').show();
+                $('#searchbtn').removeClass('openbtn');
+                $('#searchbtn').addClass('closebtn');
+                $('#search-icon').removeClass('fa fa-search');
+                $('#search-icon').addClass('fa fa-times');
+            } else {
+                $('#productSearchResult').hide();
+            }
+        });
+        
+        $('input[name="keyword"]').keyup(function(){
+            var value = $(this).val();
+            if ( value.length > 0){
+                $('#searchbtn').addClass('openbtn');
+                $('#searchbtn').removeClass('closebtn');
+                 $('#search-icon').removeClass('fa fa-times');
+                  $('#search-icon').addClass('fa fa-search');
+            }
+            else{
+                $('#productSearchResult').hide();
+                $('#searchbtn').addClass('openbtn');
+                 $('#searchbtn').removeClass('closebtn');
+                 $('#search-icon').removeClass('fa fa-times');
+                  $('#search-icon').addClass('fa fa-search');
+            
+            }
+        });
+        
+        $(document).on('click','.openbtn',function(){
+            var value = $(this).val();
+            $('#productSearchResult').show();
+            $('#searchbtn').removeClass('openbtn');
+            $('#searchbtn').addClass('closebtn');
+            $('#search-icon').removeClass('fa fa-search');
+            $('#search-icon').addClass('fa fa-times');
+            $('#productSearchForm').submit();
+        });
+
+        $('#productSearchForm').submit(function(e){
+            e.preventDefault();
+
+            $('#searching').show();
+            $.ajax({
+                type: "GET",
+                url: "{{ route('product.front.search') }}",
+                data: $('#productSearchForm').serialize(),
+                success: function( response ) {
+                    $('#searchbtn').addClass('closebtn');
+                    $('#searchbtn').removeClass('openbtn');
+                    $('#search-icon').removeClass('fa fa-search');
+                    $('#search-icon').addClass('fa fa-times');
+
+                    $('#searching').hide();
+                    $('#productSearchResult').html(response);
+                    $('#productSearchResult').show();
+                }
+            });
+        });
+
+        $(document).on('click','.closebtn',function(){
+
+            $('#searchbtn').removeClass('closebtn');
+            $('#searchbtn').addClass('openbtn');
+            $('#search-icon').removeClass('fa fa-times');
+            $('#search-icon').addClass('fa fa-search');
+
+            $('#productSearchResult').hide();
         });
     </script>
 

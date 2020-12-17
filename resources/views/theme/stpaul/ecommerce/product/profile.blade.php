@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/pygments.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/easyzoom/css/easyzoom.css') }}" /> --}}
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.css') }}" />
     <style>
         .product-rating .fa-star.checked {
             color: #ffb800;
@@ -133,6 +133,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-7">
+                                <input type="hidden" id="productID" value="{{ $product->id }}">
                                 <form id="addToCart" data-source="addToCart" method="post" action="{{ route('product-buy-now') }}">
                                     @csrf
                                     <div class="product-detail">
@@ -193,7 +194,6 @@
                                                     <div class="quantity-button quantity-up">+</div>
                                                     <div class="quantity-button quantity-down">-</div>
                                                 </div>
-                                                <span class="product-pcs">{{ $product->uom }}</span>
                                             </div>
                                             <div class="product-sku">
                                                 <input type="hidden" id="input_avail_stock" value="{{ $product->inventory }}">
@@ -202,13 +202,27 @@
                                         </div>
                                         <div class="product-btn">
                                             @if($product->inventory > 0)
-                                            <button type="button" onclick="add_to_cart('{{$product->id}}');" class="btn btn-lg add-cart-alt2-btn addToCartButton">
+                                            <button type="button" onclick="add_to_cart('{{$product->id}}');" class="btn btn-lg add-cart-alt2-btn addToCartButton" id="addtocart">
                                                 <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/cart.png" alt=""> Add to cart
                                             </button>
 
-                                            <button type="submit" class="btn btn-lg buy-now-btn buyNowButton">
+                                            <button type="submit" class="btn btn-lg buy-now-btn buyNowButton" id="buynow">
                                                 <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/blitz.png" alt=""> Buy Now
                                             </button>
+                                            @endif
+
+                                            @if(Auth::check())
+                                            <div class="product-wishlist">
+                                                <input name="wishlist" id="wishlist" data-product-id="333" type="checkbox" @if(\App\EcommerceModel\WishlistCustomer::product_wishlist($product->id) > 0) checked @endif/>
+                                                <label for="wishlist">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255.7 225.13">
+                                                        <path style="color:#000000;enable-background:accumulate;"
+                                                        d="M128,69.9s-17-48.25-63-48.25S7.71,75.32,7.71,75.32s-11.36,39.74,39.74,89.29L128,233.77l80.55-69.16c51.09-49.55,39.74-89.29,39.74-89.29S236.9,21.65,191,21.65,128,69.9,128,69.9Z"
+                                                        transform="translate(-0.13 -15.15)" fill="transparent" id="heart-path" stroke="#F8332A" stroke-width="15" marker="none" visibility="visible"
+                                                            display="inline" overflow="visible" />
+                                                    </svg>
+                                                </label>
+                                            </div>
                                             @endif
                                         </div>
                                     </div>
@@ -221,7 +235,7 @@
                     <div class="product-additional">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link @if($tab == 'details') active @endif" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Details about the product {{ $tab }}</a>
+                                <a class="nav-link @if($tab == 'details') active @endif" id="detail-tab" data-toggle="tab" href="#detail" role="tab" aria-controls="detail" aria-selected="false">Details about the product</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" id="synopsis-tab" data-toggle="tab" href="#synopsis" role="tab" aria-controls="synopsis" aria-selected="true">{{ ($product->category->name == 'Books') ? 'Synopsis' : 'Prayer' }}</a>
@@ -240,7 +254,7 @@
                                         <td><p><b>Author/s:</b> {{ $product->additional_info->authors }}</p></td>
                                     </tr>
                                     <tr>
-                                        <td><p><b>Size:</b> {{ $product->size }} {{ $product->uom }}</p></td>
+                                        <td><p><b>Size:</b> {{ $product->size }}</p></td>
                                     </tr>
                                     <tr>
                                         <td><p><b>Materials:</b> {{ $product->additional_info->materials }}</p></td>
@@ -341,17 +355,22 @@
                     @endphp
 
                     @if($related_products)
-                    <!-- Home Item on Sale Section -->
-                    <div class="category-nav-2">
-                        <div class="owl-product-nav">
-                            <a href="" class="owl-item-sale-prev"><span class="lnr lnr-arrow-left"></span></a>
-                            <a href="" class="owl-item-sale-next"><span class="lnr lnr-arrow-right"></span></a>
+                    <div id="default-wrapper" class="p-0">
+                                
+                        <div class="category-flex-2">
+                            <h2 class="category-title"><span>Related Products</span></h2>
+                            <div class="category-nav-2">
+                                <div class="product-nav">
+                                    <a href="" class="related-product-prev"><span class="lnr lnr-arrow-left"></span></a>
+                                    <a href="" class="related-product-next"><span class="lnr lnr-arrow-right"></span></a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <h2 class="category-title"><span>Related Products</span></h2>
-                    <div class="gap-40"></div>
 
-                    <div id="owl-product-5" class="owl-carousel owl-theme">
+                        <div class="gap-40"></div>
+
+                        <!-- Recently Viewed Content -->
+                        <div id="related-products" class="slick-slider">
                         @foreach(explode('|',$related_products) as $rproduct)
                             @php
                                 $product_info = \App\EcommerceModel\Product::find($rproduct);
@@ -360,7 +379,7 @@
                                 <div class="product-card">
                                     <a href="{{ route('product.front.show',$product_info->slug)}}">
                                         <img src="{{ asset('storage/products/'.$product_info->photoPrimary) }}" alt="" />
-                                        <h3 class="product-price">Php {{ $product_info->pricewithcurrency }}</h3>
+                                        <h3 class="product-price"><div class="old"><br></div>Php {{ $product_info->pricewithcurrency }}</h3>
                                     </a>
                                     <p class="product-title">{{ $product_info->name }}</p>
                                     <form>
@@ -390,13 +409,9 @@
     <script src="{{ asset('theme/stpaul/plugins/aos/dist/aos.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/jssocials/jssocials.js') }}"></script>
     <script src="{{ asset('theme/stpaul/plugins/ion.rangeslider/js/ion.rangeSlider.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/vanilla-zoom/vanilla-zoom.js') }}"></script>
     <script src="{{ asset('theme/stpaul/js/better-rating.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/easyzoom/src/easyzoom.js') }}"></script>
 
-    <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.extension.js') }}"></script>
-    <script src="{{ asset('theme/stpaul/plugins/owl.carousel/owl.carousel.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.js') }}"></script>
     <script src="{{ asset('theme/stpaul/js/rater.js') }}"></script>
     <script>
         $(".product-rating").rate();
@@ -419,16 +434,43 @@
     <script src="{{ asset('theme/stpaul/plugins/xZoom/src/hammer.js/jquery.hammer.min.js') }}"></script>
 
     <script>
-        function changePhoto(id){
-            var url = $('#photo_path'+id).val();
-            $("#photo_source").attr("href", url);
-            $('#display_product').attr('src',url);
-
-            // Setup thumbnails example
-            var api1 = $easyzoom.filter('.easyzoom--with-thumbnails').data('easyZoom');
-
-            api1.swap($("#photo_source").data('standard'), $("#photo_source").attr('href'));
-        }
+        $('input[type="checkbox"]').click(function(){
+            if($(this).prop("checked") == true){
+                
+                var prodID = $('#productID').val();
+                $.ajax({
+                    data: {
+                        "product_id": prodID,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    type: "post",
+                    url: "{{route('product.add-to-wishlist')}}",
+                    success: function(returnData) {
+                        swal({
+                            title: '',
+                            text: "Product has been added to wishlist.",         
+                        });
+                    }
+                });
+            }
+            else if($(this).prop("checked") == false){
+                var prodID = $('#productID').val();
+                $.ajax({
+                    data: {
+                        "product_id": prodID,
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    type: "post",
+                    url: "{{route('product.remove-to-wishlist')}}",
+                    success: function(returnData) {
+                        swal({
+                            title: '',
+                            text: "Product has been removed to wishlist.",         
+                        });
+                    }
+                });
+            }
+        });
 
         function add_to_cart(productID) {
             $.ajaxSetup({
@@ -440,66 +482,71 @@
             var available_stock = $('#input_avail_stock').val();
             var ordered_qty     = $('#qty').val(); 
             var inventory = parseFloat(available_stock)-parseFloat(ordered_qty);
+            var qty = $('#qty').val();
 
-            $.ajax({
-                data: {
-                    "product_id": productID,
-                    "qty": $('#qty').val(),
-                    "price": $('#product_price').val(),
-                    "_token": "{{ csrf_token() }}",
-                },
-                type: "post",
-                url: "{{route('cart.add')}}",
-                success: function(returnData) {
-                    $('#input_avail_stock').val(inventory);
-                    $('#available_stock').html(inventory);
-                    if (returnData['success']) {
-                        $('.cart-counter').html(returnData['totalItems']);
-                        $('.counter').html(returnData['totalItems']);
-                        
-                        swal({
-                            toast: true,
-                            position: 'center',
-                            title: "Product Added to your cart!",
-                            type: "success",
-                            showCancelButton: true,
-                            timerProgressBar: true,
-                            confirmButtonClass: "btn-danger",
-                            confirmButtonText: "View Cart",
-                            cancelButtonText: "Continue Shopping",
-                            closeOnConfirm: false,
-                            closeOnCancel: false
+            if(parseInt(qty) > parseInt(available_stock)){
+                swal({
+                    title: '',
+                    text: "Entered quantity exceeded to the available inventory.",         
+                });
+            } else {
+               $.ajax({
+                    data: {
+                        "product_id": productID,
+                        "qty": qty,
+                        "price": $('#product_price').val(),
+                        "_token": "{{ csrf_token() }}",
+                    },
+                    type: "post",
+                    url: "{{route('cart.add')}}",
+                    success: function(returnData) {
+                        if (returnData['success']) {
+                            $('.cart-counter').html(returnData['totalItems']);
+                            $('.counter').html(returnData['totalItems']);
                             
-                        },
-                        function(isConfirm) {
-                            if (isConfirm) {
-                                window.location.href = "{{route('cart.front.show')}}";
-                            } 
-                            else {
-                                swal.close();
-                               
-                            }
-                        });
-                        
-                    }
-                    else{
-                        swal({
-                            toast: true,
-                            position: 'center',
-                            title: "Warning!",
-                            text: "We have insufficient inventory for this item.",
-                            type: "warning",
-                            showCancelButton: true,
-                            timerProgressBar: true, 
-                            closeOnCancel: false
+                            swal({
+                                toast: true,
+                                position: 'center',
+                                title: "Product added to your cart!",
+                                type: "success",
+                                showCancelButton: true,
+                                timerProgressBar: true,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "View Cart",
+                                cancelButtonText: "Continue Shopping",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                                
+                            },
+                            function(isConfirm) {
+                                if (isConfirm) {
+                                    window.location.href = "{{route('cart.front.show')}}";
+                                } 
+                                else {
+                                    swal.close();
+                                }
+                            });
                             
-                        });
+                        }
+                        else{
+                            swal({
+                                toast: true,
+                                position: 'center',
+                                title: "Warning!",
+                                text: "We have insufficient inventory for this item.",
+                                type: "warning",
+                                showCancelButton: true,
+                                timerProgressBar: true, 
+                                closeOnCancel: false
+                                
+                            });
+                        }
+                    },
+                    failed: function() {
+                        $("#loading-overlay").hide(); 
                     }
-                },
-                failed: function() {
-                    $("#loading-overlay").hide(); 
-                }
-            });
+                }); 
+           }   
         }
     </script>
 @endsection

@@ -17,23 +17,14 @@ class CreateTriggerUpdateForEcommerceSalesPaymentsTable extends Migration
             "CREATE TRIGGER tr_update_sales_payments AFTER UPDATE ON `ecommerce_sales_payments` FOR EACH ROW 
             BEGIN
 
-                DECLARE payment_response VARCHAR(200);
-                DECLARE order_number VARCHAR(200);
-                /** COD : Order Response **/ 
+                DECLARE orderNumber VARCHAR(200);
+ 
                 IF ((OLD.is_verify <=> NEW.is_verify) = 0) THEN  
 
-                    IF(NEW.is_verify = 1) THEN
-                        SET payment_response = 'approved';
-                    END IF;
-
-                    IF(NEW.is_verify = 0) THEN
-                        SET payment_response = 'rejected';
-                    END IF;
-
-                    SET order_number = (SELECT order_number FROM ecommerce_sales_headers WHERE id = OLD.sales_header_id);
+                    SET orderNumber = (SELECT order_number FROM ecommerce_sales_headers WHERE id = OLD.sales_header_id);
 
 
-                    INSERT INTO cms_activity_logs (created_by, activity_type, dashboard_activity, activity_desc, activity_date, db_table,reference) VALUES(NEW.user_id, payment_response, concat(payment_response, ' a payment'), concat(payment_response, ' the payment for order # ',order_number), NOW(), 'ecommerce_sales_headers',OLD.id);
+                    INSERT INTO cms_activity_logs (created_by, activity_type, dashboard_activity, activity_desc, activity_date, db_table,reference) VALUES(NEW.user_id, CASE WHEN NEW.is_verify = 1 THEN 'approved' ELSE 'rejected' END, CASE WHEN NEW.is_verify = 1 THEN 'approved a payment' ELSE 'rejected a payment' END, CASE WHEN NEW.is_verify = 1 THEN concat('approved the payment of order # ',orderNumber) ELSE concat('rejected the payment for order # ',orderNumber) END, NOW(), 'ecommerce_sales_headers',OLD.id);
                 END IF;        
 
             END"

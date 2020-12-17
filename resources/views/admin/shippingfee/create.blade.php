@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="d-block">Name*</label>
+                        <label class="d-block">Zone Name*</label>
                         <input required type="text" name="name" id="name" value="{{ old('name')}}" class="form-control @error('name') is-invalid @enderror" maxlength="150">
                         @hasError(['inputName' => 'name'])
                         @endhasError
@@ -43,18 +43,32 @@
 
                     <div id="local_input">
                         <div class="form-group">
-                            <label class="d-block">Province*</label>
-                            <select class="form-control" name="province" id="province" required>
-                                <option value="">-- Select Province --</option>
-                                @foreach($provinces as $province)
-                                    <option value="{{$province->id}}">{{$province->province}}</option>
-                                @endforeach
+                            <label class="d-block">Areas*</label>
+                            <select class="form-control" name="areas" id="areas" required>
+                                <option value="">-- Select Areas --</option>
+                                <option value="metro manila">Metro Manila</option>
+                                <option value="rizal">Rizal</option>
+                                <option value="cavite">Cavite</option>
+                                <option value="laguna">Laguna</option>
+                                <option value="luzon">Luzon</option>
+                                <option value="visayas">Visayas</option>
+                                <option value="mindanao">Mindanao</option>
                             </select>
                         </div>
 
                         <div class="form-group">
+                            <div class="custom-control custom-switch @error('is_nearby') is-invalid @enderror">
+                                <input type="checkbox" class="custom-control-input" name="is_nearby" {{ (old("is_nearby") ? "checked":"") }} id="customSwitch1">
+                                <label class="custom-control-label" id="label_visibility" for="customSwitch1">
+                                    Nearby City/Metro Manila
+                                </label>
+                            </div>
+                            <small>Check to allow Same Day Delivery shipping option for these zone/area.</small>
+                        </div>
+
+                        <div class="form-group">
                             <label class="d-block">Rate*</label>
-                            <input type="number" name="rate" id="rate" value="{{ old('rate','0.00')}}" step="0.01" class="form-control @error('rate') is-invalid @enderror" min="1" required>
+                            <input type="number" name="rate" id="rate" value="0" class="form-control @error('rate') is-invalid @enderror" min="1" required>
                             @hasError(['inputName' => 'rate'])
                             @endhasError
                         </div>
@@ -79,16 +93,26 @@
             $('.selectpicker').selectpicker();
         });
 
+        $('#areas').change(function(){
+            var area = $(this).val();
+
+            if(area == 'metro manila'){
+                $( "#customSwitch1" ).prop( "checked", true );
+            } else {
+                $( "#customSwitch1" ).prop( "checked", false );
+            }
+        });
+
         $('#type').change(function(){
             var type = $(this).val();
 
             if(type == 0){
                 $('#local_input').css('display','block');
-                $("#province").prop("required", true);
+                $("#areas").prop("required", true);
                 $("#rate").attr("required", true);
             } else {
                 $('#local_input').css('display','none');
-                $("#province").prop("required", false);
+                $("#areas").prop("required", false);
                 $("#rate").attr("required", false);
             }
         });

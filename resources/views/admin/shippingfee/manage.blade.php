@@ -23,7 +23,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4 mg-t-45">
+        <div class="col-md-7 mg-t-45">
             <form id="manageRateForm" action="{{ route('shippingfee_location.store') }}" method="post">
                 @csrf
                 @method('POST')
@@ -33,44 +33,54 @@
                     <input type="text" class="form-control" name="name" value="{{$sp->name}}">
                 </div>
 
+                <div class="form-group">
+                    @if($sp->is_international == 0)
+                    <label>Flat Rate*</label>
+                    @endif
+                    <input required @if($sp->is_international == 0) type="text" @else type="hidden" @endif class="form-control" name="rate" value="{{$sp->rate}}">
+                </div>
+
                 @if($sp->is_international == 0)
                 <div class="form-group">
-                    <label>Flat Rate*</label>
-                    <input required type="text" class="form-control" name="rate" value="{{$sp->rate}}">
+                    <div class="custom-control custom-switch @error('is_nearby') is-invalid @enderror">
+                        <input type="checkbox" class="custom-control-input" name="is_nearby" {{ ($sp->is_nearby_city == 1 ? "checked":"") }}  id="customSwitch1">
+                        <label class="custom-control-label" id="label_visibility" for="customSwitch1">
+                            Nearby City/Metro Manila
+                        </label>
+                    </div>
+                    <small>Check to allow Same Day Delivery shipping option for these zone/area.</small>
                 </div>
                 @endif
 
-                @php 
-                    if($sp->province > 0){
-                        $cities = \App\Cities::where('province',$sp->province)->orderBy('city','asc')->get();
-                    }
-                @endphp
                 <div class="form-group">
-                    <label>@if($sp->is_international == 0) Cities* @else Countries* @endif</label>
-                    <select class="form-control" id='custom-headers' multiple='multiple' name="selected_locations[]">
+                    <label>@if($sp->is_international == 0) Provinces* @else Countries* @endif</label>
+                    <select class="form-control selected_locations" id='custom-headers' multiple='multiple' name="selected_locations[]">
                         @if($sp->is_international == 0)
-                            @foreach($cities as $city)
+                            @if(in_array($sp->area,['luzon','visayas','mindanao']))
+
                                 @php
-                                    $unselected_location = \App\ShippingfeeLocations::where('shippingfee_id',$sp->id)->where('name',$city->city)->count();
-                                    $selected_location = \App\ShippingfeeLocations::where('name',$city->city)->count();
+                                    $provinces = \App\ShippingfeeLocations::provinces($sp->id);
                                 @endphp
+                                @foreach($provinces as $province)
+                                    <option {{ \App\ShippingfeeLocations::checkIfSelected($sp->id,$province->id) }} value="{{ $province->id }}">{{ $province->province }}</option>
+                                @endforeach
 
-                                @if($unselected_location == 0 && $selected_location == 1)
-                                    <option disabled value="{{ $city->city }}">{{ $city->city }}</option>
-                                @endif
+                            @else
 
-                                @if($unselected_location == 0 && $selected_location == 0)
-                                    <option value="{{ $city->city }}">{{ $city->city }}</option>
-                                @endif
+                                @php
+                                    $cities = \App\ShippingfeeLocations::cities($sp->id);
+                                @endphp
+                                @foreach($cities as $city)
+                                    <option {{ \App\ShippingfeeLocations::checkIfCitySelected($sp->id,$city->city,$sp->province) }} value="{{ $city->city }}">{{ $city->city }}</option>
+                                @endforeach
 
-                                @if($unselected_location == 1 && $selected_location == 1)
-                                    <option selected value="{{ $city->city }}">{{ $city->city }}</option>
-                                @endif
-                            @endforeach
+                            @endif
                         @else
+
                             @foreach(Setting::countries() as $country)                            
                                 <option value="{{$country->name}}" @if($sp->locations->contains('name',$country->name)) selected="selected" @endif>{{$country->name}}</option>
                             @endforeach
+
                         @endif
                     </select>
                 </div>                
@@ -78,12 +88,22 @@
                 <a class="btn btn-outline-secondary btn-sm btn-uppercase" href="{{ route('shippingfee.index') }}">Cancel</a>
             </form> 
         </div>
-        <div class="col-md-8">
+        <div class="col-md-5">
             <table width="100%" class="table table-borderless">
                 <tr>
-                    <td align="right"><a class="btn btn-xs btn-primary" href="#" onclick="$('#modal-new-weight').modal('show');">Add New</a>
-                   <a class="btn btn-xs btn-success" href="#" onclick="$('#modal-upload-csv-weight').modal('show');">Upload CSV</a>
-                    <a class="btn btn-xs btn-danger" href="#" onclick="delete_rates();">Delete Selected</a></td>
+                    <td align="right">
+                        @if (auth()->user()->has_access_to_route('shippingfee_weight.store'))
+                        <a class="btn btn-xs btn-primary" href="#" onclick="$('#modal-new-weight').modal('show');">Add New</a>
+                        @endif
+
+                        @if (auth()->user()->has_access_to_route('shippingfee_weight.upload_csv'))
+                        <a class="btn btn-xs btn-success" href="#" onclick="$('#modal-upload-csv-weight').modal('show');">Upload CSV</a>
+                        @endif
+
+                        @if (auth()->user()->has_access_to_route('shippingfee-weight.multiple-delete'))
+                        <a class="btn btn-xs btn-danger" href="#" onclick="delete_rates();">Delete Selected</a>
+                        @endif
+                    </td>
                 </tr>
             </table>
 
@@ -116,10 +136,13 @@
                         <td>{{ number_format($weight->rate,2) }}</td>                                
                         <td style="text-align:center">                                    
                             <nav class="nav table-options">
+                                @if (auth()->user()->has_access_to_route('shippingfee_weight.update'))
                                 <a class="nav-link" href="#" title="Edit Rate" onclick="edit_weight('{{$weight->id}}','{{$weight->weight}}','{{$weight->rate}}')"><i data-feather="edit"></i></a>
+                                @endif
+                                @if (auth()->user()->has_access_to_route('shippingfee-weight.single-delete'))
                                 <a class="nav-link" href="#" title="Delete Rate" onclick="single_delete_weight('{{$weight->id}}')"><i data-feather="trash"></i></a>
+                                @endif
                             </nav>
-                           
                         </td>
                     </tr>
                 @empty
@@ -133,17 +156,17 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
+        <div class="col-sm-7"></div>
+        <div class="col-sm-2">
             <div>
                 @if ($weights->firstItem() == null)
                     <p class="tx-gray-400 tx-12 d-inline">{{__('common.showing_zero_items')}}</p>
                 @else
-                    <p class="tx-gray-400 tx-12 d-inline">Showing {{$weights->firstItem()}} to {{$weights->lastItem()}} of {{$weights->total()}} weights</p>
+                    <p class="tx-gray-400 tx-12 d-inline">Showing {{$weights->firstItem()}} to {{$weights->lastItem()}} of {{$weights->total()}} items</p>
                 @endif
             </div>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
             <div class="text-md-right float-md-right">
                 <div>
                     {!! $weights->links() !!}
@@ -206,7 +229,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="d-block">Weight (Kg) *</label>
-                        <input type="number" name="weight" id="weight_edit" class="form-control" step="0.01">                       
+                        <input readonly type="number" name="weight" id="weight_edit" class="form-control" step="0.01">                       
                     </div>
                     <div class="form-group">
                         <label class="d-block">Rate *</label>
@@ -329,6 +352,25 @@
         </div>
     </div>
 </div>
+
+<div class="modal effect-scale" id="prompt-no-location" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">{{__('common.no_selected_title')}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Please select at least one (1) country or city.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('pagejs')
@@ -409,10 +451,14 @@
         $('#btnUpdateRate').click(function(){
             var count = $('#weight_counter').val();
 
-            if(count >= 1){
-                $('#manageRateForm').submit();
+            if (!$(".selected_locations option:selected").length) {
+                $('#prompt-no-location').modal('show');
             } else {
-                $('#prompt-no-weight').modal('show');
+                if(count >= 1){
+                    $('#manageRateForm').submit();
+                } else {
+                    $('#prompt-no-weight').modal('show');
+                }
             }
         });
 

@@ -94,34 +94,51 @@ class CheckoutController extends Controller
         if($request->country == 259){
             $city = Cities::find($request->city);
             $location = $city->city;
+            $sp_location = ShippingfeeLocations::where('name',$location)->where('province_id',$request->province);
             
         } else {
             $country  = Countries::find($request->country);
             $location = $country->name; 
+            $sp_location = ShippingfeeLocations::where('name',$location);
         }
 
-        $sp_location = ShippingfeeLocations::where('name',$location);
+        //$sp_location = ShippingfeeLocations::where('name',$location);
         
         if($sp_location->count() > 0){
+
             $data = $sp_location->first();
+            $is_location = 1;
 
             $sp        = Shippingfee::find($data->shippingfee_id);
-            $sp_weight = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$request->weight)->latest('id')->first();
+            $sp_weight = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$request->weight)->latest('id');
+
+            if($sp_weight->count() > 0){
+                $data_weight = $sp_weight->first();
+                
+                $weight_rate = $data_weight->rate;
+                
+            } else {
+                $weight_rate = 0;
+            }
+
 
             if($sp->is_outside_manila == 0){ // within manila
                 if($request->weight > 10){
-                    $rate = ($sp->rate+$sp_weight->rate);
+                    $rate = $sp->rate+$weight_rate;
                 } else {
                     $rate = $sp->rate;
                 }
             } else {
-                $rate = ($sp->rate+$sp_weight->rate);
+                $rate = $sp->rate+$weight_rate;
             }
+            
         } else {
+            $is_location = 0;
             $rate = 0;
         }
 
-        return response()->json(['rate' => $rate]);
+
+        return response()->json(['rate' => $rate, 'islocation' => $is_location]);
     }
 
     public function remove_product(Request $request)

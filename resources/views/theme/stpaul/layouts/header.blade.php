@@ -45,15 +45,15 @@
                     </div>
                     <div class="rd-navbar-panel__center">
                         <div class="rd-navbar-n-search rd-navbar-search_not-collapsable">
-                            <form class="rd-n-search" action="{{ route('product.front.search') }}" method="POST" data-search-live="rd-search-results-live">
-                                @csrf
-                                <input type="hidden" name="_method" value="POST">
-                                <input type="hidden" name="search" value="on">
+                            <form id="productSearchForm" class="rd-n-search" data-search-live="rd-search-results-live">
                                 <div class="form-wrap">
-                                    <input required class="form-input" id="rd-navbar-n-search-form-input" type="text" name="searchtxt" autocomplete="off" placeholder="Search a product">
+                                    <input required class="form-input" id="rd-navbar-n-search-form-input" type="search" name="keyword" autocomplete="off" placeholder="Search a product">
                                     <div class="rd-n-search-results-live" id="rd-n-search-results-live"></div>
+                                    <div style="display: none;" class="dropdown-menu" id="productSearchResult">
+                                        <a style="display: none;" class="dropdown-item" href="#" id="searching">Searching..</a>
+                                    </div>
                                 </div>
-                                <button class="rd-n-search__submit" type="submit"></button>
+                                <button class="rd-n-search__submit" type="button" id="searchbtn"><i class="fa fa-search text-white" id="search-icon"></i></button>
                             </form>
                         </div>
                     </div>
@@ -99,6 +99,7 @@
                                         <div class="acc-dropdown-menu dropdown-menu dropdown-menu-right " aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="{{ route('my-account.manage-account') }}"><span class="lnr lnr-user mr-2"></span>Account Information</a>
                                             <a class="dropdown-item" href="{{route('account-my-orders') }}"><span class="lnr lnr-user mr-2"></span>My Orders</a>
+                                            <a class="dropdown-item" href="{{route('account.manage-wishlist') }}"><span class="lnr lnr-user mr-2"></span>My Wishlist</a>
                                             <a class="dropdown-item" href="{{ route('customer.logout') }}"><span class="lnr lnr-exit mr-2"></span>Log Out</a>
                                         </div>
                                     </li>

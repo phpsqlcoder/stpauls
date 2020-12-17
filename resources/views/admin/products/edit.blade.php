@@ -58,9 +58,11 @@
                     <div class="form-group">
                         <label class="d-block">Category *</label>
                         <select required name="category_id" id="category_id" class="selectpicker mg-b-5" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
-                            <option value="0" >-- Select Category --</option>
-                            @foreach($categories as $category)
-                                <option value="{{$category->id}}" @if($product->category_id == $category->id) selected @endif>{{strtoupper($category->name)}}</option>
+                            @foreach ($parentCategories as $parentCategory)
+                                <option style="font-weight: bold;" @if($product->category_id == $parentCategory->id) selected @endif value="{{ $parentCategory->id }}">{{ strtoupper($parentCategory->name) }}</option>
+                                @if(count($parentCategory->child_categories))
+                                    @include('admin.products.select-subcategories-edit',['subcategories' => $parentCategory->child_categories])
+                                @endif
                             @endforeach
                         </select>
                         @hasError(['inputName' => 'category_id'])
@@ -73,10 +75,11 @@
                         @endhasError
                     </div>
                     <div class="form-group">
-                        <label>Discount (in Php) </label>
-                        <input class="form-control @error('discount') is-invalid @enderror" type="number" step="0.01" min="0.00" value="{{ old('discount', number_format($product->discount,2,'.','')) }}" name="discount" id="discount">
+                        <label>Discount (in Php)</label>
+                        <input @if($product->salestatus > 0) readonly @endif class="form-control @error('discount') is-invalid @enderror" type="number" step="0.01" min="0.00" value="{{ old('discount', number_format($product->discount,2,'.','')) }}" name="discount" id="discount">
                         @hasError(['inputName' => 'discount'])
                         @endhasError
+                        <small class="text-danger">Note: Discount is disabled if the product is included in the promo.</small>
                     </div>
                     <div class="form-group">
                         <label class="d-block">Short Description</label>
@@ -108,7 +111,7 @@
                     </div>
                     <div class="form-group">
                         <label class="d-block">Size</label>
-                        <input type="text" class="form-control" name="size" value="{{ old('size', $product->size) }}" min="0" step="1">
+                        <input type="text" class="form-control" name="size" value="{{ old('size', $product->size) }}" maxlength="250">
                     </div>
                     <div class="form-group">
                         <label class="d-block">Unit of Measurement *</label>
@@ -140,27 +143,21 @@
 
                     <div class="form-group">
                         <label>Editorial Reviews</label>
-                        <textarea rows="3" name="editorial_review" class="form-control">
-                            {{ old('editorial_review',$product->additional_info->editorial_reviews) }}
-                        </textarea>
+                        <textarea rows="3" name="editorial_review" class="form-control">{{ old('editorial_review',$product->additional_info->editorial_reviews) }}</textarea>
                     </div>
                 </div>
 
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label class="d-block" id="synopsisLabel">Synopsis</label>
-                        <textarea name="synopsis" rows="10" cols="80">
-                            {!! old('synopsis',$product->additional_info->synopsis) !!}
-                        </textarea>
+                        <textarea name="synopsis" rows="10" cols="80">{!! old('synopsis',$product->additional_info->synopsis) !!}</textarea>
                     </div>
                 </div>
 
                 <div class="col-lg-12">
                     <div class="form-group">
                         <label class="d-block" id="about_authorLabel">About Author</label>
-                        <textarea name="about_author" rows="10" cols="80">
-                            {!! old('about_author',$product->additional_info->about_author) !!}
-                        </textarea>
+                        <textarea name="about_author" rows="10" cols="80">{!! old('about_author',$product->additional_info->about_author) !!}</textarea>
                     </div>
                 </div>
 
@@ -236,7 +233,7 @@
                     <div class="form-group">
                         <label class="d-block">Display</label>
                         <div class="custom-control custom-switch @error('isfront') is-invalid @enderror">
-                            <input type="checkbox" class="custom-control-input" name="isfront" {{ (old("visibility") || $product->isfront ? "checked":"") }} id="customSwitch2">
+                            <input @if($product->is_recommended == 1) disabled @endif type="checkbox" class="custom-control-input" name="isfront" {{ (old("visibility") || $product->isfront == 1 ? "checked":"") }} id="customSwitch2">
                             <label class="custom-control-label" for="customSwitch2">Front Page</label>
                         </div>
                         @hasError(['inputName' => 'isfront'])
@@ -244,7 +241,7 @@
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-switch @error('is_featured') is-invalid @enderror">
-                            <input type="checkbox" class="custom-control-input" name="is_featured" {{ (old("visibility") || $product->is_featured ? "checked":"") }} id="customSwitch3">
+                            <input type="checkbox" class="custom-control-input" name="is_featured" {{ (old("is_featured") == "ON" || $product->is_featured == 1 ? "checked":"") }} id="customSwitch3">
                             <label class="custom-control-label" for="customSwitch3">Featured</label>
                         </div>
                         @hasError(['inputName' => 'is_featured'])
@@ -252,7 +249,7 @@
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-switch @error('is_recommended') is-invalid @enderror">
-                            <input type="checkbox" class="custom-control-input" name="is_recommended" {{ (old("visibility") || $product->is_recommended ? "checked":"") }} id="customSwitch4">
+                            <input @if($product->isfront == 1) disabled @endif type="checkbox" class="custom-control-input" name="is_recommended" {{ (old("is_recommended") == "ON" || $product->is_recommended == 1 ? "checked":"") }} id="customSwitch4">
                             <label class="custom-control-label" for="customSwitch4">Recommended</label>
                         </div>
                         @hasError(['inputName' => 'is_recommended'])
@@ -260,7 +257,7 @@
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-switch @error('for_pickup') is-invalid @enderror">
-                            <input type="checkbox" class="custom-control-input" name="for_pickup" {{ (old("visibility") || $product->for_pickup ? "checked":"") }} id="customSwitch5">
+                            <input type="checkbox" class="custom-control-input" name="for_pickup" {{ (old("for_pickup") == "ON" || $product->for_pickup == 1 ? "checked":"") }} id="customSwitch5">
                             <label class="custom-control-label" for="customSwitch5">Store Pick-up</label>
                         </div>
                         @hasError(['inputName' => 'for_pickup'])
@@ -430,6 +427,22 @@
                 }
                 else{
                     $('#label_visibility3').html('No');
+                }
+            });
+
+            $('#customSwitch2').change(function () {
+                if($('#customSwitch2').is(":checked")) {
+                    $('#customSwitch4').attr('disabled', true);
+                } else {
+                    $('#customSwitch4').attr('disabled', false);
+                }
+            });
+
+            $('#customSwitch4').change(function () {
+                if($('#customSwitch4').is(":checked")) {
+                    $('#customSwitch2').attr('disabled', true);
+                } else {
+                    $('#customSwitch2').attr('disabled', false);
                 }
             });
 

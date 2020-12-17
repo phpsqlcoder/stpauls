@@ -128,19 +128,28 @@
                                         <td>
                                             <nav class="nav table-options justify-content-begin">
                                                 @if($customer->status == 'APPROVED')
+                                                    @if (auth()->user()->has_access_to_route('loyalty.update-discount'))
                                                     <a class="nav-link" href="javascript:;" onclick="updateDiscount('{{$customer->id}}','{{$customer->discount_id}}')" title="Edit Discount"><i data-feather="edit"></i></a>
+                                                    @endif
                                                 @endif
 
                                                 <a href="javascript:;" class="nav-link" data-toggle="collapse" data-target="#customer_{{$customer->customer_id}}" class="accordion-toggle" title="View Transactions"><i data-feather="eye"></i></a>
 
                                                 @if($customer->status == 'PENDING')
-                                                <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i data-feather="settings"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="javascript:;" onclick="approved('{{$customer->id}}')"> Approved</a>
-                                                    <a class="dropdown-item" href="javascript:;" onclick="disapproved('{{$customer->id}}')"> Disapproved</a>
-                                                </div>
+                                                    @if (auth()->user()->has_access_to_route('loyalty.approved') || auth()->user()->has_access_to_route('loyalty.disapproved'))
+                                                        <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i data-feather="settings"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            @if (auth()->user()->has_access_to_route('loyalty.approved'))
+                                                            <a class="dropdown-item" href="javascript:;" onclick="approved('{{$customer->id}}')"> Approved</a>
+                                                            @endif
+
+                                                            @if (auth()->user()->has_access_to_route('loyalty.disapproved'))
+                                                            <a class="dropdown-item" href="javascript:;" onclick="disapproved('{{$customer->id}}')"> Disapproved</a>
+                                                            @endif
+                                                        </div>
+                                                    @endif
                                                 @endif
                                             </nav>
                                         </td>

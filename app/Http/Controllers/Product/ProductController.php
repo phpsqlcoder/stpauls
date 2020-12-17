@@ -25,6 +25,9 @@ use App\StPaulModel\OnSaleProducts;
 use App\InventoryReceiverHeader;
 use App\InventoryReceiverDetail;
 
+use App\EcommerceModel\Customer;
+use App\User;
+
 use Illuminate\Support\Facades\Input;
 class ProductController extends Controller
 {
@@ -54,7 +57,9 @@ class ProductController extends Controller
 
         $listing = new ListingHelper( 'desc', 10, 'updated_at', $customConditions);
 
-        $products = $listing->simple_search(Product::class, $this->searchFields);
+        $products   = $listing->simple_search(Product::class, $this->searchFields);
+        $parentcategories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get(); 
+        $subcategories    = ProductCategory::where('parent_id','>',0)->where('status','PUBLISHED')->get();
 
         // Simple search init data
         $filter = $listing->get_filter($this->searchFields);
@@ -65,7 +70,7 @@ class ProductController extends Controller
 
         $searchType = 'simple_search';
 
-        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByUser','advanceSearchData'));
+        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByUser','advanceSearchData','subcategories','parentcategories'));
 
     }
 
@@ -91,9 +96,12 @@ class ProductController extends Controller
         $uniqueProductByCategory = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'category_id');
         $uniqueProductByUser = $listing->get_unique_item_by_column('App\EcommerceModel\Product', 'created_by');
 
+        $parentcategories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get(); 
+        $subcategories    = ProductCategory::where('parent_id','>',0)->where('status','PUBLISHED')->get(); 
+
         $searchType = 'advance_search';
 
-        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByUser','advanceSearchData'));
+        return view('admin.products.index',compact('products', 'filter', 'searchType','uniqueProductByCategory','uniqueProductByUser','advanceSearchData','subcategories','parentcategories'));
     }
 
     /**
@@ -103,9 +111,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = ProductCategory::get();
+        $parentCategories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get();
 
-        return view('admin.products.create',compact('categories'));
+        return view('admin.products.create',compact('parentCategories'));
     }
 
     /**
@@ -201,7 +209,8 @@ class ProductController extends Controller
             'isbn' => $request->isbn,
             'editorial_reviews' => $request->editorial_review,
             'about_author' => $request->about_author,
-            'additional_info' => $request->add_info
+            'additional_info' => $request->add_info,
+            'user_id' => Auth::id()
         ]);
     }
 
@@ -240,9 +249,9 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        $categories = ProductCategory::get();
+        $parentCategories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get();
 
-        return view('admin.products.edit',compact('product','categories'));
+        return view('admin.products.edit',compact('product','parentCategories'));
     }
 
     /**
@@ -264,7 +273,6 @@ class ProductController extends Controller
             'meta_description' => 'max:250',
             'price' => 'required',
             'weight' => 'required',
-            'size' => 'max:30'
         ])->validate();
 
         $product = Product::findOrFail($id);
@@ -337,7 +345,8 @@ class ProductController extends Controller
             'isbn' => $request->isbn,
             'editorial_reviews' => $request->editorial_review,
             'about_author' => $request->about_author,
-            'additional_info' => $request->add_info
+            'additional_info' => $request->add_info,
+            'user_id' => Auth::id()
         ]);
     }
 
@@ -428,6 +437,22 @@ class ProductController extends Controller
         return back()->with('success',  __('standard.products.product.change_status_success', ['STATUS' => $request->status]));
     }
 
+    public function multiple_assign_category(Request $request)
+    {
+        $products = explode("|", $request->products);
+
+        foreach ($products as $product) {
+            Product::whereId($product)->update([
+                'category_id'  => $request->categoryid,
+                'created_by' => Auth::id()
+            ]);
+        }
+
+        return back()->with('success', 'Product category of the selected products has been updated.');
+    }
+
+    
+
     public function multiple_delete(Request $request)
     {
         $products = explode("|",$request->products);
@@ -436,7 +461,7 @@ class ProductController extends Controller
             Product::whereId($product)->update(['created_by' => Auth::id() ]);
             Product::whereId($product)->delete();
 
-            OnSaleProducts::where('product_id',$request->products)->forceDelete();
+            OnSaleProducts::where('product_id',$product)->forceDelete();
         }
 
         return back()->with('success', __('standard.products.product.multiple_delete_success'));
@@ -645,21 +670,49 @@ class ProductController extends Controller
                 // number of fields in the csv
                 $col_count = count($data);
                 if($row > 1){
-                    $insert = Product::create([
-                        'beta_id' => $data[0],
-                        'name' => $data[1],
-                        'slug' => $data[2],
-                        'price' => $data[3],
-                        'weight' => $data[4],
-                        'size' => $data[5],
-                        'description' => $data[6],
-                        'category_id' => 0,
-                        'currency' => 'PHP',
-                        'status' => 'PUBLISHED',
-                        'reorder_point' => 0,
-                        'created_by' => 1,
-                        'code' => 'PR'.str_pad($row, 6, '0', STR_PAD_LEFT)
-                    ]);
+                    $product = Product::where('beta_id',$data[0])->count();
+
+                    if($product > 0){
+
+                    } else {
+                        $product = Product::create([
+                            'beta_id' => $data[0],
+                            'name' => $data[1],
+                            'slug' => $data[2],
+                            'price' => $data[3],
+                            'discount' => $data[4],
+                            'weight' => $data[5],
+                            'size' => $data[8],
+                            'description' => $data[14],
+                            'category_id' => 0,
+                            'currency' => 'PHP',
+                            'status' => ($data[18] == 'TRUE') ? 'PUBLISHED' : 'PRIVATE',
+                            'reorder_point' => 0,
+                            'for_pickup' => ($data[19] == 1) ? 1 : 0,
+                            'is_recommended' => ($data[16] == 'TRUE') ? 1 : 0,
+                            'isfront' => 0,
+                            'photo' => $data[15],
+                            'created_by' => 1,
+                        ]);
+
+                        if($product){
+                            ProductAdditionalInfo::create([
+                                'product_id' => $product->id,
+                                'authors' => $data[6],
+                                'isbn' => $data[7],
+                                'materials' => $data[9],
+                                'no_of_pages' => $data[10],
+                                'sypnosis' => $data[11],
+                                'editorial_reviews' => $data[12],
+                                'about_author' => $data[13],
+                            ]);
+
+                            Product::find($product->id)->update([
+                                'code' => 'PR'.str_pad($product->id, 6, '0', STR_PAD_LEFT)
+                            ]);
+                        }
+                    }
+                    
                 }
 
 
@@ -668,71 +721,6 @@ class ProductController extends Controller
         }
 
         return back()->with('success','Products uploaded successfully.');
-
-    }
-
-    public function upload_additional(Request $request)
-    {
-
-        $csv = array();
-
-        if(($handle = fopen($request->csv, 'r')) !== FALSE) {
-            // necessary if a large csv file
-            set_time_limit(0);
-
-            $row = 0;
-            while(($data = fgetcsv($handle, 5000, ',')) !== FALSE) {
-                $row++;
-                // number of fields in the csv
-                $col_count = count($data);
-                if($row > 1){
-                    $product = Product::where('beta_id',$data[0])->first();
-
-                    $insert = ProductAdditionalInfo::create([
-                        'product_id' => $product->id,
-                        'authors' => $data[1],
-                        'isbn' => $data[2],
-                        'materials' => $data[3],
-                        'no_of_pages' => $data[4],
-                        'sypnosis' => $data[5],
-                        'editorial_reviews' => $data[6],
-                        'about_author' => $data[7],
-                    ]);
-                }
-
-
-            }
-            fclose($handle);
-        }
-
-        return back()->with('success','Products additional info has been uploaded.');
-
-    }
-
-    public function upload_featured(Request $request)
-    {
-
-        $csv = array();
-
-        if(($handle = fopen($request->csv, 'r')) !== FALSE) {
-            // necessary if a large csv file
-            set_time_limit(0);
-
-            $row = 0;
-            while(($data = fgetcsv($handle, 5000, ',')) !== FALSE) {
-                $row++;
-                // number of fields in the csv
-                $col_count = count($data);
-                if($row > 1){
-                    $product = Product::where('beta_id',$data[0])->update(['is_featured' => 1]);
-                }
-
-
-            }
-            fclose($handle);
-        }
-
-        return back()->with('success','Feautured product has been updated.');
 
     }
 
@@ -755,18 +743,16 @@ class ProductController extends Controller
                     $qry = Product::where('beta_id',$data[1]);
 
                     if($qry->count() > 0){
-                        $product = $qry->update(['category_id' => $data[0]]);
+
+                        $qry->update(['category_id' => $data[0]]);
                     }
                     
                 }
-
-
             }
             fclose($handle);
         }
 
         return back()->with('success','Product category has been updated.');
-
     }
 
     public function upload_photos(Request $request)
@@ -804,7 +790,6 @@ class ProductController extends Controller
 
     public function upload_images(Request $request)
     {   
-
         foreach($request->file('images') as $file)
         {
             $qry = Product::where('photo',$file->getClientOriginalName());
@@ -825,14 +810,132 @@ class ProductController extends Controller
                 Storage::makeDirectory('/public/products/'.$product->id);
                 Storage::putFileAs('/public/products/'.$product->id, $file, $file->getClientOriginalName());
             }
-
-
-
         }
 
         return back()->with('success','Product images has been uploaded.');
 
     }
 
-    
+    public function upload_additional(Request $request)
+    {
+        $csv = array();
+
+        if(($handle = fopen($request->csv, 'r')) !== FALSE) {
+            // necessary if a large csv file
+            set_time_limit(0);
+
+            $row = 0;
+            while(($data = fgetcsv($handle, 5000, ',')) !== FALSE) {
+                $row++;
+                // number of fields in the csv
+                $col_count = count($data);
+                if($row > 1){
+
+                    $qry = Product::where('beta_id',$data[0])->first();
+
+                    ProductAdditionalInfo::create([
+                        'product_id' => $product->id,
+                        'authors' => $data[6],
+                        'isbn' => $data[7],
+                        'materials' => $data[9],
+                        'no_of_pages' => $data[10],
+                        'sypnosis' => $data[11],
+                        'editorial_reviews' => $data[12],
+                        'about_author' => $data[13],
+                    ]);
+                }
+
+
+            }
+            fclose($handle);
+        }
+
+        return back()->with('success','Products additional info has been uploaded.');
+    }
+
+    public function upload_featured(Request $request)
+    {
+        $csv = array();
+
+        if(($handle = fopen($request->csv, 'r')) !== FALSE) {
+            // necessary if a large csv file
+            set_time_limit(0);
+
+            $row = 0;
+            while(($data = fgetcsv($handle, 5000, ',')) !== FALSE) {
+                $row++;
+                // number of fields in the csv
+                $col_count = count($data);
+                if($row > 1){
+                    $product = Product::where('beta_id',$data[0])->update(['is_featured' => 1]);
+                }
+
+
+            }
+            fclose($handle);
+        }
+
+        return back()->with('success','Feautured product has been updated.');
+    }
+
+    public function upload_customers(Request $request)
+    {
+        $csv = array();
+
+        if(($handle = fopen($request->csv, 'r')) !== FALSE) {
+            // necessary if a large csv file
+            set_time_limit(0);
+
+            $row = 0;
+            while(($data = fgetcsv($handle, 5000, ',')) !== FALSE) {
+                $row++;
+                // number of fields in the csv
+                $col_count = count($data);
+                if($row > 1){
+
+                    $qry = User::where('email',$data[1]);
+
+                    if($qry->count() == 0){
+                        $customer = User::create([
+                            'name' => $data[3].' '.$data[4],
+                            'email' => $data[1],
+                            'firstname' => $data[3],
+                            'lastname' => $data[4],
+                            'email_verified_at' => NULL,
+                            'password' => $data[2],
+                            'role_id' => 3,
+                            'is_active' => $data[9],
+                            'user_id' => 1,
+                            'remember_token' => str_random(60),
+                            'fromMigration' => 1
+                        ]);
+
+                        if($customer){
+                            Customer::create([
+                                'firstname' => $data[3],
+                                'lastname' => $data[4],
+                                'email' => $data[1],
+                                'address' => $data[5],
+                                'city' => $data[6],
+                                'province' => $data[7],
+                                'is_active' => $data[9],
+                                'user_id' => 1,
+                                'customer_id' => $customer->id,
+                                'country' => $data[8]
+
+                            ]);
+                        }
+                        
+                    }
+                    
+                }
+
+
+            }
+            fclose($handle);
+        }
+
+        return back()->with('success','Product photo has been updated.');
+
+    }
 }

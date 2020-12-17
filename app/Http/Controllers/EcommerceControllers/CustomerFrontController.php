@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\EcommerceControllers;
 
 
+use App\MailingListModel\Subscriber;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,8 @@ use App\Deliverablecities;
 use App\Provinces;
 use App\Cities;
 
+use App\Rules\RecaptchaRule;
+
 class CustomerFrontController extends Controller
 {
 
@@ -31,7 +34,7 @@ class CustomerFrontController extends Controller
 
         $page = new Page();
         $page->name = 'Sign Up';
-        
+
         $socialData = $request;
 
         return view('theme.stpaul.ecommerce.customer.sign-up',compact('page','socialData'));
@@ -41,7 +44,7 @@ class CustomerFrontController extends Controller
     public function ajax_cities($id)
     {
 
-        $data = Cities::where('province',$id)->get();
+        $data = Cities::where('province',$id)->orderBy('city','asc')->get();
 
         return response($data);
     }
@@ -54,10 +57,10 @@ class CustomerFrontController extends Controller
     }
 
     public function customer_sign_up(Request $request)
-    {   
+    {
         Validator::make($request->all(),[
-            'firstname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
-            'lastname' => 'required|max:150|regex:/^[\pL\s\-]+$/u',
+            'firstname' => 'required|max:150',
+            'lastname' => 'required|max:150',
             'email' => 'required|email|max:191|unique:users,email',
             'password' => [
                 'required',
@@ -69,9 +72,10 @@ class CustomerFrontController extends Controller
                 'regex:/[@$!%*#?&]/', // must contain a special character
             ],
             'password_confirmation' => 'required|same:password',
+            'g-recaptcha-response' => ['required', new RecaptchaRule]
         ])->validate();
 
-        
+
         // Login Credetials
         $customer = User::create([
             'email' => $request->email,
@@ -105,7 +109,13 @@ class CustomerFrontController extends Controller
                 'reactivate_request' => 0
             ]);
         }
-            
+
+        if ($request->has('subscribe')) {
+            $newSubscriber = $request->only('email', 'firstname', 'lastname');
+            $newSubscriber['code'] = Subscriber::generate_unique_code();
+            Subscriber::create($newSubscriber);
+        }
+
         return redirect(route('customer-front.login'))->with('success','Registration Successful!');
 
     }
@@ -122,56 +132,72 @@ class CustomerFrontController extends Controller
 
     public function customer_login(Request $request)
     {
-        $userCredentials = [
-            'email'    => $request->email,
-            'password' => $request->password
-        ];
+        $checkVerified = User::where('email',$request->email);
 
-        $cart = session('cart', []);
-        
-        if (Auth::attempt($userCredentials)) {
+        if($checkVerified->exists()){
+            $customer = $checkVerified->first();
 
-            if(auth::user()->role_id != 3){ // block admin from using this login form
-                Auth::logout();
-                return back()->with('error', 'Administrative account are not allowed to login in this portal.'); 
-            }
+            if($customer->email_verified_at == NULL && $customer->fromMigration == 1){
 
-            if(Auth()->user()->is_active == 0){
-                Auth::logout();
-                return back()->with('warning','account inactive');
-            }
+                $token = app('auth.password.broker')->createToken($customer);
+                return redirect(route('ecommerce.reset_password',$token.'?email='.$request->email));
 
-            foreach ($cart as $order) {
-                $product = Product::find($order['product_id']);
-                $cart = Cart::where('product_id', $order['product_id'])
-                    ->where('user_id', Auth::id())
-                    ->first();
+            } else {
 
-                if (!empty($cart)) {
-                    $newQty = $cart->qty + $order['qty'];
-                    $cart->update([
-                        'qty' => $newQty,
-                        'price' => $product->price,
-                    ]);
+                $userCredentials = [
+                    'email'    => $request->email,
+                    'password' => $request->password
+                ];
+
+                $cart = session('cart', []);
+
+                if (Auth::attempt($userCredentials)) {
+
+                    if(auth::user()->role_id != 3){ // block admin from using this login form
+                        Auth::logout();
+                        return back()->with('error', 'Administrative account are not allowed to login in this portal.');
+                    }
+
+                    if(Auth()->user()->is_active == 0){
+                        Auth::logout();
+                        return back()->with('warning','account inactive');
+                    }
+
+                    foreach ($cart as $order) {
+                        $product = Product::find($order['product_id']);
+                        $cart = Cart::where('product_id', $order['product_id'])
+                            ->where('user_id', Auth::id())
+                            ->first();
+
+                        if (!empty($cart)) {
+                            $newQty = $cart->qty + $order['qty'];
+                            $cart->update([
+                                'qty' => $newQty,
+                                'price' => $product->price,
+                            ]);
+                        } else {
+                            Cart::create([
+                                'product_id' => $order['product_id'],
+                                'user_id' => Auth::id(),
+                                'qty' => $order['qty'],
+                                'price' => $product->price,
+                            ]);
+                        }
+                    }
+
+                    session()->forget('cart');
+                    $cnt = Cart::where('user_id',Auth::id())->count();
+                    if($cnt > 0)
+                        return redirect(route('cart.front.show'));
+                    else
+                        return redirect(route('home'));
                 } else {
-                    Cart::create([
-                        'product_id' => $order['product_id'],
-                        'user_id' => Auth::id(),
-                        'qty' => $order['qty'],
-                        'price' => $product->price,
-                    ]);
+                    Auth::logout();
+                    return back()->with('error', __('auth.login.incorrect_input'));
                 }
             }
-
-            session()->forget('cart');
-            $cnt = Cart::where('user_id',Auth::id())->count();
-            if($cnt > 0)
-                return redirect(route('cart.front.show'));
-            else
-                return redirect(route('home'));
         } else {
-            Auth::logout();
-            return back()->with('error', __('auth.login.incorrect_input'));    
+            return back()->with('error', __('auth.login.incorrect_input'));
         }
 
     }

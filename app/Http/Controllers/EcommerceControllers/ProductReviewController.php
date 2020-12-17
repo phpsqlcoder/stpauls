@@ -16,7 +16,6 @@ class ProductReviewController extends Controller
 
     public function index($param = null)
     {
-        
         $listing = new ListingHelper('asc', 10, 'product_name');
 
         $reviews = $listing->simple_search(ProductReview::class, $this->searchFields);

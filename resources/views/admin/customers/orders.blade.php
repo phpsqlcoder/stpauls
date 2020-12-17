@@ -1,9 +1,5 @@
 @extends('admin.layouts.app')
 
-@section('pagetitle')
-    Customer Management
-@endsection
-
 @section('pagecss')
     <link href="{{ asset('lib/ion-rangeslider/css/ion.rangeSlider.min.css') }}" rel="stylesheet">
 @endsection

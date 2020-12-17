@@ -128,19 +128,25 @@
                                         @method('PUT')
                                         <div class="form-group">
                                             <label class="d-block">Old Password *</label>
-                                            <input type="password" name="current_password" class="form-control" required>
+                                            <div class="form-group position-relative">
+                                                <input type="password" name="current_password" class="form-control password-field" required>
+                                            </div>
                                             @hasError(['inputName' => 'current_password'])
                                             @endhasError
                                         </div>
                                         <div class="form-group">
                                             <label class="d-block">New Password * <span class="tx-color-03">(Min. 8, alphanumeric, at least 1 upper case, 1 number and 1 special character)</span></label>
-                                            <input type="password" name="new_password" class="form-control" required>
+                                            <div class="form-group position-relative">
+                                                <input type="password" name="new_password" class="form-control password-field" required>
+                                            </div>
                                             @hasError(['inputName' => 'new_password'])
                                             @endhasError
                                         </div>
                                         <div class="form-group">
                                             <label class="d-block">Confirm Password *</label>
-                                            <input type="password" class="form-control" name="confirm_password" required>
+                                            <div class="form-group position-relative">
+                                                <input type="password" class="form-control password-field" name="confirm_password" required>
+                                            </div>    
                                             @hasError(['inputName' => 'confirm_password'])
                                             @endhasError
                                         </div>

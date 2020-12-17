@@ -28,6 +28,16 @@
             background: #b82e24;
             color: #ffffff;
         }
+
+        .file-upload{display:block;text-align:center;font-family: Helvetica, Arial, sans-serif;font-size: 12px;}
+        .file-upload .file-select{display:block;border: 2px solid #dce4ec;color: #34495e;cursor:pointer;height:40px;line-height:40px;text-align:left;background:#FFFFFF;overflow:hidden;position:relative;}
+        .file-upload .file-select .file-select-button{background:#dce4ec;padding:0 10px;display:inline-block;height:40px;line-height:40px;}
+        .file-upload .file-select .file-select-name{line-height:40px;display:inline-block;padding:0 10px;}
+        .file-upload.active .file-select{border-color:#b82e24;transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-webkit-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;}
+        .file-upload.active .file-select .file-select-button{background:#b82e24;color:#FFFFFF;transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-webkit-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;}
+        .file-upload .file-select input[type=file]{z-index:100;cursor:pointer;position:absolute;height:100%;width:100%;top:0;left:0;opacity:0;filter:alpha(opacity=0);}
+        .file-upload .file-select.file-select-disabled{opacity:0.65;}
+
     </style>
 @endsection
 
@@ -170,8 +180,14 @@
                                 </div>
                                 <div class="form-group">
                                     <div id="mob_no" class="parsley-input">
-                                        <label>Mobile Number/s <span class="tx-danger">*</span></label>
+                                        <label>Mobile Number <span class="tx-danger">*</span></label>
                                         <input type="text" id="mobile_no" name="mobile_no" class="form-control" value="{{ $web->mobile_no }}" data-parsley-class-handler="#mob_no" required @htmlValidationMessage({{__('standard.empty_all_field')}})>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div id="viberNo" class="parsley-input">
+                                        <label>Viber Number <span class="tx-danger">*</span></label>
+                                        <input type="text" id="viber_no" name="viber_no" class="form-control" value="{{ $web->viber_no}}" data-parsley-class-handler="#viberNo" required @htmlValidationMessage({{__('standard.empty_all_field')}})>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -201,7 +217,7 @@
                     <!-- Social Tab -->
                     <div class="tab-pane fade" id="social" role="tabpanel" aria-labelledby="profile-tab">
                         <div class="col-lg-12 mg-t-15">
-                            <div class="col-md-6">
+                            <div class="col-md-10">
                                 <div class="form-group multiple-form-group">
                                     <label>Social Media Accounts</label>
                                     <form method="post" action="{{route('website-settings.update-media-accounts')}}">
@@ -215,10 +231,11 @@
                                                     <option @if($media->name == 'messenger') selected @endif value="messenger">Messenger</option>
                                                     <option @if($media->name == 'twitter') selected @endif value="twitter">Twitter</option>
                                                     <option @if($media->name == 'youtube') selected @endif value="youtube">Youtube</option>
-                                                    <option @if($media->name == 'viber') selected @endif value="viber">Viber</option>
                                                     <option @if($media->name == 'whatsapp') selected @endif value="whatsapp">Whatsapp</option>
                                                     <option @if($media->name == 'instagram') selected @endif value="instagram">Instagram</option>
                                                 </select>
+                                                &nbsp;
+                                                <input type="text" class="form-control" name="account_name[]" value="{{ $media->account_name }}">
                                                 &nbsp;
                                                 <input type="text" class="form-control" name="url[]" value="{{ $media->media_account }}">
                                                 <span class="input-group-btn">&nbsp;<button type="button" data-mid="{{$media->id}}" class="btn btn-danger remove-media">x</button></span>
@@ -234,10 +251,11 @@
                                                 <option value="messenger">Messenger</option>
                                                 <option value="twitter">Twitter</option>
                                                 <option value="youtube">Youtube</option>
-                                                <option value="viber">Viber</option>
                                                 <option value="whatsapp">Whatsapp</option>
                                                 <option value="instagram">Instagram</option>
                                             </select>
+                                            &nbsp;
+                                            <input type="text" class="form-control" name="account_name[]" placeholder="Account Name">
                                             &nbsp;
                                             <input type="text" class="form-control" name="url[]" placeholder="URL">
                                             <span class="input-group-btn">&nbsp;<button type="button" class="btn btn-sm btn-primary btn-add"><i>+</i>
@@ -306,13 +324,6 @@
                                         @enderror
                                         <div class="alert alert-danger" id="contentRequired" style="display: none;">The content field is required</div>
                                     </div>
-                                    {{--                                <div class="form-group">--}}
-                                    {{--                                    <label class="d-block">Display</label>--}}
-                                    {{--                                    <div class="custom-control custom-switch">--}}
-                                    {{--                                        <input type="checkbox" class="custom-control-input" id="customSwitch1">--}}
-                                    {{--                                        <label class="custom-control-label" for="customSwitch1">Light Version</label>--}}
-                                    {{--                                    </div>--}}
-                                    {{--                                </div>--}}
                                 </div>
 
                                 <div class="col-lg-12 mg-t-30">
@@ -326,7 +337,7 @@
                     <!-- Ecommerce Tab -->
                     <div class="tab-pane fade @if(session()->has('tabname') && session('tabname') == 'ecommerce') show active @endif" id="ecommerce" role="tabpanel" aria-labelledby="ecommerce-tab">
                         <div class="col-lg-12 mg-t-15">
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <h4>Payment Options</h4>
                                 <div class="form-group">
                                     <div class="parsley-input">                                            
@@ -345,12 +356,12 @@
 
                                             <table class="table table-borderless">
                                                 <thead>
-                                                    <th></th>
-                                                    <th>Bank Name</th>
-                                                    <th>Account Name</th>
-                                                    <th>Account #</th>
-                                                    <th>Branch</th>
-                                                    <th></th>
+                                                    <th width="5%"></th>
+                                                    <th width="20%">Bank Name</th>
+                                                    <th width="20%">Account Name</th>
+                                                    <th width="15%">Account #</th>
+                                                    <th width="30%">Branch</th>
+                                                    <th width="10%"></th>
                                                 </thead>
                                                 <tbody>
                                                     @foreach($banks as $bank)
@@ -386,12 +397,12 @@
 
                                             <table class="table table-borderless">
                                                 <thead>
-                                                    <th></th>
-                                                    <th>Name</th>
-                                                    <th>Account #</th>
-                                                    <th>Recipient</th>
-                                                    <th>QR Code</th>
-                                                    <th></th>
+                                                    <th width="5%"></th>
+                                                    <th width="20%">Name</th>
+                                                    <th width="15%">Account #</th>
+                                                    <th width="20%">Recipient</th>
+                                                    <th width="30">QR Code</th>
+                                                    <th width="10%"></th>
                                                 </thead>
                                                 <tbody>
                                                     @foreach($remittances as $remittance)
@@ -744,8 +755,20 @@
                 $('#span_file_size_'+action).css('display','none');
                 $('#span_file_type_'+action).css('display','none');
 
+                if(action == 'update'){
+                    $('#btnEditRemittance').attr('disabled',true); 
+                } else {
+                    $('#btnAddRemittance').attr('disabled',true); 
+                }
+                
+
                 $('#span_file_dimension_'+action).html(filename + ' has invalid dimensions.');
             } else {
+                if(action == 'update'){
+                    $('#btnEditRemittance').attr('disabled',false); 
+                } else {
+                    $('#btnAddRemittance').attr('disabled',false); 
+                }
                 $('#span_file_dimension_'+action).css('display','none');
             }
 
@@ -758,8 +781,19 @@
                 $('#span_file_dimension_'+action).css('display','none');
                 $('#span_file_size_'+action).css('display','none');
 
+                if(action == 'update'){
+                    $('#btnEditRemittance').attr('disabled',true); 
+                } else {
+                    $('#btnAddRemittance').attr('disabled',true); 
+                }
+
                 $('#span_file_type_'+action).html(filename+ ' has invalid extension');         
             } else {
+                if(action == 'update'){
+                    $('#btnEditRemittance').attr('disabled',false); 
+                } else {
+                    $('#btnAddRemittance').attr('disabled',false); 
+                }
                 $('#span_file_type_'+action).css('display','none');
             }
 
@@ -769,8 +803,20 @@
                 $('#span_file_dimension_'+action).css('display','none');
                 $('#span_file_type_'+action).css('display','none');
 
+                if(action == 'update'){
+                    $('#btnEditRemittance').attr('disabled',true); 
+                } else {
+                    $('#btnAddRemittance').attr('disabled',true); 
+                }
+
                 $('#span_file_size_'+action).html(filename+ ' exceeded the maximum file size');        
             } else {
+                if(action == 'update'){
+                    $('#btnEditRemittance').attr('disabled',false); 
+                } else {
+                    $('#btnAddRemittance').attr('disabled',false); 
+                }
+
                 $('#span_file_size_'+action).css('display','none');
             }
         }
@@ -913,6 +959,30 @@
             $('#prompt-add-remittance').modal('show');
         }
 
+        $('#qrfile_update').bind('change', function () {
+          var filename = $("#qrfile_update").val();
+          if (/^\s*$/.test(filename)) {
+            $(".file-upload").removeClass('active');
+            $("#noFile").text("No file chosen..."); 
+          }
+          else {
+            $(".file-upload").addClass('active');
+            $("#noFile").text(filename.replace("C:\\fakepath\\", "")); 
+          }
+        });
+
+        $('#qrfile_create').bind('change', function () {
+          var filename = $("#qrfile_create").val();
+          if (/^\s*$/.test(filename)) {
+            $(".file-upload").removeClass('active');
+            $("#noFileCreate").text("No file chosen..."); 
+          }
+          else {
+            $(".file-upload").addClass('active');
+            $("#noFileCreate").text(filename.replace("C:\\fakepath\\", "")); 
+          }
+        });
+
         function edit_remittance(id,name,qrcode,accountno,recipient)
         {
             $('#prompt-edit-remittance').modal('show');
@@ -920,7 +990,7 @@
             $('#remittance_account_no').val(accountno);
             $('#remittance_id').val(id);
             $('#remittance_name').val(name);
-            $('#qrcode').val(qrcode);
+            $('#noFile').html(qrcode);
         }
 
         function delete_remittance(id){

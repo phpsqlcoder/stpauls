@@ -28,10 +28,22 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        $listing = new ListingHelper();
+        if(isset($_GET['search']) && $_GET['search'] <> ''){
+            $listing = new ListingHelper( 'asc', 10, 'id'); 
+        } else {
+            $customConditions = [
+                [
+                    'field' => 'parent_id',
+                    'operator' => '=',
+                    'value' => '0',
+                    'apply_to_deleted_data' => false
+                ]
+            ];
+
+            $listing = new ListingHelper( 'asc', 10, 'id',$customConditions);
+        }
 
         $categories = $listing->simple_search(ProductCategory::class, $this->searchFields);
-
         // Simple search init data
         $filter = $listing->get_filter($this->searchFields);
         $searchType = 'simple_search';
@@ -47,9 +59,9 @@ class ProductCategoryController extends Controller
      */
     public function create()
     {
-        $productCategories = ProductCategory::where('status','PUBLISHED')->orderBy('name','asc')->get();
+        $parentCategories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get();
 
-        return view('admin.products.category_create', compact('productCategories'));
+        return view('admin.products.category_create', compact('parentCategories'));
     }
 
     /**
@@ -101,9 +113,9 @@ class ProductCategoryController extends Controller
     {
         $category = ProductCategory::findOrFail($id);
 
-        $productCategories = ProductCategory::where('status','PUBLISHED')->orderBy('name','asc')->get();
+        $parentCategories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get();
 
-        return view('admin.products.category_edit',compact('category', 'productCategories'));
+        return view('admin.products.category_edit',compact('category', 'parentCategories'));
     }
 
     /**
@@ -172,18 +184,6 @@ class ProductCategoryController extends Controller
 
         return back()->with('success', __('standard.products.category.single_delete_success'));
 
-    }
-
-    public function multiple_delete(Request $request)
-    {
-        $categories = explode("|",$request->categories);
-
-        foreach($categories as $category){
-            ProductCategory::whereId($category)->update(['created_by' => Auth::id() ]);
-            ProductCategory::whereId($category)->delete();
-        }
-
-        return back()->with('success', __('standard.products.category.multiple_delete_success'));
     }
 
     public function update_status($id,$status)

@@ -9,8 +9,8 @@
     <li class="nav-item @if (url()->current() == route('dashboard')) active @endif">
         <a href="{{ route('dashboard') }}" class="nav-link"><i data-feather="home"></i><span>Dashboard</span></a>
     </li>
-    <!--
-    @if (auth()->user()->has_access_to_pages_module())
+    
+    <!-- @if (auth()->user()->has_access_to_pages_module())
         <li class="nav-item with-sub @if (request()->routeIs('pages*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="layers"></i> <span>Pages</span></a>
             <ul>
@@ -62,8 +62,8 @@
                 @endif
             </ul>
         </li>
-    @endif
-    --->
+    @endif -->
+    
     <li class="nav-item with-sub @if (request()->routeIs('account*') || request()->routeIs('website-settings*') || request()->routeIs('audit*')) active show @endif">
         <a href="" class="nav-link"><i data-feather="settings"></i> <span>Settings</span></a>
         <ul>
@@ -234,11 +234,28 @@
             <ul>
                 <li @if (\Route::current()->getName() == 'branch.index' || \Route::current()->getName() == 'branch.edit') class="active" @endif><a href="{{ route('branch.index') }}">Manage Branches</a></li>
                 @if (auth()->user()->has_access_to_route('branch.create'))
-                    <li @if (\Route::current()->getName() == 'branch.create') class=" " @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
+                    <li @if (\Route::current()->getName() == 'branch.create') class="active" @endif><a href="{{ route('branch.create') }}">Create New Branch</a></li>
+                @endif
+
+                @if (auth()->user()->has_access_to_route('branch.areas'))
+                <li @if (\Route::current()->getName() == 'branch.areas' || \Route::current()->getName() == 'branch.area-edit') class="active" @endif><a href="{{ route('branch.areas') }}">Manage Areas</a></li>
+                @endif
+
+                @if (auth()->user()->has_access_to_route('branch.area-create'))
+                    <li @if (\Route::current()->getName() == 'branch.area-create') class="active" @endif><a href="{{ route('branch.area-create') }}">Create New Area</a></li>
                 @endif
             </ul>
         </li>
     @endif
+
+    <!-- @if (auth()->user()->has_access_to_module('branches'))
+        <li class="nav-item with-sub @if (request()->routeIs('admin.title-requests*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="box"></i> <span>Title Requests</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'admin.title-requests') class="active" @endif><a href="{{ route('admin.title-requests') }}">Manage Requests</a></li>
+            </ul>
+        </li>
+    @endif -->
 
     @if (auth()->user()->has_access_to_module('email_notifications') || auth()->user()->has_access_to_module('transactions.index'))
         <li class="nav-item with-sub @if (request()->routeIs('transaction-status*') || request()->routeIs('transactions*')) active show @endif">
@@ -260,6 +277,47 @@
             </ul>
         </li>
     @endif
+
+    <!-- @if (auth()->user()->has_access_to_module('wishlist'))
+        <li class="nav-item with-sub @if (request()->routeIs('wishlist*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="box"></i> <span>Wishlist</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'wishlist.index') class="active" @endif><a href="{{ route('wishlist.index') }}">Manage Wishlist</a></li>
+            </ul>
+        </li>
+    @endif
+
+    @if (auth()->user()->has_access_to_subscriber_group_module() || auth()->user()->has_access_to_subscriber_module() ||
+        auth()->user()->has_access_to_campaign_module() || auth()->user()->has_access_to_mailing_list_sent_items_module())
+        <li class="nav-item with-sub @if (request()->routeIs('mailing-list*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="credit-card"></i> <span>Mailing List</span></a>
+            <ul>
+                @if (auth()->user()->has_access_to_subscriber_module())
+                    <li @if (\Route::current()->getName() == 'mailing-list.subscribers.index' || \Route::current()->getName() == 'mailing-list.subscribers.edit') class="active" @endif><a href="{{ route('mailing-list.subscribers.index') }}">Manage Subscribers</a></li>
+                    @if(auth()->user()->has_access_to_route('mailing-list.subscribers.create'))
+                        <li @if (\Route::current()->getName() == 'mailing-list.subscribers.create') class="active" @endif><a href="{{ route('mailing-list.subscribers.create') }}">Create a Subscriber</a></li>
+                    @endif
+                    <li @if (\Route::current()->getName() == 'mailing-list.subscribers.unsubscribe') class="active" @endif><a href="{{ route('mailing-list.subscribers.unsubscribe') }}">Cancelled Subscription</a></li>
+                @endif
+                @if (auth()->user()->has_access_to_subscriber_group_module())
+                    <li @if (\Route::current()->getName() == 'mailing-list.groups.index' || \Route::current()->getName() == 'mailing-list.groups.edit') class="active" @endif><a href="{{ route('mailing-list.groups.index') }}">Manage Groups</a></li>
+                    @if(auth()->user()->has_access_to_route('mailing-list.groups.create'))
+                        <li @if (\Route::current()->getName() == 'mailing-list.groups.create') class="active" @endif><a href="{{ route('mailing-list.groups.create') }}">Create a Group</a></li>
+                    @endif
+                @endif
+                @if (auth()->user()->has_access_to_campaign_module())
+                    <li @if (\Route::current()->getName() == 'mailing-list.campaigns.index' || \Route::current()->getName() == 'mailing-list.campaigns.edit') class="active" @endif><a href="{{ route('mailing-list.campaigns.index') }}">Manage Campaigns</a></li>
+                    @if(auth()->user()->has_access_to_route('mailing-list.campaigns.create'))
+                        <li @if (\Route::current()->getName() == 'mailing-list.campaigns.create') class="active" @endif><a href="{{ route('mailing-list.campaigns.create') }}">Create a Campaign</a></li>
+                    @endif
+                @endif
+                @if(auth()->user()->has_access_to_mailing_list_sent_items_module())
+                    <li @if (\Route::current()->getName() == 'mailing-list.campaigns.sent-campaigns') class="active" @endif><a href="{{ route('mailing-list.campaigns.sent-campaigns') }}">Sent Items</a></li>
+                @endif
+            </ul>
+        </li>
+    @endif -->
+
 
     @if (auth()->user()->has_access_to_route('report.customer.list') || auth()->user()->has_access_to_route('report.product.list') || auth()->user()->has_access_to_route('report.product.list') || auth()->user()->has_access_to_route('report.product.best-selling') || auth()->user()->has_access_to_route('report.sales.list') || auth()->user()->has_access_to_route('report.sales.unpaid') || auth()->user()->has_access_to_route('report.sales.payments') || auth()->user()->has_access_to_route('report.inventory.list') || auth()->user()->has_access_to_route('report.inventory.reorder_point'))
         <li class="nav-label mg-t-25">Reports</li>

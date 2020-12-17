@@ -15,6 +15,7 @@ use App\EcommerceModel\PaymentOption;
 use App\EcommerceModel\SalesPayment;
 use App\EcommerceModel\DeliveryStatus;
 use App\EcommerceModel\SalesDetail;
+use App\User;
 
 class SalesFrontController extends Controller
 {
@@ -42,12 +43,16 @@ class SalesFrontController extends Controller
             'created_by' => Auth::id()
         ]);
 
+
         $sales = SalesHeader::find($request->header_id);
 
         $sales->update([
             'user_id' => Auth::id(),
             'delivery_status' => 'WAITING FOR VALIDATION'
         ]);
+
+        $admin = User::find(1);
+        $admin->send_payment_approval_request_email($sales);
             
             
         if(isset($request->attachment)){
@@ -57,7 +62,7 @@ class SalesFrontController extends Controller
             Storage::makeDirectory('/public/payments/'.$payment->id);
             Storage::putFileAs('/public/payments/'.$payment->id, $file, $file->getClientOriginalName());
         }
-        
+
         return redirect(route('order.received',$sales->order_number));
     }
 
@@ -118,6 +123,16 @@ class SalesFrontController extends Controller
     }
 
     public function globalpay_success($orderno)
+    {
+        $page = new Page();
+        $page->name = 'Success Payment';
+
+        $sales = SalesHeader::where('order_number',$orderno)->first();
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.customer.globalpay-success',compact('page','sales'));
+    }
+
+     public function payment_success($orderno)
     {
         $page = new Page();
         $page->name = 'Success Payment';

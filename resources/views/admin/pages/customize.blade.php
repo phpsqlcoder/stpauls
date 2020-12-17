@@ -36,30 +36,17 @@
                     @method('PUT')
                     <div class="form-group">
                         <label class="d-block">Page Title *</label>
-                        <input type="text" class="form-control @error('page_title') is-invalid @enderror" name="page_title" id="page_title" value="{{ old('page_title', $page->name) }}" required>
-                        @hasError(['inputName' => 'page_title'])
-                        @endhasError
-                        <small id="page_slug"><a target="_blank" href="{{env('APP_URL')}}/{{$page->slug}}">{{env('APP_URL')}}/{{$page->slug}}</a></small>
-                        @hasError(['inputName' => 'slug'])
-                        @endhasError
+                        <label class="d-block">{{ $page->name }}</label>
+                        <label>
+                            <small id="page_slug">
+                                <a target="_blank" href="{{ $page->get_url() }}">{{ $page->get_url() }}</a>
+                            </small>
+                        </label>
                     </div>
                     <div class="form-group">
                         <label class="d-block">Page Label *</label>
                         <input type="text" class="form-control @error('label') is-invalid @enderror" name="label" id="label" value="{{ old('label', $page->label) }}" required>
                         @hasError(['inputName' => 'label'])
-                        @endhasError
-                    </div>
-                    <div class="form-group">
-                        <label class="d-block">Parent Page</label>
-                        <select id="parentPage" class="selectpicker mg-b-5 @error('parent_page') is-invalid @enderror" name="parent_page" data-style="btn btn-outline-light btn-md btn-block tx-left" title="- None -" data-width="100%">
-                            <option value="0" @if (empty($page->parent_page_id)) selected @endif>- None -</option>
-                            @forelse($parentPages as $parentPage)
-                                <option value="{{$parentPage->id}}" {{ (old("parent_page",$page->parent_page_id) == $parentPage->id ? "selected":"") }}> {{$parentPage->name}} </option>
-                            @empty
-                            @endforelse
-
-                        </select>
-                        @hasError(['inputName' => 'parent_page'])
                         @endhasError
                     </div>
                     @php
@@ -84,17 +71,17 @@
 
                     <div class="form-group banner-image" style="{{($banner_type == 'banner_slider' ? 'display:none;':'')}}">
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input @error('page_image') is-invalid @enderror"  id="page_image" name="page_image" @if (!empty($page->image_url)) title="{{$page->get_image_file_name()}}" @endif>
+                            <input type="file" class="custom-file-input @error('image_url') is-invalid @enderror"  id="image_url" name="image_url" @if (!empty($page->image_url)) title="{{$page->get_image_file_name()}}" @endif>
                             <label class="custom-file-label" for="customFile" id="img_name">@if (empty($page->image_url)) Choose file @else {{$page->get_image_file_name()}} @endif</label>
                         </div>
                         <p class="tx-10">
                             Required image dimension: {{ env('SUB_BANNER_WIDTH') }}px by {{ env('SUB_BANNER_HEIGHT') }}px <br /> Maximum file size: 1MB <br /> Required file type: .jpeg .png
                         </p>
-                        @error('page_image')
+                        @error('image_url')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
                         <div id="image_div" @if($page->has_slider()) style="display:none;" @endif>
-                            <img src="{{ old('page_image', $page->image_url) }}" height="100" width="300" id="img_temp" alt="">  <br /><br />
+                            <img src="{{ old('image_url', $page->image_url) }}" height="100" width="300" id="img_temp" alt="">  <br /><br />
                             <a href="javascript:void(0)" class="btn btn-sm btn-danger remove-upload" >Remove Image</a>
                         </div>
                     </div>
@@ -102,21 +89,21 @@
                     <div class="form-group banner-slider" style="{{($banner_type == 'banner_image' ? 'display:none;':'')}}">
                         <div class="row">
                             <div class="col-md-10">
-                                <select class="selectpicker mg-b-5 @error('page_banner') is-invalid @enderror" id="page_banner" name="page_banner" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select album" data-width="100%">
-                                    <option value="0" @if (empty($page->album_id)) selected @endif>- None -</option>
+                                <select class="selectpicker mg-b-5 @error('album_id') is-invalid @enderror" id="album_id" name="album_id" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select album" data-width="100%">
+                                    <option value @if (empty($page->album_id)) selected @endif>- None -</option>
                                     @forelse($albums as $album)
-                                        <option value="{{$album->id}}" {{ (old("page_banner",$page->album_id) == $album->id ? "selected":"") }}> {{$album->name}} </option>
+                                        <option value="{{$album->id}}" {{ (old("album_id",$page->album_id) == $album->id ? "selected":"") }}> {{$album->name}} </option>
                                     @empty
                                     @endforelse
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            {{-- <div class="col-md-2">
                                 <div class="col-md-2" id="preview_btn_div" @if(!$page->has_slider() || empty($page->album_id)) style="display:none;" @endif>
                                     <a href="#" data-toggle="modal" data-target="#preview-banner" id="preview_btn" class="btn btn-xs btn-success" data-id="{{$page->album_id}}">Preview</a>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
-                        @hasError(['inputName' => 'page_banner'])
+                        @hasError(['inputName' => 'album_id'])
                         @endhasError
                     </div>
                 </div>
@@ -144,22 +131,22 @@
                 <div class="col-lg-6 mg-t-30">
                     <div class="form-group">
                         <label class="d-block">Title <code>(meta title)</code></label>
-                        <input type="text" class="form-control @error('seo_title') is-invalid @enderror" name="seo_title" value="{{ old('seo_title',$page->meta_title) }}">
-                        @hasError(['inputName' => 'seo_title'])
+                        <input type="text" class="form-control @error('meta_title') is-invalid @enderror" name="meta_title" value="{{ old('meta_title',$page->meta_title) }}">
+                        @hasError(['inputName' => 'meta_title'])
                         @endhasError
                         <p class="tx-11 mg-t-4">{{ __('standard.seo.title') }}</p>
                     </div>
                     <div class="form-group">
                         <label class="d-block">Description <code>(meta description)</code></label>
-                        <textarea rows="3" class="form-control @error('seo_description') is-invalid @enderror" name="seo_description">{!! old('seo_description',$page->meta_description) !!}</textarea>
-                        @hasError(['inputName' => 'seo_description'])
+                        <textarea rows="3" class="form-control @error('meta_description') is-invalid @enderror" name="meta_description">{!! old('meta_description', $page->meta_description) !!}</textarea>
+                        @hasError(['inputName' => 'meta_description'])
                         @endhasError
                         <p class="tx-11 mg-t-4">{{ __('standard.seo.description') }}</p>
                     </div>
                     <div class="form-group">
                         <label class="d-block">Keywords <code>(meta keywords)</code></label>
-                        <textarea rows="3" class="form-control @error('seo_keywords') is-invalid @enderror" name="seo_keywords">{!! old('seo_keywords',$page->meta_keyword) !!}</textarea>
-                        @hasError(['inputName' => 'seo_keywords'])
+                        <textarea rows="3" class="form-control @error('meta_keyword') is-invalid @enderror" name="meta_keyword">{!! old('meta_keyword', $page->meta_keyword) !!}</textarea>
+                        @hasError(['inputName' => 'meta_keyword'])
                         @endhasError
                         <p class="tx-11 mg-t-4">{{ __('standard.seo.keywords') }}</p>
                     </div>
@@ -243,15 +230,12 @@
 
         $(function() {
             $('.selectpicker').selectpicker();
-
-            has_none_option("parentPage", "{{$page->parent_page_id}}");
-            has_none_option("page_banner", "{{$page->album_id}}");
         });
 
         /**  START Slider Preview **/
-        $('#page_banner').on('change', function() {
-            $("#preview_btn").data("id", $('#page_banner').val());
-            if($('#page_banner').val() && $('#page_banner').val() > 0){
+        $('#album_id').on('change', function() {
+            $("#preview_btn").data("id", $('#album_id').val());
+            if($('#album_id').val() && $('#album_id').val() > 0){
                 $('#preview_btn_div').show();
             } else {
                 $('#preview_btn_div').hide();
@@ -314,40 +298,6 @@
             }
         });
 
-
-        /** Generation of the page slug **/
-        function get_page_slug() {
-            var url = $('#page_title').val();
-            var parentPage = $('#parentPage').val();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
-                }
-            })
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('pages.get_slug') }}",
-                data: {url: url, parentPage: parentPage}
-            })
-
-                .done(function (response) {
-
-                    slug_url = '{{env('APP_URL')}}/' + response;
-                    $('#page_slug').html("<a target='_blank' href='" + slug_url + "'>" + slug_url + "</a>");
-
-                });
-        }
-
-        $('#parentPage').change(function(){
-            get_page_slug();
-        });
-
-        $('#page_title').change(function(){
-            get_page_slug();
-        });
-
-
         /** Handles the page banner functions **/
         $('.page_banner_btn').click(function(){
 
@@ -359,8 +309,8 @@
             else{
 
                 /** reset the input boxes **/
-                $('#page_image').val('');
-                $('#page_banner').val('');
+                $('#image_url').val('');
+                $('#album_id').val('');
                 $('#image_div').hide();
                 $('#img_name').html('Choose file');
 
@@ -371,8 +321,8 @@
                     $("#banner_image").removeClass("active");
                     $("#banner_slider").addClass("active");
 
-                    // $("#page_banner").prop('required',true);
-                    // $("#page_image").prop('required',false);
+                    // $("#album_id").prop('required',true);
+                    // $("#image_url").prop('required',false);
 
                     $(".banner-image").hide();
                     $(".banner-slider").show();
@@ -384,16 +334,14 @@
                     $("#banner_slider").removeClass("active");
                     $("#banner_image").addClass("active");
 
-                    // $("#page_image").prop('required',true);
-                    // $("#page_banner").prop('required',false);
+                    // $("#image_url").prop('required',true);
+                    // $("#album_id").prop('required',false);
 
                     $(".banner-slider").hide();
                     $(".banner-image").show();
 
                 }
             }
-
-
         });
 
         function readURL(file) {
@@ -401,7 +349,7 @@
 
             reader.onload = function(e) {
                 $('#img_name').html(file.name);
-                $('#page_image').attr('title', file.name);
+                $('#image_url').attr('title', file.name);
                 $('#img_temp').attr('src', e.target.result);
             }
 
@@ -409,7 +357,7 @@
             $('#image_div').show();
         }
 
-        $("#page_image").change(function(evt) {
+        $("#image_url").change(function(evt) {
             validate_images(evt, readURL);
         });
 
@@ -420,8 +368,8 @@
         $('#btnRemove').on('click', function() {
             $('#editForm').prepend('<input type="hidden" name="delete_image" value="1"/>');
             $('#img_name').html('Choose file');
-            $('#page_image').removeAttr('title');
-            $('#page_image').val('');
+            $('#image_url').removeAttr('title');
+            $('#image_url').val('');
             $('#img_temp').attr('src', '');
             $('#image_div').hide();
             $('#prompt-remove').modal('hide');

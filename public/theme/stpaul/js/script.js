@@ -13,7 +13,6 @@
     }
 })(jQuery);
 
-
 // @description FadeOut to Next Page
 
 $(function () {
@@ -43,20 +42,28 @@ $(function () {
         if (href.indexOf("storage/products/") > 0) {
             return;
         }
-        if (!href || href[0] === "#") {
+        if (
+            href.indexOf("#pills-book") == 0 ||
+            href.indexOf("#pills-bible") == 0 ||
+            href.indexOf("#pills-devotional") == 0
+        ) {
+            return;
+        }
+        if (!href) {
             return;
         }
 
         setTimeout(function () {
-            $("html").fadeOut(function () {
+            if (href[0] === "#") {
                 window.location = href;
-            });
+            } else {
+                $("html").fadeOut(function () {
+                    window.location = href;
+                });
+            }
         });
     });
 });
-
-
-
 
 // jQuery for page scrolling feature - requires jQuery Easing plugin
 
@@ -65,9 +72,10 @@ $(function () {
         var $anchor = $(this);
         $("html, body")
             .stop()
-            .animate({
-                scrollTop: $($anchor.attr("href")).offset().top
-            },
+            .animate(
+                {
+                    scrollTop: $($anchor.attr("href")).offset().top,
+                },
                 1500,
                 "easeInOutExpo"
             );
@@ -77,18 +85,16 @@ $(function () {
         var $anchor = $(this);
         $("html, body")
             .stop()
-            .animate({
-                scrollTop: $($anchor.attr("href")).offset().top
-            },
+            .animate(
+                {
+                    scrollTop: $($anchor.attr("href")).offset().top,
+                },
                 1500,
                 "easeInOutExpo"
             );
         event.preventDefault();
     });
 });
-
-
-
 
 // jQuery for Side Menu feature
 
@@ -100,9 +106,7 @@ $(function () {
     });
 
     $(".side-menu li").each(function () {
-        $(this)
-            .parents("ul")
-            .css("display", "block");
+        $(this).parents("ul").css("display", "block");
         $(this)
             .parents("ul")
             .next(".dropdown-append")
@@ -110,9 +114,7 @@ $(function () {
     });
 
     $(".side-menu .active").each(function () {
-        $(this)
-            .parents("ul")
-            .css("display", "block");
+        $(this).parents("ul").css("display", "block");
         $(this)
             .parents("ul")
             .next(".dropdown-append")
@@ -120,15 +122,10 @@ $(function () {
     });
 
     $(".dropdown-append").on("click", function () {
-        $(this)
-            .prev("ul")
-            .slideToggle(300);
+        $(this).prev("ul").slideToggle(300);
         $(this).toggleClass("dropdown-open");
     });
 });
-
-
-
 
 // jQuery for Jump to Top
 
@@ -143,9 +140,6 @@ $(window).on("scroll", function () {
 $("#top").on("click", function () {
     $("html, body").animate({ scrollTop: 0 }, 500);
 });
-
-
-
 
 //Quantity
 
@@ -202,13 +196,10 @@ customQuantity();
 
 // jQuery for Removing Product on Cart
 
-$('a.remove').on("click", function (event) {
+$("a.remove").on("click", function (event) {
     event.preventDefault();
     $(this).parent().parent().hide(400);
 });
-
-
-
 
 // jQuery for closing Listing Filter Wrap
 
@@ -220,4 +211,56 @@ $(".rd-navbar-listing-close-toggle").on("click", function () {
 
 $(".rd-navbar-sl-close-toggle").on("click", function () {
     $(".sl-filter-wrap").removeClass("active");
+});
+
+// reCaptcha responsive
+
+$(function () {
+    var width = $(".g-recaptcha").parent().width();
+    if (width < 302) {
+        var scale = width / 302;
+        $(".g-recaptcha").css("transform", "scale(" + scale + ")");
+        $(".g-recaptcha").css("-webkit-transform", "scale(" + scale + ")");
+        $(".g-recaptcha").css("transform-origin", "0 0");
+        $(".g-recaptcha").css("-webkit-transform-origin", "0 0");
+    }
+});
+
+$(window).on("resize", function () {
+    var width = $(".g-recaptcha").parent().width();
+    if (width < 302) {
+        var scale = width / 302;
+        $(".g-recaptcha").css("transform", "scale(" + scale + ")");
+        $(".g-recaptcha").css("-webkit-transform", "scale(" + scale + ")");
+        $(".g-recaptcha").css("transform-origin", "0 0");
+        $(".g-recaptcha").css("-webkit-transform-origin", "0 0");
+    }
+});
+
+// Show/Hide Password input field
+
+// if ($("[id^='password-field']").length > 0) {
+//     for (let x = 1; x <= $("[id^='password-field']").length; x++) {
+//         $("#password-field" + x)
+//             .after("<span></span>")
+//             .next()
+//             .addClass("fa fa-fw fa-eye field-icon toggle-password")
+//             .attr("toggle", "#password-field" + x);
+//     }
+// }
+
+$(".password-field")
+    .after("<span></span>")
+    .next()
+    .addClass("fa fa-fw fa-eye field-icon toggle-password")
+    .attr("toggle", ".password-field");
+
+$(".toggle-password").on("click", function () {
+    $(this).toggleClass("fa-eye fa-eye-slash");
+    var input = $(this).prev();
+    if (input.attr("type") == "password") {
+        input.attr("type", "text");
+    } else {
+        input.attr("type", "password");
+    }
 });

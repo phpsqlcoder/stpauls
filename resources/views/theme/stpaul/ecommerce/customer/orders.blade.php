@@ -2,6 +2,7 @@
 
 @section('pagecss')
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/datatables/datatables.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/datatables/Responsive-2.2.3/css/responsive.dataTables.min.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
     <style>
         .pagination { margin-top: 0px; }
@@ -27,7 +28,43 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-                        <table id="salesTransaction" class="table table-md table-hover text-nowrap" style="width:100%">
+                        <h4>Legends:</h4>
+                        <div class="row legend">
+                            <div class="col-md-12">
+                                <div class="unit flex-row unit-spacing-xs">
+                                    <div class="unit__left"><span class="c-icon c-icon-peso-red"></span> -</div>
+                                    <div class="unit__body"><small><strong>Pay Now - Used to Submit Payment by Attaching proof of payment and other payment details.</strong></small></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                    <div class="unit__left"><span class="lnr lnr-bicycle font-weight-bold text-first-color"></span> -</div>
+                                    <div class="unit__body"><small><strong>Book a rider</strong></small></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                    <div class="unit__left"><span class="lnr lnr-car font-weight-bold text-first-color"></span> -</div>
+                                    <div class="unit__body"><small><strong>Track your order</strong></small></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                    <div class="unit__left"><span class="lnr lnr-eye font-weight-bold text-first-color"></span> -</div>
+                                    <div class="unit__body"><small><strong>View Order Details</strong></small></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="unit flex-row align-items-center unit-spacing-xs">
+                                    <div class="unit__left"><span class="lnr lnr-cross font-weight-bold text-first-color"></span> -</div>
+                                    <div class="unit__body"><small><strong>Cancel Order</strong></small></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="gap-20"></div>
+
+                        <table id="salesTransaction" class="table table-md table-hover text-nowrap stripe" style="width:100%">
                             <thead>
                                 <tr>
                                     <th scope="col">Order #</th>
@@ -48,40 +85,48 @@
                                     <td>{{ number_format($sale->gross_amount,2) }}</td>
                                     <td class="text-uppercase">{{ $sale->delivery_status }}</td>
                                     <td class="text-right">
+                                        <div class="order-info-btn-group">
                                         @if($sale->status != 'CANCELLED')
 
                                             @if($sale->delivery_status == 'Shipping Fee Validation')
                                                 <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
-                                                    <span class="lnr lnr-cross mr-2"></span>
+                                                    <span class="lnr lnr-cross"></span>
                                                 </a>
                                             @else
 
                                                 @if($sale->delivery_status == 'Waiting for Payment' && $payment_status == 0)
                                                     @if($sale->payment_method == 1)
                                                         <a href="" title="Pay now" onclick="globalpay('{{$sale->id}}','{{$sale->net_amount}}')" id="paybtn{{$sale->id}}">
-                                                            <span class="lnr lnr-inbox mr-2"></span>
+                                                            <span class="c-icon c-icon-peso"></span>
                                                         </a>
                                                     @else
                                                         <a href="" title="Pay now" onclick="pay('{{$sale->id}}','{{$sale->net_amount}}','{{$sale->payment_option}}')" id="paybtn{{$sale->id}}">
-                                                            <span class="lnr lnr-inbox mr-2"></span>
+                                                            <span class="c-icon c-icon-peso"></span>
                                                         </a>
                                                     @endif
-                                                    
-                                                    <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
-                                                        <span class="lnr lnr-cross mr-2"></span>
-                                                    </a>
                                                 @endif
                                             @endif
                                         @endif
 
                                         @if($sale->sdd_booking_type == 1 && $sale->rider_name == '' && $sale->delivery_status == 'Scheduled for Processing')
-                                        <a href="{{ route('transaction.add-rider',$sale->id) }}" title="Add Rider"><span class="lnr lnr-bicycle mr-2"></span></a>
+                                        <a class="translate-y" href="{{ route('transaction.add-rider',$sale->id) }}" title="Add Rider"><span class="lnr lnr-bicycle"></span></a>
                                         @endif
 
-                                        <a href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car mr-2"></span></a>
+                                        <a class="translate-y" href="#" title="Track your order" onclick="view_delivery_details('{{$sale->id}}','{{$sale->order_number}}')"><span class="lnr lnr-car"></span></a>
                                         <a href="{{ route('account-order-info',$sale->id) }}" title="View Order Summary">
                                             <span class="lnr lnr-eye"></span>
                                         </a>
+
+                                         @if($sale->status != 'CANCELLED')
+                                            @if($sale->delivery_status != 'Shipping Fee Validation')
+                                                @if($sale->delivery_status == 'Waiting for Payment' && $payment_status == 0)
+                                                    <a href="#" title="Cancel Order" id="cancelbtn{{$sale->id}}" onclick="cancelOrder('{{$sale->id}}')">
+                                                        <span class="lnr lnr-cross"></span>
+                                                    </a>
+                                                @endif
+                                            @endif
+                                        @endif
+                                        </div>
                                     </td>
                                 </tr>
                                 @empty
@@ -132,7 +177,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form autocomplete="off" action="{{ route('pay-order') }}" method="post" enctype="multipart/form-data">
+            <form id="paymentForm" autocomplete="off" action="{{ route('pay-order') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -156,7 +201,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="paymentBtn">Submit</button>
                 </div>
             </form>
         </div>
@@ -208,8 +253,8 @@
 @section('customjs')
     <script>
         $(function () {
-            $('#salesTransaction').DataTable({
-                "responsive": false,
+            var table = $('#salesTransaction').DataTable({
+                "responsive": true,
                 "scrollX": true,
                 "scrollCollapse": true,
                 "searching": false,
@@ -224,12 +269,47 @@
                         "next": "<i class='nr lnr-chevron-right'></i>"
                     }
                 },
-                "pageLength":10,
-                "dom": 'rtip'
+                "pageLength": 5,
+                "dom": 'rt<"text-left"i>p'
+            });
+
+            table.rows(':not(.parent)').nodes().to$().find('td:first-child').trigger('click');
+
+            $(window).resize(function () {
+                table.rows(':not(.parent)').nodes().to$().find('td:first-child').trigger('click');
+
+                $("#salesTransaction tr.child").hover(function() {
+                    $(this).find('td').css("background-color", "#dceefd");
+                    $(this).prev().css("background-color", "#dceefd");
+                },
+                function() {
+                    $(this).find('td').removeAttr("style");
+                    $(this).prev().removeAttr("style");
+                });
+            });
+
+            $('#salesTransaction').on( 'page.dt', function () {
+                setInterval(function(){
+                    table.rows(':not(.parent)').nodes().to$().find('td:first-child').trigger('click');
+                }, 500);
+            });
+
+            $("#salesTransaction tr.child").hover(function() {
+                $(this).find('td').css("background-color", "#dceefd");
+                $(this).prev().css("background-color", "#dceefd");
+            },
+            function() {
+                $(this).find('td').removeAttr("style");
+                $(this).prev().removeAttr("style");
             });
         });
     </script>
     <script>
+
+        $('#paymentForm').submit(function(){
+            $('#paymentBtn').prop('disabled',true);
+        });
+        
         var _URL = window.URL || window.webkitURL;
         $('#attachment').change(function () {
             var file = $(this)[0].files[0];

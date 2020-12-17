@@ -75,7 +75,9 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <label for="password">{{ __('Password') }}</label>
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                <div class="form-group position-relative">
+                                    <input id="password" type="password" class="form-control password-field @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                </div>
                                 @hasError(['inputName' => 'password'])
                                 @endhasError
                             </div>
@@ -84,7 +86,9 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <label for="password-confirm">{{ __('Confirm Password') }}</label>
-                                <input id="password-confirm" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" required autocomplete="new-password">
+                                <div class="form-group position-relative">
+                                    <input id="password-confirm" type="password" class="form-control password-field @error('password_confirmation') is-invalid @enderror" name="password_confirmation" required autocomplete="new-password">
+                                </div>
                                 @hasError(['inputName' => 'password_confirmation'])
                                 @endhasError
                             </div>

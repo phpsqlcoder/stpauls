@@ -1,7 +1,7 @@
 @extends('theme.'.env('FRONTEND_TEMPLATE').'.main')
 
 @section('pagecss')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.css') }}" />
 @endsection
 
 @section('content')
@@ -16,13 +16,13 @@
                     <div class="category-nav-1">
                     <ul class="nav nav-pills" id="pills-tab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="pills-book-tab" data-toggle="pill" href="#pills-book" role="tab" aria-controls="pills-home" aria-selected="true">Books</a>
+                            <a class="nav-link active" id="pills-book-tab" data-toggle="pill" href="#pills-book" role="tab" aria-controls="pills-book" aria-selected="true">Books</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="pills-bible-tab" data-toggle="pill" href="#pills-bible" role="tab" aria-controls="pills-profile" aria-selected="false">Bibles</a>
+                            <a class="nav-link" id="pills-bible-tab" data-toggle="pill" href="#pills-bible" role="tab" aria-controls="pills-bible" aria-selected="false">Bibles</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="pills-devotional-tab" data-toggle="pill" href="#pills-devotional" role="tab" aria-controls="pills-contact" aria-selected="false">Devotional</a>
+                            <a class="nav-link" id="pills-devotional-tab" data-toggle="pill" href="#pills-devotional" role="tab" aria-controls="pills-devotional" aria-selected="false">Devotional</a>
                         </li>
                     </ul>
                     <div class="product-nav">
@@ -42,21 +42,21 @@
                     <!-- Our Products Books Tab Content -->
                     <div class="tab-pane fade show active" id="pills-book" role="tabpanel" aria-labelledby="pills-book-tab">
                         <div id="book" class="slick-slider">
-                            @foreach(\App\EcommerceModel\Product::products_cat(3) as $book)
+                            @foreach(\App\EcommerceModel\Product::products_cat('books') as $book)
                             <div class="product-link">
                                 <div class="product-card">
                                     @if($book->discount > 0)
                                         <div class="product-discount">₱ {{ $book->discount }} LESS</div>
                                     @endif
                                     <a href="{{ route('product.front.show',$book->slug)}}">
-                                        <img src="{{ asset('storage/products/'.$book->photoPrimary) }}" alt="" />
+                                        <img class="product-img" src="{{ asset('storage/products/'.$book->photoPrimary) }}" alt="" />
                                         @if($book->discount > 0)
                                         <h3 class="product-price">
-                                            <div class="old" style="font-size:15px;">Php {{ number_format($book->price,2) }}</div>
+                                            <div class="old">Php {{ number_format($book->price,2) }}</div>
                                             Php {{ number_format($book->price-$book->discount,2) }}
                                         </h3>
                                         @else
-                                        <h3 class="product-price"><br>Php {{ number_format($book->price,2) }}</h3>
+                                        <h3 class="product-price"><div class="old"><br></div>Php {{ number_format($book->price,2) }}</h3>
                                         @endif
                                     </a>
                                     <p class="product-title">{{ $book->name }}</p> 
@@ -79,21 +79,21 @@
                     <!-- Our Products Bibles Tab Content -->
                     <div class="tab-pane fade" id="pills-bible" role="tabpanel" aria-labelledby="pills-bible-tab">
                         <div id="bible" class="slick-slider">
-                            @foreach(\App\EcommerceModel\Product::products_cat(4) as $bible)
+                            @foreach(\App\EcommerceModel\Product::products_cat('bible') as $bible)
                             <div class="product-link">
                                 <div class="product-card">
                                     @if($bible->discount > 0)
                                         <div class="product-discount">₱ {{ $bible->discount }} LESS</div>
                                     @endif
                                     <a href="p{{ route('product.front.show',$bible->slug)}}">
-                                        <img src="{{ asset('storage/products/'.$bible->photoPrimary) }}" alt="" />
+                                        <img class="product-img" src="{{ asset('storage/products/'.$bible->photoPrimary) }}" alt="" />
                                         @if($bible->discount > 0)
                                         <h3 class="product-price">
-                                            <div class="old" style="font-size:15px;">Php {{ number_format($bible->price,2) }}</div>
+                                            <div class="old">Php {{ number_format($bible->price,2) }}</div>
                                             Php {{ number_format($bible->price-$bible->discount,2) }}
                                         </h3>
                                         @else
-                                        <h3 class="product-price"><br>Php {{ number_format($bible->price,2) }}</h3>
+                                        <h3 class="product-price"><div class="old"><br></div>Php {{ number_format($bible->price,2) }}</h3>
                                         @endif
                                     </a>
                                     <p class="product-title">{{ $bible->name }}</p>
@@ -116,21 +116,21 @@
                     <!-- Our Products Devotional Tab Content -->
                     <div class="tab-pane fade" id="pills-devotional" role="tabpanel" aria-labelledby="pills-devotional-tab">
                         <div id="devotional" class="slick-slider">
-                            @foreach(\App\EcommerceModel\Product::products_cat(6) as $devo)
+                            @foreach(\App\EcommerceModel\Product::products_cat('devotionals') as $devo)
                             <div class="product-link">
                                 <div class="product-card">
                                     @if($devo->discount > 0)
                                         <div class="product-discount">₱ {{ $devo->discount }} LESS</div>
                                     @endif
                                     <a href="{{ route('product.front.show',$devo->slug)}}">
-                                        <img src="{{ asset('storage/products/'.$devo->photoPrimary) }}" alt="" />
+                                        <img class="product-img" src="{{ asset('storage/products/'.$devo->photoPrimary) }}" alt="" />
                                         @if($devo->discount > 0)
                                         <h3 class="product-price">
-                                            <div class="old" style="font-size:15px;">Php {{ number_format($devo->price,2) }}</div>
+                                            <div class="old">Php {{ number_format($devo->price,2) }}</div>
                                             Php {{ number_format($devo->price-$devo->discount,2) }}
                                         </h3>
                                         @else
-                                        <h3 class="product-price"><br>Php {{ number_format($devo->price,2) }}</h3>
+                                        <h3 class="product-price"><div class="old"><br></div>Php {{ number_format($devo->price,2) }}</h3>
                                         @endif
                                     </a>
                                     <p class="product-title">{{ $devo->name }}</p>
@@ -185,7 +185,7 @@
                 <!-- Recommended Titles Content -->
                 <div id="reco-title" class="slick-slider">
                     @php
-                        $recommended_titles = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->where('is_recommended',1)->orderBy('name','asc')->get(); 
+                        $recommended_titles = \App\EcommerceModel\Product::where('status', 'PUBLISHED')->where('is_recommended',1)->orderBy('updated_at','desc')->get(); 
                     @endphp
 
                     @foreach($recommended_titles->chunk(2) as $title)
@@ -196,14 +196,14 @@
                                     <div class="product-discount">₱ {{ $b['discount'] }} LESS</div>
                                     @endif
                                     <a href="{{ route('product.front.show',$b['slug'])}}">
-                                        <img src="{{ asset('storage/products/'.$b->photoPrimary) }}" alt="" />
+                                        <img class="product-img" src="{{ asset('storage/products/'.$b->photoPrimary) }}" alt="" />
                                         @if($b['discount'] > 0)
                                         <h3 class="product-price">
-                                            <div class="old" style="font-size:15px;">Php {{ number_format($b['price'],2) }}</div>
+                                            <div class="old">Php {{ number_format($b['price'],2) }}</div>
                                             Php {{ number_format($b['price']-$b['discount'],2) }}
                                         </h3>
                                         @else
-                                        <h3 class="product-price"><br>Php {{ number_format($b['price'],2) }}</h3>
+                                        <h3 class="product-price"><div class="old"><br></div>Php {{ number_format($b['price'],2) }}</h3>
                                         @endif
                                     </a>
                                     <p class="product-title">{{ $b['name'] }}</p>
@@ -256,14 +256,13 @@
                                     <div class="product-discount">{{ $product->discount }}% OFF</div>
                                 @endif
                                 <a href="{{ route('product.front.show',$product->details->slug)}}">
-                                    <img src="{{ asset('storage/products/'.$product->details->photoPrimary) }}" alt="" />
+                                    <img class="product-img" src="{{ asset('storage/products/'.$product->details->photoPrimary) }}" alt="" />
                                     <h3 class="product-price">
                                         @if($product['discount'] > 0)
-                                            <div class="old" style="font-size:15px;">Php {{ number_format($product->details->price,2) }}</div>
+                                            <div class="old">Php {{ number_format($product->details->price,2) }}</div>
                                         @else
-                                            <br>
+                                            <h3 class="product-price"><div class="old"><br></div>Php {{ $product->details->DiscountedPrice }}</h3>
                                         @endif
-                                        Php {{ $product->details->DiscountedPrice }}
                                     </h3>
                                 </a>
                                 <p class="product-title">{{ $product->details->name }}</p>
@@ -295,15 +294,15 @@
         <!-- END Home Partners Logo Area -->
 
         <!-- Home Payments Logo Area -->
-        @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.home-payments')
+        {{--@include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.home-payments')--}}
         <!-- END Home Payments Logo Area -->
     </main>
 @endsection
 
 @section('pagejs')
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.js') }}"></script>
 @endsection
+
 
 @section('customjs')
     <script>
@@ -321,11 +320,8 @@
                 },
                 type: "post",
                 url: "{{route('cart.add')}}",
-                // beforeSend: function(){
-                //     $("#loading-overlay").show();
-                // },
+  
                 success: function(returnData) {
-                    //$("#loading-overlay").hide();
                     if (returnData['success']) {
                         $('.cart-counter').html(returnData['totalItems']);
                         $('.counter').html(returnData['totalItems']);
@@ -333,7 +329,7 @@
                         swal({
                             toast: true,
                             position: 'center',
-                            title: "Product Added to your cart!",
+                            title: "Product added to your cart!",
                             type: "success",
                             showCancelButton: true,
                             timerProgressBar: true,
@@ -349,9 +345,7 @@
                                 window.location.href = "{{route('cart.front.show')}}";
                             } 
                             else {
-                                // $('#btn'+product).html('<i class="fa fa-cart-plus bg-warning text-light p-1 rounded" title="Already added on cart"></i>');
                                 swal.close();
-                               
                             }
                         });
                         

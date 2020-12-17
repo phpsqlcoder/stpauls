@@ -93,7 +93,6 @@
                             <thead>
                                 <th>Order #</th>
                                 <th>Order Date</th>
-                                <th>Date & Time Needed</th>
                                 <th>Payment Date</th>
                                 <th>Customer Name</th>
                                 <th>Total Amount</th>
@@ -107,17 +106,20 @@
                             @forelse($sales as $sale)
                                 @php
                                     $payment = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sale->id)->first();
-                                    $date_needed = $sale->pickup_date.' '.$sale->pickup_time;
                                 @endphp
                                 <tr>
                                     <td><strong>{{ $sale->order_number }}</strong></td>
                                     <td>{{ date('Y-m-d',strtotime($sale->created_at)) }}</td>
-                                    <td>{{ date('Y-m-d h:i A',strtotime($date_needed)) }}</td>
                                     <td>@if($sale->payment_status == 'PAID') {{$payment->payment_date}} @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
-                                        <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
+                                        @if($sale->delivery_status == 'Waiting for Approval')
+                                            <a href="{{ route('sales-transaction.view',$sale->id) }}" class="tx-semibold tx-danger">{{$sale->delivery_status}}</a>
+                                        @else
+                                            <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
+                                        @endif
+                                        
                                     </td>
                                     <td>{{ $sale->delivery_type }}</td>
                                     <td>
@@ -131,17 +133,26 @@
                                                     <i data-feather="settings"></i>
                                                 </a>
                                                 @endif
+
+                                                @if (auth()->user()->has_access_to_route('payment.add.store') || auth()->user()->has_access_to_route('sales-transaction.delivery_status') || auth()->user()->has_access_to_route('display.delivery-history'))
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     @if($sale->delivery_status != 'Waiting for Approval')
                                                         @if($sale->payment_status == 'UNPAID')
-                                                        <a class="dropdown-item" href="javascript:;" onclick="addPayment('{{$sale->id}}','{{$sale->net_amount}}');">Add Payment</a>
+                                                            @if (auth()->user()->has_access_to_route('payment.add.store'))
+                                                                <a class="dropdown-item" href="javascript:;" onclick="addPayment('{{$sale->id}}','{{$sale->net_amount}}');">Add Payment</a>
+                                                            @endif
                                                         @endif
-                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status('{{$sale->id}}')" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
 
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                        @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status'))
+                                                        <a class="dropdown-item" href="{{ route('sales.update-delivery-status',$sale->id) }}" title="Update Delivery Status">Update Delivery Status</a>
+                                                        @endif
+
+                                                        @if (auth()->user()->has_access_to_route('display.delivery-history'))
+                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                        @endif
                                                     @endif
-                                                    
                                                 </div>
+                                                @endif
                                             @endif
                                         </nav>
                                     </td>
@@ -249,11 +260,6 @@
 
 @section('customjs')
     <script>
-        function change_delivery_status(id){
-            $('#prompt-change-delivery-status').modal('show');
-            $('#del_id').val(id);
-        }
-
         function show_delivery_history(id){
             $.ajax({
                 type: "GET",

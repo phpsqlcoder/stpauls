@@ -1,9 +1,5 @@
 @extends('admin.layouts.app')
 
-@section('pagetitle')
-    Customer Management
-@endsection
-
 @section('pagecss')
     <link href="{{ asset('lib/bselect/dist/css/bootstrap-select.css') }}" rel="stylesheet">
 @endsection

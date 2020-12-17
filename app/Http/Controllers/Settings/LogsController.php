@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Permission;
 use Illuminate\Http\Request;
-use App\Helpers\ListingHelper;
+use Facades\App\Helpers\CMS4ListingHelper;
 
 use Illuminate\Support\Facades\Input;
 use App\Logs;
@@ -18,13 +18,12 @@ class LogsController extends Controller
         Permission::module_init($this, 'audit_logs');
     }
 
+
     public function index(Request $request)
     {
-        $listing = new ListingHelper('desc',10,'activity_date');
+        $logs = CMS4ListingHelper::sort_by('activity_date')->simple_search(Logs::class, $this->searchFields);
 
-        $logs = $listing->simple_search(Logs::class, $this->searchFields);
-
-        $filter = $listing->get_filter($this->searchFields);
+        $filter = CMS4ListingHelper::get_filter($this->searchFields);
 
         $searchType = 'simple_search';
 

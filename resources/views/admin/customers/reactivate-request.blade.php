@@ -64,13 +64,15 @@
                                         <td>{{ $customer->email }}</td>
                                         <td>
                                             <nav class="nav table-options">
-                                                <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <i data-feather="settings"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="javascript:;" onclick="approve('{{$customer->customer_id}}')">Approve</a>
-                                                    <a class="dropdown-item" href="javascript:;" onclick="disapprove('{{$customer->customer_id}}')">Disapprove</a>
-                                                </div>
+                                                @if (auth()->user()->has_access_to_route('customer.reactivate'))
+                                                    <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i data-feather="settings"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:;" onclick="approve('{{$customer->customer_id}}')">Approve</a>
+                                                        <a class="dropdown-item" href="javascript:;" onclick="disapprove('{{$customer->customer_id}}')">Disapprove</a>
+                                                    </div>
+                                                @endif
                                             </nav>
                                         </td>
                                     </tr>

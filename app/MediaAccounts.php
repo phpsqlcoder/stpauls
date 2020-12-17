@@ -8,7 +8,7 @@ class MediaAccounts extends Model
 {
     public $table = 'social_media';
 
-    protected $fillable = [ 'name', 'media_account', 'user_id',];
+    protected $fillable = [ 'name', 'media_account', 'user_id','account_name'];
 
     public $timestamps = false;
 
@@ -26,9 +26,6 @@ class MediaAccounts extends Model
 		        break;
 		    case "youtube":
 		        return "fa-youtube";
-		        break;
-		    case "viber":
-		        return "fa-viber";
 		        break;
 		    case "whatsapp":
 		        return "fa-whatsapp";

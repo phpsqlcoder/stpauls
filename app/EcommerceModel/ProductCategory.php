@@ -19,8 +19,13 @@ class ProductCategory extends Model
         return env('APP_URL')."/product-categories/".$this->slug;
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(ProductCategory::class, 'parent_id');
+    }
+
     public function child_categories() {
-        return  $this->hasMany(ProductCategory::class, 'parent_id');
+        return  $this->hasMany(ProductCategory::class, 'parent_id')->orderBy('name','asc');
     }
 
     public function products()
@@ -56,25 +61,55 @@ class ProductCategory extends Model
 
     public static function count_unsale_products($catid)
     {   
-        $products = DB::table('products')->where('status','PUBLISHED')->where('category_id',$catid)->get();
-
-        $count = 0;
-        foreach($products as $product){
-            $qry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$product->id)->exists();
-
-            if($qry){
-            } else {
-               $count += 1; 
-            } 
-        }
+        $count = Product::whereNotIn('id',function($query){
+                $query->select('product_id')->from('onsale_products')
+                ->join('promos','onsale_products.promo_id','=','promos.id')
+                ->where('promos.status','ACTIVE')
+                ->where('promos.is_expire',0);
+            })->where('status','PUBLISHED')->where('discount','<',1)->where('category_id',$catid)->count();
 
         return $count;
     }
 
-    public static function check_product_in_promo($promoId,$productId)
+    public static function categoryName($catId)
     {
-        $qry = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('onsale_products.promo_id',$promoId)->where('onsale_products.product_id',$productId)->count();
-        
-        return $qry; 
+        $qry = ProductCategory::find($catId);
+
+        return $qry->name;
+    }
+
+    public function getTotalSubAttribute()
+    {
+        $counter = 0;
+        $subcategories = [];
+        foreach($this->child_categories as $child){
+            $counter++;
+            foreach($child->child_categories as $sub){
+                $counter++;
+            }
+        }
+
+        return $counter;
+    }
+
+
+    public function getTotalProductsAttribute()
+    {
+        $products = Product::where('category_id',$this->id)->count();
+
+        return $products;
+    }
+
+    public function getCategoryLevelAttribute()
+    {
+        $parent = $this->parent;
+        $counter = 0;
+
+        while(!is_null($parent)) {
+            $parent = $parent->parent;
+            $counter++;
+        }
+
+        return $counter;
     }
 }

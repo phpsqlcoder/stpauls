@@ -47,7 +47,7 @@ class LoginController extends Controller
     {
         if (Auth::attempt($request->only(['email', 'password']))) {
 
-            if(auth::user()->role_id == 3){ // block customers from using this login form
+            if(auth::user()->role_id == 3 || auth::user()->is_active == 0){ // block customers from using this login form
                 Auth::logout();
                 return back()->with('unauthorize-login', 'Unauthorize login.'); 
             }

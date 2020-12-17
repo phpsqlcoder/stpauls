@@ -97,7 +97,11 @@ class Permission extends Model
             'branches' => 'Branches',
             'email_notifications' => 'Email Notifications',
             'transaction_status' => 'Transaction Status',
-            'reports' => 'Reports'
+            'reports' => 'Reports',
+	        'subscriber_group' => 'Subscriber Group',
+            'subscriber' => 'Subscriber',
+            'campaign' => 'Campaign',
+            'sent_item' => 'Sent Campaign',
         ];
     }
 }

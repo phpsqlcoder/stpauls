@@ -125,7 +125,7 @@ class DiscountController extends Controller
     public function single_delete(Request $request)
     {
         $discount = Discount::findOrFail($request->discounts);
-        $discount->update([ 'user' => Auth::id() ]);
+        $discount->update([ 'user_id' => Auth::id() ]);
         $discount->delete();
 
         return back()->with('success', __('standard.discount.single_delete_success'));

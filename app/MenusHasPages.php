@@ -54,8 +54,8 @@ class MenusHasPages extends Model
     {
         return $this->hasMany(MenusHasPages::class, 'parent_id', 'id');
     }
-	
-	public function sub_pages_by_order()
+
+    public function sub_pages_by_order()
     {
         return $this->sub_pages()->orderBy('page_order')->get();
     }

@@ -137,15 +137,19 @@ class RoleController extends Controller
     public function destroy(Request $request)
     {
         if ($request->role_id != 1) {
-            Role::find($request->role_id)->delete();
+            $role = Role::find($request->role_id);
+            $role->update(['created_by' => Auth::id()]);
+            $role->delete();
         }
 
         return back()->with('success',  __('standard.account_management.roles.delete_success'));
     }
 
     public function restore($id)
-    {
-        Role::withTrashed()->findOrFail($id)->restore();
+    {   
+        $role = Role::withTrashed()->findOrFail($id);
+        $role->update(['created_by' => Auth::id()]);
+        $role->restore();
 
         return back()->with('success', __('standard.account_management.roles.restore_success'));
     }

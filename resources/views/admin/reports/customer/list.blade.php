@@ -53,17 +53,17 @@
                     </td>
                     <td>{{$r->barangay}}</td>
                     <td>
-                        @if($r->province != '')
+                        @if($r->province > 0)
                             {{$r->provinces->province}}
                         @endif
                     </td>
                     <td>
-                        @if($r->city != '')
+                        @if($r->city > 0)
                             {{$r->cities->city}}
                         @endif
                     </td>
                     <td>
-                        @if($r->country != '')
+                        @if($r->country > 0)
                             {{$r->countries->name}}
                         @endif
                     </td>

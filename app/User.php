@@ -13,6 +13,11 @@ use App\Notifications\UserResetPasswordNotification;
 
 use App\Notifications\SendEmailNotification;
 use App\Notifications\SendAccountEmailNotification;
+use App\Notifications\SendOrderApprovedEmailNotification;
+use App\Notifications\SendPaymentApprovalRequestEmailNotification;
+use App\Notifications\SendCODApprovalRequestEmailNotification;
+use App\Notifications\SendOrderReceivedEmailNotification;
+use App\Notifications\SendCustomerCODApprovalRequestNotification;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -30,7 +35,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'email_verified_at', 'password', 'role_id', 'is_active', 'remember_token', 'firstname', 'lastname', 'avatar', 'user_id', 'isDeleted','mobile','phone','address_street','address_city','address_municipality','address_zip'
+        'name', 'email', 'email_verified_at', 'password', 'role_id', 'is_active', 'remember_token', 'firstname', 'lastname', 'avatar', 'user_id', 'isDeleted','mobile','phone','address_street','address_city','address_municipality','address_zip','fromMigration'
     ];
 
     /**
@@ -95,14 +100,14 @@ class User extends Authenticatable
 
     public static function activeTotalUser()
     {
-        $total = User::where('is_active','=',1)->count();
+        $total = User::where('role_id','<>',3)->where('is_active','=',1)->count();
 
         return $total;
     }
 
     public static function inactiveTotalUser()
     {
-        $total = User::where('is_active','=',0)->count();
+        $total = User::where('role_id','<>',3)->where('is_active','=',0)->count();
 
         return $total;
     }
@@ -126,7 +131,39 @@ class User extends Authenticatable
     }
 
 
+    public function send_order_approved_email($sales,$date)
+    {
+        $this->notify(new SendOrderApprovedEmailNotification($sales,$date));
+    }
 
+    public function send_payment_approval_request_email($sales)
+    {
+        $this->notify(new SendPaymentApprovalRequestEmailNotification($sales));
+    }
+
+    public function send_cod_approval_request_email($sales)
+    {
+        $this->notify(new SendCODApprovalRequestEmailNotification($sales));
+    }
+
+    public function send_customer_cod_approval_request_email($sales)
+    {
+        $this->notify(new SendCustomerCODApprovalRequestNotification($sales));
+    }
+
+    public function send_order_received_email($sales)
+    {
+        $this->notify(new SendOrderReceivedEmailNotification($sales));
+    }
+
+    
+
+    public function customer_send_reset_password_email()
+    {
+        $token = app('auth.password.broker')->createToken($this);
+
+        $this->notify(new CustomerResetPasswordNotification($token));
+    }
 
     public function send_email_notification($sales,$template)
     {
@@ -194,6 +231,26 @@ class User extends Authenticatable
     public function has_access_to_user_module()
     {
         return $this->has_access_to_module(array_keys(Permission::modules())[8]);
+    }
+    
+    public function has_access_to_subscriber_group_module()
+    {
+        return $this->has_access_to_module(array_keys(Permission::modules())[18]);
+    }
+
+    public function has_access_to_subscriber_module()
+    {
+        return $this->has_access_to_module(array_keys(Permission::modules())[19]);
+    }
+
+    public function has_access_to_campaign_module()
+    {
+        return $this->has_access_to_module(array_keys(Permission::modules())[20]);
+    }
+
+    public function has_access_to_mailing_list_sent_items_module()
+    {
+        return $this->has_access_to_module(array_keys(Permission::modules())[21]);
     }
 
     public function has_access_to_module($module)

@@ -58,9 +58,11 @@
                     <div class="form-group">
                         <label class="d-block">Category *</label>
                         <select required name="category_id" id="category_id" class="selectpicker mg-b-5 @error('category_id') is-invalid @enderror" value="{{ old('category_id') }}" data-style="btn btn-outline-light btn-md btn-block tx-left" title="Select category" data-width="100%">
-                            <option value="">-- Select Category --</option>
-                            @foreach($categories as $category)
-                                <option value="{{$category->id}}">{{strtoupper($category->name)}}</option>
+                            @foreach ($parentCategories as $parentCategory)
+                                <option style="font-weight: bold;" value="{{ $parentCategory->id }}">{{ strtoupper($parentCategory->name) }}</option>
+                                @if(count($parentCategory->child_categories))
+                                    @include('admin.products.select-subcategories',['subcategories' => $parentCategory->child_categories])
+                                @endif
                             @endforeach
                         </select>
                         @hasError(['inputName' => 'category_id'])
@@ -385,6 +387,22 @@
                 }
                 else{
                     $('#label_visibility').html('Private');
+                }
+            });
+
+            $('#customSwitch2').change(function () {
+                if($('#customSwitch2').is(":checked")) {
+                    $('#customSwitch4').attr('disabled', true);
+                } else {
+                    $('#customSwitch4').attr('disabled', false);
+                }
+            });
+
+            $('#customSwitch4').change(function () {
+                if($('#customSwitch4').is(":checked")) {
+                    $('#customSwitch2').attr('disabled', true);
+                } else {
+                    $('#customSwitch2').attr('disabled', false);
                 }
             });
 

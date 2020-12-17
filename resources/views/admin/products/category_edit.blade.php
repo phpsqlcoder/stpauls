@@ -40,17 +40,18 @@
                         <label class="d-block">Parent Category</label>
                         <select id="parentPage" class="selectpicker mg-b-5 @error('parent_page') is-invalid @enderror" name="parent_page" data-style="btn btn-outline-light btn-md btn-block tx-left" title="- None -" data-width="100%">
                             <option value="0" selected>- None -</option>
-                            @foreach ($productCategories as $productCategory)
-                                <option value="{{ $productCategory->id }}" @if ($productCategory->id == $category->parent_id) selected @endif>{{ $productCategory->name }}</option>
+                            @foreach ($parentCategories as $parentCategory)
+                                <option style="font-weight: bold;" @if($category->id == $parentCategory->id) selected @endif value="{{ $parentCategory->id }}">{{ strtoupper($parentCategory->name) }}</option>
+                                @if(count($parentCategory->child_categories))
+                                    @include('admin.products.select-subcategories-edit-category',['subcategories' => $parentCategory->child_categories])
+                                @endif
                             @endforeach
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label class="d-block">Description</label>
-                        <textarea rows="3" class="form-control @error('description') is-invalid @enderror" name="description" maxlength="250">
-                            {{ old('description',$category->description) }}
-                        </textarea>
+                        <textarea rows="3" class="form-control @error('description') is-invalid @enderror" name="description" maxlength="250">{{ old('description',$category->description) }}</textarea>
                         @hasError(['inputName' => 'description' ])
                         @endhasError
                     </div>

@@ -12,13 +12,15 @@ use App\InventoryReceiverDetail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\EcommerceModel\ProductCategory;
+use App\StPaulModel\OnSaleProducts;
 
 class Product extends Model
 {
     use SoftDeletes;
 
     public $table = 'products';
-    protected $fillable = [ 'code', 'category_id', 'name', 'slug', 'short_description', 'description', 'currency', 'price', 'size','weight', 'status', 'is_featured', 'uom', 'created_by', 'meta_title', 'meta_keyword', 'meta_description','zoom_image','reorder_point','discount','is_pickup','is_recommended','isfront','beta_id','photo'];
+    protected $fillable = [ 'code', 'category_id', 'name', 'slug', 'short_description', 'description', 'currency', 'price', 'size','weight', 'status', 'is_featured', 'uom', 'created_by', 'meta_title', 'meta_keyword', 'meta_description','zoom_image','reorder_point','discount','for_pickup','is_recommended','isfront','beta_id','photo'];
 
     public function get_url()
     {
@@ -33,6 +35,13 @@ class Product extends Model
     public function getPriceWithCurrencyAttribute()
     {
     	return " ".number_format($this->price,2);
+    }
+
+    public function getSaleStatusAttribute()
+    {
+        $count = OnSaleProducts::where('product_id',$this->id)->count();
+
+        return $count;
     }
 
     public function ratings()
@@ -54,20 +63,6 @@ class Product extends Model
     {
         return $this->belongsTo('\App\EcommerceModel\ProductAdditionalInfo','id','product_id');
     }
-
-    // public static function colors($value){
-
-    //     $colors = \DB::table('products_variations')->select('color')->distinct()->where('product_id',$value)->get();
-    //     return $colors;
-
-    // }
-
-    // public static function sizes($value){
-
-    //     $sizes = \DB::table('products_variations')->select('size')->distinct()->where('product_id',$value)->get();
-    //     return $sizes;
-
-    // }
 
     public function photos()
     {
@@ -97,21 +92,21 @@ class Product extends Model
         if(empty($in))
             $in=0;
 
-        $cart = \App\EcommerceModel\Cart::where('product_id',$this->id)->sum('qty');
-        if(empty($cart))
-            $cart=0;
+        // $cart = \App\EcommerceModel\Cart::where('product_id',$this->id)->sum('qty');
+        // if(empty($cart))
+        //     $cart=0;
 
         $out = \DB::table('ecommerce_sales_details')
                 ->leftJoin('ecommerce_sales_headers', 'ecommerce_sales_details.sales_header_id', '=', 'ecommerce_sales_headers.id')
                 ->where('ecommerce_sales_details.product_id','=',$this->id)
-                ->where('ecommerce_sales_headers.delivery_status','=','Scheduled for Processing')
                 ->where('ecommerce_sales_headers.status','=','active')
                 ->sum('qty');
 
         if(empty($out))
             $out=0;
         
-        return ($in - ($out + $cart));
+        // return ($in - ($out + $cart));
+        return ($in - $out);
       
     }
 
@@ -129,7 +124,6 @@ class Product extends Model
         $out = \DB::table('ecommerce_sales_details')
                 ->leftJoin('ecommerce_sales_headers', 'ecommerce_sales_details.sales_header_id', '=', 'ecommerce_sales_headers.id')
                 ->where('ecommerce_sales_details.product_id','=',$this->id)
-                ->where('ecommerce_sales_headers.delivery_status','=','Scheduled for Processing')
                 ->where('ecommerce_sales_headers.status','=','active')
                 ->sum('qty');
         if(empty($out))
@@ -151,20 +145,20 @@ class Product extends Model
         if(empty($in))
             $in=0;
 
-        $cart = \App\EcommerceModel\Cart::where('product_id',$this->id)->sum('qty');
-         if(empty($cart))
-            $cart=0;
+        // $cart = \App\EcommerceModel\Cart::where('product_id',$this->id)->sum('qty');
+        //  if(empty($cart))
+        //     $cart=0;
         
         $out = \DB::table('ecommerce_sales_details')
                 ->leftJoin('ecommerce_sales_headers', 'ecommerce_sales_details.sales_header_id', '=', 'ecommerce_sales_headers.id')
                 ->where('ecommerce_sales_details.product_id','=',$this->id)
-                ->where('ecommerce_sales_headers.delivery_status','=','Scheduled for Processing')
                 ->where('ecommerce_sales_headers.status','=','active')
                 ->sum('ecommerce_sales_details.qty');
         if(empty($out))
             $out=0;
         
-        $inventory = $in - ($out + $cart + $this->reorder_point);
+        //$inventory = $in - ($out + $cart + $this->reorder_point);
+        $inventory = $in - ($out + $this->reorder_point);
 
         return $inventory;
       
@@ -207,34 +201,6 @@ class Product extends Model
         return $this->belongsTo('\App\StPaulModel\OnSaleProducts','id','product_id');
     }
 
-    // public function getDiscountedAmountAttribute()
-    // {
-    //     $saleChecker = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$this->id)->count();
-
-    //     if($saleChecker > 0){
-
-    //         $discount = ($this->on_sale->promo_details->discount/100);
-    //         $discountedAmount = ($this->price * $discount);
-
-    //     } else {
-
-
-
-    //     }
-
-
-
-
-    //     $discount = ($this->on_sale->promo_details->discount/100);
-
-    //     return ($this->price * $discount);
-    // }
-
-    // public function getDiscountedPriceAttribute()
-    // {
-    //     return ($this->price - $this->DiscountedAmount);
-    // }
-
     public function getDiscountedPriceAttribute()
     {
         $saleChecker = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$this->id)->count();
@@ -264,59 +230,37 @@ class Product extends Model
 
     public static function products_cat($categoryid)
     {
-        $products = 
-            Product::whereNotIn('id',function($query){
+        $category = ProductCategory::where('slug',$categoryid)->first();
+
+        $subcategories = [];
+        array_push($subcategories,$category->id);
+
+        foreach($category->child_categories as $child){
+            array_push($subcategories,$child->id);
+
+            foreach($child->child_categories as $sub){
+                array_push($subcategories,$sub->id);
+            }
+        }
+
+        $products = Product::whereNotIn('id',function($query){
                 $query->select('product_id')->from('onsale_products')
                 ->join('promos','onsale_products.promo_id','=','promos.id')
                 ->where('promos.status','ACTIVE')
                 ->where('promos.is_expire',0);
-            })->where('isfront',1)->where('category_id',$categoryid)->where('status', 'PUBLISHED')->where('is_recommended',0)->orderBy('name','asc')->get();
+            })->whereIn('category_id',$subcategories)->where('isfront',1)->where('status', 'PUBLISHED')->where('is_recommended',0)->orderBy('updated_at','desc')->get();
 
         return $products;
     }
 
+    public static function promo_product_categories($promoId)
+    {
+        $data = DB::table('onsale_products')->join('products','onsale_products.product_id','=','products.id')->select('products.category_id')->where('onsale_products.promo_id',$promoId)->groupBy('category_id')->get();
 
+        return $data;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-    // public static function totalProduct()
-    // {
-    //     $total = Product::withTrashed()->get()->count();
-
-    //     return $total;
-    // }
-
-    // public function is_editable()
-    // {
-    //     return $this->status != 'UNEDITABLE';
-    // }
-
-    // public static function info($p){
-
-    //     $pd = Product::where('name','=',$p)->first();
-
-    //     return $pd;
-    // }
-
-    // public static function detail($p){
-
-    //     $pd = Product::where('name',$p)->get();
-
-    //     return $pd;
-    // }    
+  
 
     public function get_image_file_name()
     {
@@ -332,27 +276,6 @@ class Product extends Model
     {
         return $this->hasMany('App\EcommerceModel\ProductReview');
     }
-
-    // public function getRatingAttribute()
-    // {
-    //     return $this->reviews->avg('rating');
-    // }
-
-    // public function getRatingStarAttribute(){
-    //     $star = 5 - (integer) $this->rating;
-    //     $front = '';
-    //     for($x = 1; $x<=$this->rating; $x++){
-    //         $front.='<span class="fa fa-star checked"></span>';
-    //     }
-
-    //     for($x = 1; $x<=$star; $x++){
-    //         $front.='<span class="fa fa-star"></span>';
-    //     }
-
-    //     return $front;
-    // }
-
-
     
 
 }

@@ -15,18 +15,18 @@
                                 <p class="text-lg-right text-md-left text-sm-left" id="log-mem">Already member? <span class="text-nowrap"><a href="{{ route('customer-front.login') }}">Login</a> here.</span></p>
                             </div>
                         </div>
-                        
+
                         @if($message = Session::get('error'))
                             <div class="alert alert-danger" role="alert">
                                 <span class="fa fa-exclamation"></span> {{ $message }}
                             </div>
                         @endif
 
-                        <div class="gap-10"></div>
+                        <div class="gap-20"></div>
                         <div id="signup-form">
                             <form id="signUpForm" autocomplete="off" method="post" action="{{ route('customer-front.customer-sign-up') }}">
                                 @csrf
-                                <div class="row">
+                                <div class="row form-style-login">
                                     <div class="col-md-12">
                                         <div class="gap-10"></div>
                                         <p class="text-center "><strong>Sign up with your social media account</strong></p>
@@ -55,36 +55,40 @@
                                                 <input required type="text" name="firstname" class="form-control form-input @error('firstname') is-invalid @enderror" value="{{ old('firstname',$socialData->firstname) }}">
                                                 @hasError(['inputName' => 'firstname'])
                                                 @endhasError
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-20"></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <p>Last Name *</p>
                                                 <input required type="text" name="lastname" class="form-control form-input @error('lastname') is-invalid @enderror" value="{{ old('lastname',$socialData->lastname) }}">
                                                 @hasError(['inputName' => 'lastname'])
                                                 @endhasError
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-20"></div>
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Email Address *</p>
                                                 <input required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="email" name="email"  class="form-control form-input  @error('email') is-invalid @enderror" value="{{ old('email',$socialData->email) }}">
                                                 @hasError(['inputName' => 'email'])
                                                 @endhasError
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-20"></div>
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Password *</p>
-                                                <input required type="password" name="password" class="form-control form-input @error('password') is-invalid @enderror">
+                                                <div class="form-group position-relative">
+                                                    <input required type="password" name="password" class="form-control form-input @error('password') is-invalid @enderror password-field">
+                                                </div>
                                                 <small class=><b>Minimum of eight (8) alphanumeric characters (combination of letters and numbers) with at least one (1) upper case and one (1) special character.</b></small>
                                                 @hasError(['inputName' => 'password'])
                                                 @endhasError
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-20"></div>
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Confirm Password *</p>
-                                                <input required type="password" name="password_confirmation" class="form-control form-input @error('password_confirmation') is-invalid @enderror">
+                                                <div class="form-group position-relative">
+                                                    <input required type="password" name="password_confirmation" class="form-control form-input @error('password_confirmation') is-invalid @enderror password-field">
+                                                </div>
                                                 @hasError(['inputName' => 'password_confirmation'])
                                                 @endhasError
-                                                <div class="gap-30"></div>    
+                                                <div class="gap-30"></div>
                                             </div>
                                             <div class="col-md-12"><hr><div class="gap-30"></div></div>
                                             <div class="col-md-12">
@@ -95,18 +99,18 @@
                                                     <option value="{{ $country->id }}">{{ $country->name }}</option>
                                                     @endforeach
                                                 </select>
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
 
                                             <div class="col-md-12" id="addressdiv" style="display: none;">
-                                                <p>Address 1</p>
+                                                <p>Main Address</p>
                                                 <input type="text" name="address" id="address" class="form-control form-input" placeholder="Unit No./Building/House No./Street" value="{{ old('address') }}">
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-12" id="brgydiv" style="display: none;">
-                                                <p>Address 2</p>
+                                                <p>Alternative Address</p>
                                                 <input type="text" name="brgy" id="brgy" class="form-control form-input" placeholder="Name of Subdivision/Barangay" value="{{ old('brgy') }}">
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-12" id="provincediv" style="display: none;">
                                                 <p>Province</p>
@@ -116,32 +120,32 @@
                                                     <option value="{{ $province->id }}">{{ $province->province }}</option>
                                                     @endforeach
                                                 </select>
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-7" id="citydiv" style="display: none;">
                                                 <p>City</p>
                                                 <select name="city" id="city" class="form-control form-input">
                                                     <option selected disabled value="">-- Select City --</option>
                                                 </select>
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-5" id="zipcodediv" style="display: none;">
                                                 <p>Zip Code</p>
                                                 <input type="text" name="zipcode" class="form-control form-input" value="{{ old('zipcode') }}">
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Telephone Number</p>
                                                 <input type="text" name="telno" id="telno" class="form-control form-input" value="{{ old('telno') }}" min="1">
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
                                             <div class="col-md-12">
                                                 <p>Mobile Number</p>
                                                 <input type="text" name="mobileno" id="mobileno" class="form-control form-input" value="{{ old('mobileno') }}" min="1" maxlength="13">
-                                                <div class="gap-10"></div>    
+                                                <div class="gap-10"></div>
                                             </div>
 
-                                            {{--<div class="col-md-12">
+                                            <div class="col-md-12">
                                                 <script src="https://www.google.com/recaptcha/api.js?hl=en" async="" defer="" ></script>
                                                 <div class="g-recaptcha" data-sitekey="{{ \Setting::info()->google_recaptcha_sitekey }}"></div>
                                                 <label class="control-label text-danger" for="g-recaptcha-response" id="catpchaError" style="display:none;font-size: 14px;"><i class="fa fa-times-circle-o"></i>The Captcha field is required.</label></br>
@@ -150,12 +154,21 @@
                                                         <label class="control-label text-danger" for="g-recaptcha-response"><i class="fa fa-times-circle-o"></i>{{ $message }}</label></br>
                                                     @endforeach
                                                 @endif
-                                            </div>--}}
+                                            </div>
+                                            <!-- <div class="col-md-12">
+                                                <div class="gap-20"></div>
+                                                <div id="chxbx">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck" name="subscribe" value="1">
+                                                        <label class="custom-control-label" for="customCheck">I want to receive exclusive offers and promotions from St Pauls.</label>
+                                                    </div>
+                                                </div>
+                                            </div> -->
                                             <div class="col-lg-6 col-md-7">
                                                 <div class="gap-10"></div>
                                                 <button type="submit" class="btn btn-md primary-btn btn-block">Sign Up</button>
                                                 <div class="gap-10"></div>
-                                                <p class="sign-notice">By clicking "SIGN UP", I agree to St. Pauls Privacy Policy</p>
+                                                <p class="sign-notice">By clicking "SIGN UP", I agree to St. Pauls <a style="color:blue;" href="{{route('privacy-policy')}}">Privacy Policy</a></p>
                                             </div>
                                         </div>
                                     </div>
@@ -183,20 +196,20 @@
                 return true;
 
             });
-        });  
+        });
     </script>
 @endsection
 
 @section('customjs')
     <script>
-        // $('#signUpForm').submit(function (evt) {
-        //     let recaptcha = $("#g-recaptcha-response").val();
-        //     if (recaptcha === "") {
-        //         evt.preventDefault();
-        //         $('#catpchaError').show();
-        //         return false;
-        //     }
-        // });
+        $('#signUpForm').submit(function (evt) {
+            let recaptcha = $("#g-recaptcha-response").val();
+            if (recaptcha === "") {
+                evt.preventDefault();
+                $('#catpchaError').show();
+                return false;
+            }
+        });
 
         $(document).ready(function() {
             $('select[name="country"]').on('change', function() {

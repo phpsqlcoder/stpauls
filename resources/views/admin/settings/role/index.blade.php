@@ -82,7 +82,7 @@
                             </form>
                         </div>
                         <div class="mg-t-10">
-                            @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/role/create') == 1)
+                            @if (auth()->user()->has_access_to_route('role.create'))
                                 <a class="btn btn-primary btn-sm mg-b-5" href="{{ route('role.create') }}">Create a Role</a>
                             @endif
                         </div>
@@ -111,15 +111,17 @@
                                     <td>{{ Setting::date_for_listing($role->updated_at) }}</td>
                                     <td>
                                         @if($role->trashed())
+                                            @if (auth()->user()->has_access_to_route('role.restore'))
                                             <nav class="nav table-options justify-content-end">
                                                 <a class="nav-link" href="{{route('role.restore', $role->id)}}" title="Restore this role"><i data-feather="rotate-ccw"></i></a>
                                             </nav>
+                                            @endif
                                         @else
                                             <nav class="nav table-options justify-content-end">
-                                                @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/role/edit') == 1)
+                                                @if (auth()->user()->has_access_to_route('role.edit'))
                                                     <a href="{{ route('role.edit',$role->id) }}" class="nav-link" title="Edit Role"><i data-feather="edit"></i></a>
                                                 @endif
-                                                @if(\App\ViewPermissions::check_permission(Auth::user()->role_id,'admin/role/delete') == 1)
+                                                @if (auth()->user()->has_access_to_route('role.delete'))
                                                     <a href="#modalDeleteRole" class="nav-link delete_role"  data-rid="{{ $role->id }}" data-toggle="modal" title="Delete Role"><i data-feather="trash"></i></a>
                                                 @endif
                                             </nav>

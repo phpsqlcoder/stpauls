@@ -13,6 +13,7 @@ use App\StPaulModel\OnSaleProducts;
 use App\StPaulModel\Promo;
 
 use Auth;
+use DB;
 
 class PromoController extends Controller
 {
@@ -55,7 +56,7 @@ class PromoController extends Controller
     {
 
         $products = 
-            Product::where('status','PUBLISHED')->where('discount',NULL)->whereNotIn('id', function($query){
+            Product::where('status','PUBLISHED')->where('discount','<',1)->whereNotIn('id', function($query){
                 $query->select('product_id')->from('onsale_products')
                 ->join('promos','promos.id','=','onsale_products.promo_id')
                 ->where('promos.status','ACTIVE')
@@ -103,8 +104,13 @@ class PromoController extends Controller
 
         if($promo){
             foreach($prodId as $key => $id){
-                $product = Product::find($id);
+                $sale = DB::table('onsale_products')->join('promos','onsale_products.promo_id','=','promos.id')->where('onsale_products.product_id',$id)->where('promos.status','INACTIVE')->count();
 
+                if($sale){
+                    OnSaleProducts::where('product_id',$id)->delete();
+                }
+
+                $product = Product::find($id);
                 OnSaleProducts::create([
                     'promo_id' => $promo->id,
                     'product_id' => $id,
@@ -138,7 +144,7 @@ class PromoController extends Controller
     public function edit($id)
     {
         $unsale_products = 
-            Product::where('status','PUBLISHED')->where('discount',NULL)->whereNotIn('id', function($query){
+            Product::where('status','PUBLISHED')->where('discount','<',1)->whereNotIn('id', function($query){
                 $query->select('product_id')->from('onsale_products')
                 ->join('promos','promos.id','=','onsale_products.promo_id')
                 ->where('promos.status','ACTIVE')
@@ -153,10 +159,9 @@ class PromoController extends Controller
             })->get();
 
         $categories = ProductCategory::where('status','PUBLISHED')->orderBy('name','asc')->get();
-        $products = $unsale_products->merge($onsale_products);
         $promo = Promo::find($id);
 
-        return view('admin.promos.edit',compact('products','categories','promo'));
+        return view('admin.promos.edit',compact('unsale_products','onsale_products','categories','promo'));
     }
 
     /**
@@ -218,7 +223,7 @@ class PromoController extends Controller
 
         }
 
-        return redirect(route('promos.index'))->with('success', __('standard.promos.promo_update_details_success'));
+        return back()->with('success', __('standard.promos.promo_update_details_success'));
 
     }
 

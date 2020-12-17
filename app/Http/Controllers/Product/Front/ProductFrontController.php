@@ -47,12 +47,23 @@ class ProductFrontController extends Controller
     public function product_list(Request $request, $slug)
     {
         $category = ProductCategory::where('slug',$slug)->first();
+        $subcategories = [];
+        array_push($subcategories,$category->id);
 
         $page = new Page();
         $page = $category;
         $pageLimit = 40;
 
-        $products = Product::where('category_id',$category->id)->where('status','PUBLISHED');
+        foreach($category->child_categories as $child){
+            array_push($subcategories,$child->id);
+
+            foreach($child->child_categories as $sub){
+                array_push($subcategories,$sub->id);
+            }
+        }
+
+        $products = Product::whereIn('category_id',$subcategories)->where('status','PUBLISHED');
+
         $maxPrice = $products->max('price');
         $minPrice = 1;
 
@@ -96,13 +107,13 @@ class ProductFrontController extends Controller
             }
 
             $total_product = $products->count();
-            $products = $products->orderBy('name','asc')->paginate($pageLimit);
+            $products = $products->orderBy('updated_at','desc')->paginate($pageLimit);
         }
         else{
             $productMaxPrice = $maxPrice;
             $minPrice = $minPrice;
             $total_product = $products->count();
-            $products = $products->paginate($pageLimit);
+            $products = $products->orderBy('updated_at','desc')->paginate($pageLimit);
         }
 
         return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-list',compact('products','page','categories','total_product','maxPrice','minPrice','productMaxPrice','category','request'));
@@ -110,77 +121,21 @@ class ProductFrontController extends Controller
 
     public function search_product(Request $request)
     {
-        $page = new Page();
-        $page->name = 'Products';
-        $pageLimit  = 40;
+        $keyword = $request->keyword;
 
-        $minPrice = 1;
-        $categories = ProductCategory::where('parent_id',0)->where('status','PUBLISHED')->get();
+        $products = 
+            Product::join('product_additional_info','products.id','=','product_additional_info.product_id')
+                ->select('products.*','product_additional_info.authors')
+                ->whereStatus('PUBLISHED')
+                ->where(function($query) use ($keyword){
+                    $query->where('products.name','like','%'.$keyword.'%')
+                        ->orWhere('products.code','like','%'.$keyword.'%')
+                        ->orWhere('products.description','like','%'.$keyword.'%')
+                        ->orWhere('authors','like','%'.$keyword.'%');
+                    })
+                ->get();
 
-        if(!empty($request->searchtxt)){
-            $searchtxt = $request->searchtxt;
-        } else {
-            $searchtxt = "";
-        }
-
-        if($request->has('search')){
-
-            $products = Product::join('product_additional_info','products.id','=','product_additional_info.product_id')->select('products.*','product_additional_info.authors')->whereStatus('PUBLISHED');
-
-            if(!empty($request->searchtxt)){  
-                $searchtxt = $request->searchtxt;      
-                $products = $products->where(function($query) use ($searchtxt){
-                    $query->where('products.name','like','%'.$searchtxt.'%')
-                        ->orWhere('products.code','like','%'.$searchtxt.'%')
-                        ->orWhere('products.description','like','%'.$searchtxt.'%')
-                        ->orWhere('authors','like','%'.$searchtxt.'%');
-                    });
-            }
-            $productMaxPrice = $products->max('price');
-
-            if(!empty($request->rating)){
-                $rating = $request->rating;
-                $products->whereIn('products.id',function($query) use($rating){
-                    $query->select('product_id')->from('ecommerce_product_review')
-                    ->where('rating',$rating)
-                    ->where('is_approved',1);
-                });
-            }
-
-            if(!empty($request->sort)){            
-                if($request->sort == 'Price low to high'){
-                    $products = $products->orderBy('price','asc');
-                }
-                elseif($request->sort == 'Price high to low'){
-                    $products = $products->orderBy('price','desc');
-                }
-            }
-
-            if(!empty($request->limit)){ 
-                if($request->limit=='All')
-                    $pageLimit = 100000000;      
-                else
-                    $pageLimit = $request->limit;
-            }
-
-            if(!empty($request->price)){
-                $price = explode(';',$request->price);
-                $products = $products->whereBetween('price',[$price[0],$price[1]]);
-
-                $maxPrice = $price[1];
-                $minPrice = $price[0];
-            } else {
-                $maxPrice = $productMaxPrice;
-            }
-
-            $total_product = $products->count();
-            $products = $products->orderBy('name','asc')->paginate($pageLimit);
-        }
-        else{
-            
-        }
-
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-search',compact('products','categories','total_product','productMaxPrice','page','request','searchtxt','maxPrice','minPrice'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.product.product-search',compact('products','keyword'));
 
     }
 }

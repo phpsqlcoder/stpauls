@@ -10,7 +10,7 @@ class Shippingfee extends Model
     use SoftDeletes;
     
     protected $table = 'shippingfees';
-    protected $fillable = ['name', 'is_international', 'is_outside_manila', 'user_id', 'rate','province'];
+    protected $fillable = ['name', 'is_international', 'is_outside_manila', 'user_id', 'rate','province','area','is_nearby_city'];
 
     public function user()
     {

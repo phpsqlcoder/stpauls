@@ -40,9 +40,7 @@ class ShippingfeeController extends Controller
      */
     public function create()
     {
-        $provinces = Provinces::orderBy('province','asc')->get();
-
-        return view('admin.shippingfee.create',compact('provinces'));
+        return view('admin.shippingfee.create');
     }
 
     /**
@@ -59,12 +57,43 @@ class ShippingfeeController extends Controller
             'type' => 'required'
         ])->validate();
 
+        if($request->type == 1){
+            $provinceId = 0;
+        } else {
+          if($request->areas == 'metro manila'){
+                $provinceId = 49;
+            }
+            if($request->areas == 'rizal'){
+                $provinceId = 65;
+            }
+            if($request->areas == 'cavite'){
+                $provinceId = 24;
+            }
+            if($request->areas == 'laguna'){
+                $provinceId = 42;
+            }  
+        }
+        
+        if($request->type == 1){
+            $isOutside = 1;
+            $area = 'international';
+        } else {
+            $area = $request->areas;
+            if($request->areas == 'metro manila'){
+                $isOutside = 0;
+            } else {
+                $isOutside = 1;
+            }
+        }
+
         Shippingfee::create([
             'name' => $request->name,
             'is_international' => $request->type,
-            'province' => ($request->type == 1) ? 0 : $request->province,
+            'province' => in_array($request->areas,['luzon','visayas','mindanao']) ? 0 : $provinceId,
             'rate' => $request->rate,
-            'is_outside_manila' => ($request->province == 49) ? 0 : 1,
+            'is_outside_manila' => $isOutside,
+            'area' => $area,
+            'is_nearby_city' => ($request->has('is_nearby') ? 1 : 0),
             'user_id' => Auth::id()
         ]);
         
@@ -86,46 +115,134 @@ class ShippingfeeController extends Controller
 
         $fee->update([
             'name' => $request->name,
-            'rate' => ($fee->is_international == 0) ? $request->rate : 0
+            'rate' => $request->rate,
+            'is_nearby_city' => ($request->has('is_nearby') ? 1 : 0),
         ]);
 
-        if($fee){
+        if($fee->is_international == 1){
 
-            $arr_locations = [];
-            $saved_locations = ShippingfeeLocations::where('shippingfee_id',$request->shippingfee_id)->get();
+            $this->store_countries($request,$fee->id);
 
-            foreach($saved_locations as $l){
-                array_push($arr_locations,$l->name);
-            }
+        } else {
 
-            // save new locations
-            $selected_location = $data['selected_locations'];
-            foreach($selected_location as $key => $location){
-                if(!in_array($location,$arr_locations)){
+            if(in_array($fee->area,['metro manila','rizal','cavite','laguna'])){
 
-                    ShippingfeeLocations::create([
-                        'shippingfee_id' => $request->shippingfee_id,
-                        'name' => $location,
-                        'user_id' => Auth::id()
-                    ]);
+                $arr_locations = [];
+                $saved_locations = ShippingfeeLocations::where('shippingfee_id',$request->shippingfee_id)->get();
+
+                foreach($saved_locations as $l){
+                    array_push($arr_locations,$l->name);
                 }
-            }
 
-            // delete existing promotional product that is not selected
-            $arr_selectedlocations = [];
-            foreach($selected_location as $key => $slocation){
-                array_push($arr_selectedlocations,$slocation);
-            }
+                // save new locations
+                $selected_location = $data['selected_locations'];
+                foreach($selected_location as $key => $location){
+                    if(!in_array($location,$arr_locations)){
 
-            foreach($saved_locations as $location){
-                if(!in_array($location->name,$arr_selectedlocations)){
-                    ShippingfeeLocations::where('name',$location->name)->delete();
+                        ShippingfeeLocations::create([
+                            'shippingfee_id' => $request->shippingfee_id,
+                            'name' => $location,
+                            'province_id' => $fee->province,
+                            'is_nearby_metro_manila' => ($fee->is_outside_manila == 0) ? 1 : 0, 
+                            'user_id' => Auth::id()
+                        ]);
+                    }
                 }
-            }
 
+                // delete existing promotional product that is not selected
+                $arr_selectedlocations = [];
+                foreach($selected_location as $key => $slocation){
+                    array_push($arr_selectedlocations,$slocation);
+                }
+
+                foreach($saved_locations as $location){
+                    if(!in_array($location->name,$arr_selectedlocations)){
+                        ShippingfeeLocations::where('name',$location->name)->delete();
+                    }
+                }
+
+            } else {
+
+                $arr_selected_provinces = [];
+                $saved_provinces = ShippingfeeLocations::where('shippingfee_id',$request->shippingfee_id)->get();
+
+                foreach($saved_provinces as $sprovinces){
+                    array_push($arr_selected_provinces,$sprovinces->province_id);
+                }
+
+                // save new locations
+                $selected_location = $data['selected_locations'];
+                foreach($selected_location as $key => $location){
+                    if(!in_array($location,$arr_selected_provinces)){
+
+                        $cities = Cities::where('province',$location)->get();
+
+                        foreach($cities as $city){
+                            ShippingfeeLocations::create([
+                                'shippingfee_id' => $request->shippingfee_id,
+                                'name' => $city->city,
+                                'province_id' => $city->province,
+                                'is_nearby_metro_manila' => ($fee->is_outside_manila == 0) ? 1 : 0, 
+                                'user_id' => Auth::id()
+                            ]); 
+                        }
+                        
+                    }
+                }
+
+                // delete existing location that is not selected
+                $arr_selectedlocations = [];
+                foreach($selected_location as $key => $slocation){
+                    array_push($arr_selectedlocations,$slocation);
+                }
+
+                foreach($saved_provinces as $province){
+                    if(!in_array($province->province_id,$arr_selectedlocations)){
+                        ShippingfeeLocations::where('province_id',$province->province_id)->delete();
+                    }
+                }
+            } 
         }
 
         return back()->with('success','Successfully added new locations for this zone');
+    }
+
+    public function store_countries($req,$sfeeId)
+    {
+        $arr_countries = [];
+        $saved_countries = ShippingfeeLocations::where('shippingfee_id',$sfeeId)->get();
+
+        foreach($saved_countries as $country){
+            array_push($arr_countries,$country->name);
+        }
+
+        $data = $req->all();
+
+        // save new countries
+        $selected_countries = $data['selected_locations'];
+        foreach($selected_countries as $key => $country){
+            if(!in_array($country,$arr_countries)){
+
+                ShippingfeeLocations::create([
+                    'shippingfee_id' => $sfeeId,
+                    'name' => $country,
+                    'province_id' => 0,
+                    'user_id' => Auth::id()
+                ]);
+            }
+        }
+
+        // delete existing countries
+        $arr_selectedCountries = [];
+        foreach($selected_countries as $key => $scountries){
+            array_push($arr_selectedCountries,$scountries);
+        }
+
+        foreach($saved_countries as $country){
+            if(!in_array($country->name,$selected_countries)){
+                ShippingfeeLocations::where('name',$country->name)->delete();
+            }
+        }
     }
 
     public function weight_store(Request $request)
@@ -142,7 +259,7 @@ class ShippingfeeController extends Controller
 
     public function weight_update(Request $request)
     {
-        $update = ShippingfeeWeight::where('id',$request->weight_id)->update([
+        ShippingfeeWeight::find($request->weight_id)->update([
             'weight' => $request->weight,
             'rate' => $request->rate,
             'user_id' => Auth::id()            
@@ -153,7 +270,9 @@ class ShippingfeeController extends Controller
 
     public function weight_single_delete(Request $request)
     {
-        ShippingfeeWeight::find($request->rates)->delete();
+        $sfee = ShippingfeeWeight::find($request->rates);
+        $sfee->update(['user_id' => Auth::id()]);
+        $sfee->delete();
 
         return back()->with('success','Selected rate has been deleted.');
     }
@@ -164,7 +283,9 @@ class ShippingfeeController extends Controller
         $rates = explode("|",$string);
 
         foreach($rates as $rate){
-            ShippingfeeWeight::find($rate)->delete();
+            $sfee = ShippingfeeWeight::find($rate);
+            $sfee->update(['user_id' => Auth::id()]);
+            $sfee->delete();
         }
 
         return back()->with('success','Selected rates has been deleted.');
@@ -254,8 +375,11 @@ class ShippingfeeController extends Controller
     }
 
     public function single_delete(Request $request)
-    {
-        Shippingfee::findOrFail($request->rates)->forceDelete();
+    {   
+        $rate = Shippingfee::findOrFail($request->rates);
+        $rate->update(['user_id' => Auth::id()]);
+        $rate->forceDelete();
+
         ShippingfeeLocations::where('shippingfee_id',$request->rates)->delete();
         ShippingfeeWeight::where('shippingfee_id',$request->rates)->delete();
 
@@ -268,7 +392,12 @@ class ShippingfeeController extends Controller
         $rates = explode("|",$string);
 
         foreach($rates as $rate){
-            Shippingfee::findOrFail($rate)->delete();
+            $sfee = Shippingfee::findOrFail($rate);
+            $sfee->update(['user_id' => Auth::id()]);
+            $sfee->forceDelete();
+
+            ShippingfeeLocations::where('shippingfee_id',$rate)->delete();
+            ShippingfeeWeight::where('shippingfee_id',$rate)->delete();
         }
 
         return back()->with('success', 'Selected shipping fee has been deleted');

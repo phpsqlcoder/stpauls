@@ -37,11 +37,18 @@
             font-weight: normal;
         }
 
-        table tbody tr:last-child td {
-            border: none;
+        table tfoot tr:first-child td {
+            border-top: none; 
         }
 
-        table tfoot tr td:second-child {
+        table tfoot tr:last-child td {
+            color: #57B223;
+            font-size: 1.4em;
+            border-top: 1px solid #57B223; 
+
+        }
+
+        table tfoot tr td:first-child {
             border: none;
         }
     </style>
@@ -52,26 +59,52 @@
     <section id="default-wrapper">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
+                <div id="col1" class="col-lg-3">
                     @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.account-page-options')
                 </div>
-                <div class="col-lg-9" style="border-bottom: 10px solid #b81600;">
-                    <div class="row row-sm">
-                        <div class="col-sm-6 col-lg-6 mg-b-20">
+                <div id="col2" class="col-lg-9 order-info" style="border-bottom: 10px solid #b81600;">
+                    <nav class="rd-navbar">
+                        <div class="rd-navbar-listing-toggle rd-navbar-static--hidden toggle-original" data-rd-navbar-toggle=".listing-filter-wrap"><span class="lnr lnr-list"></span> Options</div>
+                    </nav>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 text-lg-left text-md-left text-center mb-4">
                             <img src="{{  asset('storage/logos/'.Setting::getFaviconLogo()->company_logo) }}" alt="StPaul" width="240" />
                         </div>
-                        <div class="col-sm-6 col-lg-6 mg-b-20">
-                            <small class="d-flex justify-content-end">Order Number</small>
-                            <h1 class="d-flex justify-content-end" style="margin-top:-2px;color:#b82e24;">{{ $sales->order_number }}</h1>
+                        <div class="col-lg-6 col-md-6 text-lg-right text-md-right text-left">
+                            <small">Order Number</small>
+                            <h2 class="mb-0" style="margin-top:-2px;color:#b82e24;">{{ $sales->order_number }}</h2>
                         </div>
-                        <div class="col-sm-6 col-lg-8" style="border-left: 6px solid #b82e24;margin-top: 30px;">
-                            <label class="tx-sans tx-medium tx-spacing-1 tx-color-03">Delivery Details</label>
+                    </div>
+                    <div class="row" style="border-left: 6px solid #b82e24;margin-top: 30px;border-right: 6px solid #b82e24;margin-top: 30px;">
+                        <div class="col-lg-7 col-md-7 col-sm-12">
+                            <label class="text-first-color font-weight-bold">Delivery Details</label>
                             <h2 class="name" style="color:#555555;">{{ $sales->customer_name }}</h2>
                             <p class="mg-b-3">{{$sales->customer_address}}</p>
                             <p class="mg-b-3">{{$sales->customer_contact_number}}</p>
                             <p class="mg-b-3"><a style="color:blue;" href="mailto:{{ $sales->customer_main_details->email }}">{{ $sales->customer_main_details->email }}</a></p>
                             <p>&nbsp;</p>
-                            <p>Remarks : {{ $sales->remarks }}</p>
+                            <p class="mg-b-10">Remarks :</p>
+                            <ul>
+                                @if($sales->remarks != '')
+                                    <li>{{ $sales->remarks }}</li>
+                                @endif
+                                
+                                @php
+                                    $paymentQry = \App\EcommerceModel\SalesPayment::where('sales_header_id',$sales->id);
+                                    $paymentCount = $paymentQry->count();
+                                @endphp
+
+                                @if($paymentQry->count() > 0)
+                                    @php
+                                        $paymentRemarks = $paymentQry->first();
+                                    @endphp
+
+                                    @if($paymentRemarks->remarks != '')
+                                        <li>{{ $paymentRemarks->remarks }}</li>
+                                    @endif
+                                @endif
+                            </ul>
+                            <p>Other Instructions : {{ $sales->other_instruction ?? 'N/A' }}</p>
                             @if($sales->sdd_booking_type == 1)
                             <p>Courier Name : {{$sales->courier_name }}</p>
                             <p>Rider Name : {{ $sales->rider_name }}</p>
@@ -82,16 +115,16 @@
                         </div>
                         <!-- col -->
 
-                        <div class="col-sm-6 col-lg-4" style="border-right: 6px solid #b82e24;margin-top: 30px;">
-                            <label class="tx-sans tx-medium tx-spacing-1 tx-color-03">Order Details</label>
+                        <div class="col-lg-5 col-md-5 col-sm-12">
+                            <label class="text-first-color font-weight-bold">Order Details</label>
                             <ul class="list-unstyled lh-7">
                                 <li class="d-flex justify-content-between">
                                     <span>Order Date</span>
-                                    <span>{{ date('m/d/Y h:i A',strtotime($sales->created_at)) }}</span>
+                                    <span class="text-right">{{ date('m/d/Y h:i A',strtotime($sales->created_at)) }}</span>
                                 </li>
                                 <li class="d-flex justify-content-between">
                                     <span>Payment Method</span>
-                                    <span>{{ \App\EcommerceModel\SalesHeader::payment_type($sales->id) }}</span>
+                                    <span class="text-right">{{ \App\EcommerceModel\SalesHeader::payment_type($sales->id) }}</span>
                                 </li>                            
                                 <li class="d-flex justify-content-between">
                                     <span>Payment Status</span>
@@ -100,20 +133,38 @@
                                 <hr>
                                 <li class="d-flex justify-content-between">
                                     <span>Delivery Type</span>
-                                    <span><b>{{ $sales->delivery_type }}</b></span>
+                                    <span class="text-right">
+                                        @if($sales->delivery_type == 'Same Day Delivery')
+                                            @if($sales->sdd_booking_type == 1)
+                                                <b>Book Your Own Rider</b>
+                                            @else
+                                                <b>Same Day Delivery</b>
+                                            @endif
+                                        @else
+                                            <b>{{ $sales->delivery_type }}</b>
+                                        @endif
+                                    </span>
                                 </li>
+                                @if($sales->delivery_type == 'Store Pick Up')
                                 <li class="d-flex justify-content-between">
                                     <span>Branch</span>
-                                    <span class="text-uppercase">{{ $sales->branch ?? 'N/A' }}</span>
+                                    <span class="tx-semibold tx-uppercase">{{ $sales->branch }}</span>
                                 </li>
+                                <li class="d-flex justify-content-between">
+                                    <span>Pick-up Date</span>
+                                    <span class="tx-semibold tx-uppercase">{{ $sales->pickup_date }}</span>
+                                </li>
+                                @endif
                                 <li class="d-flex justify-content-between">
                                     <span>Delivery Status</span>
                                     <span class="text-success tx-uppercase"><b>{{ $sales->delivery_status }}</b></span>
                                 </li>
                             </ul>
                         </div>
+                    </div>
 
-                        <div class="table-responsive">
+                    <div class="row">
+                        <div class="table-responsive mb-4">
                             <table border="0" cellspacing="0" cellpadding="0" style="margin-top: 50px;">
                                 <thead style="background:#b81600;">
                                     <tr style="color:white;">
@@ -146,34 +197,38 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="4" rowspan="3"></td>
+                                        <td colspan="4"></td>
                                         <td>Total Weight</td>
                                         <td class="text-right">{{ ($totalweight/1000) }} kg</td>
                                     </tr>
                                     <tr>
+                                        <td colspan="4"></td>
                                         <td>Sub-Total</td>
                                         <td class="text-right">{{ number_format($subtotal,2) }}</td>
                                     </tr>
+                                    @if($sales->discount_percentage > 0)
                                     <tr>
+                                        <td colspan="4"></td>
                                         <td class="text-danger">LESS: Loyalty Discount({{$sales->discount_percentage}}%)</td>
                                         <td class="text-right text-danger">{{ number_format($sales->discount_amount,2) }}</td>
                                     </tr>
+                                    @endif
+                                    @if($sales->delivery_fee_amount > 0)
                                     <tr>
-                                        <td colspan="4" rowspan="3">
-                                            <div class="col-sm-12 col-lg-8 order-2 order-sm-0 mg-t-40 mg-sm-t-0">
-                                                <div class="gap-30"></div>
-                                                <label class="tx-sans tx-10 tx-medium tx-spacing-1 tx-color-03">Other Instructions</label>
-                                                <p>{{ $sales->other_instruction ?? 'N/A' }}</p>
-                                            </div>
-                                        </td>
+                                        <td colspan="4"></td>
                                         <td>ADD: Shipping Fee</td>
                                         <td class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
                                     </tr>
+                                    @endif
+                                    @if($sales->service_fee > 0)
                                     <tr>
+                                        <td colspan="4"></td>
                                         <td>ADD: Service Fee</td>
                                         <td class="text-right">{{ number_format($sales->service_fee,2) }}</td>
                                     </tr>
+                                    @endif
                                     <tr>
+                                        <td colspan="4"></td>
                                         <td><h5 class="text-success"><b>TOTAL DUE</b></h5></td>
                                         <td class="text-right"><h5>{{ number_format($sales->net_amount,2)}}</h5></td>
                                     </tr>

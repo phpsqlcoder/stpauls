@@ -227,6 +227,7 @@ return [
         'single_delete_success' => 'Selected branch has been deleted.',
         'restore_success' => 'Successfully restored the branch.',
         'multiple_delete_success' => 'Selected branches has been deleted.',
+        'multiple_update_success' => 'Selected branches status has been changed to :STATUS',
     ],
 
     'locations' => [

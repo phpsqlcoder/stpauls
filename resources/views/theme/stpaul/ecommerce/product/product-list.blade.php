@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ asset('theme/stpaul/css/better-rating.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme/stpaul/css/animate.min.css') }}" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.css') }}" />
 @endsection
 
 @section('content')
@@ -115,7 +115,7 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="filter-product">
-                            <div class="row">
+                            <div class="row align-items-center">
                                 <div id="col2" class="col-6">
                                     <nav class="rd-navbar">
                                         <div class="rd-navbar-listing-toggle rd-navbar-static--hidden toggle-original" data-rd-navbar-toggle=".listing-filter-wrap"><span class="lnr lnr-list"></span> Filter</div>
@@ -139,8 +139,8 @@
                                     </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="btn-group">
-                                        <p class="filter-item-count ml-auto">{{$total_product}} Item/s found</p>
+                                    <div class="btn-group align-items-center">
+                                        <p class="filter-item-count ml-auto mt-auto mb-auto">{{$total_product}} Item/s found</p>
                                         <button type="button" class="btn dropdown-filter-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Sort by
                                         </button>
@@ -163,14 +163,14 @@
                                             <div class="product-discount">₱ {{ $product->discount }} LESS</div>
                                             @endif
                                             <a href="{{ route('product.front.show',$product->slug)}}">
-                                                <div class="prodImg"><img src="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="" /></div>
+                                                <div class="prodImg"><img class="product-img" src="{{ asset('storage/products/'.$product->photoPrimary) }}" alt="" /></div>
                                                 @if($product->discount > 0)
                                                 <h3 class="product-price">
-                                                    <div class="old" style="font-size: 15px;">Php {{ number_format($product->price,2) }}</div>
+                                                    <div class="old">Php {{ number_format($product->price,2) }}</div>
                                                     Php {{ number_format($product->price-$product->discount,2) }}
                                                 </h3>
                                                 @else
-                                                <h3 class="product-price">Php {{ number_format($product->price,2) }}</h3>
+                                                <h3 class="product-price"><div class="old"><br></div>Php {{ number_format($product->price,2) }}</h3>
                                                 @endif 
                                             </a>
                                             <p class="product-title">{{ $product->name }}</p>
@@ -199,7 +199,7 @@
 
 @section('pagejs')
     <script src="{{ asset('theme/stpaul/plugins/ion.rangeslider/js/ion.rangeSlider.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.js') }}"></script>
     
     <script>
         $(".js-range-slider").ionRangeSlider({
@@ -262,7 +262,7 @@
                         swal({
                             toast: true,
                             position: 'center',
-                            title: "Product Added to your cart!",
+                            title: "Product added to your cart!",
                             type: "success",
                             showCancelButton: true,
                             timerProgressBar: true,

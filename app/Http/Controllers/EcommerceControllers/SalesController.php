@@ -38,37 +38,37 @@ class SalesController extends Controller
         return view('admin.sales.invoice',compact('sales','settings'));
     }
 
-    public function index()
-    {
+    // public function index()
+    // {
 
-        $customConditions = [
-            [
-                'field' => 'status',
-                'operator' => '=',
-                'value' => 'active',
-                'apply_to_deleted_data' => true
-            ],
-        ];
+    //     $customConditions = [
+    //         [
+    //             'field' => 'status',
+    //             'operator' => '=',
+    //             'value' => 'active',
+    //             'apply_to_deleted_data' => true
+    //         ],
+    //     ];
 
-        $listing = new ListingHelper('desc',10,'order_number',$customConditions);
+    //     $listing = new ListingHelper('desc',10,'order_number',$customConditions);
 
-        $sales = SalesHeader::where('id','>','0');
-        if(isset($_GET['startdate']) && $_GET['startdate']<>'')
-            $sales = $sales->where('created_at','>=',$_GET['startdate']);
-        if(isset($_GET['enddate']) && $_GET['enddate']<>'')
-            $sales = $sales->where('created_at','<=',$_GET['enddate'].' 23:59:59');
-        if(isset($_GET['search']) && $_GET['search']<>'')
-            $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
+    //     $sales = SalesHeader::where('id','>','0');
+    //     if(isset($_GET['startdate']) && $_GET['startdate']<>'')
+    //         $sales = $sales->where('created_at','>=',$_GET['startdate']);
+    //     if(isset($_GET['enddate']) && $_GET['enddate']<>'')
+    //         $sales = $sales->where('created_at','<=',$_GET['enddate'].' 23:59:59');
+    //     if(isset($_GET['search']) && $_GET['search']<>'')
+    //         $sales = $sales->where('order_number','like','%'.$_GET['search'].'%');
 
-        $sales = $sales->orderBy('id','desc');
-        $sales = $sales->paginate(20);
+    //     $sales = $sales->orderBy('id','desc');
+    //     $sales = $sales->paginate(20);
 
-        $filter = $listing->get_filter($this->searchFields);
-        $searchType = 'simple_search';
+    //     $filter = $listing->get_filter($this->searchFields);
+    //     $searchType = 'simple_search';
 
-        return view('admin.sales.index',compact('sales','filter','searchType'));
+    //     return view('admin.sales.index',compact('sales','filter','searchType'));
 
-    }
+    // }
 
     public function sales_money_transfer()
     {
@@ -76,6 +76,30 @@ class SalesController extends Controller
             [
                 'field' => 'payment_method',
                 'operator' => '>',
+                'value' => 1,
+                'apply_to_deleted_data' => false
+            ]
+        ];
+        
+        $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
+
+        $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
+
+        // Simple search init data
+        $filter = $listing->get_filter($this->searchFields);
+
+        $searchType = 'simple_search';
+
+        return view('admin.sales.money-transfer',compact('sales','filter','searchType'));
+
+    }
+
+    public function sales_card_payment()
+    {
+        $customConditions = [
+            [
+                'field' => 'payment_method',
+                'operator' => '=',
                 'value' => 1,
                 'apply_to_deleted_data' => false
             ]
@@ -90,8 +114,7 @@ class SalesController extends Controller
 
         $searchType = 'simple_search';
 
-        return view('admin.sales.money-transfer',compact('sales','filter','searchType'));
-
+        return view('admin.sales.card-payment',compact('sales','filter','searchType'));
     }
 
     public function sales_cash_on_delivery()
@@ -121,29 +144,6 @@ class SalesController extends Controller
         $searchType = 'simple_search';
 
         return view('admin.sales.cash-on-delivery',compact('sales','filter','searchType'));
-    }
-
-    public function sales_card_payment()
-    {
-        $customConditions = [
-            [
-                'field' => 'payment_method',
-                'operator' => '=',
-                'value' => 1,
-                'apply_to_deleted_data' => false
-            ]
-        ];
-
-        $listing = new ListingHelper('desc', 20, 'created_at', $customConditions);
-
-        $sales = $listing->simple_search(SalesHeader::class, $this->searchFields);
-
-        // Simple search init data
-        $filter = $listing->get_filter($this->searchFields);
-
-        $searchType = 'simple_search';
-
-        return view('admin.sales.card-payment',compact('sales','filter','searchType'));
     }
 
     public function display_payment_details($id){
@@ -178,13 +178,16 @@ class SalesController extends Controller
 
                 $this->send_email_notification($sales,'Approve Order');
 
+                $admin = User::find(Auth::id());
+                $admin->send_order_approved_email($sales,now());
+
                 return back()->with('success', 'Order has been approved.');
 
             } else {
 
                 $sales->update([
                     'status' => 'CANCELLED',
-                    'delivery_status' => 'CANCELLED',
+                    'delivery_status' => 'Cancelled',
                     'remarks' => $request->remarks,
                     'is_approve' => 0,
                     'user_id' => Auth::id()
@@ -218,12 +221,17 @@ class SalesController extends Controller
             ]);
 
             $this->send_email_notification($sales,'Approve Payment');
+
+            $admin = User::find(Auth::id());
+            $admin->send_order_approved_email($sales,now());
+
             return back()->with('success',__('standard.sales.approve_success'));
 
         } else {
             $payment->update([
                 'is_verify' => 0, 
                 'status' => 'UNPAID',
+                'remarks' => $request->remarks,
                 'user_id' => Auth::id()
             ]);
 
@@ -279,6 +287,13 @@ class SalesController extends Controller
         return back()->with('success','Payment has been added.');
     }
 
+    public function update_delivery_status($id)
+    {
+        $sales = SalesHeader::find($id);
+
+        return view('admin.sales.update-delivery-status',compact('sales'));
+    }
+
     public function delivery_status(Request $request)
     {
         $qry = SalesHeader::find($request->del_id);
@@ -297,8 +312,17 @@ class SalesController extends Controller
 
         $this->send_email_notification($qry,$request->delivery_status);
 
-        return back()->with('success','Successfully updated delivery status!');
+        if($qry->payment_method == 0){
+            return redirect(route('sales-transaction.cash-on-delivery'))->with('success','Successfully updated delivery status!');
+        }
 
+        if($qry->payment_method == 1){
+            return redirect(route('sales-transaction.card-payment'))->with('success','Successfully updated delivery status!');
+        }
+
+        if($qry->payment_method == 2 || $qry->payment_method == 3){
+            return redirect(route('sales-transaction.money-transfer'))->with('success','Successfully updated delivery status!');
+        }
     }
 
     public function add_shippingfee(Request $request)
@@ -317,6 +341,8 @@ class SalesController extends Controller
         ]);
 
         $this->send_email_notification($sales,'Add Shipping Fee');
+        $admin = User::find(Auth::id());
+        $admin->send_order_approved_email($sales,now());
 
         return back()->with('success', 'Shipping fee has been added.');
     }
@@ -335,6 +361,16 @@ class SalesController extends Controller
         }
     }
 
+    public function cancel_order(Request $request)
+    {
+        SalesHeader::find($request->orderid)->update([
+            'status' => 'CANCELLED',
+            'delivery_status' => 'CANCELLED'
+        ]);
+
+        return back()->with('success', 'Order has been cancelled.');
+    }
+
 
 
 
@@ -345,6 +381,10 @@ class SalesController extends Controller
 
 
     
+
+
+
+
 
 
 
@@ -426,28 +466,23 @@ class SalesController extends Controller
 
     }
 
-    public function view_payment($id)
-    {
-        $salesPayments = SalesPayment::where('sales_header_id',$id)->get();
-        $totalPayment = SalesPayment::where('sales_header_id',$id)->sum('amount');
-        $totalNet = SalesHeader::where('id',$id)->sum('net_amount');
-        $remainingPayment = $totalNet - $totalPayment;
+    // public function view_payment($id)
+    // {
+    //     $salesPayments = SalesPayment::where('sales_header_id',$id)->get();
+    //     $totalPayment = SalesPayment::where('sales_header_id',$id)->sum('amount');
+    //     $totalNet = SalesHeader::where('id',$id)->sum('net_amount');
+    //     $remainingPayment = $totalNet - $totalPayment;
 
-        return view('admin.sales.payment',compact('salesPayments','totalPayment','totalNet','remainingPayment'));
-    }
+    //     return view('admin.sales.payment',compact('salesPayments','totalPayment','totalNet','remainingPayment'));
+    // }
 
-    public function cancel_product(Request $request)
-    {
-        return $request;
-    }
+    // public function display_payments(Request $request){
+    //     $input = $request->all();
 
-    public function display_payments(Request $request){
-        $input = $request->all();
+    //     $payments = SalesPayment::where('sales_header_id',$request->id)->get();
 
-        $payments = SalesPayment::where('sales_header_id',$request->id)->get();
-
-        return view('admin.sales.added-payments-result',compact('payments'));
-    }
+    //     return view('admin.sales.added-payments-result',compact('payments'));
+    // }
 
     public function display_delivery(Request $request){
 

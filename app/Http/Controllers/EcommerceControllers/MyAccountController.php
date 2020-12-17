@@ -13,6 +13,8 @@ use App\EcommerceModel\Customer;
 use App\User;
 use App\Provinces;
 use App\Setting;
+use App\EcommerceModel\WishlistCustomer;
+use App\EcommerceModel\Wishlist;
 
 use Auth;
 
@@ -91,15 +93,11 @@ class MyAccountController extends Controller
                 $localAddressInfo, 
                 [
                     'address' => 'required',
-                    'barangay' => 'required',
                     'province' => 'required',
-                    'city' => 'required',
-                    'zipcode' => 'required'
+                    'city' => 'required'
                 ],
                 [
-                    'address.required' => 'The address line 1 field is required.',
-                    'barangay.required' => 'The address line 2 field is required.',
-                    'zipcode.required' => 'The zip code field is required.'
+                    'address.required' => 'The main address field is required.'
                 ]
             );
          } else {
@@ -108,12 +106,10 @@ class MyAccountController extends Controller
                 [
                     'country' => 'required',
                     'intl_address' => 'required',
-                    'zipcode' => 'required'
                 ],
                 [   
                     'country.required' => 'The country field is required.',
-                    'intl_address.required' => 'The billing address field is required.',
-                    'zipcode.required' => 'The zip code field is required.'
+                    'intl_address.required' => 'The billing address field is required.'
                 ]
             );
          }
@@ -127,12 +123,12 @@ class MyAccountController extends Controller
 
         Customer::where('customer_id',Auth::id())->update([
             'country' => $request->country,
-            'address' => ($request->country == 259) ? $request->address : '',
-            'barangay' => ($request->country == 259) ? $request->barangay : '',
-            'city' => ($request->country == 259) ? $request->city : NULL,
-            'province' => ($request->country == 259) ? $request->province : NULL,
+            'address' => ($request->country == 259) ? $request->address : NULL,
+            'barangay' => ($request->country == 259) ? $request->barangay : NULL,
+            'city' => ($request->country == 259) ? $request->city : 0,
+            'province' => ($request->country == 259) ? $request->province : 0,
             'zipcode' => $request->zipcode,
-            'intl_address' => ($request->country <> 259) ? $request->intl_address : ''
+            'intl_address' => ($request->country <> 259) ? $request->intl_address : NULL
         ]);
 
         return back()->with([
@@ -206,5 +202,23 @@ class MyAccountController extends Controller
 
         return redirect(route('cart.front.show'));
 //        return redirect()->back()->with('success', 'Reorder has been successful');
+    }
+
+    public function wishlist()
+    {
+        $page = new Page();
+        $page->name = 'Manage Wishlist';
+
+        $wishlist = WishlistCustomer::where('customer_id',Auth::id())->get();
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.my-account.wishlist', compact('page','wishlist'));
+    }
+
+    public function remove_product(Request $request)
+    {
+        $wishlist = WishlistCustomer::find($request->id);
+        Wishlist::where('product_id',$wishlist->product_id)->decrement('total_count',1);
+        $wishlist->delete();
+
     }
 }

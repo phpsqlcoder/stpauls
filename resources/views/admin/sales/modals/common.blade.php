@@ -1,4 +1,4 @@
-<div class="modal effect-scale" id="prompt-change-delivery-status" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+{{--<div class="modal effect-scale" id="prompt-change-delivery-status" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -17,11 +17,12 @@
                             <option value="Scheduled for Processing">Scheduled for Processing</option>
                             <option value="Processing">Processing</option>
                             <option value="Ready For delivery">Ready For delivery</option>
+                            <option value="Ready for Pickup">Ready for Pickup</option>
                             <option value="Shipped">Shipped</option>
                             <option value="In Transit">In Transit</option>
                             <option value="Delivered">Delivered</option>
                             <option value="Returned">Returned</option>
-                            <option value="Cancelled">Cancelled</option>
+                            <option value="CANCELLED">Cancelled</option>
                         </select>
                         <p class="tx-10 text-danger" id="error">
                             @hasError(['inputName' => 'delivery_status'])
@@ -41,7 +42,7 @@
             </form>
         </div>
     </div>
-</div>
+</div>--}}
 
 <div class="modal effect-scale" id="prompt-show-delivery-history" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -69,6 +70,30 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal effect-scale" id="prompt-delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="post" action="{{ route('sales.cancel-order') }}">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Cancel Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>You are about to cancel this order. Do you want to continue?</p>
+                    <input type="hidden" name="orderid" id="orderid">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-sm btn-danger">Yes, Cancel</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

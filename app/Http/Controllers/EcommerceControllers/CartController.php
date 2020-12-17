@@ -31,10 +31,24 @@ use App\Cities;
 use App\Provinces;
 use App\Countries;
 
+use App\User;
+
 
 
 class CartController extends Controller
 {
+    public function deduct_qty(Request $request)
+    {
+        $cart = Cart::where('product_id', $request->product_id)
+                ->where('user_id', Auth::id())
+                ->decrement('qty',1);
+
+        return response()->json([
+            'success' => true,
+            'totalItems' => Setting::EcommerceCartTotalItems()                
+        ]);
+    }
+
     public function store(Request $request)
     {       
         $product = Product::whereId($request->product_id)->first();
@@ -231,7 +245,7 @@ class CartController extends Controller
         if (auth()->check()) {        
 
             if (Cart::where('user_id', auth()->id())->count() == 0) {
-                return redirect()->route('product.front.list');
+                return redirect()->route('product.front.list',['new-products']);
             }
 
             foreach($cartId as $key => $cart){
@@ -276,26 +290,19 @@ class CartController extends Controller
 
             $address = $request->address.' '.$request->barangay.', '.$data_city->city.' '.$data_province->province.', '.$request->zipcode.' '.$data_country->name;
         } else {
-            $address = $request->billing_address;
+            $data_country  = Countries::find($request->country);
+            $address = $request->billing_address.', '.$data_country->name;
         }
 
-        if($request->has('bookingType')){
-            $deliveryStatus = 'Waiting for Payment';
-        } else {
-           if($request->shipOption != 2 && $request->shippingfee == 0){
+        if($request->islocation == 0){
             $deliveryStatus = 'Shipping Fee Validation';
+        } else {
+            if($request->shipOption == 1){
+                $deliveryStatus = 'Waiting for Approval';
             } else {
-                if($request->shipOption == 1){
-                    $deliveryStatus = 'Waiting for Approval';
-                } else {
-                    $deliveryStatus = 'Waiting for Payment';
-                }
-            } 
+                $deliveryStatus = 'Waiting for Payment';
+            }
         }
-        
-
-        $pickupdate = $request->input('pickup_date_2');
-        $pickuptime = $request->input('pickup_time_2');
 
         $salesHeader = SalesHeader::create([
             'order_number' => $requestId,
@@ -323,8 +330,7 @@ class CartController extends Controller
             'payment_method' => (!isset($request->payment_method)) ? 0 : $request->payment_method,
             'payment_option' => (!isset($request->payment_method)) ? 0 : $request->payment_option,
             'branch' => ($request->shipOption == 2)  ? $request->branch : NULL,
-            'pickup_date' => ($request->shipOption == 2) ? $pickupdate : NULL,
-            'pickup_time' => ($request->shipOption == 2) ? $pickuptime : NULL,
+            'pickup_date' => ($request->shipOption == 2) ? $request->pickup_date : NULL,
             'service_fee' => $request->servicefee,
             'is_approve' => NULL,
             'is_other' => ($request->shipOption != 2 && $request->shippingfee == 0) ? 1 : 0,
@@ -379,6 +385,15 @@ class CartController extends Controller
 
         Cart::where('user_id', Auth::id())->delete();
 
+        if($request->shipOption == 1){
+            $admin = User::find(1);
+            $admin->send_cod_approval_request_email($salesHeader);
+
+            $customer = User::find(Auth::id());
+            $customer->send_customer_cod_approval_request_email($salesHeader);
+        }
+        
+
         // Loyalty
             $discountPurchaseAmount = 10000;
             if($request->net_amount >= $discountPurchaseAmount){
@@ -397,6 +412,8 @@ class CartController extends Controller
             }
         //
 
+        $customer = Customer::where('customer_id',Auth::id())->first();
+
         if($request->payment_method == 1){
             $address_line1 = ($request->country == 259) ? $request->address: $request->billing_address;
             $address_line2 = ($request->country == 259) ? $request->barangay : '';
@@ -406,15 +423,18 @@ class CartController extends Controller
             $order         = $request;
             $uniqID        = $salesHeader->order_number;
 
-            if($request->shippingfee > 0){
-                return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
-            } else {
+            $firstname     = $customer->firstname;
+            $lastname      = $customer->lastname;
+            $email         = $customer->email;
 
+            if($request->islocation == 0){
                 return redirect(route('order.received',$requestId));
+            } else {
+                return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode','firstname','lastname','email'));
             }
 
         } else {
-            return redirect(route('order.received',$requestId));
+            return redirect(route('order.payment-received',$requestId));
         }
               
     }
@@ -433,8 +453,12 @@ class CartController extends Controller
         $zipcode       = $customer->zipcode;
         $order         = $sales;
         $uniqID        = $sales->order_number;
+
+        $firstname     = $customer->firstname;
+        $lastname      = $customer->lastname;
+        $email         = $customer->email;
         
-        return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode'));
+        return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode','firstname','lastname','email'));
 
     }
 }

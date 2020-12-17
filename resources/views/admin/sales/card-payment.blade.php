@@ -115,37 +115,56 @@
                                     $payment = $qry->first();
                                 @endphp
                                 <tr>
-                                    <td><strong>{{ $sale->order_number }}</strong></td>
+                                    <td><strong>{{ $sale->order_number }} </strong></td>
                                     <td>{{ date('Y-m-d h:i A',strtotime($sale->created_at)) }}</td>
-                                    <td>@if($sale->payment_status == 'PAID') {{ $payment->payment_date }} @endif</td>
+                                    <td>
+                                        @if($sale->payment_status == 'PAID') 
+                                            @if($count > 0)
+                                                {{ $payment->payment_date }}
+                                            @endif 
+                                        @endif</td>
                                     <td>{{ $sale->customer_name }}</td>
                                     <td>{{ number_format($sale->net_amount,2) }}</td>
                                     <td>
-                                        @if($count > 0 && $sale->status != 'CANCELLED')
-                                            @if($payment->is_verify == 0)
-                                            <a href="javascript:;" onclick="show_payment_details('{{$sale->id}}')"><strong>{{ $sale->delivery_status }} [{{$count}}]</strong></a>
+                                        <span class="@if($sale->delivery_status == 'Shipping Fee Validation' || $sale->delivery_status == 'Scheduled for Processing' || $sale->delivery_status == 'Waiting for Payment') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span> 
+                                    </td>
+                                    <td>
+                                        @if($sale->delivery_type == 'Same Day Delivery')
+                                            @if($sale->sdd_booking_type == 1)
+                                                Book Your Own Rider
                                             @else
-                                            {{ $sale->delivery_status }}
+                                                Same Day Delivery
                                             @endif
                                         @else
-                                            <span class="@if($sale->delivery_status == 'Shipping Fee Validation') tx-semibold tx-primary @endif">{{ $sale->delivery_status }}</span>
-                                        @endif   
+                                            {{ $sale->delivery_type }}
+                                        @endif
                                     </td>
-                                    <td>{{ $sale->delivery_type }}</td>
                                     <td>
                                         <nav class="nav table-options">
                                             <a class="nav-link" target="_blank" href="{{ route('sales-transaction.view',$sale->id) }}" title="View Sales Details"><i data-feather="eye"></i></a>
 
-                                            @if($sale->payment_status == 'PAID')
-                                            <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i data-feather="settings"></i>
-                                            </a>
-                                            @endif
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="javascript:void(0);" onclick="change_delivery_status({{$sale->id}})" title="Update Delivery Status" data-id="{{$sale->id}}">Update Delivery Status</a>
+                                            @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status') || auth()->user()->has_access_to_route('display.delivery-history'))
+                                                @if($sale->status != 'CANCELLED')
+                                                    <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i data-feather="settings"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        @if($sale->payment_status == 'PAID')
+                                                            @if (auth()->user()->has_access_to_route('sales-transaction.delivery_status'))
+                                                                <a class="dropdown-item" href="{{ route('sales.update-delivery-status',$sale->id) }}" title="Update Delivery Status">Update Delivery Status</a>
+                                                            @endif
 
-                                                <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history({{$sale->id}})" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
-                                            </div>
+                                                            @if (auth()->user()->has_access_to_route('display.delivery-history'))
+                                                                <a class="dropdown-item" href="javascript:void(0);" onclick="show_delivery_history('{{$sale->id}}')" title="Show Delivery History" data-id="{{$sale->id}}">Show Delivery History</a>
+                                                            @endif
+                                                        @endif
+
+                                                        @if($sale->delivery_status != 'Delivered')
+                                                        <a class="dropdown-item" href="javascript:void(0);" onclick="cancel_order('{{$sale->id}}')" title="Cancel Order">Cancel Order</a>
+                                                        @endif
+                                                    </div>
+                                                @endif  
+                                            @endif
                                         </nav>
                                     </td>
                                 </tr>
@@ -189,31 +208,8 @@
 
     <div class="modal effect-scale" id="prompt-show-payment-details" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Payment Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table class="table table-bordered payment_details" style="word-break: break-all;">
-                        <thead>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Attachment</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </thead>
-                        <tbody id="payment_details_tbl">
-
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+            <div class="modal-content" id="payment_details_tbl">
+                
             </div>
         </div>
     </div>
@@ -235,6 +231,11 @@
 
 @section('customjs')
     <script>
+        function cancel_order(id){
+            $('#orderid').val(id);
+            $('#prompt-delete').modal('show');
+        }
+
         function show_payment_details(id){
             var url = "{{ route('display.payment-details', ':id') }}";
                 url = url.replace(':id',id);
@@ -278,11 +279,6 @@
                     swal.close();                   
                 }
             });
-        }
-
-        function change_delivery_status(id){
-            $('#prompt-change-delivery-status').modal('show');
-            $('#del_id').val(id);
         }
 
         function show_delivery_history(id){
