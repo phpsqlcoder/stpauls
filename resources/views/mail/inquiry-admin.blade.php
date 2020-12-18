@@ -41,7 +41,7 @@
             <img src="{{ Setting::get_company_logo_storage_path() }}" alt="company logo" width="175" />
         </div>
 
-        <p style="margin-top: 30px;"><strong>Dear {{ $adminInfo->firstname }},</strong></p>
+        <p style="margin-top: 30px;"><strong>Dear Ma'am/Sir,</strong></p>
 
         <p>
             {{ $clientInfo['name'] }} has sent an inquiry for your action.

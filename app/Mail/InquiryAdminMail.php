@@ -14,7 +14,6 @@ class InquiryAdminMail extends Mailable
 
     public $setting;
     public $clientInfo;
-    public $adminInfo;
 
     /**
      * Create a new message instance.
@@ -23,11 +22,10 @@ class InquiryAdminMail extends Mailable
      * @param $clientInfo
      * @param $adminInfo
      */
-    public function __construct($setting, $clientInfo, $adminInfo)
+    public function __construct($setting, $clientInfo)
     {
         $this->setting = $setting;
         $this->clientInfo = $clientInfo;
-        $this->adminInfo = $adminInfo;
     }
 
     /**
@@ -40,6 +38,6 @@ class InquiryAdminMail extends Mailable
     {
         return $this->view('mail.inquiry-admin')
             ->text('mail.inquiry-admin_plain')
-            ->subject('Receive an Inquiry');
+            ->subject('Inquiry Received');
     }
 }
