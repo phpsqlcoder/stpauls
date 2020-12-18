@@ -129,10 +129,15 @@ class FrontController extends Controller
 
         Mail::to($client['email'])->send(new InquiryMail(Setting::info(), $client));
 
-        $admin = (object) ['firstname' => 'St Pauls Support'];
+        $recipientEmails = EmailRecipient::email_list();
+        foreach ($recipientEmails as $email) {
+            Mail::to($email)->send(new InquiryAdminMail(Setting::info(), $client));
+        }
 
-        Mail::to(Setting::info()->email)->send(new InquiryAdminMail(Setting::info(), $client, $admin));
+        if (Mail::failures()) {
+            return redirect()->back()->with('error', 'Failed to send inquiry. Please try again later.');
+        }
 
-        return redirect()->back()->with('success','Email sent!');
+        return redirect()->back()->with('success', 'Success! Your inquiry has been sent.');
     }
 }
