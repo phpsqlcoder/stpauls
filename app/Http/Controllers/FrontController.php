@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\ContactUsRequest;
 
+use App\EmailRecipient;
 use App\Helpers\Webfocus\Setting;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InquiryAdminMail;
