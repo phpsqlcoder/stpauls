@@ -1,4 +1,4 @@
-Dear {{ $adminInfo->firstname }},
+Dear Ma'am/Sir,
 
 {{ $clientInfo['name'] }} has sent an inquiry for your action.
 Please see details of the inquiry below.
