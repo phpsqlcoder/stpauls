@@ -94,9 +94,9 @@
                                             <div id="divIntlAddress" style="display: @if($customer->details->country <> 259 && $customer->details->country != "") block; @else none; @endif">
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
-                                                    <p>Billing Address *</p>
+                                                    <p>Shippinh Address *</p>
                                                     <textarea name="billing_address" class="form-control form-input" rows="3" id="billing_address" maxlength="60">{{ $customer->details->intl_address }}</textarea>
-                                                    <p id="p_otheradd" class="text-danger" style="display: none;"><small>The billing address field is required.</small></p>
+                                                    <p id="p_otheradd" class="text-danger" style="display: none;"><small>The shipping address field is required.</small></p>
                                                 </div>
                                             </div>
 

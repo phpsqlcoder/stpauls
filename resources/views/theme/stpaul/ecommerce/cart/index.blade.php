@@ -34,14 +34,19 @@
                             <h2>My Cart</h2>
                         </div>
                         <ul class="cart-wrap">
-                            @php $grandtotal = 0; $totalproducts = 0; @endphp
+                            @php $grandtotal = 0; $totalproducts = 0; $available_stock = 0; @endphp
 
                             @forelse($cart as $key => $order)
 
                             @php 
                                 $totalproducts += 1;
                                 $grandtotal += $order->product->discountedprice*$order->qty;
+
+                                if($order->product->inventory == 0){
+                                    $available_stock++;
+                                }
                             @endphp
+
                             <li class="item">
                                 <div class="remove-item">
                                     <a href="#" onclick="remove_item('@if(Auth::check()) {{$order->id}} @else {{$key}} @endif')" style="font-size: .7em;" class="text-uppercase txt-10">Remove <span class="lnr lnr-cross"></span></a>
@@ -75,7 +80,7 @@
                                             <div class="cart-quantity">
                                                 <label for="quantity">Quantity</label>
                                                 <div class="quantity">
-                                                    <input readonly type="number" name="qty[]" value="{{ $order->qty }}" min="1" max="1000000" step="1" data-inc="1" id="order{{$loop->iteration}}_qty">
+                                                    <input readonly type="number" name="qty[]" value="{{ $order->qty }}" min="1" step="1" data-inc="1" id="order{{$loop->iteration}}_qty">
                                                     <div class="quantity-nav">
                                                         <div class="quantity-button quantity-up" id="{{$loop->iteration}}">+</div>
                                                         <div class="quantity-button quantity-down" id="{{$loop->iteration}}">-</div>
@@ -83,12 +88,16 @@
                                                 </div>
                                                 <input type="hidden" id="orderID_{{$loop->iteration}}" value="{{$order->product_id}}">
                                                 <input type="hidden" id="prevqty{{$loop->iteration}}" value="{{ $order->qty }}">
-                                                <input type="hidden" id="maxorder{{$loop->iteration}}" value="{{ $order->product->Maxpurchase }}">
+                                                <input type="hidden" id="maxorder{{$loop->iteration}}" value="{{ $order->product->inventory }}">
                                             </div>
                                             <div class="cart-info">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <table>
+                                                            <tr>
+                                                                <td><p @if($order->product->inventory == 0) class="text-danger" @endif><b>Available Stock</b></p></td>
+                                                                <td><p @if($order->product->inventory == 0) class="text-danger" @endif><b>{{ $order->product->inventory }}</b></p></td>
+                                                            </tr>
                                                             <tr>
                                                                 <td>
                                                                     <p>Weight (g)</p>
@@ -177,7 +186,11 @@
                                         <input type="hidden" id="roleid" value="3">
                                         <input type="hidden" id="auth" value="0">
                                         @endif
-                                        <button @if($totalproducts > 0) @else disabled @endif type="button" id="btnCheckout" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
+                                        <button @if($totalproducts > 0 && $available_stock == 0) @else disabled @endif type="button" id="btnCheckout" class="btn btn-lg tertiary-btn">Proceed to Checkout</button>
+
+                                        @if($available_stock > 0)
+                                        <p class="text-danger"><small>Kindly remove products with 0 available stock.</small></p>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -233,8 +246,7 @@
                 var qty = $('#order'+id+'_qty').val();
                 var maxorder = $('#maxorder'+id).val();
 
-
-                if(maxorder == 0){
+                if(qty > maxorder){
                     swal({
                         title: '',
                         text: "Sorry. Currently, there is no sufficient stocks for the item you wish to order.",         
@@ -242,9 +254,7 @@
 
                     $('#order'+id+'_qty').val(qty-1);
                 } else {
-                    var stock = maxorder-1;
                     $('#prevqty'+id).val(qty);
-                    $('#maxorder'+id).val(stock);
 
                     addQty(id,orderid);
                 }  
@@ -256,18 +266,12 @@
             var productid = $('#orderID_'+id).val();
 
             if(id){
-                var qty = $('#order'+id+'_qty').val();
                 var prevqty = $('#prevqty'+id).val();
-
-                var maxorder = $('#maxorder'+id).val();
-                var stock = parseFloat(maxorder)+1;
-
 
                 if(prevqty == 1){
 
                 } else {
                     $('#prevqty'+id).val(prevqty-1);
-                    $('#maxorder'+id).val(stock);
 
                     var auth = $('#auth').val();
                     if(auth == 0){
