@@ -134,7 +134,7 @@
                                                 <div class="gap-10"></div>
                                                 <div class="form-group form-wrap">
                                                     <p>Main Address *</p>
-                                                    <input required type="text" class="form-control form-input" name="address" id="input_address" value="{{ $customer->details->address }}" maxlength="60">
+                                                    <input required type="text" class="form-control form-input" name="address" id="input_address" value="{{ $customer->details->address }}" maxlength="40">
                                                     <p id="p_address" class="text-danger" style="display: none;"><small>The main address field is required.</small></p>
                                                 </div>
 
