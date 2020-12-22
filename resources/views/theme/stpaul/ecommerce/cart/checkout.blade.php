@@ -192,25 +192,38 @@
                                             <input type="hidden" id="array_cities" value="{{ rtrim($nearby_cities,',') }}">
                                             
                                             <div class="tab-wrap custom vertical">
-                                                @if($customer->details->country == '')
-                                                    <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
-                                                    <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                    <div class="tab__content">
-                                                        <h3>Cash on Delivery</h3>
-                                                        <div class="alert alert-info" role="alert">
-                                                            <h4 class="alert-heading">Reminder!</h4>
-                                                            <p>{!! $cod->reminder !!}</p>
+                                                @if($amount <= $cod->maximum_purchase)
+                                                    @if($customer->details->country == '')
+                                                        <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
+                                                        <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                        <div class="tab__content">
+                                                            <h3>Cash on Delivery</h3>
+                                                            <div class="alert alert-info" role="alert">
+                                                                <h4 class="alert-heading">Reminder!</h4>
+                                                                <p>{!! $cod->reminder !!}</p>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                @else
-                                                    <!-- If customer country is Philippines -->
-                                                    @if($customer->details->country == 259)
-                                                    <!-- If metro manila -->
-                                                        @if($customer->details->province == 49)
-                                                            <!-- If COD for metro manila is allowed-->
-                                                            @if($cod->within_metro_manila == 1)
-                                                                <!-- If purchased amount is less than or equal to COD max purchase -->
-                                                                @if($amount <= $cod->maximum_purchase)
+                                                    @else
+                                                        <!-- If customer country is Philippines -->
+                                                        @if($customer->details->country == 259)
+                                                        <!-- If metro manila -->
+                                                            @if($customer->details->province == 49)
+                                                                <!-- If COD for metro manila is allowed-->
+                                                                @if($cod->within_metro_manila == 1)
+                                                                    <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
+                                                                    <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                                    <div class="tab__content">
+                                                                        <h3>Cash on Delivery</h3>
+                                                                        <div class="alert alert-info" role="alert">
+                                                                            <h4 class="alert-heading">Reminder!</h4>
+                                                                            <p>{!! $cod->reminder !!}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                            <!-- If not metro manila -->
+                                                            @else
+                                                                <!-- If COD allowed for outside metro manila -->
+                                                                @if($cod->outside_metro_manila == 1)
                                                                     <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
                                                                     <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                                     <div class="tab__content">
@@ -222,35 +235,18 @@
                                                                     </div>
                                                                 @endif
                                                             @endif
-                                                        <!-- If not metro manila -->
+                                                            <!-- end if metro manila -->
                                                         @else
-                                                            <!-- If COD allowed for outside metro manila -->
-                                                            @if($cod->outside_metro_manila == 1)
-                                                                <!-- If purchased amount is less than or equal to COD max purchase -->
-                                                                @if($amount <= $cod->maximum_purchase)
-                                                                <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
-                                                                <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                                <div class="tab__content">
-                                                                    <h3>Cash on Delivery</h3>
-                                                                    <div class="alert alert-info" role="alert">
-                                                                        <h4 class="alert-heading">Reminder!</h4>
-                                                                        <p>{!! $cod->reminder !!}</p>
-                                                                    </div>
+                                                            <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
+                                                            <label style="display: none;" id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                            <div class="tab__content">
+                                                                <h3>Cash on Delivery</h3>
+                                                                <div class="alert alert-info" role="alert">
+                                                                    <h4 class="alert-heading">Reminder!</h4>
+                                                                    <p>{!! $cod->reminder !!}</p>
                                                                 </div>
-                                                                @endif
-                                                            @endif
-                                                        @endif
-                                                        <!-- end if metro manila -->
-                                                    @else
-                                                        <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
-                                                        <label style="display: none;" id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
-                                                        <div class="tab__content">
-                                                            <h3>Cash on Delivery</h3>
-                                                            <div class="alert alert-info" role="alert">
-                                                                <h4 class="alert-heading">Reminder!</h4>
-                                                                <p>{!! $cod->reminder !!}</p>
                                                             </div>
-                                                        </div>
+                                                        @endif
                                                     @endif
                                                 @endif
                                                 

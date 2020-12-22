@@ -80,7 +80,12 @@
                                             <div class="cart-quantity">
                                                 <label for="quantity">Quantity</label>
                                                 <div class="quantity">
+                                                    @if($order->qty > $order->product->inventory)
+                                                    <input readonly type="number" name="qty[]" value="{{ $order->product->inventory }}" min="1" step="1" data-inc="1" id="order{{$loop->iteration}}_qty">
+                                                    @else
                                                     <input readonly type="number" name="qty[]" value="{{ $order->qty }}" min="1" step="1" data-inc="1" id="order{{$loop->iteration}}_qty">
+                                                    @endif
+
                                                     <div class="quantity-nav">
                                                         <div class="quantity-button quantity-up" id="{{$loop->iteration}}">+</div>
                                                         <div class="quantity-button quantity-down" id="{{$loop->iteration}}">-</div>
@@ -97,6 +102,10 @@
                                                             <tr>
                                                                 <td><p @if($order->product->inventory == 0) class="text-danger" @endif><b>Available Stock</b></p></td>
                                                                 <td><p @if($order->product->inventory == 0) class="text-danger" @endif><b>{{ $order->product->inventory }}</b></p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><p><b>Quantity Added on Cart</b></p></td>
+                                                                <td><p><b>{{ $order->qty }}</b></p></td>
                                                             </tr>
                                                             <tr>
                                                                 <td>
