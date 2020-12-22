@@ -13,7 +13,7 @@
                 <div class="col-md-12">
                     @if($message = Session::get('success'))
                         <div class="alert alert-success alert-dismissible fade show">
-                            <strong>Success!</strong> {{ $message }}
+                            <strong>Success!</strong> {{ $message }}s
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                         </div>
                     @endif
