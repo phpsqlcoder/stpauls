@@ -179,30 +179,30 @@ class MyAccountController extends Controller
 
     }
 
-    public function reorder(Request $request, $orderNumber)
-    {
-        $sale = SalesHeader::where('user_id', auth()->id())->where('order_number', $orderNumber)->first();
+//     public function reorder(Request $request, $orderNumber)
+//     {
+//         $sale = SalesHeader::where('user_id', auth()->id())->where('order_number', $orderNumber)->first();
 
-        if (empty($sale)) {
-            abort(404);
-        }
+//         if (empty($sale)) {
+//             abort(404);
+//         }
 
-        foreach ($sale->items as $item) {
-            Cart::create([
-                'product_id' => $item->product_id,
-                'user_id' => $sale->user_id,
-                'qty' => $item->qty,
-                'price' => $item->product->price,
-                'with_installation' => $item->product->with_installation,
-                'installation_fee' => $item->product->installation_fee
-            ]);
-        }
+//         foreach ($sale->items as $item) {
+//             Cart::create([
+//                 'product_id' => $item->product_id,
+//                 'user_id' => $sale->user_id,
+//                 'qty' => $item->qty,
+//                 'price' => $item->product->price,
+//                 'with_installation' => $item->product->with_installation,
+//                 'installation_fee' => $item->product->installation_fee
+//             ]);
+//         }
 
-        $sale->delete();
+//         $sale->delete();
 
-        return redirect(route('cart.front.show'));
-//        return redirect()->back()->with('success', 'Reorder has been successful');
-    }
+//         return redirect(route('cart.front.show'));
+// //        return redirect()->back()->with('success', 'Reorder has been successful');
+//     }
 
     public function wishlist()
     {

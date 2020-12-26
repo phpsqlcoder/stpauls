@@ -43,19 +43,18 @@ class Setting {
 
     public static function getFooter()
     {
-        $delete_old_entries = \App\EcommerceModel\Cart::where('updated_at','<',Carbon::now()->subDays(2))->delete();
-        $old_sales = \App\EcommerceModel\SalesHeader::where('updated_at','<',Carbon::now()->subDays(2))->whereStatus('active')->get();
-        foreach($old_sales as $s){
-             $paid = \App\EcommerceModel\SalesPayment::where('sales_header_id',$s->id)->whereStatus('PAID')->sum('amount');
-             if($paid<=0){
-                $cancel_sales = \App\EcommerceModel\SalesHeader::whereId($s->id)->update([
-                    'deleted_at' => date('Y-m-d H:i:s'),
-                    'status' => 'CANCELLED',
-                    'delivery_status' => 'CANCELLED'
-                ]);
-             }
-        }
-;
+//         $delete_old_entries = \App\EcommerceModel\Cart::where('updated_at','<',Carbon::now()->subDays(2))->delete();
+//         $old_sales = \App\EcommerceModel\SalesHeader::where('updated_at','<',Carbon::now()->subDays(2))->whereStatus('active')->get();
+//         foreach($old_sales as $s){
+//              $paid = \App\EcommerceModel\SalesPayment::where('sales_header_id',$s->id)->whereStatus('PAID')->sum('amount');
+//              if($paid<=0){
+//                 $cancel_sales = \App\EcommerceModel\SalesHeader::whereId($s->id)->update([
+//                     'status' => 'CANCELLED',
+//                     'delivery_status' => 'CANCELLED'
+//                 ]);
+//              }
+//         }
+// ;
         
         $footer = DB::table('pages')->where('slug', 'footer')->where('name', 'footer')->first();
 
