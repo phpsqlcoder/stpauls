@@ -51,8 +51,10 @@ class ShippingfeeLocations extends Model
                     $data = $sp_location->first();
 
                     $sp        = Shippingfee::find($data->shippingfee_id);
-                    $sp_weight = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$weight)->latest('id');
+                    $sp_weight = ShippingfeeWeight::where('shippingfee_id',$data->shippingfee_id)->where('weight','<=',$weight)->orderBy('weight','desc')->latest('id');
+
                     if($sp_weight->count() > 0){
+                        
                         $data_weight = $sp_weight->first();
                         
                         $weight_rate = $data_weight->rate;
