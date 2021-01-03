@@ -195,7 +195,7 @@
                                                 @if($amount <= $cod->maximum_purchase)
                                                     @if($customer->details->country == '')
                                                         <input type="radio" id="tab1" name="shipOption" value="1" class="tab">
-                                                        <label id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
+                                                        <label style="display: none;" id="cod_label" for="tab1">Cash On Delivery (COD) <span class="fa fa-check-circle fa-icon ml-2"></span></label>
                                                         <div class="tab__content">
                                                             <h3>Cash on Delivery</h3>
                                                             <div class="alert alert-info" role="alert">

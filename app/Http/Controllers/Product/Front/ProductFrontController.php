@@ -19,7 +19,7 @@ class ProductFrontController extends Controller
 {
     public function show($slug)
     {
-        $product = Product::whereSlug($slug)->where('status', 'PUBLISHED')->first();
+        $product = Product::where('slug',$slug)->where('status', 'PUBLISHED')->first();
 
         $categories = 
             ProductCategory::where('parent_id',0)
