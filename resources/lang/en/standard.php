@@ -34,7 +34,7 @@ return [
         //'exceed_size' => 'The image has exceeded the maximum file size. The required maximum file size is :size.',
         //'file_type' => 'The image has invalid file type. Please follow the required file types - :type .',
         //'incorrect_dimension' => 'The Banner image has invalid dimensions. Please follow the required dimensions :width by :height.',
-        //'create_success' => 'The album has been created.',
+        'create_success' => 'The album has been created.',
         'empty_transition' => 'Please select an item from the list.',
         'exceed_file_size' => 'The image uploaded has exceeded the maximum file size.',
         'invalid_type' => 'The image uploaded has invalid file type.',

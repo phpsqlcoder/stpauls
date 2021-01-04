@@ -1,4 +1,4 @@
-<div class="banner-wrapper" style="display:none;">
+<div class="banner-wrapper">
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12" style="padding:0;">
