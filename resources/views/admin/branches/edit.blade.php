@@ -152,6 +152,15 @@
                                 @endhasError
                             </div>
 
+                            <div class="form-group">
+                                <div class="custom-control custom-switch @error('store_pickup') is-invalid @enderror">
+                                    <input type="checkbox" class="custom-control-input" name="store_pickup" {{ (old("store_pickup") == "ON" || $branch->store_pickup == 1 ? "checked":"") }} id="customSwitch2">
+                                    <label class="custom-control-label" for="customSwitch2">Store Pick-up</label>
+                                </div>
+                                @hasError(['inputName' => 'store_pickup'])
+                                @endhasError
+                            </div>
+
                             @if($branch->isfeatured == 1)
                             <div class="form-group">
                                 <div class="custom-control custom-switch @error('is_featured') is-invalid @enderror">

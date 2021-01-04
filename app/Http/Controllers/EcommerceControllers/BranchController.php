@@ -93,6 +93,7 @@ class BranchController extends Controller
             'email' => $request->email,
             'other_details' => $request->other_details,
             'img' => $file->getClientOriginalName(),
+            'store_pickup' => ($request->has('store_pickup') ? 1 : 0),
             'user_id' => Auth::id()
         ]);
 
@@ -184,6 +185,7 @@ class BranchController extends Controller
             'email' => $request->email,
             'other_details' => $request->other_details,
             'img' => isset($file) ? $file->getClientOriginalName() : $branch->img,
+            'store_pickup' => ($request->has('store_pickup') ? 1 : 0),
             'user_id' => Auth::id()
         ]);
 

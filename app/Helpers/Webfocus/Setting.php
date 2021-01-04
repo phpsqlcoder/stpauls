@@ -235,7 +235,7 @@ class Setting {
 
     public static function branches(){
 
-        $branches = Branch::orderBy('name','asc')->get();
+        $branches = Branch::where('store_pickup',1)->orderBy('name','asc')->get();
 
         return $branches;
     }

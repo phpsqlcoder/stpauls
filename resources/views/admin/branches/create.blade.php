@@ -128,6 +128,13 @@
                                 </div>
                             </div>
 
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" name="store_pickup" {{ (old("store_pickup") ? "checked":"") }} id="customSwitch2">
+                                    <label class="custom-control-label" id="label_visibility" for="customSwitch2">Store Pick-up</label>
+                                </div>
+                            </div>
+
                             @if($featured == 0)
                             <div class="form-group">
                                 <div class="custom-control custom-switch @error('is_featured') is-invalid @enderror">

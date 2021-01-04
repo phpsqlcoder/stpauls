@@ -130,9 +130,10 @@
                                     </div>
                                 </th>
                                 <th width="17%">Name</th>
-                                <th width="25%">Address</th>
+                                <th width="20%">Address</th>
                                 <th width="20%">Contact Number</th>
                                 <th width="10%">Status</th>
+                                <th width="5%">Store Pick-up</th>
                                 <th width="13%">Last Date Modified</th>
                                 <th width="10%">Action</th>
                             </tr>
@@ -156,6 +157,13 @@
                                         </ul>
                                     </td>
                                     <td>{{ $branch->status }}</td>
+                                    <td>
+                                        @if($branch->store_pickup == 1)
+                                            <span class="text-success"><b>YES</b></span>
+                                        @else
+                                            NO
+                                        @endif
+                                    </td>
                                     <td>{{ Setting::date_for_listing($branch->updated_at) }}</td>
                                     <td>
                                         <nav class="nav table-options">
