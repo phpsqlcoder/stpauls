@@ -264,3 +264,26 @@ $(".toggle-password").on("click", function () {
         input.attr("type", "password");
     }
 });
+
+// side navigation responsive
+function openNav() {
+    document.getElementById("mySidenav").style.left = "0";
+    $(".dark-curtain").fadeIn();
+}
+/* Set the width of the side navigation to 0 */
+function closeNav() {
+    document.getElementById("mySidenav").style.left = "-300px";
+    $(".dark-curtain").fadeOut();
+}
+function myFunction(x) {
+    if (x.matches) {
+        // If media query matches
+        $(".tablet-view").addClass("sidenav").attr("id", "mySidenav");
+    } else {
+        $(".tablet-view").removeClass("sidenav").removeAttr("id");
+    }
+}
+
+var x = window.matchMedia("(max-width: 991px)");
+myFunction(x);
+x.addListener(myFunction);

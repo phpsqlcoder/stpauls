@@ -2,30 +2,25 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12" style="padding:0;">
-                <div>
-                    <div class="hero-slide">
-                        <div class="sub-banner-overlay"></div>
-             
-                        <div class="sub-banner-caption">
-                            <div class="container">
-                                <div class="sub-banner-flex">
-                                    <h2>{{ $page->name }}</h2>
-                                    @if(isset($breadcrumb))
-                                        <div class="breadcrumb">
-                                            @foreach($breadcrumb as $link => $url)
-                                                @if($loop->last)
-                                                    <span class="current">{{$link}}</span>
-                                                @else
-                                                    <a href="{{$url}}">{{$link}}</a>
-                                                    <span class="fa default"></span>
-                                                @endif
-                                            @endforeach
-                                        </div>
+                <div class="sub-banner-caption">
+                    <div class="container">
+                        <h2>{{ $page->name }}</h2>
+                        @if(isset($breadcrumb))
+                            <ol class="breadcrumb">
+                                @foreach($breadcrumb as $link => $url)
+                                    @if($loop->last)
+                                        <li class="breadcrumb-item active" aria-current="page">{{$link}}</li>
+                                    @else
+                                        <li class="breadcrumb-item"><a href="{{$url}}">{{$link}}</a></li>
                                     @endif
-                                    
-                                </div>
-                            </div>
-                        </div>
+                                @endforeach
+                            </ol>
+                        @endif
+                    </div>
+                </div>
+                <div id="banner" class="slick-slider">
+                    <div class="hero-slide">
+                        <img src="{{ asset('theme/stpaul/images/banners/sub/subbanner.jpg') }}">
                     </div>
                 </div>
             </div>
