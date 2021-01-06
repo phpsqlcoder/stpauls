@@ -56,7 +56,7 @@
                                 </div>
                                 <div class="news-post-share">
                                     <div class="share_link"></div>
-                                    <p class="news-post-info-meta">Posted {{ Setting::date_for_news_list($article->updated_at) }}</p>
+                                    <p class="news-post-info-meta">Posted {{ Setting::date_for_news_list($article->date) }}</p>
                                 </div>
                             </div>
                         </div>

@@ -3,11 +3,16 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>ST PAULS Online | Catholic Online Bookstore in Philippines</title>
-    <link rel="shortcut icon" type="image/x-icon" href="{{  asset('storage/icons/'.Setting::getFaviconLogo()->website_favicon) }}">
+    @if ($page->name == 'Home')
+        <title>{{ Setting::info()->company_name }}</title>
+    @else
+        <title>{{ (empty($page->meta_title) ? $page->name:$page->meta_title) }} | {{ Setting::info()->company_name }}</title>
+    @endif
+    <link rel="shortcut icon" href="{{ Setting::get_company_favicon_storage_path() }}" type="image/x-icon" />
+    <meta name="description" content="{{ $page->meta_description }}">
+    <meta name="keywords" content="{{ $page->meta_keyword }}">
 
     <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/bootstrap/css/bootstrap.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('theme/stpaul/plugins/font-awesome/css/all.min.css') }}" />
@@ -30,7 +35,7 @@
 
     @yield('pagecss')
 
-    {!! \Setting::info()->google_analytics !!}
+    {!! Setting::info()->google_analytics !!}
     {{ \App\StPaulModel\Promo::update_promo_xpiration() }}
 
     <!--[if lt IE 9]>

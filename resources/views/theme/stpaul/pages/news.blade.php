@@ -52,7 +52,7 @@
                     <div class="article-meta-share">
                         <div class="article-meta">
                             <p>
-                                Posted {{ Setting::date_for_news_list($news->updated_at) }}, by
+                                Posted {{ Setting::date_for_news_list($news->date) }}, by
                                 <span class="article-meta-author">{{$news->user->name}}</span>
                             </p>
                         </div>
