@@ -151,7 +151,7 @@
                                                         <a class="nav-link" href="{{ route('mailing-list.campaigns.edit', $campaign->id) }}" title="Edit Campaign"><i data-feather="edit"></i></a>
                                                     @endif
 
-                                                    @if (auth()->user()->has_access_to_route('mailing-list.campaigns.destroy') && $campaign->id != 1))
+                                                    @if (auth()->user()->has_access_to_route('mailing-list.campaigns.destroy'))
                                                         <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <i data-feather="settings"></i>
                                                         </a>
