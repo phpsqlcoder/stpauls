@@ -408,7 +408,7 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
         Route::post('/mailing-list-groups/{id}/restore', 'MailingList\GroupController@restore')->name('mailing-list.groups.restore');
 
         Route::resource('/mailing-list/campaigns', 'MailingList\CampaignController', ['as' => 'mailing-list']);
-        Route::get('/mailing-list/campaigns/sent-campaigns', 'MailingList\CampaignController@sent_campaigns')->name('mailing-list.campaigns.sent-campaigns');
+        Route::get('/mailing-list/sent-campaigns', 'MailingList\CampaignController@sent_campaigns')->name('mailing-list.campaigns.sent-campaigns');
         Route::delete('/delete/mailing-list/campaign', 'MailingList\CampaignController@destroy_many')->name('mailing-list.campaigns.destroy_many');
         Route::post('/campaigns/{id}/restore', 'MailingList\CampaignController@restore')->name('mailing-list.campaigns.restore');
         //// END MAILING LIST ////
