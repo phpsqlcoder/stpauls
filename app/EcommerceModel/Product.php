@@ -39,7 +39,7 @@ class Product extends Model
 
     public function getSaleStatusAttribute()
     {
-        $count = OnSaleProducts::where('product_id',$this->id)->count();
+        $count  = DB::table('promos')->join('onsale_products','promos.id','=','onsale_products.promo_id')->where('promos.status','ACTIVE')->where('promos.is_expire',0)->where('onsale_products.product_id',$this->id)->count();
 
         return $count;
     }
