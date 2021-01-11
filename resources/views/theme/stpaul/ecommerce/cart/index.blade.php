@@ -255,7 +255,7 @@
                 var qty = $('#order'+id+'_qty').val();
                 var maxorder = $('#maxorder'+id).val();
 
-                if(qty > maxorder){
+                if(parseInt(qty) > parseInt(maxorder)){
                     swal({
                         title: '',
                         text: "Sorry. Currently, there is no sufficient stocks for the item you wish to order.",         
