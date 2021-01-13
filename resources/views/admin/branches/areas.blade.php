@@ -60,12 +60,6 @@
                                                 <label class="custom-control-label" for="sortByDesc">{{__('common.descending')}}</label>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" id="showDeleted" name="showDeleted" class="custom-control-input" @if ($filter->showDeleted) checked @endif>
-                                                <label class="custom-control-label" for="showDeleted">{{__('common.show_deleted')}}</label>
-                                            </div>
-                                        </div>
                                         <div class="form-group mg-b-40">
                                             <label class="d-block">{{__('common.item_displayed')}}</label>
                                             <input id="displaySize" type="text" class="js-range-slider" name="perPage" value="{{ $filter->perPage }}"/>

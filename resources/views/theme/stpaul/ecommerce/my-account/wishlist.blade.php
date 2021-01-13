@@ -34,7 +34,7 @@
                         <table id="wishlistTable" class="table table-md table-hover text-nowrap stripe" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th scope="col" width="20%">product Code</th>
+                                    <th scope="col" width="20%">Product Code</th>
                                     <th scope="col" width="55%">Name</th>
                                     <th scope="col" width="15%">Amount</th>
                                     <th scope="col" width="10%">Action</th>
