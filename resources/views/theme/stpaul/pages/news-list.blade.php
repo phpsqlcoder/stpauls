@@ -49,6 +49,7 @@
                             @else
                             <div class="news-post-img" style="background-image:url('{{ asset('storage/news_image/news_thumbnail/No_Image_Available.jpg')}}');"></div>
                             @endif
+                            
                             <div class="news-post-info">
                                 <div class="news-post-content">
                                     <h3>
