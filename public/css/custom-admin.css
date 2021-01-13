@@ -7,6 +7,10 @@ body {
     font-family: "Segoe UI", "Hind", "IBM Plex Sans", sans-serif;
 }
 
+#scroll1 {
+    overflow-y: auto;
+}
+
 .dropdown-profile .dropdown-link:hover .avatar img,
 .dropdown-profile .dropdown-link:focus .avatar img {
     transform: scale(1);
