@@ -42,11 +42,6 @@
                     </div>
                 </div>
                 <div class="col-lg-9">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item active" aria-current="page"><a href="{{ route('home') }}"> Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"><a href="{{route('news.front.index')}}">News</a></li>
-                        <li class="breadcrumb-item active" aria-current="page"><a href="#">{{$news->name}}</a></li>
-                    </ol>
                     <div class="gap-20"></div>
                     <h2>{{$news->name}}</h2>
                     <div class="article-meta-share">
