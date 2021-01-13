@@ -89,55 +89,57 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-12">
                 <div class="table-list mg-b-10">
                     <div class="table-responsive-lg">
                         <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
-                            <tr>
-                                <th scope="col" width="30%">Name</th>
-                                <th scope="col" width="40%">Description</th>
-                                <th scope="col" width="15%">Last Date Modified</th>
-                                <th scope="col" width="15%">Options</th>
-                            </tr>
+                                <tr>
+                                    <th width="35%">Name</th>
+                                    <th width="35%">Description</th>
+                                    <th width="15%">Last Date Modified</th>
+                                    <th width="15%">Options</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @forelse($roles as $role)
-                                <tr>
-                                    <th>
-                                        <strong @if($role->trashed()) style="text-decoration:line-through;" @endif>{{ $role->name }}</strong>
-                                    </th>
-                                    <td>{{ $role->description }}</td>
-                                    <td>{{ Setting::date_for_listing($role->updated_at) }}</td>
-                                    <td>
-                                        @if($role->trashed())
-                                            @if (auth()->user()->has_access_to_route('role.restore'))
-                                            <nav class="nav table-options justify-content-end">
-                                                <a class="nav-link" href="{{route('role.restore', $role->id)}}" title="Restore this role"><i data-feather="rotate-ccw"></i></a>
-                                            </nav>
+                                @forelse($roles as $role)
+                                    <tr>
+                                        <td>
+                                            <strong @if($role->trashed()) style="text-decoration:line-through;" @endif>{{ $role->name }}</strong>
+                                        </td>
+                                        <td>{{ $role->description }}</td>
+                                        <td>{{ Setting::date_for_listing($role->updated_at) }}</td>
+                                        <td>
+                                            @if($role->trashed())
+                                                @if (auth()->user()->has_access_to_route('role.restore'))
+                                                <nav class="nav table-options justify-content-end">
+                                                    <a class="nav-link" href="{{route('role.restore', $role->id)}}" title="Restore this role"><i data-feather="rotate-ccw"></i></a>
+                                                </nav>
+                                                @endif
+                                            @else
+                                                <nav class="nav table-options">
+                                                    @if (auth()->user()->has_access_to_route('role.edit'))
+                                                        <a href="{{ route('role.edit',$role->id) }}" class="nav-link" title="Edit Role"><i data-feather="edit"></i></a>
+                                                    @endif
+                                                    @if (auth()->user()->has_access_to_route('role.delete'))
+                                                        <a href="#modalDeleteRole" class="nav-link delete_role"  data-rid="{{ $role->id }}" data-toggle="modal" title="Delete Role"><i data-feather="trash"></i></a>
+                                                    @endif
+                                                </nav>
                                             @endif
-                                        @else
-                                            <nav class="nav table-options justify-content-end">
-                                                @if (auth()->user()->has_access_to_route('role.edit'))
-                                                    <a href="{{ route('role.edit',$role->id) }}" class="nav-link" title="Edit Role"><i data-feather="edit"></i></a>
-                                                @endif
-                                                @if (auth()->user()->has_access_to_route('role.delete'))
-                                                    <a href="#modalDeleteRole" class="nav-link delete_role"  data-rid="{{ $role->id }}" data-toggle="modal" title="Delete Role"><i data-feather="trash"></i></a>
-                                                @endif
-                                            </nav>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="3" style="text-align: center;"> <p class="text-danger">No roles found.</p></td>
-                                </tr>
-                            @endforelse
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;"> <p class="text-danger">No roles found.</p></td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div class="mg-t-5">
                     @if ($roles->firstItem() == null)
