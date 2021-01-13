@@ -101,13 +101,12 @@ class WebController extends Controller
     }
 
     public function remove_logo(Request $request){
-
         $web = Setting::first();
         $web->company_logo = '';
         $web->user_id = Auth::id();
         $web->save();
 
-        Storage::delete(Setting::select('company_logo')->where('id',$id)->get());
+        Storage::delete(Setting::select('company_logo')->where('id',$web->id)->get());
 
         return back()->with('success', __('standard.settings.website.remove_logo_success'));
     }
@@ -119,7 +118,7 @@ class WebController extends Controller
         $web->user_id = Auth::id();
         $web->save();
 
-        Storage::delete(Setting::select('website_favicon')->where('id',$id)->get());
+        Storage::delete(Setting::select('website_favicon')->where('id',$web->id)->get());
 
         return back()->with('success', __('standard.settings.website.remove_favicon_success'));
     }
