@@ -62,8 +62,8 @@
                         </div>
                     </div>
                     <div class="article-content">
-                        @if (!empty($news->thumbnail_url))
-                            <img src="{{ $news->thumbnail_url }}" alt="News image" />
+                        @if (!empty($news->image_url))
+                            <img src="{{ $news->image_url }}" alt="News image" />
                         @endif
                         {!! $news->contents !!}
                     </div>

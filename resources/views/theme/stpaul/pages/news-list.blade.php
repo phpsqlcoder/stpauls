@@ -44,7 +44,12 @@
                     
                     @forelse($articles as $article) 
                         <div class="news-post">
-                            <div class="news-post-img" style="background-image:url('{{ $article->image_url }}')"></div>
+                            @if($article->thumbnail_url)
+                            <div class="news-post-img" style="background-image:url('{{ $article->thumbnail_url }}')"></div>
+                            @else
+                            <div class="news-post-img" style="background-image:url('{{ asset('storage/news_image/news_thumbnail/No_Image_Available.jpg')}}');"></div>
+                            @endif
+                            
                             <div class="news-post-info">
                                 <div class="news-post-content">
                                     <h3>
