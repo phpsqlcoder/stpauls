@@ -34,7 +34,10 @@
                                         <div class="form-row">
                                             <div class="col-md-12">
                                                 <p>Email Address *</p>
-                                                <input pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="email" name="email" class="form-control form-input  @error('email') is-invalid @enderror" value="{{ old('email') }}">
+                                                <input id="emailInput" type="text" name="email" class="form-control form-input  @error('email') is-invalid @enderror" value="{{ old('email') }}" oninput="checkEmail();" onkeypress="checkEmail();">
+                                                <span class="invalid-feedback" role="alert" style="display: hidden;">
+                                                    <strong>Invalid Email.</strong>
+                                                </span>
                                                 @hasError(['inputName' => 'email'])
                                                 @endhasError
                                                 <div class="gap-10"></div>    
@@ -121,6 +124,23 @@
 
             });
         });  
+    </script>
+    <script>
+        function checkEmail() {
+            var email_input = document.querySelector("#emailInput");
+            var email_regex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+            if (!email_regex.test(email_input.value)) {
+                email_input.setCustomValidity("Invalid Email.");
+                $("#emailInput").next().removeAttr("style");
+                $("#emailInput").next().css("display", "block");
+            } else {
+                email_input.setCustomValidity("");
+                $("#emailInput").next().removeAttr("style");
+                $("#emailInput").next().css("display", "hidden");
+                console.log("gumagana");
+            }
+            console.log(email_regex.test(email_input.value));
+        }
     </script>
 @endsection
 
