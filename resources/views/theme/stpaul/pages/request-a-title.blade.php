@@ -137,9 +137,7 @@
                 email_input.setCustomValidity("");
                 $("#emailInput").next().removeAttr("style");
                 $("#emailInput").next().css("display", "hidden");
-                console.log("gumagana");
             }
-            console.log(email_regex.test(email_input.value));
         }
     </script>
 @endsection
