@@ -31,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -51,9 +51,9 @@ class LoginController extends Controller
                 Auth::logout();
                 return back()->with('unauthorize-login', 'Unauthorize login.'); 
             }
-        } else {
-            return back()->with('error', __('auth.login.incorrect_input'));  
         }
+        
+        return back()->with('error', __('auth.login.incorrect_input')); 
     }
 
     protected function redirectTo()
