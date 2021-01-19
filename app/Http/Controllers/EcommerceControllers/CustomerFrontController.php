@@ -214,7 +214,7 @@ class CustomerFrontController extends Controller
         $page = new Page();
         $page->name = 'Forgot Password';
 
-        return view('theme.sysu.ecommerce.customer.forgot-password');
+        return view('theme.stpaul.ecommerce.customer.forgot-password');
 
     }
 
@@ -229,6 +229,6 @@ class CustomerFrontController extends Controller
         $page = new Page();
         $page->name = 'Forgot Password';
 
-        return view('theme.sysu.ecommerce.customer.register-guest');
+        return view('theme.stpaul.ecommerce.customer.register-guest');
     }
 }
