@@ -14,7 +14,8 @@
  || Route::current()->getName() == 'account-my-orders'
  || Route::current()->getName() == 'account.manage-wishlist'
  || Route::current()->getName() == 'front.request-a-title'
- || Route::current()->getName() == 'front.branches')
+ || Route::current()->getName() == 'front.branches'
+ || Route::current()->getName() == 'account-order-info')
 
 @else
 
