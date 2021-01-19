@@ -13,7 +13,8 @@
  || Route::current()->getName() == 'my-account.change-password'
  || Route::current()->getName() == 'account-my-orders'
  || Route::current()->getName() == 'account.manage-wishlist'
- || Route::current()->getName() == 'front.request-a-title')
+ || Route::current()->getName() == 'front.request-a-title'
+ || Route::current()->getName() == 'front.branches')
 
 @else
 
