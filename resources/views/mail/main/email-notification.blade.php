@@ -106,9 +106,9 @@
                     $payment       = $qrypayment->first();
 
                     $content    = $template->content;
-                    $keywords   = ['{order_number}', '{shippingfee}', '{paid_amount}', '{remarks}', '{net_amount}', '{delivery_status}'];
+                    $keywords   = ['{order_number}', '{shippingfee}', '{paid_amount}', '{remarks}', '{net_amount}', '{delivery_status}','{branch}'];
 
-                    $variables  = [$sales->order_number, number_format($sales->delivery_fee_amount,2), number_format($paidamount,2), $sales->remarks, number_format($sales->net_amount,2), $sales->delivery_status];
+                    $variables  = [$sales->order_number, number_format($sales->delivery_fee_amount,2), number_format($paidamount,2), $sales->remarks, number_format($sales->net_amount,2), $sales->delivery_status, $sales->branch];
 
                     $newContent = str_replace($keywords,$variables,$content);
                 @endphp
