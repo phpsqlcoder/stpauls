@@ -56,6 +56,7 @@
                             <li>{paid_amount}       = Displays the amount paid of the customer.</li>
                             <li>{net_amount}        = Displays the sales net amount.</li>
                             <li>{delivery_status}   = Displays the sales delivery status.</li>
+                            <li>{branch}            = Displays the pick up store branch.</li>
                             <li>{remarks}           = Displays the sales remarks.</li>
                             <br>
                             <li>{customer_name}     = Displays the customer name.</li>
