@@ -160,7 +160,7 @@
                                                 <div id="chxbx">
                                                     <div class="custom-control custom-checkbox">
                                                         <input type="checkbox" class="custom-control-input" id="customCheck" name="subscribe" value="1">
-                                                        <label class="custom-control-label" for="customCheck">I want to receive exclusive offers and promotions from St Pauls.</label>
+                                                        <label class="custom-control-label" for="customCheck">I want to receive exclusive offers and promotions from ST PAULS.</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -168,7 +168,7 @@
                                                 <div class="gap-10"></div>
                                                 <button type="submit" class="btn btn-md primary-btn btn-block">Sign Up</button>
                                                 <div class="gap-10"></div>
-                                                <p class="sign-notice">By clicking "SIGN UP", I agree to St. Pauls <a style="color:blue;" href="{{route('privacy-policy')}}">Privacy Policy</a></p>
+                                                <p class="sign-notice">By clicking "SIGN UP", I agree to ST PAULS <a style="color:blue;" href="{{route('privacy-policy')}}">Privacy Policy</a></p>
                                             </div>
                                         </div>
                                     </div>
