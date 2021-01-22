@@ -10,20 +10,29 @@
                 </ul>
             </div>
             <div class="col-lg-8 col-md-12 col-sm-12">
-                <form action="" method="POST">
+                <form action="{{ route('customer-front.subscribe') }}" method="POST">
+                    @csrf
                     <div class="form-row form-style align-center">
-                        <div class="col-lg-5">
+                        <div class="col-lg-3">
                             <div class="gap-10"></div>
                             <div class="form-wrap">
-                                <label class="form-label" for="name">Name</label>
-                                <input id="name" type="text" class="form-control form-input" name="name" autocomplete="name" />
+                                <label class="form-label" for="name">First Name</label>
+                                <input id="firs_name" type="text" class="form-control form-input" name="first_name" autocomplete="off" />
                             </div>
                             <div class="gap-10"></div>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="col-lg-3">
                             <div class="gap-10"></div>
                             <div class="form-wrap">
-                                <input id="email" type="email" class="form-control form-input" name="email" autocomplete="email" />
+                                <label class="form-label" for="name">Last Name</label>
+                                <input id="last_name" type="text" class="form-control form-input" name="last_name" autocomplete="off" />
+                            </div>
+                            <div class="gap-10"></div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="gap-10"></div>
+                            <div class="form-wrap">
+                                <input id="email" type="email" class="form-control form-input" name="email" autocomplete="off" />
                                 <label class="form-label" for="email">Email Address</label>
                             </div>
                             <div class="gap-10"></div>

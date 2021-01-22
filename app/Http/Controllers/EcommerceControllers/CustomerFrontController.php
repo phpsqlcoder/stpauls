@@ -120,6 +120,15 @@ class CustomerFrontController extends Controller
 
     }
 
+    public function subscribe(Request $request)
+    {
+        $newSubscriber = $request->only('email', 'first_name', 'last_name');
+        $newSubscriber['code'] = Subscriber::generate_unique_code();
+        Subscriber::create($newSubscriber);
+
+        return back()->with('subcribe-success','Successfully submitted.');
+    }
+
 
     public function login(Request $request) {
 

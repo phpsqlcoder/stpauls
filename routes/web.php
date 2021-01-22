@@ -8,8 +8,9 @@
     // Home
         Route::get('/', 'FrontController@home')->name('home');
 
-    // Customer Login & Sign Up
+    // Customer Login, Sign Up & Subscribe
 
+        Route::post('/customer-subscribe','EcommerceControllers\CustomerFrontController@subscribe')->name('customer-front.subscribe');
         Route::get('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@sign_up')->name('customer-front.sign-up');
         Route::post('/customer-sign-up', 'EcommerceControllers\CustomerFrontController@customer_sign_up')->name('customer-front.customer-sign-up');
 
