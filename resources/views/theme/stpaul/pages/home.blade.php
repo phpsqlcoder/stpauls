@@ -2,7 +2,6 @@
 
 @section('pagecss')
     <link rel="stylesheet" href="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
 @endsection
 
 @section('content')
@@ -306,29 +305,10 @@
 
 @section('pagejs')
     <script src="{{ asset('theme/stpaul/plugins/sweetalert2/sweetalert.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 @endsection
 
 @section('customjs')
     <script>
-        $(document).ready(function () {
-            @if(Session::has('subcribe-success'))
-                swal({
-                    toast: true,
-                    position: 'center',
-                    title: "{{ session('subcribe-success', '') }}",
-                    type: "success",
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    onOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                })
-            @endif
-        });
-
         function add_to_cart(productID) {
             $.ajaxSetup({
                 headers: {
@@ -392,5 +372,52 @@
                 }
             });
         }
+
+        $('#subscribeForm').submit(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $('#spanSubscribe').html('Submitting...');
+            $('#subscribeBtn').prop('disabled',true);
+
+            let data = $('#subscribeForm').serialize();
+            $.ajax({
+                data: data,
+                type: "POST",
+                url: "{{ route('customer-front.subscribe') }}",
+                success: function(returnData) {
+                    $('#spanSubscribe').html('Subscribe');
+                    $('#subscribeBtn').prop('disabled',false);
+
+                    swal({
+                        toast: true,
+                        position: 'center',
+                        title: "Success!",
+                        text: returnData['subcribe-success'],
+                        type: "success",
+                        showCancelButton: false,
+                        timerProgressBar: true, 
+                        closeOnCancel: false
+                        
+                    });
+                },
+                error: function(){
+                    swal({
+                        toast: true,
+                        position: 'center',
+                        title: "Success!",
+                        text: returnData['subcribe-failed'],
+                        type: "error",
+                        showCancelButton: false,
+                        timerProgressBar: true, 
+                        closeOnCancel: false
+                    });
+                }
+            });
+            return false;
+        });
     </script>
 @endsection

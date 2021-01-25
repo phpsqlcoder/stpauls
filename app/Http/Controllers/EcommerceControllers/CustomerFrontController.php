@@ -26,6 +26,7 @@ use App\Provinces;
 use App\Cities;
 
 use App\Rules\RecaptchaRule;
+use App\Mail\MailingList\WelcomeMail;
 
 class CustomerFrontController extends Controller
 {
@@ -132,9 +133,14 @@ class CustomerFrontController extends Controller
         if ($subscriber) {
             if ($subscriber->trashed()) {
                 $subscriber->restore();
-                return back()->with('subcribe-success', 'Thank you for subscribing again.');
+
+                return response()->json([
+                    'subcribe-success' => 'Thank you for subscribing again.'              
+                ]);
             } else {
-                return back()->with('subcribe-failed', 'Your email is already in our list.');
+                return response()->json([
+                    'subcribe-failed' => 'Your email is already in our list.'              
+                ]);
             }
         }
 
@@ -144,9 +150,14 @@ class CustomerFrontController extends Controller
 
         if (!empty($subscriber)) {
             \Mail::to($request->email)->send(new WelcomeMail(Setting::info(), $subscriber));
-            return back()->with('subcribe-success', 'Thank you for subscribing.');
+
+            return response()->json([
+                'subcribe-success' => 'Thank you for subscribing.'              
+            ]);
         } else {
-            return back()->with('subcribe-failed', 'Failed to subscribe. Please try again later.');
+            return response()->json([
+                'subcribe-failed' => 'Failed to subscribe. Please try again later.'              
+            ]);
         }
     }
 
