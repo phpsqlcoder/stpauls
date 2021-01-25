@@ -122,11 +122,32 @@ class CustomerFrontController extends Controller
 
     public function subscribe(Request $request)
     {
-        $newSubscriber = $request->only('email', 'first_name', 'last_name');
-        $newSubscriber['code'] = Subscriber::generate_unique_code();
-        Subscriber::create($newSubscriber);
+        $newSubscriber = $request->validate([
+            'email' => 'required|email',
+            'first_name' => '',
+            'last_name' => ''
+        ]);
 
-        return back()->with('subcribe-success','Successfully submitted.');
+        $subscriber = Subscriber::withTrashed()->where('email', $request->email)->first();
+        if ($subscriber) {
+            if ($subscriber->trashed()) {
+                $subscriber->restore();
+                return back()->with('subcribe-success', 'Thank you for subscribing again.');
+            } else {
+                return back()->with('subcribe-failed', 'Your email is already in our list.');
+            }
+        }
+
+        $newSubscriber['code'] = Subscriber::generate_unique_code();
+
+        $subscriber = Subscriber::create($newSubscriber);
+
+        if (!empty($subscriber)) {
+            \Mail::to($request->email)->send(new WelcomeMail(Setting::info(), $subscriber));
+            return back()->with('subcribe-success', 'Thank you for subscribing.');
+        } else {
+            return back()->with('subcribe-failed', 'Failed to subscribe. Please try again later.');
+        }
     }
 
 

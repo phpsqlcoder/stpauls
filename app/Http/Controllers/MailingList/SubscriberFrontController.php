@@ -18,41 +18,15 @@ class SubscriberFrontController extends Controller
             'email' => 'required|email',
             'first_name' => '',
             'last_name' => '',
-            'alert_types' => ''
         ]);
 
         $subscriber = Subscriber::withTrashed()->where('email', $request->email)->first();
         if ($subscriber) {
             if ($subscriber->trashed()) {
-
-                foreach($newSubscriber['alert_types'] as $typeId) {
-                    $group = Group::find($typeId);
-                    if ($group && ! $group->subscribers->containts($subscriber->id)) {
-                        $group->subscribers()->attach($subscriber->id);
-                    }
-                }
-
                 $subscriber->restore();
                 return response()->json(['success' => true, 'message' => 'Thank you for subscribing again.']);
             } else {
-                if (is_array($newSubscriber['alert_types']) && !empty($newSubscriber['alert_types'])) {
-                    $subscribeToNewAlert = false;
-                    foreach($newSubscriber['alert_types'] as $typeId) {
-                        $group = Group::find($typeId);
-                        if ($group && ! $group->subscribers->contains($subscriber->id)) {
-                            $group->subscribers()->attach($subscriber->id);
-                            $subscribeToNewAlert = true;
-                        }
-                    }
-
-                    if ($subscribeToNewAlert)
-                        return response()->json(['success' => true, 'message' => 'Thank you for subscribing again.']);
-                    else
-                        return response()->json(['failed' => true, 'message' => 'Your email is already in our list.']);
-
-                } else {
-                    return response()->json(['failed' => true, 'message' => 'Your email is already in our list.']);
-                }
+                return response()->json(['failed' => true, 'message' => 'Your email is already in our list.']);
             }
         }
 
@@ -61,16 +35,6 @@ class SubscriberFrontController extends Controller
         $subscriber = Subscriber::create($newSubscriber);
 
         if (!empty($subscriber)) {
-
-            if (is_array($newSubscriber['alert_types']) && !empty($newSubscriber['alert_types'])) {
-                foreach($newSubscriber['alert_types'] as $typeId) {
-                    $group = Group::find($typeId);
-                    if ($group && ! $group->subscribers->contains($subscriber->id)) {
-                        $group->subscribers()->attach($subscriber->id);
-                    }
-                }
-            }
-
             \Mail::to($request->email)->send(new WelcomeMail(Setting::info(), $subscriber));
             return response()->json(['success' => true, 'message' => 'Thank you for subscribing.']);
         } else {
