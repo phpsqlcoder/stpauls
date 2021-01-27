@@ -15,7 +15,7 @@
                                         <h2>{{ $banner->title }}</h2>
                                         <p>{{ $banner->description }}</p>
                                         @if($banner->url && $banner->button_text)  
-                                        <a class="btn btn-lg primary-btn mt-5" href="{{ $banner->url }}">{{ $banner->button_text }}</a>
+                                        <a class="btn btn-lg primary-btn mt-5" href="{{ $banner->url }}" target="_blank">{{ $banner->button_text }}</a>
                                         @endif
                                         <div class="gap-60"></div>
                                     </div>
