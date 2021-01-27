@@ -6,10 +6,6 @@
 
 @section('content')
 	<main>
-        <!-- Subscribe Form Area -->
-            @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.subscribe-form')
-        <!-- END Subscribe Form Area -->
-
         <!-- Home Main Body Area -->
         <section id="home-body">
             <div class="container">
@@ -288,7 +284,6 @@
                 @endif
                 <!-- END Item on Sale Content -->
                 <!-- END Home Item on Sale Section -->
-
             </div>
         </section>
         <!-- END Home Main Body Area -->
@@ -300,6 +295,10 @@
         <!-- Home Payments Logo Area -->
         {{--@include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.home-payments')--}}
         <!-- END Home Payments Logo Area -->
+
+        <!-- Subscribe Form Area -->
+            @include('theme.'.env('FRONTEND_TEMPLATE').'.layouts.subscribe-form')
+        <!-- END Subscribe Form Area -->
     </main>
 @endsection
 
