@@ -136,7 +136,7 @@
                                             <a class="nav-link" href="{{ route('branch.area-edit',$area->id) }}" title="Edit Area"><i data-feather="edit"></i></a>
                                             @endif
 
-                                            @if (auth()->user()->has_access_to_route('branch.single.delete'))
+                                            @if (auth()->user()->has_access_to_route('branch-area.single.delete'))
                                                 @if(count($area->branches))
 
                                                 @else

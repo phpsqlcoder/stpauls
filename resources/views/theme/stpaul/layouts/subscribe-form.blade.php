@@ -10,14 +10,13 @@
                 </ul>
             </div>
             <div class="col-lg-8 col-md-12 col-sm-12">
-                <form action="{{ route('customer-front.subscribe') }}" method="POST">
-                    @csrf
+                <form id="subscribeForm">
                     <div class="form-row form-style align-center">
                         <div class="col-lg-3">
                             <div class="gap-10"></div>
                             <div class="form-wrap">
                                 <label class="form-label" for="name">First Name</label>
-                                <input id="firs_name" type="text" class="form-control form-input" name="first_name" autocomplete="off" />
+                                <input id="firs_name" type="text" class="form-control form-input" id="first_name" name="first_name" autocomplete="off" />
                             </div>
                             <div class="gap-10"></div>
                         </div>
@@ -25,7 +24,7 @@
                             <div class="gap-10"></div>
                             <div class="form-wrap">
                                 <label class="form-label" for="name">Last Name</label>
-                                <input id="last_name" type="text" class="form-control form-input" name="last_name" autocomplete="off" />
+                                <input id="last_name" type="text" class="form-control form-input" id="last_name" name="last_name" autocomplete="off" />
                             </div>
                             <div class="gap-10"></div>
                         </div>
@@ -39,7 +38,7 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="gap-10"></div>
-                            <button type="submit" class="btn btn-md primary-btn">Subscribe</button>
+                            <button type="submit" class="btn btn-md primary-btn" id="subscribeBtn"><span id="spanSubscribe">Subscribe</span></button>
                             <div class="gap-10"></div>
                         </div>
                     </div>
