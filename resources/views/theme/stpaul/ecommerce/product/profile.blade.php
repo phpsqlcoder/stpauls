@@ -18,6 +18,34 @@
         .product-rating .fa-star.checked {
             color: #ffb800;
         }
+
+        .add-to-wishlist-btn {
+            font-family: "IBM Plex Sans", sans-serif;
+            font-size: 1em;
+            font-weight: 600;
+            background: #28a745;
+            text-transform: uppercase;
+            color: white;
+            margin-top: 10px;
+            -webkit-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            border-radius: 0;
+            z-index: 500;
+        }
+
+        .remove-to-wishlist-btn {
+            font-family: "IBM Plex Sans", sans-serif;
+            font-size: 1em;
+            font-weight: 600;
+            background: #ffc107;
+            text-transform: uppercase;
+            color: white;
+            margin-top: 10px;
+            -webkit-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            border-radius: 0;
+            z-index: 500;
+        }
     </style>
 @endsection
 
@@ -211,18 +239,18 @@
                                             </button>
                                             @endif
 
+                                            @php
+                                                $is_fav = \App\EcommerceModel\WishlistCustomer::product_wishlist($product->id);
+                                            @endphp
+
                                             @if(Auth::check())
-                                            <div class="product-wishlist">
-                                                <input name="wishlist" id="wishlist" data-product-id="333" type="checkbox" @if(\App\EcommerceModel\WishlistCustomer::product_wishlist($product->id) > 0) checked @endif/>
-                                                <label for="wishlist">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 255.7 225.13">
-                                                        <path style="color:#000000;enable-background:accumulate;"
-                                                        d="M128,69.9s-17-48.25-63-48.25S7.71,75.32,7.71,75.32s-11.36,39.74,39.74,89.29L128,233.77l80.55-69.16c51.09-49.55,39.74-89.29,39.74-89.29S236.9,21.65,191,21.65,128,69.9,128,69.9Z"
-                                                        transform="translate(-0.13 -15.15)" fill="transparent" id="heart-path" stroke="#F8332A" stroke-width="15" marker="none" visibility="visible"
-                                                            display="inline" overflow="visible" />
-                                                    </svg>
-                                                </label>
-                                            </div>
+                                                <button type="button" style="display: {{ $is_fav == 0 ? 'none' : 'block' }};" id="favBtnRemove" class="btn btn-lg remove-to-wishlist-btn" onclick="remove_to_favorites('{{$product->id}}')">
+                                                    Remove to Wishlist
+                                                </button>
+
+                                                <button style="display: {{ $is_fav == 1 ? 'none' : 'block' }};" id="favBtnAdd" type="button" class="btn btn-lg add-to-wishlist-btn" onclick="add_to_favorites('{{$product->id}}')">
+                                                    Add to Wishlist
+                                                </button>
                                             @endif
                                         </div>
                                     </div>
@@ -434,43 +462,85 @@
     <script src="{{ asset('theme/stpaul/plugins/xZoom/src/hammer.js/jquery.hammer.min.js') }}"></script>
 
     <script>
-        $('input[type="checkbox"]').click(function(){
-            if($(this).prop("checked") == true){
+        function add_to_favorites(product_id){
+            console.log('add');
+            $.ajax({
+                data: {
+                    "product_id": product_id,
+                    "_token": "{{ csrf_token() }}",
+                },
+                type: "post",
+                url: "{{route('product.add-to-wishlist')}}",
+                success: function(returnData) {
+                    $('#favBtnRemove').css('display','block');
+                    $('#favBtnAdd').css('display','none');
+
+                    swal({
+                        title: '',
+                        text: "Product has been added to wishlist.",         
+                    });
+                }
+            });
+        }
+
+        function remove_to_favorites(product_id){
+            console.log('remove');
+            $.ajax({
+                data: {
+                    "product_id": product_id,
+                    "_token": "{{ csrf_token() }}",
+                },
+                type: "post",
+                url: "{{route('product.remove-to-wishlist')}}",
+                success: function(returnData) {
+                    $('#favBtnRemove').css('display','none');
+                    $('#favBtnAdd').css('display','block');
+
+                    swal({
+                        title: '',
+                        text: "Product has been removed to wishlist.",         
+                    });
+                }
+            });
+        }
+
+        // $('input[type="checkbox"]').click(function(){
+        //     if($(this).prop("checked") == true){
                 
-                var prodID = $('#productID').val();
-                $.ajax({
-                    data: {
-                        "product_id": prodID,
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    type: "post",
-                    url: "{{route('product.add-to-wishlist')}}",
-                    success: function(returnData) {
-                        swal({
-                            title: '',
-                            text: "Product has been added to wishlist.",         
-                        });
-                    }
-                });
-            }
-            else if($(this).prop("checked") == false){
-                var prodID = $('#productID').val();
-                $.ajax({
-                    data: {
-                        "product_id": prodID,
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    type: "post",
-                    url: "{{route('product.remove-to-wishlist')}}",
-                    success: function(returnData) {
-                        swal({
-                            title: '',
-                            text: "Product has been removed to wishlist.",         
-                        });
-                    }
-                });
-            }
-        });
+        //         var prodID = $('#productID').val();
+        //         $.ajax({
+        //             data: {
+        //                 "product_id": prodID,
+        //                 "_token": "{{ csrf_token() }}",
+        //             },
+        //             type: "post",
+        //             url: "{{route('product.add-to-wishlist')}}",
+        //             success: function(returnData) {
+        //                 swal({
+        //                     title: '',
+        //                     text: "Product has been added to wishlist.",         
+        //                 });
+        //             }
+        //         });
+        //     }
+        //     else if($(this).prop("checked") == false){
+        //         var prodID = $('#productID').val();
+        //         $.ajax({
+        //             data: {
+        //                 "product_id": prodID,
+        //                 "_token": "{{ csrf_token() }}",
+        //             },
+        //             type: "post",
+        //             url: "{{route('product.remove-to-wishlist')}}",
+        //             success: function(returnData) {
+        //                 swal({
+        //                     title: '',
+        //                     text: "Product has been removed to wishlist.",         
+        //                 });
+        //             }
+        //         });
+        //     }
+        // });
 
         function add_to_cart(productID) {
             $.ajaxSetup({
