@@ -237,20 +237,21 @@
                                             <button type="submit" class="btn btn-lg buy-now-btn buyNowButton" id="buynow">
                                                 <img src="{{\URL::to('/')}}/theme/stpaul/images/misc/blitz.png" alt=""> Buy Now
                                             </button>
-                                            @endif
 
-                                            @php
-                                                $is_fav = \App\EcommerceModel\WishlistCustomer::product_wishlist($product->id);
-                                            @endphp
+                                            @else
+                                                @php
+                                                    $is_fav = \App\EcommerceModel\WishlistCustomer::product_wishlist($product->id);
+                                                @endphp
 
-                                            @if(Auth::check())
-                                                <button type="button" style="display: {{ $is_fav == 0 ? 'none' : 'block' }};" id="favBtnRemove" class="btn btn-lg remove-to-wishlist-btn" onclick="remove_to_favorites('{{$product->id}}')">
-                                                    Remove to Wishlist
-                                                </button>
+                                                @if(Auth::check())
+                                                    <button type="button" style="display: {{ $is_fav == 0 ? 'none' : 'block' }};" id="favBtnRemove" class="btn btn-lg remove-to-wishlist-btn" onclick="remove_to_favorites('{{$product->id}}')">
+                                                        Remove to Wishlist
+                                                    </button>
 
-                                                <button style="display: {{ $is_fav == 1 ? 'none' : 'block' }};" id="favBtnAdd" type="button" class="btn btn-lg add-to-wishlist-btn" onclick="add_to_favorites('{{$product->id}}')">
-                                                    Add to Wishlist
-                                                </button>
+                                                    <button style="display: {{ $is_fav == 1 ? 'none' : 'block' }};" id="favBtnAdd" type="button" class="btn btn-lg add-to-wishlist-btn" onclick="add_to_favorites('{{$product->id}}')">
+                                                        Add to Wishlist
+                                                    </button>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
