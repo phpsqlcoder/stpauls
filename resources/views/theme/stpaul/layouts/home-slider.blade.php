@@ -6,22 +6,13 @@
                     @foreach ($page->album->banners as $banner)
                     <div class="hero-slide">
                         <img src="{{ $banner->image_path }}">
-                        <div class="banner-caption">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-lg-5 col-md-5">
-                                    </div>
-                                    <div class="col-lg-7 col-md-7">
-                                        <h2>{{ $banner->title }}</h2>
-                                        <p>{{ $banner->description }}</p>
-                                        @if($banner->url && $banner->button_text)  
-                                        <a class="btn btn-lg primary-btn mt-5" href="{{ $banner->url }}" target="_blank">{{ $banner->button_text }}</a>
-                                        @endif
-                                        <div class="gap-60"></div>
-                                    </div>
-                                </div>
+                        @if($banner->url && $banner->button_text)  
+                        <div class="banner-button">
+                            <div class="container position-relative d-flex justify-content-center">
+                                <a class="btn btn-md primary-btn" href="{{ $banner->url }}" target="_blank">{{ $banner->button_text }}</a>
                             </div>
                         </div>
+                        @endif
                     </div>
                     @endforeach
                 </div>
