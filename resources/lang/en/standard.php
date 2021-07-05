@@ -252,6 +252,14 @@ return [
     'sales' => [
         'approve_success' => 'Payment has been approved.',
         'reject_success' => 'Payment rejected and order has been cancelled.',
-    ]
+    ],
+
+    'coupons' => [
+        'status_update_success' => 'The Coupon status has been changed to :STATUS',
+        'single_delete_success' => 'The Coupon has been deleted.',
+        'restore_promo_success' => 'The Coupon has been restored.',
+        'multiple_status_update_success' => 'Selected Coupon(s) status has been changed to :STATUS',
+        'multiple_delete_success' => 'Selected Coupon(s) has been deleted.'
+    ],
 
 ];

@@ -33,6 +33,10 @@ use App\ShippingfeeLocations;
 use App\ShippingfeeWeight;
 use App\Shippingfee;
 
+
+use App\EcommerceModel\CouponCartDiscount;
+use App\EcommerceModel\CouponCart;
+
 class CheckoutController extends Controller
 {
 
@@ -85,8 +89,17 @@ class CheckoutController extends Controller
             }
         }
 
+        $checkoutDiscount = CouponCartDiscount::where('customer_id',Auth::id());
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','weight','page','cod','stp','sdd','dtd','loyalty_discount','payment_method','forPickupCounter','totalproducts'));
+        if($checkoutDiscount->exists()){
+            $c = $checkoutDiscount->first();
+            $ckCouponDiscount = $c->coupon_discount;
+        } else {
+            $ckCouponDiscount = 0;
+        }
+
+
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','weight','page','cod','stp','sdd','dtd','loyalty_discount','payment_method','forPickupCounter','totalproducts','ckCouponDiscount'));
     }
 
     public function ajax_city_rates(Request $request)

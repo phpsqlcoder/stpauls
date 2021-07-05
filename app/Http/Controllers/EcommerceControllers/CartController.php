@@ -31,6 +31,10 @@ use App\Cities;
 use App\Provinces;
 use App\Countries;
 
+use App\EcommerceModel\CouponCartDiscount;
+use App\EcommerceModel\CouponCart;
+use App\EcommerceModel\Coupon;
+
 use App\User;
 
 
@@ -206,6 +210,11 @@ class CartController extends Controller
     public function view()
     {
         if (auth()->check()) {
+
+            // reset coupon carts of customer
+            CouponCartDiscount::where('customer_id',Auth::id())->delete();
+            CouponCart::where('customer_id',Auth::id())->delete();
+
             $cart = Cart::where('user_id',Auth::id())->get();
             $totalProducts = $cart->count();
         } else {
@@ -236,7 +245,7 @@ class CartController extends Controller
     }
 
     public function proceed_checkout(Request $request)
-    {
+    {  
         $data   = $request->all();
         $cartId = $data['cart_id'];
         $qty    = $data['qty'];
@@ -254,6 +263,33 @@ class CartController extends Controller
                     'price' => $price[$key]
                 ]);
             }
+
+
+            if($request->coupon_counter > 0){
+                $data    = $request->all();
+                $coupons = $data['couponid'];
+                $product = $data['coupon_productid'];
+                $usage   = $data['couponUsage'];
+
+                foreach($coupons as $key => $c){
+                    $coupon = Coupon::find($c);
+
+                    if($coupon->status == 'ACTIVE'){
+                        CouponCart::create([
+                            'coupon_id' => $coupon->id,
+                            'product_id' => $product[$key] == 0 ? NULL : $product[$key],
+                            'customer_id' => Auth::id(),
+                            'total_usage' => $usage[$key]
+                        ]);
+                    }
+                }
+            }
+
+            CouponCartDiscount::create([
+                'customer_id' => Auth::id(),
+                'coupon_discount' => $request->coupon_total_discount
+            ]);
+            
            
             return redirect()->route('cart.front.checkout');
         } else {

@@ -112,4 +112,11 @@ class ProductCategory extends Model
 
         return $counter;
     }
+
+    
+    // coupons
+    public function  published_products()
+    {
+        return $this->hasMany(Product::class, 'category_id')->where('status','PUBLISHED');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\EcommerceModel;
 
 use Illuminate\Database\Eloquent\Model;
+use \App\EcommerceModel\SalesHeader;
 
 class SalesPayment extends Model
 {
@@ -22,7 +23,7 @@ class SalesPayment extends Model
     public static function pending_money_transfer()
     {   
 
-        $qry = \DB::table('ecommerce_sales_headers')->where('payment_method','>',1)->where('status','active')->whereIn('delivery_status',['Waiting for Payment','WAITING FOR VALIDATION','Shipping Fee Validation'])->count();
+        $qry = SalesHeader::where('payment_method','>',1)->where('status','active')->whereIn('delivery_status',['Waiting for Payment','WAITING FOR VALIDATION','Shipping Fee Validation'])->count();
 
         return $qry;
     }

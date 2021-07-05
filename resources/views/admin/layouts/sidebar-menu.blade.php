@@ -196,6 +196,16 @@
         </li>
     @endif
 
+    @if (auth()->user()->has_access_to_module('coupons'))
+        <li class="nav-item with-sub @if (request()->routeIs('coupons*')) active show @endif">
+            <a href="" class="nav-link"><i data-feather="users"></i> <span>Coupons</span></a>
+            <ul>
+                <li @if (\Route::current()->getName() == 'coupons.index' || \Route::current()->getName() == 'coupons.edit') class="active" @endif><a href="{{ route('coupons.index') }}">Manage Coupons</a></li>
+                <li @if (\Route::current()->getName() == 'coupons.create') class="active" @endif><a href="{{ route('coupons.create') }}">Create a Coupon</a></li>
+            </ul>
+        </li>
+    @endif
+
     @if (auth()->user()->has_access_to_module('loyalty'))
         <li class="nav-item with-sub @if (request()->routeIs('loyalty*') || request()->routeIs('discounts*')) active show @endif">
             <a href="" class="nav-link"><i data-feather="users"></i> <span>Loyalty</span></a>

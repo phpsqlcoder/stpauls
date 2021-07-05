@@ -91,7 +91,7 @@
             Route::get('/ajax-city-rates','EcommerceControllers\CheckoutController@ajax_city_rates')->name('ajax.get-city-rates');
 
 
-            Route::get('/checkout/remove-product','EcommerceControllers\CheckoutController@remove_product')->name('checkout.remove-product');
+            // Route::get('/checkout/remove-product','EcommerceControllers\CheckoutController@remove_product')->name('checkout.remove-product');
             Route::post('/temp_save','EcommerceControllers\CartController@save_sales')->name('cart.temp_sales');
         //
 
@@ -140,6 +140,17 @@
             Route::get('/wishlist-remove-product','EcommerceControllers\MyAccountController@remove_product')->name('wishlist.remove-product');
         //
 
+
+        // Coupons
+            Route::get('/account/claimed-coupons','EcommerceControllers\CouponFrontController@claimed')->name('coupons-claimed');
+
+            Route::get('/checkout-use-coupon/{id}','EcommerceControllers\CouponFrontController@use_coupon')->name('use-coupon');
+
+            Route::post('/add-manual-coupon','EcommerceControllers\CouponFrontController@add_manual_coupon')->name('add-manual-coupon');
+
+            Route::get('/display-collectibles', 'EcommerceControllers\CouponFrontController@collectibles')->name('display.coupons');
+            Route::get('/remove-coupon/{id}','EcommerceControllers\CheckoutController@remove_coupon')->name('checkout.remove-coupon');
+        //
     });
 
 
@@ -183,6 +194,17 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/admin/promo-multiple-change-status','Promo\PromoController@multiple_change_status')->name('promo.multiple.change.status');
             Route::post('/admin/promo-multiple-delete','Promo\PromoController@multiple_delete')->name('promo.multiple.delete');
             Route::get('/admin/promo-restore/{id}', 'Promo\PromoController@restore')->name('promo.restore');
+        //
+
+        // Coupon
+            Route::resource('/coupons','EcommerceControllers\CouponController');
+            Route::get('/coupon/{id}/{status}', 'EcommerceControllers\CouponController@update_status')->name('coupon.change-status');
+            Route::post('/coupon-single-delete', 'EcommerceControllers\CouponController@single_delete')->name('coupon.single.delete');
+            Route::get('/coupon-restore/{id}', 'EcommerceControllers\CouponController@restore')->name('coupon.restore');
+            Route::post('/coupon-multiple-change-status','EcommerceControllers\CouponController@multiple_change_status')->name('coupon.multiple.change.status');
+            Route::post('/coupon-multiple-delete','EcommerceControllers\CouponController@multiple_delete')->name('coupon.multiple.delete');
+
+            Route::get('/get-product-brands', 'EcommerceControllers\CouponFrontController@get_brands')->name('display.product-brands');
         //
 
         // Product review
