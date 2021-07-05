@@ -265,6 +265,8 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/website-settings/remove_logo', 'Settings\WebController@remove_logo')->name('website-settings.remove-logo');
             Route::post('/website-settings/remove_icon', 'Settings\WebController@remove_icon')->name('website-settings.remove-icon');
             Route::post('/website-settings/remove_media', 'Settings\WebController@remove_media')->name('website-settings.remove-media');
+
+            Route::post('/ecommerce-coupon-setting-update','Settings\WebController@coupon_update')->name('ecom-setting-coupon-update');
         //
 
         // Manage Sales Transactions

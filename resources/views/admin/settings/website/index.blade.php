@@ -657,6 +657,28 @@
                                         </div>
                                     </form>
                                 </div>
+
+                                <h4 class="mg-t-50">Coupon Settings</h4>
+                                <form method="post" action="{{ route('ecom-setting-coupon-update') }}">
+                                    @csrf
+                                    <div class="form-group">
+                                        <div id="coupon_limit" class="parsley-input">      
+                                            <label>Coupon Limit *</label>                                      
+                                            <input type="number" name="coupon_limit" class="form-control" data-parsley-class-handler="#coupon_limit" value="{{ old('coupon_limit',$web->coupon_limit) }}" min="1">
+                                            <small>Number of Coupons to be used in every transaction.</small>
+                                        </div>
+                                    </div>
+                                     <div class="form-group">
+                                        <div id="coupon_discount_limit" class="parsley-input">      
+                                            <label>Coupon Discount Limit *</label>                                      
+                                            <input type="number" name="coupon_discount_limit" class="form-control" data-parsley-class-handler="#coupon_discount_limit" value="{{ old('coupon_discount_limit',$web->coupon_discount_limit) }}" min="1">
+                                            <small>Total coupon discount limit to be used in every transaction.</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-xs btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

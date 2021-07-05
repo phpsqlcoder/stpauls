@@ -469,5 +469,20 @@ class WebController extends Controller
             'success' =>  'Payment option has been activated.'
         ]);
     }
+
+
+    public function coupon_update(Request $request)
+    {
+       $coupon = Setting::first();
+       $coupon->update([
+            'coupon_limit' => $request->coupon_limit,
+            'coupon_discount_limit' => $request->coupon_discount_limit
+       ]);
+
+       return back()->with([
+            'tabname' => 'ecommerce',
+            'success' =>  'Coupon settings has been updated.'
+        ]);
+    }
     
 }

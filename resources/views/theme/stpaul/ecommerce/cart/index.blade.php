@@ -207,6 +207,7 @@
 
                                 <input type="hidden" id="total_amount_discount_counter" value="0">
                                 <input type="hidden" id="coupon_limit" value="{{ Setting::info()->coupon_limit }}">
+                                <input type="hidden" id="coupon_discount_limit" value="{{ Setting::info()->coupon_discount_limit }}">
                                 <input type="hidden" id="coupon_counter" name="coupon_counter" value="0">
                                 <input type="hidden" id="solo_coupon_counter" value="0">
                                 <!-- <input type="hidden" id="total_amount_discount_counter" value="0"> -->
@@ -668,7 +669,7 @@
 
             var combination = $('#couponcombination'+cid).val();
 
-            var max_amount_coupon_discount = parseFloat(500);
+            var max_amount_coupon_discount = parseFloat($('#coupon_discount_limit').val());
             var couponTotalDiscount = parseFloat($('#coupon_total_discount').val());
 
             if(parseInt(totalUsedCoupon) < parseInt(limit)){
