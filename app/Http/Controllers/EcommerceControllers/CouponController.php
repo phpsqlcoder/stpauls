@@ -48,7 +48,7 @@ class CouponController extends Controller
         $products = Product::where('status','PUBLISHED')->get();
         $categories =  ProductCategory::has('published_products')->where('status','PUBLISHED')->get();
         $brands = Product::whereNotNull('brand')->distinct()->get(['brand']);
-        $customers = User::where('role_id',6)->where('is_active',1)->get();
+        $customers = User::where('role_id',3)->where('is_active',1)->get();
 
         $locations = Deliverablecities::where('status','PUBLISHED')->get();
         $free_products = Product::where('category_id',87)->get();
@@ -176,7 +176,7 @@ class CouponController extends Controller
         $products = Product::where('status','PUBLISHED')->get();
         $categories =  ProductCategory::has('published_products')->where('status','PUBLISHED')->get();
         $brands = Product::whereNotNull('brand')->distinct()->get(['brand']);
-        $customers = User::where('role_id',6)->where('is_active',1)->get();
+        $customers = User::where('role_id',3)->where('is_active',1)->get();
         $locations = Deliverablecities::where('status','PUBLISHED')->get();
         $free_products = Product::where('category_id',87)->get();
 
