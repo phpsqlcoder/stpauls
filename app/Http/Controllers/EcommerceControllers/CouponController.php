@@ -138,7 +138,7 @@ class CouponController extends Controller
             'amount_discount_type' => $amount_discount,
             'product_discount' => $request->amount_discount == 2 ? $request->product_discount : NULL,
             'discount_product_id' => $discount_productid,
-            // 'availability' => ($request->has('availability')) ? 1 : 0,
+            'availability' => 1,
             'user_id' => Auth::id(),
         ]);
 
