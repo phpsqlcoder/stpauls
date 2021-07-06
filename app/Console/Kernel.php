@@ -13,7 +13,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\CouponAvailability::class,
+        Commands\CouponValidity::class,
+        Commands\EventValidity::class,
+        Commands\PromoValidity::class,
     ];
 
     /**
@@ -24,8 +27,23 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // Check Coupon validity every minute.
+        $schedule->command('coupon_validity:cron')
+                 ->everyMinute();
+
+        // Check Promo validity every minute.
+        $schedule->command('promo_validity:cron')
+                 ->everyMinute();
+
+        // Check Coupon Event validity every minute.
+        $schedule->command('event_validity:cron')
+                 ->everyMinute();
+
+        // Check Coupon start date then set availabity value into 1 (active).
+        $schedule->command('coupon_availability:cron')
+                 ->everyMinute();
+
+
     }
 
     /**
