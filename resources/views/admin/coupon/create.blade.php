@@ -587,43 +587,43 @@
             }
         });
 
-    //     $.ajax({
-    //         dataType: "json",
-    //         type: "GET",
-    //         url: "{{ route('ajax.get-products') }}",
-    //         data: '',
-    //         success: function(response) {
-    //             var products = new Bloodhound({
-				//   	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-				//   	queryTokenizer: Bloodhound.tokenizers.whitespace,
-				//   	local: response
-				// });
+        $.ajax({
+            dataType: "json",
+            type: "GET",
+            url: "{{ route('ajax.get-products') }}",
+            data: '',
+            success: function(response) {
+                var products = new Bloodhound({
+				  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+				  	queryTokenizer: Bloodhound.tokenizers.whitespace,
+				  	local: response
+				});
 
-				// products.initialize();
+				products.initialize();
 
-				// var elt = $('#input_product1');
-				// elt.tagsinput({
-				//   	itemValue: 'value',
-				//   	itemText: 'text',
-				//   	typeaheadjs: {
-				//     	name: 'products',
-				//     	displayKey: 'text',
-				//     	source: products.ttAdapter()
-				//   	}
-				// });
+				var elt = $('#input_product1');
+				elt.tagsinput({
+				  	itemValue: 'value',
+				  	itemText: 'text',
+				  	typeaheadjs: {
+				    	name: 'products',
+				    	displayKey: 'text',
+				    	source: products.ttAdapter()
+				  	}
+				});
 
-				// var elt = $('#product_opt');
-				// elt.tagsinput({
-				//   	itemValue: 'value',
-				//   	itemText: 'text',
-				//   	typeaheadjs: {
-				//     	name: 'products',
-				//     	displayKey: 'text',
-				//     	source: products.ttAdapter()
-				//   	}
-				// });
-    //         }
-    //     });
+				var elt = $('#product_opt');
+				elt.tagsinput({
+				  	itemValue: 'value',
+				  	itemText: 'text',
+				  	typeaheadjs: {
+				    	name: 'products',
+				    	displayKey: 'text',
+				    	source: products.ttAdapter()
+				  	}
+				});
+            }
+        });
     });
 
 	$('#sf_area').change(function(){
