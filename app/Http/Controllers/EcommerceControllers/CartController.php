@@ -266,10 +266,11 @@ class CartController extends Controller
 
 
             if($request->coupon_counter > 0){
-                $data    = $request->all();
-                $coupons = $data['couponid'];
-                $product = $data['coupon_productid'];
-                $usage   = $data['couponUsage'];
+                $data     = $request->all();
+                $coupons  = $data['couponid'];
+                $product  = $data['coupon_productid'];
+                $usage    = $data['couponUsage'];
+                $discount = $data['discount'];
 
                 foreach($coupons as $key => $c){
                     $coupon = Coupon::find($c);
@@ -279,7 +280,8 @@ class CartController extends Controller
                             'coupon_id' => $coupon->id,
                             'product_id' => $product[$key] == 0 ? NULL : $product[$key],
                             'customer_id' => Auth::id(),
-                            'total_usage' => $usage[$key]
+                            'total_usage' => $usage[$key],
+                            'discount' => $discount[$key]
                         ]);
                     }
                 }

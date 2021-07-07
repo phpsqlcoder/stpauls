@@ -205,6 +205,9 @@ Route::group(['prefix' => env('APP_PANEL', 'stpaul')], function () {
             Route::post('/coupon-multiple-delete','EcommerceControllers\CouponController@multiple_delete')->name('coupon.multiple.delete');
 
             Route::get('/get-product-brands', 'EcommerceControllers\CouponFrontController@get_brands')->name('display.product-brands');
+
+            Route::get('/ajax-customers','EcommerceControllers\CouponController@customer_lookup')->name('ajax.get-customers');
+            Route::get('/ajax-products','EcommerceControllers\CouponController@product_lookup')->name('ajax.get-products');
         //
 
         // Product review

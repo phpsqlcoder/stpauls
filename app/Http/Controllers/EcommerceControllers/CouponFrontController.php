@@ -449,7 +449,6 @@ class CouponFrontController extends Controller
         }
 
         $purchased_combined_coupons = Coupon::whereIn('id',$arr_purchase_combination_coupons)->get();
-        
     //
 
         $collectibles = collect($couponsMinTotalAmount)
@@ -461,10 +460,14 @@ class CouponFrontController extends Controller
         ->merge($couponEvents)
         ->merge($couponeventspecific);
 
+        // \Log::info($purchased_coupons);
+
 
         $arr_coupon_availability = [];
         foreach($collectibles as $coupon){
-            array_push($arr_coupon_availability,$coupon->id);
+            if(!in_array($coupon->id, $arr_coupon_availability)){
+                array_push($arr_coupon_availability,$coupon->id);
+            }
         }
 
         $coupons = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->where('customer_scope','all');

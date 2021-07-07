@@ -4,6 +4,8 @@
 	<link href="{{ asset('lib/bselect/dist/css/bootstrap-select.css') }}" rel="stylesheet">
 	<link href="{{ asset('lib/clockpicker/bootstrap-clockpicker.min.css') }}" rel="stylesheet">
 	<link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
+
+	<link href="{{ asset('lib/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet">
 	<style>
 		.select2 {width:100% !important;}
 
@@ -119,12 +121,7 @@
 				<div class="form-group">
 					<div class="mb-3" id="customer-optn" style="display: @if(old('coupon_scope') == 'specific') block @else none @endif;">
 						<label class="d-block">Customer Name *</label>
-						<select class="form-control select2" name="customer[]" multiple="multiple">
-							<option label="Choose one"></option>
-							@foreach($customers as $customer)
-								<option @if(is_array(old('customer')) && in_array($customer->id, old('customer'))) selected @endif value="{{$customer->id}}">{{ $customer->name }}</option>
-							@endforeach
-						</select>
+						<input id="input3" type="text" class="form-control" name="customer" autocomplete="off">
 						@hasError(['inputName' => 'customer'])
                     	@endhasError
 					</div>
@@ -144,19 +141,51 @@
                     @endhasError
 				</div>
 
+
+
+
+
+
+
+
+
 				<div class="form-group">
 					<div class="mb-3 reward-option" id="free-shipping-optn" style="display:@if($errors->any() && old('reward') == 'free-shipping-optn') block @else none @endif">
-						<label class="d-block">Location *</label>
-						<select class="form-control select2" name="location[]" multiple="multiple" style="min-height: 32px;">
+						<label class="d-block">Area *</label>
+						<select class="form-control select2" name="sf_area" id="sf_area" style="min-height: 32px;">
 							<option label="Select Area"></option>
 							<option value="all">All Area</option>
-							@foreach($locations as $location)
-								<option @if(is_array(old('location')) && in_array($location->name, old('location'))) selected @endif value="{{$location->name}}">{{ $location->name }}</option>
-							@endforeach
+							<option value="local">Local</option>
+							<option value="intl">International</option>
 						</select>
-						@hasError(['inputName' => 'location'])
+						@hasError(['inputName' => 'sf_area'])
                     	@endhasError
 						<br><br>
+
+						<div class="form-group" id="selectCities" style="display:none;">
+							<label class="d-block">Cities *</label>
+							<select class="form-control select2" name="cities[]" multiple="multiple">
+								<option value="" class="text-secondary">Select Cities</option>
+								@foreach($provinces as $pr)
+									<optgroup label="{{ $pr->province }}">
+										@foreach($pr->cities as $c)
+											<option @if(is_array(old('cities')) && in_array($c->city, old('cities'))) selected @endif value="{{$c->id}}">{{ $c->city }}</option>
+										@endforeach
+									</optgroup>
+								@endforeach
+							</select>
+						</div>
+
+						<div class="form-group" id="selectCountries" style="display:none;">
+							<label class="d-block">Countries *</label>
+							<select class="form-control select2" name="countries[]" multiple="multiple">
+								<option value="" class="text-secondary">Select Countries</option>
+								@foreach($countries as $c)
+									<option @if(is_array(old('countries')) && in_array($c->name, old('countries'))) selected @endif value="{{$c->id}}">{{ $c->name }}</option>
+								@endforeach
+							</select>
+						</div>
+
 						<label class="d-block">Discount Type *</label>
 						<div class="row" style="padding-bottom: 10px;">
 							<div class="col-6">
@@ -178,6 +207,28 @@
 						@hasError(['inputName' => 'shipping_fee_discount_amount'])
                     	@endhasError
 					</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 					<div class="mb-3 reward-option" id="discount-amount-optn" style="display:@if($errors->any() && old('reward') == 'discount-amount-optn') block @else none @endif">
 						<label class="d-block">Discount Amount *</label>
@@ -216,12 +267,7 @@
 									<label class="custom-control-label" for="same-product">Same Product</label>
 								</div>
 							</div>
-							<!-- <div class="col-4">
-								<div class="custom-control custom-radio">
-									<input @if(old('product_discount') == 'highest') checked @endif type="radio" id="product-highest-price" name="product_discount" class="custom-control-input" value="highest" onchange="productdiscount('highest')">
-									<label class="custom-control-label" for="product-highest-price">Highest Price</label>
-								</div>
-							</div> -->
+
 							<div class="col-6">
 								<div class="custom-control custom-radio">
 									<input @if(old('product_discount') == 'specific') checked @endif type="radio" id="specific-product" name="product_discount" class="custom-control-input" value="specific" onchange="productdiscount('specific')">
@@ -231,12 +277,7 @@
 						</div>
 
 						<div style="display: @if(old('product_discount') == 'specific') block @else none @endif;" id="discount_productid">
-							<select class="form-control select2" name="discount_productid">
-								<option label="Choose Product"></option>
-								@foreach($products as $product)
-									<option @if(old('discount_productid') == $product->id) selected @endif value="{{$product->id}}">{{ $product->name }}</option>
-								@endforeach
-							</select>
+							<input id="input_product1" type="text" class="form-control" name="discount_productid" autocomplete="off">
 						</div>
                 	</div>
 
@@ -244,9 +285,7 @@
 						<label class="d-block">Free Product *</label>
 						<select class="form-control select2" name="free_product_id" style="min-height: 32px;">
 							<option label="Choose one"></option>
-							@foreach($free_products as $product)
-								<option @if(old('free_product_id') == $product->id) selected @endif value="{{$product->id}}">{{ $product->name }}</option>
-							@endforeach
+							
 						</select>
 						@hasError(['inputName' => 'free_product_id'])
                     	@endhasError
@@ -363,12 +402,7 @@
 						<small class="text-danger" style="display: none;" id="spanProductOpt"></small>
 						<div class="form-group">
 							<label class="d-block">Product Name</label>
-							<select class="form-control select2" multiple="multiple" name="product_name[]" id="product_opt">
-								<option label="Choose one"></option>
-								@foreach($products as $product)
-									<option @if(is_array(old('product_name')) && in_array($product->id, old('product_name'))) selected @endif value="{{$product->id}}">{{ $product->name }}</option>
-								@endforeach
-							</select>
+							<input id="product_opt" type="text" class="form-control" name="product_name">
 						</div>
 
 						<div class="form-group">
@@ -515,10 +549,104 @@
 	<script src="{{ asset('lib/jqueryui/jquery-ui.min.js') }}"></script>
 	<script src="{{ asset('lib/clockpicker/bootstrap-clockpicker.min.js') }}"></script>
 	<script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
+
+	<script src="{{ asset('lib/bootstrap-tagsinput/bootstrap-tagsinput.min.js') }}"></script>
+	<script src="{{ asset('lib/typeahead.js/typeahead.bundle.min.js') }}"></script>
 @endsection
 
 
 @section('customjs')
+<script>
+	
+	$(document).ready(function(){
+
+		$.ajax({
+            dataType: "json",
+            type: "GET",
+            url: "{{ route('ajax.get-customers') }}",
+            data: '',
+            success: function(response) {
+                var customers = new Bloodhound({
+				  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+				  	queryTokenizer: Bloodhound.tokenizers.whitespace,
+				  	local: response
+				});
+
+				customers.initialize();
+
+				var elt = $('#input3');
+				elt.tagsinput({
+				  	itemValue: 'value',
+				  	itemText: 'text',
+				  	typeaheadjs: {
+				    	name: 'customers',
+				    	displayKey: 'text',
+				    	source: customers.ttAdapter()
+				  	}
+				});
+            }
+        });
+
+    //     $.ajax({
+    //         dataType: "json",
+    //         type: "GET",
+    //         url: "{{ route('ajax.get-products') }}",
+    //         data: '',
+    //         success: function(response) {
+    //             var products = new Bloodhound({
+				//   	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+				//   	queryTokenizer: Bloodhound.tokenizers.whitespace,
+				//   	local: response
+				// });
+
+				// products.initialize();
+
+				// var elt = $('#input_product1');
+				// elt.tagsinput({
+				//   	itemValue: 'value',
+				//   	itemText: 'text',
+				//   	typeaheadjs: {
+				//     	name: 'products',
+				//     	displayKey: 'text',
+				//     	source: products.ttAdapter()
+				//   	}
+				// });
+
+				// var elt = $('#product_opt');
+				// elt.tagsinput({
+				//   	itemValue: 'value',
+				//   	itemText: 'text',
+				//   	typeaheadjs: {
+				//     	name: 'products',
+				//     	displayKey: 'text',
+				//     	source: products.ttAdapter()
+				//   	}
+				// });
+    //         }
+    //     });
+    });
+
+	$('#sf_area').change(function(){
+		var value = $(this).val();
+
+		if(value == 'local' || value == 'intl'){
+			if(value == 'local'){
+				$('#selectCities').css('display','block');
+				$('#selectCountries').css('display','none');
+			}
+
+			if(value == 'intl'){
+				$('#selectCities').css('display','none');
+				$('#selectCountries').css('display','block');
+			}
+		} else {
+			$('#selectCities').css('display','none');
+				$('#selectCountries').css('display','none');
+		}
+		
+	})
+</script>
+
 <script>
 	$('#coupon-scope-specific').click(function(){
 		$('#customer-optn').show();

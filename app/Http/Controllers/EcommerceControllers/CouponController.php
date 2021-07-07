@@ -17,6 +17,11 @@ use App\Deliverablecities;
 use Carbon\Carbon;
 use Auth;
 
+
+use App\Provinces;
+use App\Countries;
+use App\Cities;
+
 class CouponController extends Controller
 {
     private $searchFields = ['name'];
@@ -45,15 +50,44 @@ class CouponController extends Controller
      */
     public function create()
     {
-        $products = Product::where('status','PUBLISHED')->get();
         $categories =  ProductCategory::has('published_products')->where('status','PUBLISHED')->get();
         $brands = Product::whereNotNull('brand')->distinct()->get(['brand']);
-        $customers = User::where('role_id',3)->where('is_active',1)->get();
 
-        $locations = Deliverablecities::where('status','PUBLISHED')->get();
-        $free_products = Product::where('category_id',87)->get();
+        $provinces = Provinces::orderby('province','asc')->get();
+        $countries = Countries::orderby('name','asc')->get();
+        // $free_products = Product::where('category_id',87)->get();
 
-        return view('admin.coupon.create',compact('products','categories','brands','customers','locations','free_products'));
+        return view('admin.coupon.create',compact('categories','brands','provinces','countries'));
+    }
+
+    public function customer_lookup()
+    {
+       $customers = User::where('role_id',3)->where('is_active',1)->get();
+       $arr_customer = array();
+
+        foreach($customers as $customer){
+            $arr_customer[] = [
+                "value" => $customer->id,
+                "text" => $customer->name
+            ];
+        }
+
+        return json_encode($arr_customer);
+    }
+
+    public function product_lookup()
+    {
+       $products = Product::where('status','PUBLISHED')->get();
+       $arr_products = array();
+
+        foreach($products as $product){
+            $arr_products[] = [
+                "value" => $product->id,
+                "text" => $product->name
+            ];
+        }
+
+        return json_encode($arr_products);
     }
 
     /**
@@ -72,7 +106,7 @@ class CouponController extends Controller
             'reward' => 'required',
             'code' => $request->coupon_activation == 'manual' ? 'required|unique:coupons,coupon_code' : '',
             'reward' => 'required',
-            'location' => $request->reward == 'free-shipping-optn' ? 'required' : '',
+            'sf_area' => $request->reward == 'free-shipping-optn' ? 'required' : '',
             'shipping_fee_discount_amount' => ($request->reward == 'free-shipping-optn' && $request->discount_type == 'partial') ? 'required' : '',
             'discount_amount' => $request->reward == 'discount-amount-optn' ? 'required' : '',
             'discount_percentage' => $request->reward == 'discount-percentage-optn' ? 'required' : '',
@@ -84,14 +118,26 @@ class CouponController extends Controller
 
         $loc = '';
         if($request->reward == 'free-shipping-optn'){
-          
-            $locations = $data['location'];
+            if($request->sf_area == 'all'){
+                $loc = NULL;
+            }
+
+            if($request->sf_area == 'local' || $request->sf_area == 'intl'){
+
+                if($request->sf_area == 'local'){
+                    $locations = $data['cities'];
+                } else {
+                    $locations = $data['countries'];
+                }
+
+                foreach($locations as $l){
+                    $loc .= $l.'|';
+                }
+            }   
+
             $loc_discount_type = $request->discount_type;
             $loc_discount_amount = $request->shipping_fee_discount_amount;
-
-            foreach($locations as $l){
-                $loc .= $l.'|';
-            }  
+             
         } else {
             $loc = NULL;
             $loc_discount_type = NULL;
@@ -100,9 +146,12 @@ class CouponController extends Controller
 
         $customernames = '';
         if(isset($request->customer)){
-            $customers = $data['customer'];
+            $customers = explode(',',$request->customer);
+
             foreach($customers as $c){
-                $customernames .= $c.'|';
+                if($c != ''){
+                    $customernames .= $c.'|';
+                }
             }
         }
 
@@ -128,6 +177,7 @@ class CouponController extends Controller
             'activation_type' => $request->coupon_activation,
             'customer_scope' => $request->coupon_scope,
             'scope_customer_id' => $request->coupon_scope == 'specific' ? $customernames : NULL,
+            'area' => $request->sf_area,
             'location' => $loc,
             'location_discount_type' => $loc_discount_type,
             'location_discount_amount' => $loc_discount_amount,
@@ -314,7 +364,7 @@ class CouponController extends Controller
         if($request->has('purchase_product')){
             $coupon_combination_counter++;
             if(isset($request->product_name)){
-                $prodname = $data['product_name'];
+                $prodname = explode(',',$request->product_name);
                 $coupon_combination .= 'product|';
                 foreach($prodname as $prod){
                     $productnames .= $prod.'|';

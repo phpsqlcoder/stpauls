@@ -221,13 +221,18 @@
 
                         <div class="cart-title">
                             <h2>Summary</h2>
-                            <!-- coupon discounts -->
-                            <input type="hidden" id="coupon_total_discount" name="coupon_total_discount" value="0">
-                            <input type="hidden" id="total_amount_discount" value="0">
+                        </div>
 
-                            <input type="hidden" name="grantotal" id="npt_grandTotal" value="{{ $grandtotal }}">
+                        <!-- coupon discounts -->
+                        <input type="hidden" id="coupon_total_discount" name="coupon_total_discount" value="0">
+                        <input type="hidden" id="total_amount_discount" value="0">
+
+                        <input type="hidden" name="grantotal" id="npt_grandTotal" value="{{ $grandtotal }}">
+
+                        <div id="discount_list">
                             
                         </div>
+
                         <div class="summary-wrap">
                             <div class="subtotal">
                                 <div class="table">
@@ -628,7 +633,7 @@
                                             '<small><strong>'+couponStartDate+''+couponEndDate+'</strong>'+
                                             '<p class="m-0">'+coupon.description+'</p></small>'+
                                         '</div>'+
-                                        '<div class="coupon-item-btns">'+usebtn+'&nbsp;'+
+                                        '<div class="coupon-item-btns"><button class="btn btn-secondary btn-sm" disabled>Use Coupon</button>&nbsp;'+
                                             '<button type="button" class="btn btn-info btn-sm" data-toggle="popover" title="Terms & Condition" data-content="'+coupon.terms_and_conditions+'">Terms & Conditions</button>'+
                                         '</div>'+
                                     '</div>'
@@ -794,6 +799,8 @@
                 $('.couponDiscountSummary').css('display','block');
 
                 $('#total_amount_discount').val(amountdiscount);
+
+                $('#discount_list').append('<input type="hidden" name="discount[]" id="discount'+cid+'" value="'+amountdiscount+'"/>');
 
                 grandTotal();
             }
@@ -1060,7 +1067,7 @@
                     arr_coupon_product.push(iteration);
 
                     var sub_price = $('#input_order'+iteration+'_product_total_price').val();
-                    var productSubTotalDiscount = parseFloat(sub_price)-parseFloat(totaldiscount);
+                    var productSubTotalDiscount = parseFloat(sub_price)-parseFloat(discount);
                 }
 
                 $('#appliedCouponList').append(
@@ -1068,7 +1075,7 @@
                         '<div class="coupon-item">'+
                             // coupon inputs
                                 '<input type="hidden" name="couponUsage[]" value="'+counter+'">'+
-                                '<input type="hidden" id="coupon_discount'+cid+'" value="'+totaldiscount+'">'+
+                                '<input type="hidden" id="coupon_discount'+cid+'" value="'+discount+'">'+
                                 '<input type="hidden" id="coupon_combination'+cid+'" value="'+combination+'">'+
                                 '<input type="hidden" id="productid'+cid+'" value="'+iteration+'">'+
                                 '<input type="hidden" name="couponid[]" value="'+cid+'">'+
@@ -1090,6 +1097,8 @@
                         '</div>'+
                     '</div>'
                 );
+
+                $('#discount_list').append('<input type="hidden" name="discount[]" id="discount'+cid+'" value="'+discount+'"/>');
 
                 $('[data-toggle="popover"]').popover();
 
@@ -1185,13 +1194,14 @@
                                 '<p class="m-0">'+desc+'</p>'+
                             '</div>'+
                             '<div class="coupon-item-btns">'+
-                                '<button class="btn btn-danger btn-sm productCouponRemove" id="'+cid+'"><i class="fa fa-times"></i></button>&nbsp;'+
+                                '<button class="btn btn-danger btn-sm cRmvFreeProduct" id="'+cid+'"><i class="fa fa-times"></i></button>&nbsp;'+
                                 '<button type="button" class="btn btn-info btn-sm" data-toggle="popover" title="Terms & Condition" data-content="'+terms+'">Terms & Conditions</button>'+
                             '</div>'+
                         '</div>'+
                     '</div>'
                 );
 
+                $('#discount_list').append('<input type="hidden" name="discount[]" id="discount'+cid+'" value="0"/>');
                 $('[data-toggle="popover"]').popover();
 
 
