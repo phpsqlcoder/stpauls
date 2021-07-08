@@ -210,13 +210,7 @@
                     <td>Sub-Total</td>
                     <td class="text-right">{{ number_format($subtotal,2) }}</td>
                 </tr>
-                @if($sales->discount_percentage > 0)
-                <tr>
-                    <td colspan="4"></td>
-                    <td class="text-danger">LESS: Loyalty Discount({{$sales->discount_percentage}}%)</td>
-                    <td class="text-right text-danger">{{ number_format($sales->discount_amount,2) }}</td>
-                </tr>
-                @endif
+                
                 @if($sales->delivery_fee_amount > 0)
                 <tr>
                     <td colspan="4"></td>
@@ -224,6 +218,7 @@
                     <td class="text-right">{{ number_format($sales->delivery_fee_amount,2) }}</td>
                 </tr>
                 @endif
+
                 @if($sales->service_fee > 0)
                 <tr>
                     <td colspan="4"></td>
@@ -231,6 +226,43 @@
                     <td class="text-right">{{ number_format($sales->service_fee,2) }}</td>
                 </tr>
                 @endif
+
+                @if($sales->discount_percentage > 0)
+                <tr>
+                    <td colspan="4"></td>
+                    <td class="text-danger">LESS: Loyalty Discount({{$sales->discount_percentage}}%)</td>
+                    <td class="text-right text-danger">{{ number_format($sales->discount_amount,2) }}</td>
+                </tr>
+                @endif
+
+                @php
+                    $coupon_order_discount = 0; $coupon_sfee_discount = 0;
+                    $coupons = \App\EcommerceModel\CouponSale::where('sales_header_id',$sales->id)->get();
+                    foreach($coupons as $coupon){
+                        if($coupon->is_sfee == 0){
+                            $coupon_order_discount += $coupon->discount;
+                        } else {
+                            $coupon_sfee_discount += $coupon->discount; 
+                        }
+                    }
+                @endphp
+
+                @if($coupon_order_discount > 0)
+                    <tr>
+                        <td colspan="4"></td>
+                        <td class="text-danger">LESS: Coupon Discount</td>
+                        <td class="text-right">{{ number_format($coupon_order_discount,2) }}</td>
+                    </tr>
+                @endif
+
+                @if($coupon_sfee_discount > 0)
+                    <tr>
+                        <td colspan="4"></td>
+                        <td class="text-danger">LESS: Shipping Fee</td>
+                        <td class="text-right">{{ number_format($coupon_sfee_discount,2) }}</td>
+                    </tr>
+                @endif
+
                 <tr>
                     <td colspan="4"></td>
                     <td><h5 class="text-success"><b>TOTAL DUE</b></h5></td>

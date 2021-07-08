@@ -402,7 +402,12 @@
 						<small class="text-danger" style="display: none;" id="spanProductOpt"></small>
 						<div class="form-group">
 							<label class="d-block">Product Name</label>
-							<input id="product_opt" type="text" class="form-control" name="product_name">
+							<select class="form-control select2" multiple="multiple" name="product_name[]" id="product_opt">
+								<option label="Choose one"></option>
+								@foreach($products as $product)
+									<option @if(is_array(old('product_name')) && in_array($product->id, old('product_name'))) selected @endif value="{{$product->id}}">{{ $product->name }}</option>
+								@endforeach
+							</select>
 						</div>
 
 						<div class="form-group">
@@ -431,7 +436,7 @@
 							<div class="col-12" id="total-amount-div" style="display: {{ (old('purchase_total_amount') ? 'block':'none') }};">
 								<label class="d-block">Total Amount *</label>
 							</div>
-							<div class="col-md-6" id="total-amount-input" style="display: {{ (old('purchase_total_amount') ? 'block':'none') }};">
+							<div class="col-md-6 mb-3" id="total-amount-input" style="display: {{ (old('purchase_total_amount') ? 'block':'none') }};">
 								<input name="purchase_amount" id="purchase_amount" type="number" min="1" class="form-control" value="{{ old('purchase_amount') }}">
 								<small id="spanPurchaseAmount" style="display: none;" class="text-danger"></small>
 							</div>
@@ -448,7 +453,7 @@
 							<div class="col-12" id="total-quantity-div" style="padding-top: 10px;display: {{ (old('purchase_total_qty') ? 'block':'none') }};">
 								<label class="d-block">Total Quantity *</label>
 							</div>
-							<div class="col-md-6" id="total-quantity-input" style="display: {{ (old('purchase_total_qty') ? 'block':'none') }};">
+							<div class="col-md-6 mb-3" id="total-quantity-input" style="display: {{ (old('purchase_total_qty') ? 'block':'none') }};">
 								<input name="purchase_qty" id="purchase_qty" type="number" min="1" class="form-control" value="{{ old('purchase_qty') }}">
 								<small id="spanPurchaseQty" style="display: none;" class="text-danger"></small>
 							</div>
@@ -587,43 +592,32 @@
             }
         });
 
-        $.ajax({
-            dataType: "json",
-            type: "GET",
-            url: "{{ route('ajax.get-products') }}",
-            data: '',
-            success: function(response) {
-                var products = new Bloodhound({
-				  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-				  	queryTokenizer: Bloodhound.tokenizers.whitespace,
-				  	local: response
-				});
+    //     $.ajax({
+    //         dataType: "json",
+    //         type: "GET",
+    //         url: "{{ route('ajax.get-products') }}",
+    //         data: '',
+    //         success: function(response) {
+    //             var products = new Bloodhound({
+				//   	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+				//   	queryTokenizer: Bloodhound.tokenizers.whitespace,
+				//   	local: response
+				// });
 
-				products.initialize();
+				// products.initialize();
 
-				var elt = $('#input_product1');
-				elt.tagsinput({
-				  	itemValue: 'value',
-				  	itemText: 'text',
-				  	typeaheadjs: {
-				    	name: 'products',
-				    	displayKey: 'text',
-				    	source: products.ttAdapter()
-				  	}
-				});
-
-				var elt = $('#product_opt');
-				elt.tagsinput({
-				  	itemValue: 'value',
-				  	itemText: 'text',
-				  	typeaheadjs: {
-				    	name: 'products',
-				    	displayKey: 'text',
-				    	source: products.ttAdapter()
-				  	}
-				});
-            }
-        });
+				// var elt = $('#product_opt');
+				// elt.tagsinput({
+				//   	itemValue: 'value',
+				//   	itemText: 'text',
+				//   	typeaheadjs: {
+				//     	name: 'products',
+				//     	displayKey: 'text',
+				//     	source: products.ttAdapter()
+				//   	}
+				// });
+    //         }
+    //     });
     });
 
 	$('#sf_area').change(function(){
@@ -770,8 +764,7 @@
             }
         });
 
-		var value = parseInt($(this).val());
-		if(value != ''){
+		if($(this).val() != ''){
 			$('#product_opt').attr("disabled", true);
 		} else {
 			$('#product_opt').removeAttr("disabled");

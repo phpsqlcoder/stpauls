@@ -109,8 +109,8 @@
 
             <div class="col-md-12">
                 <div class="table-list mg-b-10">
-                    <div class="table-responsive-lg text-nowrap">
-                        <table class="table mg-b-0 table-light table-hover" style="width:100%;">
+                    <div class="table-responsive-lg">
+                        <table class="table mg-b-0 table-light table-hover" style="word-break: break-all;">
                             <thead>
                                 <tr>
                                     <th style="width: 5%;">
@@ -119,7 +119,7 @@
                                             <label class="custom-control-label" for="checkbox_all"></label>
                                         </div>
                                     </th>
-                                    <th scope="col" width="20%">Name</th>
+                                    <th scope="col" width="30%">Name</th>
                                     <th scope="col">Date Start</th>
                                     <th scope="col">Date End</th>
                                     <th class="text-center" scope="col">Total Usage</th>
@@ -147,7 +147,7 @@
 	                                    <td>{{ $coupon->end_date }} {{ $coupon->end_time }}</td>
 	                                    <td class="text-center">
                                             @if(\App\EcommerceModel\Coupon::coupon_total_usage($coupon->id) > 0)
-                                                <a target="_blank" href="{{ route('report.coupon.list') }}?coupon_code={{$coupon->coupon_code}}">{{ \App\EcommerceModel\Coupon::coupon_total_usage($coupon->id) }}</a>
+                                                {{--<a target="_blank" href="{{ route('report.coupon.list') }}?coupon_code={{$coupon->coupon_code}}">{{ \App\EcommerceModel\Coupon::coupon_total_usage($coupon->id) }}</a>--}}
                                             @else
                                                 0
                                             @endif

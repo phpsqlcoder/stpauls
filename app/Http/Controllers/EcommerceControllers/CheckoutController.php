@@ -89,19 +89,10 @@ class CheckoutController extends Controller
             }
         }
 
-        $checkoutDiscount = CouponCartDiscount::where('customer_id',Auth::id());
-
-        if($checkoutDiscount->exists()){
-            $c = $checkoutDiscount->first();
-            $ckCouponDiscount = $c->coupon_discount;
-        } else {
-            $ckCouponDiscount = 0;
-        }
-
         $appliedCoupons = CouponCart::where('customer_id',Auth::id())->get();
 
 
-        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','weight','page','cod','stp','sdd','dtd','loyalty_discount','payment_method','forPickupCounter','totalproducts','ckCouponDiscount','appliedCoupons'));
+        return view('theme.'.env('FRONTEND_TEMPLATE').'.ecommerce.cart.checkout', compact('customer','products','amount','weight','page','cod','stp','sdd','dtd','loyalty_discount','payment_method','forPickupCounter','totalproducts','appliedCoupons'));
     }
 
     public function ajax_city_rates(Request $request)

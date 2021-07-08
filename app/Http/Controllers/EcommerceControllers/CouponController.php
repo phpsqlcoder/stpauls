@@ -52,12 +52,13 @@ class CouponController extends Controller
     {
         $categories =  ProductCategory::has('published_products')->where('status','PUBLISHED')->get();
         $brands = Product::whereNotNull('brand')->distinct()->get(['brand']);
+        $products = Product::where('status','PUBLISHED')->orderBy('name','asc')->get();
 
         $provinces = Provinces::orderby('province','asc')->get();
         $countries = Countries::orderby('name','asc')->get();
         // $free_products = Product::where('category_id',87)->get();
 
-        return view('admin.coupon.create',compact('categories','brands','provinces','countries'));
+        return view('admin.coupon.create',compact('categories','brands','provinces','countries','products'));
     }
 
     public function customer_lookup()

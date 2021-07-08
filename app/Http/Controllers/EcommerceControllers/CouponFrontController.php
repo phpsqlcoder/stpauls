@@ -472,15 +472,15 @@ class CouponFrontController extends Controller
 
         $coupons = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->where('customer_scope','all');
         if($request->page_name == 'cart'){
-            $coupons = $coupons->whereNull('location')->orderBy('name','asc');
-            $coupon_customer = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->where('customer_scope','specific')->whereNull('location')->get();
+            $coupons = $coupons->whereNull('area')->orderBy('name','asc');
+            $coupon_customer = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->where('customer_scope','specific')->whereNull('area')->get();
         } else {
             $coupons = $coupons->where('amount_discount_type',1)->where(function ($orWhereQuery){
-                $orWhereQuery->orwhereNotNull('location');
+                $orWhereQuery->orwhereNotNull('area');
             })->orderBy('name','asc');
 
             $coupon_customer = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->where('customer_scope','specific')->where('amount_discount_type',1)->where(function ($orWhereQuery){
-                $orWhereQuery->orwhereNotNull('location');
+                $orWhereQuery->orwhereNotNull('area');
                 })->get();
         }
 

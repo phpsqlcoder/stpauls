@@ -507,35 +507,41 @@
                                                         </div>
                                                     </div>
 
-                                                    @php
-                                                        $total_coupon = 0; $total_discount = 0; $total_solo_coupon = 0;
-                                                    @endphp
-                                                    @foreach($appliedCoupons as $coupon)
+                                                    <div id="appliedCouponList">
+                                                        @php
+                                                            $total_coupon = 0; $total_discount = 0; $total_solo_coupon = 0;
+                                                        @endphp
+                                                        @foreach($appliedCoupons as $coupon)
 
-                                                    @php
-                                                        $total_coupon++;
-                                                        $total_discount += $coupon->discount;
+                                                        @php
+                                                            $total_coupon++;
+                                                            $total_discount += $coupon->discount;
 
-                                                        if($coupon->details->combination == 0){
-                                                            $total_solo_coupon++;
-                                                        }
-                                                    @endphp
-                                                    <div class="subtotal">
-                                                        <div class="coupon-item mb-3">
-                                                            <div class="coupon-item-name text-white" style="background:#b82e24;">
-                                                              <h6 class="p-1 mb-1">{{ $coupon->details->name }}</h6>
-                                                          </div>
-                                                          <div class="coupon-item-desc mb-1">
-                                                              <small><strong>Jan 1, 2021 - Dec 31, 2021</strong></small>
-                                                              <p class="m-0">{{ $coupon->details->name }}</p>
-                                                          </div>
-                                                          <div class="coupon-item-btns">
-                                                              <button class="btn btn-danger btn-sm"><i class="fa fa-times"></i></button>
-                                                              <button type="button" class="btn btn-info btn-sm" data-toggle="popover" title="Terms & Condition" data-content="{{ $coupon->details->terms_and_conditions }}">Terms & Conditions</button>
-                                                          </div>
+                                                            if($coupon->details->combination == 0){
+                                                                $total_solo_coupon++;
+                                                            }
+                                                        @endphp
+                                                        <div class="subtotal">
+                                                            <input type="hidden" name="couponid[]" value="{{ $coupon->coupon_id }}">
+                                                            <input type="hidden" name="couponcode[]" value="{{ $coupon->details->coupon_code }}">
+                                                            <input type="hidden" name="coupon_productid[]" value="{{ $coupon->product_id }}">
+                                                            <input type="hidden" name="coupon_productdiscount[]" value="{{ $coupon->discount }}">
+                                                            <input type="hidden" name="is_sfee[]" value="0">
+                                                            <div class="coupon-item mb-3">
+                                                                <div class="coupon-item-name text-white" style="background:#b82e24;">
+                                                                  <h6 class="p-1 mb-1">{{ $coupon->details->name }}</h6>
+                                                              </div>
+                                                              <div class="coupon-item-desc mb-1">
+                                                                  <small><strong>Jan 1, 2021 - Dec 31, 2021</strong></small>
+                                                                  <p class="m-0">{{ $coupon->details->name }}</p>
+                                                              </div>
+                                                              <div class="coupon-item-btns">
+                                                                  <button type="button" class="btn btn-info btn-sm" data-toggle="popover" title="Terms & Condition" data-content="{{ $coupon->details->terms_and_conditions }}">Terms & Conditions</button>
+                                                              </div>
+                                                            </div>
                                                         </div>
+                                                        @endforeach
                                                     </div>
-                                                    @endforeach
                                                 </div>
                                             </div>
                                         </div>
@@ -626,6 +632,7 @@
                                                     <span id="total-weight">{{ number_format(($weight/1000),2) }} </span>kg
                                                 </span>
                                             </li>
+
                                             <li class="d-flex justify-content-between">
                                                 <span>Sub-Total</span>
                                                 <span>
@@ -633,6 +640,23 @@
                                                     ₱ <span id="sub-total">{{ number_format($subTotal,2) }}</span>
                                                 </span>
                                             </li>
+
+                                            <li class="d-flex justify-content-between">
+                                                <span id="lispan_shippingfee">ADD: Shipping Fee</span>
+                                                <span>
+                                                    <input type="hidden" id="input_shippingfee" name="shippingfee">
+                                                    <span id="span_shippingfee">0.00</span>
+                                                </span>
+                                            </li>
+
+                                            <li class="d-flex justify-content-between">
+                                                <span id="lispan_servicefee">ADD: Service Fee</span>
+                                                <span>
+                                                    <input name="servicefee" type="hidden" id="input_servicefee" name="servicefee">
+                                                    <span id="span_servicefee">0.00</span>
+                                                </span>
+                                            </li>
+
                                             @if($loyalty_discount > 0)
                                             <li class="d-flex justify-content-between">
                                                 <span class="text-danger">LESS: Loyalty Discount ({{number_format($loyalty_discount,0)}}%)</span>
@@ -647,34 +671,24 @@
                                                 <input type="hidden" id="input_discount_amount" name="discount_amount">
                                             @endif
 
-                                            <li class="d-flex justify-content-between">
-                                                <span id="lispan_shippingfee">ADD: Shipping Fee</span>
-                                                <span>
-                                                    <input type="hidden" id="input_shippingfee" name="shippingfee">
-                                                    <span id="span_shippingfee">0.00</span>
-                                                </span>
-                                            </li>
-
-                                            @if($ckCouponDiscount > 0)
-                                            <li class="d-flex justify-content-between">
-                                                <span id="lispan_shippingfee">LESS: Coupon Discount</span>
-                                                <span>
-                                                    <span id="span_shippingfee">₱ {{ number_format($ckCouponDiscount,2) }}</span>
-                                                </span>
-                                            </li>
-                                            <input type="hidden" id="coupon_discount" value="{{$ckCouponDiscount}}">
+                                            @if($total_discount > 0)
+                                                <li class="d-flex justify-content-between">
+                                                    <span class="text-danger">LESS: Coupon Discount</span>
+                                                    <span>
+                                                        <span id="span_coupon_discount">₱ {{ number_format($total_discount,2) }}</span>
+                                                    </span>
+                                                </li>
+                                                <input type="hidden" id="coupon_discount" name="coupon_discount" value="{{$total_discount}}">
                                             @else
-                                                <input type="hidden" id="coupon_discount" value="0">
+                                                <input type="hidden" id="coupon_discount" name="coupon_discount" value="0">
                                             @endif
 
                                             <li class="d-flex justify-content-between">
-                                                <span id="lispan_servicefee">ADD: Service Fee</span>
-                                                <span>
-                                                    <input name="servicefee" type="hidden" id="input_servicefee" name="servicefee">
-                                                    <span id="span_servicefee">0.00</span>
+                                                <span class="text-danger" id="li_less_sfee" style="display:none;">LESS: Shipping Fee</span>
+                                                <span id="span_less_sfee" style="display:none;">
                                                 </span>
                                             </li>
-                                            
+
                                             <li class="d-flex justify-content-between">
                                                 <strong>TOTAL DUE</strong>
                                                 <strong>
@@ -735,13 +749,16 @@
                         </div>
                     </div>
 
-                    <input type="text" name="" id="coupon_counter" value="{{ $total_coupon }}">
-                    <input type="text" id="coupon_limit" value="{{ Setting::info()->coupon_limit }}">
-                    <input type="text" id="solo_coupon_counter" value="{{ $total_solo_coupon }}">
-                    <input type="text" id="coupon_discount_limit" value="{{ Setting::info()->coupon_discount_limit }}">
-                    <input type="text" id="coupon_total_discount" name="coupon_total_discount" value="{{ $total_discount }}">
 
-                    <input type="text" id="sf_discount_coupon" value="0">
+                    <input type="hidden" name="" id="coupon_counter" value="{{ $total_coupon }}">
+                    <input type="hidden" id="coupon_limit" value="{{ Setting::info()->coupon_limit }}">
+                    <input type="hidden" id="solo_coupon_counter" value="{{ $total_solo_coupon }}">
+                    <input type="hidden" id="coupon_discount_limit" value="{{ Setting::info()->coupon_discount_limit }}">
+                    <input type="hidden" id="coupon_total_discount" name="coupon_total_discount" value="{{ $total_discount }}">
+
+
+                    <input type="hidden" id="sf_discount_coupon" value="0">
+                    <input type="hidden" id="sf_discount_amount" name="sf_discount_amount" value="0">
                 </div>
             </div>
         </section>
@@ -1185,21 +1202,23 @@
         }
 
         function totalDue(){
-            var subtotal    = $('#input_sub_total').val();
-            var shippingfee = $('#input_shippingfee').val();
-            var servicefee  = $('#input_servicefee').val();
+            var subtotal    = parseFloat($('#input_sub_total').val());
+            var shippingfee = parseFloat($('#input_shippingfee').val());
+            var servicefee  = parseFloat($('#input_servicefee').val());
 
             var loyalty     = parseFloat($('#input_loyalty_discount').val());
-            var coupon      = parseFloat($('#coupon_discount').val());
 
+            //coupons 
+            var sfee_discount   = parseFloat($('#sf_discount_amount').val());
+            var coupon_discount = parseFloat($('#coupon_discount').val());
 
             var disc = (loyalty / 100).toFixed(2); //its convert 10 into 0.10
             var loyaltyDiscount = subtotal * disc; // gives the value for subtract from main value
 
             // total discount (loyalty and coupon)
-            var totalDiscount = loyalty+coupon;
+            var totalDiscount = loyalty+coupon_discount+sfee_discount;
 
-            var grandTotal = (parseFloat(subtotal)+parseFloat(shippingfee)+parseFloat(servicefee))-parseFloat(totalDiscount);
+            var grandTotal = (subtotal+shippingfee+servicefee)-totalDiscount;
 
             $('#input_discount_amount').val(loyaltyDiscount);
             $('#span_discount').html('₱ '+FormatAmount(loyaltyDiscount,2));
@@ -1229,11 +1248,6 @@
             }
             else {
                 if(option == 1){
-                    // swal({
-                    //     showConfirmButton: false,
-                    //     title: '',
-                    //     text: "Please wait we are redirecting you to the payment gateway.",         
-                    // });
                     $("#checkout-form").submit();
                 } else {
                     if (!$("input[name='payment_option']:checked").val()) {
@@ -1314,17 +1328,14 @@
                             if(jQuery.inArray(coupon.id, arr_selected_coupons) !== -1){
                                 var usebtn = '<button class="btn btn-success btn-sm" disabled>Applied</button>';
                             } else {
-                                if(coupon.location == null){
-                                    var usebtn = '<button class="btn btn-success btn-sm" id="couponBtn'+coupon.id+'" onclick="use_coupon_total_amount('+coupon.id+')"><span id="btnCpnTxt'+coupon.id+'">Use Coupon</span></button>';
-                                } else {
-                                    var usebtn = '<button class="btn btn-success btn-sm" id="couponBtn'+coupon.id+'" onclick="use_sf_coupon('+coupon.id+')"><span id="btnCpnTxt'+coupon.id+'">Use Coupon</span></button>';
-                                }
+                                var usebtn = '<button class="btn btn-success btn-sm" id="couponBtn'+coupon.id+'" onclick="use_sf_coupon('+coupon.id+')"><span id="btnCpnTxt'+coupon.id+'">Use Coupon</span></button>';
                             }
 
                             $('#coupons_tbl').append(
                                 '<div class="coupon-item p-2 border border-info rounded mb-1">'+
                                     // coupons input
                                         '<input type="hidden" id="couponcombination'+coupon.id+'" value="'+coupon.combination+'">'+
+                                        '<input type="hidden" id="sfarea'+coupon.id+'" value="'+coupon.area+'">'+
                                         '<input type="hidden" id="sflocation'+coupon.id+'" value="'+coupon.location+'">'+
                                         '<input type="hidden" id="sfdiscountamount'+coupon.id+'" value="'+coupon.location_discount_amount+'">'+
                                         '<input type="hidden" id="sfdiscounttype'+coupon.id+'" value="'+coupon.location_discount_type+'">'+
@@ -1334,6 +1345,7 @@
                                         '<input type="hidden" id="couponcode'+coupon.id+'" value="'+coupon.coupon_code+'">'+
                                         '<input type="hidden" id="couponterms'+coupon.id+'" value="'+coupon.terms_and_conditions+'">'+
                                         '<input type="hidden" id="coupondesc'+coupon.id+'" value="'+coupon.description+'">'+
+                                        '<input type="hidden" id="couponvalidity'+coupon.id+'" value="'+couponValidity+'">'+
                                     //
                                     '<div class="coupon-item-name text-white rounded" style="background:#b82e24;">'+
                                         '<small><h6 class="p-1 mb-1">'+coupon.name+'</h6></small>'+
@@ -1383,6 +1395,16 @@
             var max_amount_coupon_discount = parseFloat($('#coupon_discount_limit').val());
             var couponTotalDiscount = parseFloat($('#coupon_total_discount').val());
 
+            var sfee_coupon_counter = $('#sf_discount_coupon').val();
+
+            if(sfee_coupon_counter > 1){
+                swal({
+                    title: '',
+                    text: "Only one (1) coupon allowed for shipping fee discount.",         
+                });
+                return false;
+            }
+
             if(parseInt(totalUsedCoupon) < parseInt(limit)){
 
                 if(couponTotalDiscount > max_amount_coupon_discount){
@@ -1426,6 +1448,18 @@
             }
         }
 
+        function addCommas(nStr){
+            nStr += '';
+            x = nStr.split('.');
+            x1 = x[0];
+            x2 = x.length > 1 ? '.' + x[1] : '';
+            var rgx = /(\d+)(\d{3})/;
+            while (rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ',' + '$2');
+            }
+            return x1 + x2;
+        }
+
     // shipping fee coupon rewards
         function use_sf_coupon(cid){
             // check total use shipping fee coupons
@@ -1450,7 +1484,13 @@
             }
             
             if(coupon_counter(cid)){
-                var city = $('#city').val();
+                var sfarea  = $('#sfarea'+cid).val();
+
+                if(sfarea == 'local'){
+                    var loc = $('#city').val();
+                } else {
+                    var loc = $('#country').val();
+                }
 
                 var couponLocation = $('#sflocation'+cid).val();
                 var cLocation = couponLocation.split('|');
@@ -1460,78 +1500,100 @@
                     arr_coupon_location.push(value);
                 });
 
-                if(jQuery.inArray(city, arr_coupon_location) !== -1 || jQuery.inArray('all', arr_coupon_location) !== -1){
+                var checker = 0;
+                if(sfarea == 'all'){
+                    checker = 1;
+                } else {
+                    if(jQuery.inArray(loc, arr_coupon_location) !== -1){
+                        checker = 1;
+                    }
+                }
+
+
+                if(checker > 0){
 
                     var name  = $('#couponname'+cid).val();
                     var terms = $('#couponterms'+cid).val();
-                    var desc = $('#coupondesc'+cid).val();
+                    var desc  = $('#coupondesc'+cid).val();
                     var combination = $('#couponcombination'+cid).val();
-                    
-                    $('#couponList').append(
-                        '<div id="couponDiv'+cid+'">'+
-                            '<div class="coupon-item p-2 border rounded mb-1">'+
-                                '<div class="row no-gutters">'+
-                                    '<div class="col-12">'+
-                                        '<div class="coupon-item-name">'+
-                                            '<h5 class="m-0">'+name+' <span></span></h5>'+
-                                        '</div>'+
-                                        '<div class="coupon-item-desc small mb-1">'+
-                                            '<span>'+desc+'</span>'+
-                                        '</div>'+
-                                        '<div class="coupon-item-btns">'+
-                                            '<input type="hidden" id="coupon_combination'+cid+'" value="'+combination+'">'+
-                                            '<input type="hidden" name="couponid[]" value="'+cid+'">'+
-                                            '<input type="hidden" name="coupon_productid[]" value="0">'+
-                                            '<button type="button" class="btn btn-danger btn-sm sfCouponRemove" id="'+cid+'">Remove</button>&nbsp;'+
-                                            '<button type="button" class="btn btn-info btn-sm" data-toggle="popover" title="Terms & Condition" data-content="'+terms+'">Terms & Conditions</button>'+
-                                        '</div>'+
-                                    '</div>'+
+                    var validity    = $('#couponvalidity'+cid).val();
+                    var code = $('#couponcode'+cid).val();
+
+                    var sf_type = $('#sfdiscounttype'+cid).val();
+
+                    if(sf_type == 'full'){
+                        sfee_discount = parseFloat($('#input_shippingfee').val());
+                        $('#sf_discount_amount').val(sfee_discount); 
+                    }
+
+                    if(sf_type == 'partial'){
+                        sfee_discount = parseFloat($('#sfdiscountamount'+cid).val());
+                        $('#sf_discount_amount').val(sfee_discount.toFixed(2));
+                        
+                    }
+
+                    $('#appliedCouponList').append(
+                        '<div class="subtotal" id="appliedCouponDiv'+cid+'">'+
+                            '<div class="coupon-item">'+
+                                // coupon inputs
+                                    '<input type="hidden" id="coupon_combination'+cid+'" value="'+combination+'">'+
+                                    '<input type="hidden" name="couponid[]" value="'+cid+'">'+
+                                    '<input type="hidden" name="couponcode[]" value="'+code+'">'+
+                                    '<input type="hidden" name="coupon_productid[]" value="0">'+
+                                    '<input type="hidden" name="is_sfee[]" value="1">'+
+                                    '<input type="hidden" name="coupon_productdiscount[]" id="coupon_sfee_discount'+cid+'" value="'+sfee_discount+'">'+
+                                //
+                                '<div class="coupon-item-name text-white" style="background:#b82e24;">'+
+                                    '<h6 class="p-1 mb-1">'+name+'</h6>'+
+                                '</div>'+
+                                '<div class="coupon-item-desc mb-1">'+
+                                    '<small><strong>'+validity+'</strong></small>'+
+                                    '<p class="m-0">'+desc+'</p>'+
+                                '</div>'+
+                                '<div class="coupon-item-btns">'+
+                                    '<button class="btn btn-danger btn-sm couponRemove" id="'+cid+'"><i class="fa fa-times"></i></button>&nbsp;'+
+                                    '<button type="button" class="btn btn-info btn-sm" data-toggle="popover" title="Terms & Condition" data-content="'+terms+'">Terms & Conditions</button>'+
                                 '</div>'+
                             '</div>'+
                         '</div>'
                     );
-
                     $('#sf_discount_coupon').val(1);
-                    var sf_type = $('#sfdiscounttype'+cid).val();
-                    var sf_discount = parseFloat($('#sfdiscountamount'+cid).val());
 
-                    if(sf_type == 'full'){
-                        dfee = parseFloat($('#delivery_fee').val());
+                    $('#li_less_sfee').css('display','block');
+                    $('#span_less_sfee').css('display','block');
+                    $('#span_less_sfee').html('₱ '+addCommas(sfee_discount.toFixed(2)));
 
-                        $('#sf_discount_amount').val(dfee);
+                    var coupon_total_discount = parseFloat($('#coupon_total_discount').val());
+                    var coupon_sfee_discount = coupon_total_discount+sfee_discount;
 
-                        $('#sf_discount_row').css('display','table-row');
-                        $('#sf_discount_span').html(addCommas(dfee.toFixed(2)));
-                    }
-
-                    if(sf_type == 'partial'){
-                        $('#sf_discount_amount').val(sf_discount.toFixed(2));
-
-                        $('#sf_discount_row').css('display','table-row');
-                        $('#sf_discount_span').html(addCommas(sf_discount.toFixed(2)));
-                    }
+                    $('#coupon_total_discount').val(coupon_sfee_discount);
 
                     $('#couponBtn'+cid).prop('disabled',true);
                     $('#btnCpnTxt'+cid).html('Applied');
 
-                    compute_total();
                 } else {
                     swal({
                         title: '',
                         text: "Selected delivery location is not in the coupon location.",         
                     });
-                } 
+                }
             }
         }
 
-        $(document).on('click', '.sfCouponRemove', function(){  
+        $(document).on('click', '.couponRemove', function(){  
             var id = $(this).attr("id");  
 
-            $('#sf_discount_row').css('display','none');
-            
+            var sfee_discount = $('#coupon_sfee_discount'+id).val();
+            var coupon_total_discount = parseFloat($('#coupon_total_discount').val());
+            var coupon_sfee_discount = coupon_total_discount-sfee_discount;
+
+            $('#coupon_total_discount').val(coupon_sfee_discount);
+
+            $('#li_less_sfee').css('display','none');
+            $('#span_less_sfee').css('display','none');
+
             $('#sf_discount_amount').val(0);
-            var totalsfdiscoutcounter = $('#sf_discount_coupon').val();
-            $('#sf_discount_coupon').val(parseInt(totalsfdiscoutcounter)-1);
+            $('#sf_discount_coupon').val(0);
 
             var counter = $('#coupon_counter').val();
             $('#coupon_counter').val(parseInt(counter)-1);
@@ -1541,9 +1603,7 @@
                 $('#solo_coupon_counter').val(0);
             }
 
-            $('#couponDiv'+id+'').remove();
-
-            compute_total();
+            $('#appliedCouponDiv'+id).remove();
         });
     //
     </script>

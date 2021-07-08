@@ -34,6 +34,7 @@ use App\Countries;
 use App\EcommerceModel\CouponCartDiscount;
 use App\EcommerceModel\CouponCart;
 use App\EcommerceModel\Coupon;
+use App\EcommerceModel\CouponSale;
 
 use App\User;
 
@@ -278,7 +279,7 @@ class CartController extends Controller
                     if($coupon->status == 'ACTIVE'){
                         CouponCart::create([
                             'coupon_id' => $coupon->id,
-                            'product_id' => $product[$key] == 0 ? NULL : $product[$key],
+                            'product_id' => $product[$key] == 0 ? 0 : $product[$key],
                             'customer_id' => Auth::id(),
                             'total_usage' => $usage[$key],
                             'discount' => $discount[$key]
@@ -328,6 +329,14 @@ class CartController extends Controller
             }
         }
 
+        $net_amount = $request->net_amount;
+
+        $coupon_discount = $request->coupon_discount;
+        $sfee_discount = $request->sf_discount_amount;
+        $loyaltydiscount = $request->loyaltydiscount;
+
+        $total_discount =  $coupon_discount+$sfee_discount+$loyaltydiscount;
+
         $salesHeader = SalesHeader::create([
             'order_number' => $requestId,
             'customer_id' => Auth::id(),
@@ -342,10 +351,10 @@ class CartController extends Controller
             'delivery_type' => $delivery_type->name,
             'delivery_fee_amount' => $request->shippingfee,
             'delivery_status' => $deliveryStatus,
-            'gross_amount' => number_format($request->net_amount,2,'.',''),
+            'gross_amount' => number_format($net_amount,2,'.',''),
             'tax_amount' => 0,
-            'net_amount' => number_format($request->net_amount,2,'.',''),
-            'discount_amount' => $request->discount_amount,
+            'net_amount' => number_format($net_amount,2,'.',''),
+            'discount_amount' => $total_discount,
             'discount_percentage' => $request->loyaltydiscount,
             'payment_status' => 'UNPAID',
             'status' => 'active',
@@ -386,6 +395,7 @@ class CartController extends Controller
             $promoChecker = $promoQry->count();
             if($promoChecker == 1){
                $promoDetails = $promoQry->first(); 
+               $discount = $promoDetails->discount/100;
             }
 
             SalesDetail::create([
@@ -397,7 +407,7 @@ class CartController extends Controller
                 'tax_amount' => $price[$key]-($price[$key]/1.12),
                 'promo_id' => $promoChecker == 1 ? $promoDetails->id : 0,
                 'promo_description' => $promoChecker == 1 ? $promoDetails->name : '',
-                'discount_amount' => $promoChecker == 1 ? $price[$key]*('.'.$promoDetails->discount) : 0.00,
+                'discount_amount' => $promoChecker == 1 ? $price[$key]*$discount : 0.00,
                 'gross_amount' => $request->net_amount,
                 'net_amount' => 0,
                 'qty' => $qty[$key],
@@ -436,6 +446,31 @@ class CartController extends Controller
             }
         //
 
+        // Coupon 
+            if(isset($data['couponid'])){
+                $coupons = $data['couponid'];
+                $code = $data['couponcode'];
+                $productid = $data['coupon_productid'];
+                $discount = $data['coupon_productdiscount'];
+                $sfee = $data['is_sfee'];
+                
+                foreach($coupons as $key => $c){
+                    CouponSale::create([
+                        'customer_id' => Auth::id(),
+                        'coupon_id' => $c,
+                        'coupon_code' => $code[$key],
+                        'sales_header_id' => $salesHeader->id,
+                        'order_status' => 'UNPAID',
+                        'product_id' => $productid[$key],
+                        'discount' => $discount[$key],
+                        'is_sfee' => $sfee[$key]
+                    ]);
+                }
+            }
+
+            CouponCart::where('customer_id',Auth::id())->delete();
+        //
+
         $customer = Customer::where('customer_id',Auth::id())->first();
 
         if($request->payment_method == 1){
@@ -444,7 +479,6 @@ class CartController extends Controller
             $city          = ($request->country == 259) ? $data_city->city : '';
             $province      = ($request->country == 259) ? $data_province->province : '';
             $zipcode       = ($request->country == 259) ? $request->zipcode : '';
-            $order         = $request;
             $uniqID        = $salesHeader->order_number;
 
             $firstname     = $customer->firstname;
@@ -454,7 +488,7 @@ class CartController extends Controller
             if($request->islocation == 0){
                 return redirect(route('order.received',$requestId));
             } else {
-                return view('theme.globalpay.payment_confirmation', compact('order','uniqID','address_line1','address_line2','city','province','zipcode','firstname','lastname','email'));
+                return view('theme.globalpay.payment_confirmation', compact('net_amount','uniqID','address_line1','address_line2','city','province','zipcode','firstname','lastname','email'));
             }
 
         } else {
