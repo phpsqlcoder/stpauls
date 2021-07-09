@@ -217,7 +217,7 @@
 						<div class="row">
 							<div class="col-6">
 								<div class="custom-control custom-radio">
-									<input type="radio" id="coupon-discount-type-partial" name="discount_type" class="custom-control-input" value="partial" onchange="sf_discount_type()" @if($coupon->location_discount_type == 'partial') checked @endif>
+									<input type="radio" id="coupon-discount-type-partial" name="discount_type" class="custom-control-input" value="partial" onchange="sf_discount_type()" @if($coupon->location_discount_type == 'partial') checked @else checked @endif>
 									<label class="custom-control-label" for="coupon-discount-type-partial">Partial</label>
 								</div>
 							</div>
