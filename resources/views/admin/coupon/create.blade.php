@@ -611,33 +611,6 @@
 				});
             }
         });
-
-    //     $.ajax({
-    //         dataType: "json",
-    //         type: "GET",
-    //         url: "{{ route('ajax.get-products') }}",
-    //         data: '',
-    //         success: function(response) {
-    //             var products = new Bloodhound({
-				//   	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
-				//   	queryTokenizer: Bloodhound.tokenizers.whitespace,
-				//   	local: response
-				// });
-
-				// products.initialize();
-
-				// var elt = $('#product_opt');
-				// elt.tagsinput({
-				//   	itemValue: 'value',
-				//   	itemText: 'text',
-				//   	typeaheadjs: {
-				//     	name: 'products',
-				//     	displayKey: 'text',
-				//     	source: products.ttAdapter()
-				//   	}
-				// });
-    //         }
-    //     });
     });
 
 	$('#sf_area').change(function(){
@@ -657,8 +630,7 @@
 			$('#selectCities').css('display','none');
 				$('#selectCountries').css('display','none');
 		}
-		
-	})
+	});
 </script>
 
 <script>
@@ -670,6 +642,7 @@
 
 	$('#coupon-scope-all').click(function(){
 		$('#customer-optn').hide();
+		$('#subscribers-optn').hide();
 		$('#coupon-customer-limit').attr('disabled',false);
 	});
 

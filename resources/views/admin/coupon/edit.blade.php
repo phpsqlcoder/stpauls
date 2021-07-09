@@ -4,6 +4,8 @@
 	<link href="{{ asset('lib/bselect/dist/css/bootstrap-select.css') }}" rel="stylesheet">
 	<link href="{{ asset('lib/clockpicker/bootstrap-clockpicker.min.css') }}" rel="stylesheet">
 	<link href="{{ asset('lib/select2/css/select2.min.css') }}" rel="stylesheet">
+
+	<link href="{{ asset('lib/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet">
 	<style>
 		.select2 {width:100% !important;}
 
@@ -92,7 +94,7 @@
 					</div>
 					<div class="mb-3" id="coupon-code" style="display: @if(old('coupon_activation') == 'manual' || $coupon->activation_type == 'manual') block @else none @endif;">
 						<label class="d-block">Coupon Code</label>
-						<input type="text" name="code" class="form-control @error('code') is-invalid @enderror" value="{{ old('code',$coupon->coupon_code) }}">
+						<input type="text" name="code" class="form-control @error('code') is-invalid @enderror" value="{{ old('code',$coupon->coupon_code) }}" maxlength="50">
 						@hasError(['inputName' => 'code'])
                     	@endhasError
 					</div>
@@ -100,35 +102,61 @@
 				<div class="form-group">
 					<label class="d-block">Customer Scope</label>
 					<div class="row" style="padding-bottom: 10px;">
-						<div class="col-6">
+						<div class="col-4">
 							<div class="custom-control custom-radio">
 								<input type="radio" id="coupon-scope-all" name="coupon_scope" class="custom-control-input" value="all" onclick="ShowHideDiv()" @if($coupon->customer_scope == 'all') checked @endif>
 								<label class="custom-control-label" for="coupon-scope-all">All</label>
 							</div>
 							<small style="font-style: italic;">Coupon will be applicable to all customers who completed an activity.</small>
 						</div>
-						<div class="col-6">
+						<div class="col-4">
 							<div class="custom-control custom-radio">
 								<input type="radio" id="coupon-scope-specific" name="coupon_scope" class="custom-control-input" value="specific" onclick="ShowHideDiv()" @if($coupon->customer_scope == 'specific') checked @endif>
 								<label class="custom-control-label" for="coupon-scope-specific">Specific</label>
 							</div>
 							<small style="font-style: italic;">Only the specific customer will be able to use and claim the coupon reward.</small>
 						</div>
+						<div class="col-4">
+							<div class="custom-control custom-radio">
+								<input @if(old('coupon_scope') == 'specific') checked @endif type="radio" id="coupon-scope-subscribers" name="coupon_scope" class="custom-control-input" value="subscribers" onclick="ShowHideDiv()" @if($coupon->customer_scope == 'subscribers') checked @endif>
+								<label class="custom-control-label" for="coupon-scope-subscribers">Newsletter Subscribers</label>
+							</div>
+							<small style="font-style: italic;">Only the newsletter subscribers will be able to use and claim the coupon reward.</small>
+						</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="mb-3 reward-option" id="customer-optn" style="display:@if($coupon->customer_scope == 'specific') block @else none @endif">
 						<label class="d-block">Customer Name *</label>
-						<select class="form-control select2" name="customer[]" multiple="multiple">
-							<option label="Choose one"></option>
-							@foreach($customers as $customer)
-								<option @if($coupon->scope_customer_id == $customer->id) selected @endif value="{{$customer->id}}">{{ $customer->name }}</option>
-							@endforeach
-						</select>
+						<input id="input3" type="text" class="form-control" name="customer" autocomplete="off">
 						@hasError(['inputName' => 'customer'])
                     	@endhasError
 					</div>
 				</div>
+
+
+				@php
+					$arr_subscribers_group = [];
+					$groups = explode('|',$coupon->scope_subscriber_group_id);
+					foreach($groups as $group){
+						array_push($arr_subscribers_group,$group);
+					}
+				@endphp
+
+				<div class="form-group">
+					<div class="mb-3" id="subscribers-optn" style="display:@if($coupon->customer_scope == 'subscribers') block @else none @endif">
+						<label class="d-block">Subscribers Group *</label>
+						<select class="form-control select2" name="subscribers_group[]" multiple="multiple" id="" style="min-height: 32px;">
+							<option label="Select Group"></option>
+							@foreach($subscribers_group as $group)
+								<option @if(in_array($group->id,$arr_subscribers_group)) selected @endif value="{{ $group->id }}">{{ $group->name }}</option>
+							@endforeach
+						</select>
+						
+					</div>
+				</div>
+
+
 				<div class="form-group">
 					<label class="d-block">Reward</label>
 					<select class="custom-select @error('reward') is-invalid @enderror" id="reward-optn" name="reward">
@@ -142,26 +170,49 @@
 				</div>
 
 				@php
-					$arr_loc = [];
-					$locs = explode('|',$coupon->location);
-					foreach($locs as $l){
-						array_push($arr_loc,$l);
+					$arr_location = [];
+					$locations = explode('|',$coupon->location);
+					foreach($locations as $location){
+						array_push($arr_location,$location);
 					}
 				@endphp
 				<div class="form-group">
 					<div class="mb-3 reward-option" id="free-shipping-optn" style="display:@if(isset($coupon->location)) block @else none @endif">
-						<label class="d-block">Location</label>
-						<select class="form-control select2" name="location[]" multiple="multiple" style="min-height: 32px;">
+						<label class="d-block">Area *</label>
+						<select class="form-control select2" name="sf_area" id="sf_area" style="min-height: 32px;">
 							<option label="Select Area"></option>
-							<option value="all" @if(in_array('all',$arr_loc)) selected @endif>All Area</option>
-							@foreach($locations as $location)
-								<option @if(in_array($location->name,$arr_loc)) selected @endif value="{{$location->name}}">{{ $location->name }}</option>
-							@endforeach
+							<option @if($coupon->area == 'all') selected @endif value="all">All Area</option>
+							<option @if($coupon->area == 'local') selected @endif value="local">Local</option>
+							<option @if($coupon->area == 'intl') selected @endif value="intl">International</option>
 						</select>
-						@hasError(['inputName' => 'location'])
+						@hasError(['inputName' => 'sf_area'])
                     	@endhasError
 
 						<br><br>
+						<div class="form-group" id="selectCities" style="display:@if($coupon->area == 'local') block @else none @endif;">
+							<label class="d-block">Cities *</label>
+							<select class="form-control select2" name="cities[]" multiple="multiple">
+								<option value="" class="text-secondary">Select Cities</option>
+								@foreach($provinces as $pr)
+									<optgroup label="{{ $pr->province }}">
+										@foreach($pr->cities as $c)
+											<option @if(in_array($c->id,$arr_location)) selected @endif value="{{$c->id}}">{{ $c->city }}</option>
+										@endforeach
+									</optgroup>
+								@endforeach
+							</select>
+						</div>
+
+						<div class="form-group" id="selectCountries" style="display:@if($coupon->area == 'intl') block @else none @endif;">
+							<label class="d-block">Countries *</label>
+							<select class="form-control select2" name="countries[]" multiple="multiple">
+								<option value="" class="text-secondary">Select Countries</option>
+								@foreach($countries as $c)
+									<option @if(in_array($c->id,$arr_location)) selected @endif value="{{$c->id}}">{{ $c->name }}</option>
+								@endforeach
+							</select>
+						</div>
+
 						<label class="d-block">Discount Type</label>
 						<div class="row">
 							<div class="col-6">
@@ -222,12 +273,6 @@
 									<label class="custom-control-label" for="same-product">Same Product</label>
 								</div>
 							</div>
-							<!-- <div class="col-4">
-								<div class="custom-control custom-radio">
-									<input type="radio" id="product-highest-price" name="product_discount" class="custom-control-input" value="highest" onchange="productdiscount('highest')" @if($coupon->product_discount == 'highest') checked @endif>
-									<label class="custom-control-label" for="product-highest-price">Highest Price</label>
-								</div>
-							</div> -->
 							<div class="col-6">
 								<div class="custom-control custom-radio">
 									<input type="radio" id="specific-product" name="product_discount" class="custom-control-input" value="specific" onchange="productdiscount('specific')" @if($coupon->product_discount == 'specific') checked @endif>
@@ -426,7 +471,7 @@
 							<div class="col-12" id="total-amount-div" style="display:@if(isset($coupon->purchase_amount)) block @else none @endif;">
 								<label class="d-block">Total Amount *</label>
 							</div>
-							<div class="col-md-6" id="total-amount-input" style="display:@if(isset($coupon->purchase_amount)) block @else none @endif;">
+							<div class="col-md-6 mb-3" id="total-amount-input" style="display:@if(isset($coupon->purchase_amount)) block @else none @endif;">
 								<input name="purchase_amount" id="purchase_amount" type="number" min="1" class="form-control" value="{{ $coupon->purchase_amount }}">
 								<small id="spanPurchaseAmount" style="display: none;" class="text-danger"></small>
 							</div>
@@ -443,7 +488,7 @@
 							<div class="col-12" id="total-quantity-div" style="padding-top: 10px;display:@if(isset($coupon->purchase_qty)) block @else none @endif;">
 								<label class="d-block">Total Quantity *</label>
 							</div>
-							<div class="col-md-6" id="total-quantity-input" style="display:@if(isset($coupon->purchase_qty)) block @else none @endif;">
+							<div class="col-md-6 mb-3" id="total-quantity-input" style="display:@if(isset($coupon->purchase_qty)) block @else none @endif;">
 								<input name="purchase_qty" id="purchase_qty" type="number" min="1" class="form-control" value="{{ $coupon->purchase_qty }}">
 								<small id="spanPurchaseQty" style="display: none;" class="text-danger"></small>
 							</div>
@@ -546,6 +591,24 @@
         </div>
     </div>
 </div>
+@php
+	$arr_customer = [];
+	if($coupon->customer_scope == 'specific'){
+		$customers = explode('|',$coupon->scope_customer_id);
+		
+		foreach($customers as $customer){
+			if($customer != ""){
+				$cstmr = \App\User::find($customer);
+		        $arr_customer[] = [
+		            "value" => $cstmr->id,
+		            "text" => $cstmr->name
+		        ];
+			}
+	    }
+
+	}
+@endphp
+
 @endsection
 
 @section('pagejs')
@@ -554,18 +617,88 @@
 	<script src="{{ asset('lib/jqueryui/jquery-ui.min.js') }}"></script>
 	<script src="{{ asset('lib/clockpicker/bootstrap-clockpicker.min.js') }}"></script>
 	<script src="{{ asset('lib/select2/js/select2.min.js') }}"></script>
+
+	<script src="{{ asset('lib/bootstrap-tagsinput/bootstrap-tagsinput.min.js') }}"></script>
+	<script src="{{ asset('lib/typeahead.js/typeahead.bundle.min.js') }}"></script>
 @endsection
 
 
 @section('customjs')
 <script>
+	$(document).ready(function(){
+
+		$.ajax({
+            dataType: "json",
+            type: "GET",
+            url: "{{ route('ajax.get-customers') }}",
+            data: '',
+            success: function(response) {
+                var customers = new Bloodhound({
+				  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('text'),
+				  	queryTokenizer: Bloodhound.tokenizers.whitespace,
+				  	local: response
+				});
+
+				customers.initialize();
+
+				var elt = $('#input3');
+				elt.tagsinput({
+				  	itemValue: 'value',
+				  	itemText: 'text',
+				  	typeaheadjs: {
+				    	name: 'customers',
+				    	displayKey: 'text',
+				    	source: customers.ttAdapter()
+				  	}
+				});
+
+				var selected_customers = @json($arr_customer);
+				$.each(selected_customers, function(key, customer){
+					elt.tagsinput('add', { "value": customer.value , "text": customer.text   });
+				});
+            }
+        });
+    });
+
+    $('#sf_area').change(function(){
+		var value = $(this).val();
+
+		if(value == 'local' || value == 'intl'){
+			if(value == 'local'){
+				$('#selectCities').css('display','block');
+				$('#selectCountries').css('display','none');
+			}
+
+			if(value == 'intl'){
+				$('#selectCities').css('display','none');
+				$('#selectCountries').css('display','block');
+			}
+		} else {
+			$('#selectCities').css('display','none');
+				$('#selectCountries').css('display','none');
+		}
+	});
+
 	$('#coupon-scope-specific').click(function(){
+		$('#customer-optn').show();
+		$('#subscribers-optn').hide();
+
 		$('#coupon-customer-limit').prop('checked',false);
 		$('#coupon-customer-limit-form').hide();
 		$('#coupon-customer-limit').attr('disabled',true);
 	});
 
 	$('#coupon-scope-all').click(function(){
+		$('#customer-optn').hide();
+		$('#subscribers-optn').hide();
+
+		$('#coupon-customer-limit').attr('disabled',false);
+	});
+
+	$('#coupon-scope-subscribers').click(function(){
+		$('#subscribers-optn').show();
+		$('#customer-optn').hide();
+		
 		$('#coupon-customer-limit').attr('disabled',false);
 	});
 
@@ -681,8 +814,7 @@
             }
         });
 
-		var value = parseInt($(this).val());
-		if(value != ''){
+		if($(this).val() != ''){
 			$('#product_opt').attr("disabled", true);
 		} else {
 			$('#product_opt').removeAttr("disabled");
