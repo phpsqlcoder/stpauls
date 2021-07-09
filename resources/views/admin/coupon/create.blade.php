@@ -93,7 +93,7 @@
 					</div>
 					<div class="mb-3" id="coupon-code" style="display: @if(old('coupon_activation') == 'manual') block @else none @endif;">
 						<label class="d-block">Coupon Code *</label>
-						<input type="text" name="code" class="form-control @error('code') is-invalid @enderror" value="{{ old('code') }}">
+						<input type="text" name="code" class="form-control @error('code') is-invalid @enderror" value="{{ old('code') }}" maxlength="50">
 						@hasError(['inputName' => 'code'])
                     	@endhasError
 					</div>
@@ -102,19 +102,26 @@
 				<div class="form-group">
 					<label class="d-block">Customer Scope</label>
 					<div class="row" style="padding-bottom: 10px;">
-						<div class="col-6">
+						<div class="col-4">
 							<div class="custom-control custom-radio">
 								<input @if(old('coupon_scope') == 'all') checked @endif checked type="radio" id="coupon-scope-all" name="coupon_scope" class="custom-control-input" value="all" checked onclick="ShowHideDiv()">
 								<label class="custom-control-label" for="coupon-scope-all">All</label>
 							</div>
 							<small style="font-style: italic;">Coupon will be applicable to all customers who completed an activity.</small>
 						</div>
-						<div class="col-6">
+						<div class="col-4">
 							<div class="custom-control custom-radio">
 								<input @if(old('coupon_scope') == 'specific') checked @endif type="radio" id="coupon-scope-specific" name="coupon_scope" class="custom-control-input" value="specific" onclick="ShowHideDiv()">
 								<label class="custom-control-label" for="coupon-scope-specific">Specific</label>
 							</div>
 							<small style="font-style: italic;">Only the specific customer will be able to use and claim the coupon reward.</small>
+						</div>
+						<div class="col-4">
+							<div class="custom-control custom-radio">
+								<input @if(old('coupon_scope') == 'specific') checked @endif type="radio" id="coupon-scope-subscribers" name="coupon_scope" class="custom-control-input" value="subscribers" onclick="ShowHideDiv()">
+								<label class="custom-control-label" for="coupon-scope-subscribers">Newsletter Subscribers</label>
+							</div>
+							<small style="font-style: italic;">Only the newsletter subscribers will be able to use and claim the coupon reward.</small>
 						</div>
 					</div>
 				</div>
@@ -124,6 +131,19 @@
 						<input id="input3" type="text" class="form-control" name="customer" autocomplete="off">
 						@hasError(['inputName' => 'customer'])
                     	@endhasError
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="mb-3" id="subscribers-optn" style="display: @if(old('coupon_scope') == 'subscribers') block @else none @endif;">
+						<label class="d-block">Subscribers Group *</label>
+						<select class="form-control select2" name="subscribers_group[]" multiple="multiple" id="" style="min-height: 32px;">
+							<option label="Select Group"></option>
+							@foreach($subscribers_group as $g)
+								<option value="{{ $g->id }}">{{ $g->name }}</option>
+							@endforeach
+						</select>
+						
 					</div>
 				</div>
 
@@ -644,11 +664,18 @@
 <script>
 	$('#coupon-scope-specific').click(function(){
 		$('#customer-optn').show();
+		$('#subscribers-optn').hide();
 		$('#coupon-customer-limit').attr('disabled',true);
 	});
 
 	$('#coupon-scope-all').click(function(){
 		$('#customer-optn').hide();
+		$('#coupon-customer-limit').attr('disabled',false);
+	});
+
+	$('#coupon-scope-subscribers').click(function(){
+		$('#customer-optn').hide();
+		$('#subscribers-optn').show();
 		$('#coupon-customer-limit').attr('disabled',false);
 	});
 

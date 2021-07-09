@@ -14,6 +14,8 @@ use App\EcommerceModel\ProductCategory;
 use App\User;
 use App\Deliverablecities;
 
+use \App\MailingListModel\Group;
+
 use Carbon\Carbon;
 use Auth;
 
@@ -56,9 +58,11 @@ class CouponController extends Controller
 
         $provinces = Provinces::orderby('province','asc')->get();
         $countries = Countries::orderby('name','asc')->get();
+
+        $subscribers_group = Group::orderBy('name','asc')->get();
         // $free_products = Product::where('category_id',87)->get();
 
-        return view('admin.coupon.create',compact('categories','brands','provinces','countries','products'));
+        return view('admin.coupon.create',compact('categories','brands','provinces','countries','products','subscribers_group'));
     }
 
     public function customer_lookup()
@@ -156,6 +160,16 @@ class CouponController extends Controller
             }
         }
 
+        $subscribers_id = '';
+        if(isset($request->subscribers_group)){
+            $groups = $data['subscribers_group'];
+            foreach($groups as $group){
+                if($group != ''){
+                    $subscribers_id .= $group.'|';
+                }
+            }
+        }
+
         $amount_discount = 1;
         if($request->reward == 'discount-amount-optn' || $request->reward == 'discount-percentage-optn'){
             $amount_discount = $request->amount_discount;
@@ -178,6 +192,7 @@ class CouponController extends Controller
             'activation_type' => $request->coupon_activation,
             'customer_scope' => $request->coupon_scope,
             'scope_customer_id' => $request->coupon_scope == 'specific' ? $customernames : NULL,
+            'scope_subscriber_group_id' => $request->coupon_scope == 'subscribers' ? $subscribers_id : NULL,
             'area' => $request->sf_area,
             'location' => $loc,
             'location_discount_type' => $loc_discount_type,

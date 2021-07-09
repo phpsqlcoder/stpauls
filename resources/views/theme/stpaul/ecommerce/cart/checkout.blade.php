@@ -496,14 +496,14 @@
                                                     <div class="promo-code">
                                                         <label for="promo">Enter promo code or <span class="white-spc">gift card</span></label>
                                                         <div class="input-group">
-                                                            <input type="text" class="promo-input form-control" name="promo" id="promo">
+                                                            <input type="text" class="promo-input form-control" id="coupon_code">
                                                         </div>
                                                         <div class="field_wrapper"></div>
 
                                                         <a class="mt-2 mb-2 text-primary" href="#" style="font-size:12px;" onclick="myCoupons()"> or click here to  Select from My Coupons</a>
 
                                                         <div class="mt-2">
-                                                            <button class="btn promo-btn" type="button">Apply</button>
+                                                            <button class="btn promo-btn" type="button" id="couponManualBtn">Apply</button>
                                                         </div>
                                                     </div>
 
@@ -759,6 +759,8 @@
 
                     <input type="hidden" id="sf_discount_coupon" value="0">
                     <input type="hidden" id="sf_discount_amount" name="sf_discount_amount" value="0">
+
+                    <div id="manual-coupon-details"></div>
                 </div>
             </div>
         </section>
@@ -1276,6 +1278,152 @@
             return num_parts.join(".");
         }
 
+
+        $('#couponManualBtn').click(function(){
+            var couponCode = $('#coupon_code').val();
+            var grandtotal = parseFloat($('#input_total_due').val());
+
+            if (!$("input[name='shipOption']:checked").val()) {
+                swal({
+                    title: '',
+                    text: "Please select a shipping method!",         
+                });
+                return false;
+            }
+
+            $.ajax({
+                data: {
+                    "couponcode": couponCode,
+                    "_token": "{{ csrf_token() }}",
+                },
+                type: "post",
+                url: "{{route('add-manual-coupon')}}",
+                success: function(returnData) {
+                    // coupon validity label
+                        if(returnData.coupon_details['start_time'] == null){
+                            var couponStartDate = returnData.coupon_details['start_date'];
+                        } else {
+                            var couponStartDate = returnData.coupon_details['start_date']+' '+returnData.coupon_details['start_time'];
+                        }
+                        
+                        if(returnData.coupon_details['end_date'] == null){
+                            var couponEndDate = '';
+                        } else {
+                            if(returnData.coupon_details['end_time'] == null){
+                                var couponEndDate = ' - '+returnData.coupon_details['end_date'];
+                            } else {
+                                var couponEndDate = ' - '+returnData.coupon_details['end_date']+' '+returnData.coupon_details['end_time'];
+                            }
+                        }
+                        var couponValidity = couponStartDate+''+couponEndDate;
+                    //
+
+                    if(returnData['not_allowed']){
+                        swal({
+                            title: '',
+                            text: "Sorry, you are not authorized to use this coupon.",         
+                        });
+                        return false;
+                    }
+                    
+                    if(returnData['exist']){
+                        swal({
+                            title: '',
+                            text: "Coupon already used.",         
+                        }); 
+                        return false;
+                    }
+
+                    if(returnData['not_exist']){
+                        swal({
+                            title: '',
+                            text: "Coupon not found.",         
+                        }); 
+                        return false;
+                    }
+
+                    if(returnData['expired']){
+                        swal({
+                            title: '',
+                            text: "Coupon is already expired.",         
+                        }); 
+                        return false;
+                    }
+
+                    if (returnData['success']) {
+
+                        // coupon validity label
+                            if(returnData.coupon_details['start_time'] == null){
+                                var couponStartDate = returnData.coupon_details['start_date'];
+                            } else {
+                                var couponStartDate = returnData.coupon_details['start_date']+' '+returnData.coupon_details['start_time'];
+                            }
+                            
+                            if(returnData.coupon_details['end_date'] == null){
+                                var couponEndDate = '';
+                            } else {
+                                if(returnData.coupon_details['end_time'] == null){
+                                    var couponEndDate = ' - '+returnData.coupon_details['end_date'];
+                                } else {
+                                    var couponEndDate = ' - '+returnData.coupon_details['end_date']+' '+returnData.coupon_details['end_time'];
+                                }
+                            }
+                            var couponValidity = couponStartDate+''+couponEndDate;
+                        //
+
+                        $('#manual-coupon-details').append(
+                            '<div id="manual_details'+returnData.coupon_details['id']+'">'+
+                            // coupons input
+                                '<input type="hidden" id="couponcombination'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['combination']+'">'+
+                                '<input type="hidden" id="sfarea'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['area']+'">'+
+                                '<input type="hidden" id="sflocation'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['location']+'">'+
+                                '<input type="hidden" id="sfdiscountamount'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['location_discount_amount']+'">'+
+                                '<input type="hidden" id="sfdiscounttype'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['location_discount_type']+'">'+
+                                '<input type="hidden" id="discountpercentage'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['percentage']+'">'+
+                                '<input type="hidden" id="discountamount'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['amount']+'">'+
+                                '<input type="hidden" id="couponname'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['name']+'">'+
+                                '<input type="hidden" id="couponcode'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['coupon_code']+'">'+
+                                '<input type="hidden" id="couponterms'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['terms_and_conditions']+'">'+
+                                '<input type="hidden" id="coupondesc'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['description']+'">'+
+                                '<input type="hidden" id="couponvalidity'+returnData.coupon_details['id']+'" value="'+couponValidity+'">'+
+                            //
+                            '</div>'
+                        );
+
+                        if(returnData.coupon_details['location'] == null){
+                            swal({
+                                title: '',
+                                text: "Only shipping fee coupon is allowed.",         
+                            });
+
+                        } else {
+                            if(returnData.coupon_details['amount'] > 0){ 
+                                var amountdiscount = parseFloat(returnData.coupon_details['amount']);
+                            }
+
+                            if(returnData.coupon_details['percentage'] > 0){
+                                var percent  = parseFloat(returnData.coupon_details['percentage'])/100;
+                                var discount = parseFloat(grandtotal)*percent;
+
+                                var amountdiscount = parseFloat(discount);
+                            }
+
+                            var total = grandtotal-amountdiscount;
+                            if(total.toFixed(2) < 1){
+                                swal({
+                                    title: '',
+                                    text: "The total amount is less than the coupon discount.",         
+                                });
+
+                                return false;
+                            }
+                            
+                            use_sf_coupon(returnData.coupon_details['id']);
+                        }
+                    } 
+                }
+            });
+        });
 
         function myCoupons(){
 

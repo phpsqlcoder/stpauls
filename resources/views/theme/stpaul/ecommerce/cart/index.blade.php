@@ -188,7 +188,7 @@
                             <div class="promo-code">
                                 <label for="promo">Enter promo code or <span class="white-spc">gift card</span></label>
                                 <div class="input-group">
-                                    <input type="text" class="promo-input form-control" name="promo" id="promo">
+                                    <input type="text" class="promo-input form-control" id="coupon_code">
                                 </div>
                                 <div class="field_wrapper"></div>
                                 
@@ -199,7 +199,7 @@
                                 @endif
                                 
                                 <div class="mt-2">
-                                    <button class="btn promo-btn" type="button">Apply</button>
+                                    <button class="btn promo-btn" type="button" id="couponManualBtn">Apply</button>
                                 </div>
 
                                 <!-- coupon parameters/validators -->
@@ -229,9 +229,8 @@
 
                         <input type="hidden" name="grantotal" id="npt_grandTotal" value="{{ $grandtotal }}">
 
-                        <div id="discount_list">
-                            
-                        </div>
+                        <div id="discount_list"></div>
+                        <div id="manual-coupon-details"></div>
 
                         <div class="summary-wrap">
                             <div class="subtotal">
@@ -334,6 +333,162 @@
         function login_modal(){
             $('#modalLoginLink').modal('show');
         }
+
+        $('#couponManualBtn').click(function(){
+            var couponCode = $('#coupon_code').val();
+            var grandtotal = parseFloat($('#npt_grandTotal').val());
+
+            $.ajax({
+                data: {
+                    "couponcode": couponCode,
+                    "_token": "{{ csrf_token() }}",
+                },
+                type: "post",
+                url: "{{route('add-manual-coupon')}}",
+                success: function(returnData) {
+
+                    // coupon validity label
+                        if(returnData.coupon_details['start_time'] == null){
+                            var couponStartDate = returnData.coupon_details['start_date'];
+                        } else {
+                            var couponStartDate = returnData.coupon_details['start_date']+' '+returnData.coupon_details['start_time'];
+                        }
+                        
+                        if(returnData.coupon_details['end_date'] == null){
+                            var couponEndDate = '';
+                        } else {
+                            if(returnData.coupon_details['end_time'] == null){
+                                var couponEndDate = ' - '+returnData.coupon_details['end_date'];
+                            } else {
+                                var couponEndDate = ' - '+returnData.coupon_details['end_date']+' '+returnData.coupon_details['end_time'];
+                            }
+                        }
+                        var couponValidity = couponStartDate+''+couponEndDate;
+                    //
+
+
+                    if(returnData['not_allowed']){
+                        swal({
+                            title: '',
+                            text: "Sorry, you are not authorized to use this coupon.",         
+                        });
+                        return false;
+                    }
+
+                    if(returnData['not_exist']){
+                        swal({
+                            title: '',
+                            text: "Coupon not found.",         
+                        });
+                        return false; 
+                    }
+
+                    if(returnData['expired']){
+                        swal({
+                            title: '',
+                            text: "Coupon is already expired.",         
+                        });
+                        return false;
+                    }
+                    if (returnData['success']) {
+                        if(returnData.coupon_details['location'] != null){
+                            swal({
+                                title: '',
+                                text: "Shipping fee coupons can only be used on checkout.",         
+                            });
+                            return false;
+                        }
+
+                        $('#manual-coupon-details').append(
+                            '<div id="manual_details'+returnData.coupon_details['id']+'">'+
+                            // coupons input
+                                '<input type="hidden" id="couponvalidity'+returnData.coupon_details['id']+'" value="'+couponValidity+'">'+
+                                '<input type="hidden" id="couponcode'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['coupon_code']+'">'+
+                                '<input type="hidden" id="couponname'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['name']+'">'+
+                                '<input type="hidden" id="coupondesc'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['description']+'">'+
+                                '<input type="hidden" id="couponterms'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['terms_and_conditions']+'">'+
+
+                                // coupon combination and remaining usage
+                                '<input type="hidden" id="couponcombination'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['combination']+'">'+
+
+                                // coupon condition : purchase products, categories, brands, total qty purchase, total amount purchase
+                                '<input type="hidden" id="couponproducts'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['purchase_product_id']+'">'+
+                                '<input type="hidden" id="purchaseproductid'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['purchase_product_id']+'">'+
+                                '<input type="hidden" id="couponcategories'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['purchase_product_cat_id']+'">'+
+                                '<input type="hidden" id="couponbrands'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['purchase_product_brand']+'">'+
+                                '<input type="hidden" id="purchaseqty'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['purchase_qty']+'">'+
+                                '<input type="hidden" id="purchaseamount'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['purchase_amount']+'">'+
+
+                                // where to apply discount either current product or specific
+                                '<input type="hidden" id="productdiscount'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['product_discount']+'">'+
+                                '<input type="hidden" id="discountproductid'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['discount_product_id']+'">'+
+                                
+                                // coupon discount amount
+                                '<input type="hidden" id="discountpercentage'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['percentage']+'">'+
+                                '<input type="hidden" id="discountamount'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['amount']+'">'+
+                                '<input type="hidden" id="couponfreeproductid'+returnData.coupon_details['id']+'" value="'+returnData.coupon_details['free_product_id']+'">'+
+                            '</div>'
+                            //
+                        );
+
+                        if(returnData.coupon_details['amount_discount_type'] == 1){
+                            if(returnData.coupon_details['free_product_id'] != null){
+                                free_product_coupon(returnData.coupon_details['id']);
+                            } else {
+                                if(returnData.coupon_details['amount'] > 0){ 
+                                    var amountdiscount = parseFloat(returnData.coupon_details['amount']);
+                                }
+
+                                if(returnData.coupon_details['percentage'] > 0){
+                                    var percent  = parseFloat(returnData.coupon_details['percentage'])/100;
+                                    var discount = parseFloat(grandtotal)*percent;
+
+                                    var amountdiscount = parseFloat(discount);
+                                }
+
+                                var total = grandtotal-amountdiscount;
+                                if(total.toFixed(2) < 1){
+                                    swal({
+                                        title: '',
+                                        text: "The total amount is less than the coupon discount.",         
+                                    });
+
+                                    return false;
+                                }
+
+                                use_coupon_total_amount(returnData.coupon_details['id']);
+                                $('#coupon_code').val('');
+                            }
+                        } else {
+
+                            if(returnData.coupon_details['amount'] > 0){ 
+                                var amountdiscount = parseFloat(returnData.coupon_details['amount']);
+                            }
+
+                            if(returnData.coupon_details['percentage'] > 0){
+                                var percent  = parseFloat(returnData.coupon_details['percentage'])/100;
+                                var discount = parseFloat(grandtotal)*percent;
+
+                                var amountdiscount = parseFloat(discount);
+                            }
+
+                            var total = grandtotal-amountdiscount;
+                            if(total.toFixed(2) < 1){
+                                swal({
+                                    title: '',
+                                    text: "The total amount is less than the coupon discount.",         
+                                });
+
+                                return false;
+                            }
+
+                            use_coupon_on_product(returnData.coupon_details['id']);
+                            $('#coupon_code').val('');
+                        }
+                    }  
+                }
+            });
+        });
 
         function myCoupons(){
             var hasProduct = $('#cproducts').val();
@@ -814,7 +969,7 @@
             
             var updated_coupon_discount = coupon_total_discount-total_amount_discount;
             $('#coupon_total_discount').val(updated_coupon_discount);
-            $('#total_coupon_deduction').html('₱ '+ addCommas(updated_coupon_discount.toFixed(2))); 
+            $('#total_coupon_deduction').html(addCommas(updated_coupon_discount.toFixed(2))); 
             
             var counter = $('#coupon_counter').val();
             $('#coupon_counter').val(parseInt(counter)-1);
@@ -829,6 +984,7 @@
             }
 
             $('#appliedCouponDiv'+id).remove(); 
+            $('#manual_details'+id).remove();
             grandTotal();
         });
     //
@@ -1161,6 +1317,7 @@
             }
 
             $('#appliedCouponDiv'+id+'').remove(); 
+            $('#manual_details'+id).remove();
 
             grandTotal();
         });

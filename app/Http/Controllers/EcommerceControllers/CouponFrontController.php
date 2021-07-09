@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Helpers\ListingHelper;
 
+use \App\MailingListModel\GroupsHasSubscriber;
+use \App\MailingListModel\Group;
 use App\EcommerceModel\Coupon;
 use App\EcommerceModel\CustomerCoupon;
 use App\EcommerceModel\CouponSale;
@@ -150,12 +152,6 @@ class CouponFrontController extends Controller
                             'expired' => true,               
                         ]);
                     } else {
-                        
-                        // CouponCart::create([
-                        //     'customer_id' => Auth::id(),
-                        //     'coupon_id' => $c->id
-                        // ]);
-
                         return response()->json([
                             'success' => true, 
                             'coupon_details' => $c              
@@ -474,12 +470,18 @@ class CouponFrontController extends Controller
         if($request->page_name == 'cart'){
             $coupons = $coupons->whereNull('area')->orderBy('name','asc');
             $coupon_customer = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->where('customer_scope','specific')->whereNull('area')->get();
+
+            $coupon_subscribers = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->where('customer_scope','subscribers')->whereNull('area')->get();
         } else {
             $coupons = $coupons->where('amount_discount_type',1)->where(function ($orWhereQuery){
                 $orWhereQuery->orwhereNotNull('area');
             })->orderBy('name','asc');
 
             $coupon_customer = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->where('customer_scope','specific')->where('amount_discount_type',1)->where(function ($orWhereQuery){
+                $orWhereQuery->orwhereNotNull('area');
+                })->get();
+
+            $coupon_subscribers = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->where('customer_scope','subscribers')->where('amount_discount_type',1)->where(function ($orWhereQuery){
                 $orWhereQuery->orwhereNotNull('area');
                 })->get();
         }
@@ -501,13 +503,39 @@ class CouponFrontController extends Controller
             }
         }
 
-        if(empty($arr_customer_coupons)){
+        // newsletters
+        $arr_subscribers_coupons = [];
+        $arr_subscribers_id = [];
+        foreach($coupon_subscribers as $coupon){
+            $groups = explode('|',$coupon->scope_subscriber_group_id);
+            foreach($groups as $group_id){
+                if($group_id != ''){
+                    $subscribers = GroupsHasSubscriber::where('group_id',$group_id)->get();
+                    foreach($subscribers as $subscriber){
+                        if(!in_array($subscriber->details->email, $arr_subscribers_id)){
+                            array_push($arr_subscribers_id, $subscriber->details->email);
+                        }
+                    }
+                }
+            }
+
+            if(in_array(auth()->user()->email, $arr_subscribers_id)){
+                array_push($arr_subscribers_coupons, $coupon->id);
+            }
+        }
+        \Log::info($arr_subscribers_coupons);
+
+        if(empty($arr_customer_coupons) && empty($arr_subscribers_coupons)){
             $allCoupons = $coupons;
         } else {
-            $customerCoupons = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->whereIn('id',$arr_customer_coupons)->get();
+            $customerCoupons   = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->whereIn('id',$arr_customer_coupons)->get();
+            $subscriberCoupons = Coupon::where('status','ACTIVE')->where('availability',1)->where('activation_type','auto')->whereIn('id',$arr_subscribers_coupons)->get();
             // all or specific coupons
-            $allCoupons = collect($customerCoupons)->merge($coupons);
+
+            $allCoupons = collect($customerCoupons)->merge($subscriberCoupons)->merge($coupons);
         }
+
+        
 
         // get remaining usage
         $arr_coupon_usage_limit = [];
