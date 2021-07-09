@@ -177,7 +177,7 @@
 					}
 				@endphp
 				<div class="form-group">
-					<div class="mb-3 reward-option" id="free-shipping-optn" style="display:@if(isset($coupon->location)) block @else none @endif">
+					<div class="mb-3 reward-option" id="free-shipping-optn" style="display:@if(isset($coupon->area)) block @else none @endif">
 						<label class="d-block">Area *</label>
 						<select class="form-control select2" name="sf_area" id="sf_area" style="min-height: 32px;">
 							<option label="Select Area"></option>
