@@ -305,7 +305,9 @@
 						<label class="d-block">Free Product *</label>
 						<select class="form-control select2" name="free_product_id" style="min-height: 32px;">
 							<option label="Choose one"></option>
-							
+							@foreach($free_products as $product)
+								<option value="{{$product->id}}">{{ $product->name }}</option>
+							@endforeach
 						</select>
 						@hasError(['inputName' => 'free_product_id'])
                     	@endhasError

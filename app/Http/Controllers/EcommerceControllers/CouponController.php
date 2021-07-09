@@ -60,9 +60,9 @@ class CouponController extends Controller
         $countries = Countries::orderby('name','asc')->get();
 
         $subscribers_group = Group::orderBy('name','asc')->get();
-        // $free_products = Product::where('category_id',87)->get();
+        $free_products = Product::where('category_id',129)->get();
 
-        return view('admin.coupon.create',compact('categories','brands','provinces','countries','products','subscribers_group'));
+        return view('admin.coupon.create',compact('categories','brands','provinces','countries','products','subscribers_group','free_products'));
     }
 
     public function customer_lookup()
@@ -244,7 +244,7 @@ class CouponController extends Controller
         $countries = Countries::orderby('name','asc')->get();
 
         $subscribers_group = Group::orderBy('name','asc')->get();
-        $free_products = Product::where('category_id',87)->get();
+        $free_products = Product::where('category_id',129)->get();
 
         return view('admin.coupon.edit',compact('coupon','categories','brands','provinces','countries','products','subscribers_group','free_products'));
     }
